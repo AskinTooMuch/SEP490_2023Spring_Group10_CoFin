@@ -1,3 +1,6 @@
+-- V 0.2.0
+-- Last update: 06/02/2023
+-- Script for generating EIMS - Eggs Incubating Management System.
 -- Check if database already exist. If yes then drop the database to ensure the script runs successfully with no variations.
 DROP DATABASE IF EXISTS eims;
 CREATE DATABASE eims;
@@ -99,9 +102,9 @@ CREATE TABLE importReceipt(
 CREATE TABLE importDetail(
 	importDetailId	integer			AUTO_INCREMENT PRIMARY KEY,
 	importId		integer			NOT NULL,
+	eggTypeId		integer			NOT NULL,
     amount			integer 		NOT NULL,
-    price			decimal(15,2)	NOT NULL,
-    eggTypeId		integer			NOT NULL
+    price			decimal(15,2)	NOT NULL
 );
 
 CREATE TABLE exportReceipt(
@@ -146,10 +149,10 @@ CREATE TABLE eggProduct(
 
 CREATE TABLE eggLocation(
 	eggId		integer	AUTO_INCREMENT PRIMARY KEY,
-	productId		integer NOT NULL,
-    machineId		integer NOT NULL,
-    amount			integer NOT NULL,
-    status			boolean NOT NULL
+	productId	integer NOT NULL,
+    machineId	integer NOT NULL,
+    amount		integer NOT NULL,
+    status		boolean NOT NULL
 );
 
 CREATE TABLE salary(
@@ -164,12 +167,12 @@ CREATE TABLE salary(
 
 CREATE TABLE cost(
 	costId 		integer 		AUTO_INCREMENT PRIMARY KEY,
-    userId			integer			NOT NULL,
-    facilityId		integer 		NOT NULL,
+    userId		integer			NOT NULL,
+    facilityId	integer 		NOT NULL,
     costItem	varchar(63) 	NOT NULL,
     costAmount	decimal(15,2) 	NOT NULL,
-    issueDate		datetime		NOT NULL,
-    status 			boolean 		NOT NULL
+    issueDate	datetime		NOT NULL,
+    status 		boolean 		NOT NULL
 );
 
 CREATE TABLE subscription(
@@ -202,8 +205,8 @@ ALTER TABLE eggType
 ADD FOREIGN KEY (specieId) 		REFERENCES specie(specieId),
 ADD FOREIGN KEY (userId) 		REFERENCES user(userId);
 
-ALTER TABLE machineType
-ADD FOREIGN KEY (userId) 		REFERENCES user(userId);
+ALTER TABLE incubationPhase
+ADD FOREIGN KEY (specieId)		REFERENCES specie(specieId);
 
 ALTER TABLE supplier
 ADD FOREIGN KEY (userId) 		REFERENCES user(userId);
@@ -218,7 +221,6 @@ ADD FOREIGN KEY (facilityId)	REFERENCES facility(facilityId);
 
 ALTER TABLE importDetail
 ADD FOREIGN KEY (importId)		REFERENCES importReceipt(importId),
-ADD FOREIGN KEY (batchId) 		REFERENCES eggBatch(batchId),
 ADD FOREIGN KEY (eggTypeId)		REFERENCES eggType(eggTypeId);
 
 ALTER TABLE exportReceipt
@@ -228,23 +230,27 @@ ADD FOREIGN KEY (facilityId)	REFERENCES facility(facilityId);
 
 ALTER TABLE exportDetail
 ADD FOREIGN KEY (exportId)		REFERENCES exportReceipt(exportId),
-ADD FOREIGN KEY (batchId) 		REFERENCES eggBatch(batchId);
+ADD FOREIGN KEY (productId) 	REFERENCES eggProduct(productId);
 
 ALTER TABLE machine
 ADD FOREIGN KEY (machineTypeId)	REFERENCES machineType(machineTypeId),
 ADD FOREIGN KEY (facilityId)	REFERENCES facility(facilityId);
 
-ALTER TABLE batchDetail
-ADD FOREIGN KEY (batchId)		REFERENCES eggBatch(batchId),
+ALTER TABLE eggProduct
+ADD FOREIGN KEY (importDetailId)	REFERENCES importDetail(importDetailId),
+ADD FOREIGN KEY (incubationPhaseId)	REFERENCES incubationPhase(incubationPhaseId);
+
+ALTER TABLE eggLocation
+ADD FOREIGN KEY (productId)		REFERENCES eggProduct(productId),
 ADD FOREIGN KEY (machineId)		REFERENCES machine(machineId);
 
 ALTER TABLE salary
 ADD FOREIGN KEY (userId)		REFERENCES user(userId);
 
-ALTER TABLE spending
+ALTER TABLE cost
 ADD FOREIGN KEY (userId)		REFERENCES user(userId),
 ADD FOREIGN KEY (facilityId)	REFERENCES facility(facilityId);
 
 ALTER TABLE userSubsription
-ADD FOREIGN KEY (userId)		REFERENCES user(userId),
+ADD FOREIGN KEY (facilityId)	REFERENCES facility(facilityId),
 ADD FOREIGN KEY (subscriptionId)REFERENCES subscription(subscriptionId);
