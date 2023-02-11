@@ -1,5 +1,8 @@
--- V 0.2.0
--- Last update: 06/02/2023
+-- Version 0.3.0: Add data
+-- V0.2.0: Add foreign key constraint
+-- V0.2.1: Change attribute name, re-route foreign key constraint
+-- V0.2.2: Add CHECK constraint
+-- Last update: 11/02/2023
 -- Script for generating EIMS - Eggs Incubating Management System.
 -- Check if database already exist. If yes then drop the database to ensure the script runs successfully with no variations.
 DROP DATABASE IF EXISTS eims;
@@ -20,7 +23,7 @@ CREATE TABLE facility(
     facilityAddress				varchar(63) NOT NULL,
     facilityFoundDate			date 		NOT NULL,
     subscriptionExpirationDate	datetime,
-    hotline						varchar(15),
+    hotline						varchar(15)	NOT NULL,
     status						boolean		NOT NULL
 );
 
@@ -29,8 +32,10 @@ CREATE TABLE user(
     roleId		integer			NOT NULL,
     facilityId	integer,
     userName	varchar(63)		NOT NULL,
+    dob			date			NOT NULL,
     phone		varchar(15)		NOT NULL,
     email		varchar(127),
+    salary		decimal(15,2),
     password	varchar(127)	NOT NULL,
     address		varchar(127),
 	status		boolean			NOT NULL
@@ -40,15 +45,18 @@ CREATE TABLE specie(
 	specieId	integer		AUTO_INCREMENT PRIMARY KEY,
     userId		integer		NOT NULL,
     specieName	varchar(63) NOT NULL,
-    incubationPeriod	time,
+    incubationPeriod	integer,
     status		boolean		NOT NULL
 );
 
-CREATE TABLE eggType(
-	eggTypeId			integer 	AUTO_INCREMENT PRIMARY KEY,
+CREATE TABLE breed(
+	breedId			integer 	AUTO_INCREMENT PRIMARY KEY,
     specieId			integer,
     userId				integer		NOT NULL,
-    eggTypeName			varchar(63)	NOT NULL,
+    breedName			varchar(63)	NOT NULL,
+    averageWeight		double		NOT NULL,
+    commonDisease		varchar(255),
+    growthTime			time		NOT NULL,
     imageSrc			varchar(1027),
     status 				boolean		NOT NULL
 );
@@ -57,7 +65,7 @@ CREATE TABLE incubationPhase(
 	incubationPhaseId 	integer 	AUTO_INCREMENT PRIMARY KEY,
     specieId			integer		NOT NULL,
     phaseNumber			integer		NOT NULL,
-    phasePeriod			time		NOT NULL,
+    phasePeriod			integer		NOT NULL,
     phaseDescription	varchar(255),		
     status				boolean 	NOT NULL
 );
@@ -96,13 +104,14 @@ CREATE TABLE importReceipt(
     facilityId	integer			NOT NULL,
     importDate	datetime		NOT NULL,
     total		decimal(15,2)	NOT NULL,
+    paid		decimal(15,2)	NOT NULL,
     status		boolean			NOT NULL
 );
 
-CREATE TABLE importDetail(
-	importDetailId	integer			AUTO_INCREMENT PRIMARY KEY,
+CREATE TABLE eggBatch(
+	eggBatchId	integer			AUTO_INCREMENT PRIMARY KEY,
 	importId		integer			NOT NULL,
-	eggTypeId		integer			NOT NULL,
+	breedId		integer			NOT NULL,
     amount			integer 		NOT NULL,
     price			decimal(15,2)	NOT NULL
 );
@@ -114,6 +123,7 @@ CREATE TABLE exportReceipt(
     facilityId	integer			NOT NULL,
     exportDate	datetime		NOT NULL,
     total		decimal(15,2)	NOT NULL,
+    paid		decimal(15,2)	NOT NULL,
     status		boolean			NOT NULL
 );
 
@@ -139,7 +149,7 @@ CREATE TABLE machine(
 
 CREATE TABLE eggProduct(
 	productId			integer	AUTO_INCREMENT PRIMARY KEY,
-	importDetailId		integer	NOT NULL,
+	eggBatchId		integer	NOT NULL,
     incubationPhaseId	integer	NOT NULL,
     incubationDate		datetime,
     amount				integer NOT NULL,
@@ -178,7 +188,7 @@ CREATE TABLE cost(
 CREATE TABLE subscription(
 	subscriptionId 	integer 		AUTO_INCREMENT PRIMARY KEY,
     cost			decimal(15,2) 	NOT NULL,
-    duration		time			NOT NULL,
+    duration		integer			NOT NULL,
     machineQuota	integer			NOT NULL,
     status 			boolean			NOT NULL
 );
@@ -196,14 +206,18 @@ ADD FOREIGN KEY (userId) 		REFERENCES user(userId);
 
 ALTER TABLE user
 ADD FOREIGN KEY (roleId) 		REFERENCES userRole(roleId),
-ADD	FOREIGN KEY (facilityId) 	REFERENCES facility(facilityId);
+ADD	FOREIGN KEY (facilityId) 	REFERENCES facility(facilityId),
+ADD CHECK (salary >= 0);
 
 ALTER TABLE specie
-ADD FOREIGN KEY (userId) 		REFERENCES user(userId);
+ADD FOREIGN KEY (userId) 		REFERENCES user(userId),
+ADD CHECK (incubationPeriod > 0);
 
-ALTER TABLE eggType
+ALTER TABLE breed
 ADD FOREIGN KEY (specieId) 		REFERENCES specie(specieId),
-ADD FOREIGN KEY (userId) 		REFERENCES user(userId);
+ADD FOREIGN KEY (userId) 		REFERENCES user(userId),
+ADD CHECK (averageWeight > 0),
+ADD CHECK (growthTime > 0);
 
 ALTER TABLE incubationPhase
 ADD FOREIGN KEY (specieId)		REFERENCES specie(specieId);
@@ -217,40 +231,122 @@ ADD FOREIGN KEY (userId) 		REFERENCES user(userId);
 ALTER TABLE importReceipt
 ADD FOREIGN KEY (supplierId) 	REFERENCES supplier(supplierId),
 ADD FOREIGN KEY (userId) 		REFERENCES user(userId),
-ADD FOREIGN KEY (facilityId)	REFERENCES facility(facilityId);
+ADD FOREIGN KEY (facilityId)	REFERENCES facility(facilityId),
+ADD CHECK (total >= 0),
+ADD CHECK (paid >= 0);
 
-ALTER TABLE importDetail
+ALTER TABLE eggBatch
 ADD FOREIGN KEY (importId)		REFERENCES importReceipt(importId),
-ADD FOREIGN KEY (eggTypeId)		REFERENCES eggType(eggTypeId);
+ADD FOREIGN KEY (breedId)		REFERENCES breed(breedId),
+ADD CHECK (amount > 0),
+ADD CHECK (price > 0);
 
 ALTER TABLE exportReceipt
 ADD FOREIGN KEY (customerId) 	REFERENCES customer(customerId),
 ADD FOREIGN KEY (userId) 		REFERENCES user(userId),
-ADD FOREIGN KEY (facilityId)	REFERENCES facility(facilityId);
+ADD FOREIGN KEY (facilityId)	REFERENCES facility(facilityId),
+ADD CHECK (total >= 0),
+ADD CHECK (paid >= 0);
 
 ALTER TABLE exportDetail
 ADD FOREIGN KEY (exportId)		REFERENCES exportReceipt(exportId),
-ADD FOREIGN KEY (productId) 	REFERENCES eggProduct(productId);
+ADD FOREIGN KEY (productId) 	REFERENCES eggProduct(productId),
+ADD CHECK (price > 0),
+ADD CHECK (vaccinePrice >= 0),
+ADD CHECK (amount > 0);
 
 ALTER TABLE machine
 ADD FOREIGN KEY (machineTypeId)	REFERENCES machineType(machineTypeId),
-ADD FOREIGN KEY (facilityId)	REFERENCES facility(facilityId);
+ADD FOREIGN KEY (facilityId)	REFERENCES facility(facilityId),
+ADD CHECK (maxCapacity >= 0),
+ADD CHECK (curCapacity >= 0);
 
 ALTER TABLE eggProduct
-ADD FOREIGN KEY (importDetailId)	REFERENCES importDetail(importDetailId),
+ADD FOREIGN KEY (eggBatchId)	REFERENCES eggBatch(eggBatchId),
 ADD FOREIGN KEY (incubationPhaseId)	REFERENCES incubationPhase(incubationPhaseId);
 
 ALTER TABLE eggLocation
 ADD FOREIGN KEY (productId)		REFERENCES eggProduct(productId),
-ADD FOREIGN KEY (machineId)		REFERENCES machine(machineId);
+ADD FOREIGN KEY (machineId)		REFERENCES machine(machineId),
+ADD CHECK (amount > 0);
 
 ALTER TABLE salary
-ADD FOREIGN KEY (userId)		REFERENCES user(userId);
+ADD FOREIGN KEY (userId)		REFERENCES user(userId),
+ADD CHECK (baseSalary > 0),
+ADD CHECK (bonus >= 0),
+ADD CHECK (fine >= 0);
 
 ALTER TABLE cost
 ADD FOREIGN KEY (userId)		REFERENCES user(userId),
-ADD FOREIGN KEY (facilityId)	REFERENCES facility(facilityId);
+ADD FOREIGN KEY (facilityId)	REFERENCES facility(facilityId),
+ADD CHECK (costAmount >= 0);
+
+ALTER TABLE subscription
+ADD CHECK (cost >= 0),
+ADD CHECK (duration >= 0),
+ADD CHECK (machineQuota >= 0);
 
 ALTER TABLE userSubsription
 ADD FOREIGN KEY (facilityId)	REFERENCES facility(facilityId),
 ADD FOREIGN KEY (subscriptionId)REFERENCES subscription(subscriptionId);
+
+-- Insert Data into tables
+-- userRole
+INSERT INTO userRole (roleId, roleName, status)
+VALUES 	(1, 'User', 1),
+		(2, 'Owner', 1),
+		(3, 'Employee', 1),
+		(4, 'Moderator', 1),
+		(5, 'Admin', 0);
+-- user
+INSERT INTO user(userId, roleId, userName, dob, phone, password, status)
+VALUES 	(1, '5', 'Default Data pack', '2001-12-16', '0969044714', 'a', 0);
+
+-- specie
+INSERT INTO specie(specieId, userId, specieName, incubationPeriod, status)
+VALUES 	(1, 1, 'Gà', 22, 1),
+		(2, 1, 'Vịt', 31, 1),
+		(3, 1, 'Ngan', 36, 1);
+
+-- incubationPhase
+INSERT INTO incubationPhase(specieId, phaseNumber, phasePeriod, phaseDescription, status)
+VALUES 	(1, 0, 0,'Trứng vỡ/dập', 1),
+		(1, 1, 3,'Trứng trắng/tròn, trứng không có phôi', 1),
+		(1, 2, 13,'Trứng loãng/tàu, phôi chết non', 1),
+		(1, 3, 14,'Trứng lộn', 1),
+		(1, 4, 19,'Trứng đang nở', 1),
+		(1, 5, 22,'Trứng tắc', 1),
+		(1, 6, 22,'Con nở', 1),
+		(1, 7, 22,'Con đực', 1),
+		(1, 8, 22,'Con cái', 1),
+		(2, 0, 0,'Trứng vỡ/dập', 1),
+		(2, 1, 3,'Trứng trắng/tròn, trứng không có phôi', 1),
+		(2, 2, 17,'Trứng loãng/tàu, phôi chết non', 1),
+		(2, 3, 18,'Trứng lộn', 1),
+		(2, 4, 28,'Trứng đang nở', 1),
+		(2, 5, 31,'Trứng tắc', 1),
+		(2, 6, 31,'Con nở', 1),
+		(2, 7, 31,'Con đực', 1),
+		(2, 8, 31,'Con cái', 1),
+		(3, 0, 0,'Trứng vỡ/dập', 1),
+		(3, 1, 3,'Trứng trắng/tròn, trứng không có phôi', 1),
+		(3, 2, 17,'Trứng loãng/tàu, phôi chết non', 1),
+		(3, 3, 18,'Trứng lộn', 1),
+		(3, 4, 32,'Trứng đang nở', 1),
+		(3, 5, 36,'Trứng tắc', 1),
+		(3, 6, 36,'Con nở', 1),
+		(3, 7, 36,'Con đực', 1),
+		(3, 8, 36,'Con cái', 1);
+
+-- machineType
+INSERT INTO machineType(machineTypeId, machineTypeName, description, status)
+VALUES 	(1, 'Máy ấp', 'Máy dùng cho giai đoạn vừa mới ấp cho tới khi sắp nở, nhiệt cao, sức chứa cao', 1),
+		(2, 'Máy nở', 'Máy dùng cho giai đoạn từ trứng lộn đến khi nở ra con, nhiệt thấp hơn, sức chứa thấp hơn', 1);
+
+-- subscription
+INSERT INTO subscription(cost, duration, machineQuota, status)
+VALUES 	(0, 30, 5, 1),
+		(500000, 30, 5, 1),
+		(1300000, 90, 5, 1),
+		(2400000, 180, 10, 1),
+		(4000000, 365, 15, 1);

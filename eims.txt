@@ -20,7 +20,7 @@ CREATE TABLE facility(
     facilityAddress				varchar(63) NOT NULL,
     facilityFoundDate			date 		NOT NULL,
     subscriptionExpirationDate	datetime,
-    hotline						varchar(15),
+    hotline						varchar(15)	NOT NULL,
     status						boolean		NOT NULL
 );
 
@@ -29,8 +29,10 @@ CREATE TABLE user(
     roleId		integer			NOT NULL,
     facilityId	integer,
     userName	varchar(63)		NOT NULL,
+    dob			date			NOT NULL,
     phone		varchar(15)		NOT NULL,
     email		varchar(127),
+    salary		decimal(15,2),
     password	varchar(127)	NOT NULL,
     address		varchar(127),
 	status		boolean			NOT NULL
@@ -44,11 +46,14 @@ CREATE TABLE specie(
     status		boolean		NOT NULL
 );
 
-CREATE TABLE eggType(
-	eggTypeId			integer 	AUTO_INCREMENT PRIMARY KEY,
+CREATE TABLE breed(
+	breedId			integer 	AUTO_INCREMENT PRIMARY KEY,
     specieId			integer,
     userId				integer		NOT NULL,
-    eggTypeName			varchar(63)	NOT NULL,
+    breedName			varchar(63)	NOT NULL,
+    averageWeight		double		NOT NULL,
+    commonDisease		varchar(255),
+    growthTime			time		NOT NULL,
     imageSrc			varchar(1027),
     status 				boolean		NOT NULL
 );
@@ -96,13 +101,14 @@ CREATE TABLE importReceipt(
     facilityId	integer			NOT NULL,
     importDate	datetime		NOT NULL,
     total		decimal(15,2)	NOT NULL,
+    paid		decimal(15,2)	NOT NULL,
     status		boolean			NOT NULL
 );
 
-CREATE TABLE importDetail(
-	importDetailId	integer			AUTO_INCREMENT PRIMARY KEY,
+CREATE TABLE eggBatch(
+	eggBatchId	integer			AUTO_INCREMENT PRIMARY KEY,
 	importId		integer			NOT NULL,
-	eggTypeId		integer			NOT NULL,
+	breedId		integer			NOT NULL,
     amount			integer 		NOT NULL,
     price			decimal(15,2)	NOT NULL
 );
@@ -114,6 +120,7 @@ CREATE TABLE exportReceipt(
     facilityId	integer			NOT NULL,
     exportDate	datetime		NOT NULL,
     total		decimal(15,2)	NOT NULL,
+    paid		decimal(15,2)	NOT NULL,
     status		boolean			NOT NULL
 );
 
@@ -139,7 +146,7 @@ CREATE TABLE machine(
 
 CREATE TABLE eggProduct(
 	productId			integer	AUTO_INCREMENT PRIMARY KEY,
-	importDetailId		integer	NOT NULL,
+	eggBatchId		integer	NOT NULL,
     incubationPhaseId	integer	NOT NULL,
     incubationDate		datetime,
     amount				integer NOT NULL,
@@ -196,17 +203,21 @@ ADD FOREIGN KEY (userId) 		REFERENCES user(userId);
 
 ALTER TABLE user
 ADD FOREIGN KEY (roleId) 		REFERENCES userRole(roleId),
-ADD	FOREIGN KEY (facilityId) 	REFERENCES facility(facilityId);
+ADD	FOREIGN KEY (facilityId) 	REFERENCES facility(facilityId),
+ADD CHECK (salary >= 0);
 
 ALTER TABLE specie
-ADD FOREIGN KEY (userId) 		REFERENCES user(userId);
+ADD FOREIGN KEY (userId) 		REFERENCES user(userId),
+ADD CHECK (incubationPeriod > 0);
 
-ALTER TABLE eggType
+ALTER TABLE breed
 ADD FOREIGN KEY (specieId) 		REFERENCES specie(specieId),
 ADD FOREIGN KEY (userId) 		REFERENCES user(userId);
 
 ALTER TABLE incubationPhase
-ADD FOREIGN KEY (specieId)		REFERENCES specie(specieId);
+ADD FOREIGN KEY (specieId)		REFERENCES specie(specieId),
+ADD CHECK (averageWeight > 0),
+ADD CHECK (growthTime > 0);
 
 ALTER TABLE supplier
 ADD FOREIGN KEY (userId) 		REFERENCES user(userId);
@@ -217,39 +228,60 @@ ADD FOREIGN KEY (userId) 		REFERENCES user(userId);
 ALTER TABLE importReceipt
 ADD FOREIGN KEY (supplierId) 	REFERENCES supplier(supplierId),
 ADD FOREIGN KEY (userId) 		REFERENCES user(userId),
-ADD FOREIGN KEY (facilityId)	REFERENCES facility(facilityId);
+ADD FOREIGN KEY (facilityId)	REFERENCES facility(facilityId),
+ADD CHECK (total >= 0),
+ADD CHECK (paid >= 0);
 
-ALTER TABLE importDetail
+ALTER TABLE eggBatch
 ADD FOREIGN KEY (importId)		REFERENCES importReceipt(importId),
-ADD FOREIGN KEY (eggTypeId)		REFERENCES eggType(eggTypeId);
+ADD FOREIGN KEY (breedId)		REFERENCES breed(breedId),
+ADD CHECK (amount > 0),
+ADD CHECK (price > 0);
 
 ALTER TABLE exportReceipt
 ADD FOREIGN KEY (customerId) 	REFERENCES customer(customerId),
 ADD FOREIGN KEY (userId) 		REFERENCES user(userId),
-ADD FOREIGN KEY (facilityId)	REFERENCES facility(facilityId);
+ADD FOREIGN KEY (facilityId)	REFERENCES facility(facilityId),
+ADD CHECK (total >= 0),
+ADD CHECK (paid >= 0);
 
 ALTER TABLE exportDetail
 ADD FOREIGN KEY (exportId)		REFERENCES exportReceipt(exportId),
-ADD FOREIGN KEY (productId) 	REFERENCES eggProduct(productId);
+ADD FOREIGN KEY (productId) 	REFERENCES eggProduct(productId),
+ADD CHECK (price > 0),
+ADD CHECK (vaccinePrice >= 0),
+ADD CHECK (amount > 0);
 
 ALTER TABLE machine
 ADD FOREIGN KEY (machineTypeId)	REFERENCES machineType(machineTypeId),
-ADD FOREIGN KEY (facilityId)	REFERENCES facility(facilityId);
+ADD FOREIGN KEY (facilityId)	REFERENCES facility(facilityId),
+ADD CHECK (maxCapacity >= 0),
+ADD CHECK (curCapacity >= 0);
 
 ALTER TABLE eggProduct
-ADD FOREIGN KEY (importDetailId)	REFERENCES importDetail(importDetailId),
+ADD FOREIGN KEY (eggBatchId)	REFERENCES eggBatch(eggBatchId),
 ADD FOREIGN KEY (incubationPhaseId)	REFERENCES incubationPhase(incubationPhaseId);
 
 ALTER TABLE eggLocation
 ADD FOREIGN KEY (productId)		REFERENCES eggProduct(productId),
-ADD FOREIGN KEY (machineId)		REFERENCES machine(machineId);
+ADD FOREIGN KEY (machineId)		REFERENCES machine(machineId),
+ADD CHECK (amount > 0);
 
 ALTER TABLE salary
-ADD FOREIGN KEY (userId)		REFERENCES user(userId);
+ADD FOREIGN KEY (userId)		REFERENCES user(userId),
+ADD CHECK (baseSalary > 0),
+ADD CHECK (bonus >= 0),
+ADD CHECK (fine >= 0);
 
 ALTER TABLE cost
 ADD FOREIGN KEY (userId)		REFERENCES user(userId),
-ADD FOREIGN KEY (facilityId)	REFERENCES facility(facilityId);
+ADD FOREIGN KEY (facilityId)	REFERENCES facility(facilityId),
+ADD CHECK (costAmount >= 0);
+
+ALTER TABLE subscription
+ADD CHECK (cost >= 0),
+ADD CHECK (duration >= 0),
+ADD CHECK (machineQuota >= 0);
 
 ALTER TABLE userSubsription
 ADD FOREIGN KEY (facilityId)	REFERENCES facility(facilityId),
