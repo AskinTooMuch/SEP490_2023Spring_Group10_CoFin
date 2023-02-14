@@ -172,6 +172,7 @@ CREATE TABLE salary(
     bonus		decimal(15,2),
     fine		decimal(15,2),
 	issueDate	date			NOT NULL,
+    note		varchar(255),
     status		boolean 		NOT NULL
 );
 
@@ -182,6 +183,7 @@ CREATE TABLE cost(
     costItem	varchar(63) 	NOT NULL,
     costAmount	decimal(15,2) 	NOT NULL,
     issueDate	datetime		NOT NULL,
+    note		varchar(255),
     status 		boolean 		NOT NULL
 );
 
@@ -311,33 +313,35 @@ VALUES 	(1, 1, 'Gà', 22, 1),
 -- incubationPhase
 INSERT INTO incubationPhase(specieId, phaseNumber, phasePeriod, phaseDescription, status)
 VALUES 	(1, 0, 0,'Trứng vỡ/dập', 1),
-		(1, 1, 3,'Trứng trắng/tròn, trứng không có phôi', 1),
-		(1, 2, 13,'Trứng loãng/tàu, phôi chết non', 1),
-		(1, 3, 14,'Trứng lộn', 1),
-		(1, 4, 19,'Trứng đang nở', 1),
-		(1, 5, 22,'Trứng tắc', 1),
-		(1, 6, 22,'Con nở', 1),
-		(1, 7, 22,'Con đực', 1),
-		(1, 8, 22,'Con cái', 1),
+		(1, 1, 0,'Trứng đang ấp', 1),
+		(1, 2, 3,'Trứng trắng/tròn, trứng không có phôi', 1),
+		(1, 3, 13,'Trứng loãng/tàu, phôi chết non', 1),
+		(1, 4, 14,'Trứng lộn', 1),
+		(1, 5, 19,'Trứng đang nở', 1),
+		(1, 6, 21,'Trứng tắc', 1),
+		(1, 7, 21,'Con nở', 1),
+		(1, 8, 21,'Con đực', 1),
+		(1, 9, 21,'Con cái', 1),
 		(2, 0, 0,'Trứng vỡ/dập', 1),
-		(2, 1, 3,'Trứng trắng/tròn, trứng không có phôi', 1),
-		(2, 2, 17,'Trứng loãng/tàu, phôi chết non', 1),
-		(2, 3, 18,'Trứng lộn', 1),
-		(2, 4, 28,'Trứng đang nở', 1),
-		(2, 5, 31,'Trứng tắc', 1),
-		(2, 6, 31,'Con nở', 1),
-		(2, 7, 31,'Con đực', 1),
-		(2, 8, 31,'Con cái', 1),
+        (2, 1, 0,'Trứng đang ấp', 1),
+		(2, 2, 3,'Trứng trắng/tròn, trứng không có phôi', 1),
+		(2, 3, 17,'Trứng loãng/tàu, phôi chết non', 1),
+		(2, 4, 18,'Trứng lộn', 1),
+		(2, 5, 28,'Trứng đang nở', 1),
+		(2, 6, 30,'Trứng tắc', 1),
+		(2, 7, 30,'Con nở', 1),
+		(2, 8, 30,'Con đực', 1),
+		(2, 9, 30,'Con cái', 1),
 		(3, 0, 0,'Trứng vỡ/dập', 1),
-		(3, 1, 3,'Trứng trắng/tròn, trứng không có phôi', 1),
-		(3, 2, 17,'Trứng loãng/tàu, phôi chết non', 1),
-		(3, 3, 18,'Trứng lộn', 1),
-		(3, 4, 32,'Trứng đang nở', 1),
-		(3, 5, 36,'Trứng tắc', 1),
-		(3, 6, 36,'Con nở', 1),
-		(3, 7, 36,'Con đực', 1),
-		(3, 8, 36,'Con cái', 1);
-
+        (3, 1, 0,'Trứng đang ấp', 1),
+		(3, 2, 3,'Trứng trắng/tròn, trứng không có phôi', 1),
+		(3, 3, 17,'Trứng loãng/tàu, phôi chết non', 1),
+		(3, 4, 18,'Trứng lộn', 1),
+		(3, 5, 32,'Trứng đang nở', 1),
+		(3, 6, 35,'Trứng tắc', 1),
+		(3, 7, 35,'Con nở', 1),
+		(3, 8, 35,'Con đực', 1),
+		(3, 9, 35,'Con cái', 1);
 -- machineType
 INSERT INTO machineType(machineTypeId, machineTypeName, description, status)
 VALUES 	(1, 'Máy ấp', 'Máy dùng cho giai đoạn vừa mới ấp cho tới khi sắp nở, nhiệt cao, sức chứa cao', 1),
