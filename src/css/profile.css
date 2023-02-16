@@ -1,0 +1,33 @@
+.head{
+    padding: 20px;
+    border-bottom: 1px black;
+    text-align: center;
+}
+
+
+.modal-body{
+    border:none;
+}
+
+.modal-footer{
+    display: inline-flex;
+}
+
+label{
+    font-size: large;
+    color: black;
+}
+.card-header{
+    background-color: #52565B;
+    color: white;
+  }
+  
+.card-body{
+    background-color: #333333;
+    color: white;
+  }
+
+  h3{
+    text-align: center;
+    padding: 10px;
+  }

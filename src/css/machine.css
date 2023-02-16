@@ -1,0 +1,67 @@
+.col-md-1 {
+    display: inline-flex;
+}
+
+.btn-light {
+    width: 10%;
+    border-radius: 50px;
+    border: 1px grey solid;
+}
+
+.btn-light:hover {
+    background-color: black;
+    color: white;
+}
+
+.input-group-prepend button {
+    border: none;
+}
+
+.filter {
+    display: inline-flex;
+}
+
+p {
+    padding: 10px;
+}
+
+.table {
+    text-align: center;
+}
+
+.text-green {
+    color: green;
+    font-weight: bold;
+}
+
+.text-red {
+    color: red;
+    font-weight: bold;
+}
+
+.trclick {
+    cursor: pointer;
+}
+
+tbody :hover{
+    background-color: lightblue;
+}
+
+tbody tr ::after :hover {
+    background-color: grey;
+}
+
+.col-md-4 .button .btn{
+    width: 20%;
+    float: right;
+    margin: 15px;
+}
+
+.detailbody{
+    background-color: #EAE5E5;
+    padding: 20px;
+}
+
+.machineborder{
+    padding: 10px;
+}
