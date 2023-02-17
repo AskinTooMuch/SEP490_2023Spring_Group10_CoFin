@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { useNavigate } from "react-router-dom";
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import SearchIcon from '@mui/icons-material/Search';
 import ImportExportIcon from '@mui/icons-material/ImportExport';
@@ -10,11 +9,7 @@ const Species = () => {
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
-    let navigate = useNavigate(); 
-    const routeChange = () =>{ 
-      let path = '/supplierdetail'; 
-      navigate(path);
-    }
+    
     return(
         <>
         <nav className="navbar justify-content-between">
@@ -24,13 +19,21 @@ const Species = () => {
             aria-labelledby="contained-modal-title-vcenter"
             centered >
             <Modal.Header closeButton onClick={handleClose}>
-              <Modal.Title>Thêm máy</Modal.Title>
+              <Modal.Title>Thêm loài mới</Modal.Title>
             </Modal.Header>
             <Modal.Body>
               <div className="changepass">
                 <div className="row">
                   <div className="col-md-6 ">
-                    <p>Tên máy<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
+                    <p>Tên loài<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
+                  </div>
+                  <div className="col-md-6">
+                    <input />
+                  </div>
+                </div>
+                <div className="row">
+                  <div className="col-md-6 ">
+                    <p>Thời gian ấp lần 1<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                   </div>
                   <div className="col-md-6">
                     <input />
@@ -38,20 +41,23 @@ const Species = () => {
                 </div>
                 <div className="row">
                   <div className="col-md-6">
-                    <p>Loại máy<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
+                    <p>Thời gian ấp lần 2<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                   </div>
                   <div className="col-md-6">
-                    <select class="form-select" aria-label="Default select example">
-                      <option selected>Open this select menu</option>
-                      <option value="1" >Oneg</option>
-                      <option value="2">Two</option>
-                      <option value="3">Three</option>
-                    </select>
+                    <input />
                   </div>
                 </div>
                 <div className="row">
+                  <div className="col-md-6 ">
+                    <p>Thời gian ấp lần 3<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
+                  </div>
                   <div className="col-md-6">
-                    <p>Sức chứa<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
+                    <input />
+                  </div>
+                </div>
+                <div className="row">
+                  <div className="col-md-6 ">
+                    <p>Thời gian nở<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                   </div>
                   <div className="col-md-6">
                     <input />
@@ -66,7 +72,7 @@ const Species = () => {
                 Huỷ
               </Button>
 
-              <Button variant="dark" style={{ width: "30%" }} className="col-md-6" onClick={handleClose}>
+              <Button variant="success" style={{ width: "20%" }} className="col-md-6" onClick={handleClose}>
                 Tạo
               </Button>
 
@@ -97,7 +103,7 @@ const Species = () => {
               </tr>
             </thead>
             <tbody>
-              <tr className='trclick' onClick={routeChange}>
+              <tr className='trclick' >
 
                 <th scope="row">1</th>
                 <td>Gà</td>

@@ -5,6 +5,7 @@ import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Species from './Species';
+import Breed from './Breed';
 function Egg(props) {
   const { children, value, index, ...other } = props;
 
@@ -58,7 +59,7 @@ export default function BasicTabs() {
         <Species/>
       </Egg>
       <Egg value={value} index={1}>
-        Item Two
+        <Breed/>
       </Egg>
       <Egg value={value} index={2}>
         z

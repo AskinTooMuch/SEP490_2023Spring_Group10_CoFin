@@ -11,6 +11,7 @@ import Profile from './components/Profile';
 import Order from './components/Order';
 import Machine from './components/Machine'
 import Egg from './components/Eggs'
+import BreedDetails from './components/BreedDetails'
 import MachineDetails from './components/MachineDetails'
 import SupplierDetails from './components/SupplierDetails'
 import Subscription from './components/Subscription';
@@ -23,6 +24,7 @@ function App() {
           <Route path="/subcribe" element={<Subscription />} />
           <Route path="/egg" element={<Egg />} />
           <Route path="/machine" element={<Machine />} />
+          <Route path="/breeddetail" element={<BreedDetails />} />
           <Route path="/machinedetail" element={<MachineDetails />} />
           <Route path="/supplierdetail" element={<SupplierDetails />} />
           <Route path="/order" element={<Order />} />
