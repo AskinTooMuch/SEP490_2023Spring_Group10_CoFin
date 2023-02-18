@@ -59,6 +59,7 @@ public class AuthController {
         user.setEmail(signUpDTO.getEmail());
 
         // demo infor
+        user.setFacilityId(Long.parseLong("1"));
         String sDate1="31-12-1998";
         Date date1 = null;
         try {
@@ -70,7 +71,8 @@ public class AuthController {
         user.setDob(date1);
         user.setPhone("0123456789");
         user.setAddress("hai duong");
-        user.setStatus(Long.parseLong("1"));
+        user.setSalary(999.F);
+        user.setStatus(true);
 
         //Encode password
         user.setPassword(passwordEncoder.encode(signUpDTO.getPassword()));

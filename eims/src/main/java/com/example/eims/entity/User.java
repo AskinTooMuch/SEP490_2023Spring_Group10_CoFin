@@ -40,7 +40,7 @@ public class User {
     @Column(name = "address")
     private String address;
     @Column(name = "status")
-    private Long status;
+    private boolean status;
 
 /*    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "user_roles",
