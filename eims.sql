@@ -11,14 +11,14 @@ USE eims;
 
 -- Create all tables with no foreign keys.
 CREATE TABLE userRole(
-	roleId 		integer 	AUTO_INCREMENT PRIMARY KEY,
+	role_id 		integer 	AUTO_INCREMENT PRIMARY KEY,
     roleName 	varchar(63) NOT NULL,
     status		boolean		NOT NULL
 );
 
 CREATE TABLE facility(
-	facilityId					integer 	AUTO_INCREMENT PRIMARY KEY,
-    userId						integer		NOT NULL,
+	facility_id					integer 	AUTO_INCREMENT PRIMARY KEY,
+    user_id						integer		NOT NULL,
     facilityName				varchar(63) NOT NULL,
     facilityAddress				varchar(63) NOT NULL,
     facilityFoundDate			date 		NOT NULL,
@@ -28,9 +28,9 @@ CREATE TABLE facility(
 );
 
 CREATE TABLE user(
-	userId		integer 		AUTO_INCREMENT PRIMARY KEY,
-    roleId		integer			NOT NULL,
-    facilityId	integer,
+	user_id		integer 		AUTO_INCREMENT PRIMARY KEY,
+    role_id		integer			NOT NULL,
+    facility_id	integer,
     userName	varchar(63)		NOT NULL,
     dob			date			NOT NULL,
     phone		varchar(15)		NOT NULL,
@@ -43,7 +43,7 @@ CREATE TABLE user(
 
 CREATE TABLE specie(
 	specieId	integer		AUTO_INCREMENT PRIMARY KEY,
-    userId		integer		NOT NULL,
+    user_id		integer		NOT NULL,
     specieName	varchar(63) NOT NULL,
     incubationPeriod	integer,
     status		boolean		NOT NULL
@@ -52,7 +52,7 @@ CREATE TABLE specie(
 CREATE TABLE breed(
 	breedId			integer 	AUTO_INCREMENT PRIMARY KEY,
     specieId			integer,
-    userId				integer		NOT NULL,
+    user_id				integer		NOT NULL,
     breedName			varchar(63)	NOT NULL,
     averageWeight		double		NOT NULL,
     commonDisease		varchar(255),
@@ -79,7 +79,7 @@ CREATE TABLE machineType(
 
 CREATE TABLE supplier(
 	supplierId		integer 		AUTO_INCREMENT PRIMARY KEY,
-    userId			integer			NOT NULL,
+    user_id			integer			NOT NULL,
     supplierName	varchar(63)		NOT NULL,
     supplierPhone	varchar(15)		NOT NULL,
     supplierAddress	varchar(255)	NOT NULL,
@@ -89,7 +89,7 @@ CREATE TABLE supplier(
 
 CREATE TABLE customer(
 	customerId		integer 	AUTO_INCREMENT PRIMARY KEY,
-    userId			integer		NOT NULL,
+    user_id			integer		NOT NULL,
     customerName	varchar(63)	NOT NULL,
     customerPhone	varchar(15),
     customerAddress	varchar(127),
@@ -100,8 +100,8 @@ CREATE TABLE customer(
 CREATE TABLE importReceipt(
 	importId	integer			AUTO_INCREMENT PRIMARY KEY,
     supplierId	integer			NOT NULL,
-    userId		integer			NOT NULL,	-- Importer
-    facilityId	integer			NOT NULL,
+    user_id		integer			NOT NULL,	-- Importer
+    facility_id	integer			NOT NULL,
     importDate	datetime		NOT NULL,
     total		decimal(15,2)	NOT NULL,
     paid		decimal(15,2)	NOT NULL,
@@ -119,8 +119,8 @@ CREATE TABLE eggBatch(
 CREATE TABLE exportReceipt(
 	exportId	integer			AUTO_INCREMENT PRIMARY KEY,
     customerId	integer			NOT NULL,
-    userId		integer			NOT NULL,	-- Exporter
-    facilityId	integer			NOT NULL,
+    user_id		integer			NOT NULL,	-- Exporter
+    facility_id	integer			NOT NULL,
     exportDate	datetime		NOT NULL,
     total		decimal(15,2)	NOT NULL,
     paid		decimal(15,2)	NOT NULL,
@@ -138,7 +138,7 @@ CREATE TABLE exportDetail(
 CREATE TABLE machine(
 	machineId		integer		AUTO_INCREMENT PRIMARY KEY,
     machineTypeId	integer 	NOT NULL,
-    facilityId		integer		NOT NULL,
+    facility_id		integer		NOT NULL,
     machineName		varchar(63)	NOT NULL,
     maxCapacity		integer		NOT NULL,
     curCapacity		integer		NOT NULL,
@@ -167,7 +167,7 @@ CREATE TABLE eggLocation(
 
 CREATE TABLE salary(
 	salaryId	integer			AUTO_INCREMENT PRIMARY KEY,
-	userId		integer			NOT NULL,
+	user_id		integer			NOT NULL,
     baseSalary	decimal(15,2)	NOT NULL,
     bonus		decimal(15,2),
     fine		decimal(15,2),
@@ -178,8 +178,8 @@ CREATE TABLE salary(
 
 CREATE TABLE cost(
 	costId 		integer 		AUTO_INCREMENT PRIMARY KEY,
-    userId		integer			NOT NULL,
-    facilityId	integer 		NOT NULL,
+    user_id		integer			NOT NULL,
+    facility_id	integer 		NOT NULL,
     costItem	varchar(63) 	NOT NULL,
     costAmount	decimal(15,2) 	NOT NULL,
     issueDate	datetime		NOT NULL,
@@ -196,7 +196,7 @@ CREATE TABLE subscription(
 );
 
 CREATE TABLE userSubsription(
-    facilityId		integer		NOT NULL,
+    facility_id		integer		NOT NULL,
     subscriptionId	integer 	NOT NULL,
     subscribeDate	datetime	NOT NULL,
     status			boolean		NOT NULL
@@ -204,20 +204,20 @@ CREATE TABLE userSubsription(
 
 -- Add the foreign keys and references to created tables.
 ALTER TABLE facility 
-ADD FOREIGN KEY (userId) 		REFERENCES user(userId);
+ADD FOREIGN KEY (user_id) 		REFERENCES user(user_id);
 
 ALTER TABLE user
-ADD FOREIGN KEY (roleId) 		REFERENCES userRole(roleId),
-ADD	FOREIGN KEY (facilityId) 	REFERENCES facility(facilityId),
+ADD FOREIGN KEY (role_id) 		REFERENCES userRole(role_id),
+ADD	FOREIGN KEY (facility_id) 	REFERENCES facility(facility_id),
 ADD CHECK (salary >= 0);
 
 ALTER TABLE specie
-ADD FOREIGN KEY (userId) 		REFERENCES user(userId),
+ADD FOREIGN KEY (user_id) 		REFERENCES user(user_id),
 ADD CHECK (incubationPeriod > 0);
 
 ALTER TABLE breed
 ADD FOREIGN KEY (specieId) 		REFERENCES specie(specieId),
-ADD FOREIGN KEY (userId) 		REFERENCES user(userId),
+ADD FOREIGN KEY (user_id) 		REFERENCES user(user_id),
 ADD CHECK (averageWeight > 0),
 ADD CHECK (growthTime > 0);
 
@@ -225,15 +225,15 @@ ALTER TABLE incubationPhase
 ADD FOREIGN KEY (specieId)		REFERENCES specie(specieId);
 
 ALTER TABLE supplier
-ADD FOREIGN KEY (userId) 		REFERENCES user(userId);
+ADD FOREIGN KEY (user_id) 		REFERENCES user(user_id);
 
 ALTER TABLE customer
-ADD FOREIGN KEY (userId) 		REFERENCES user(userId);
+ADD FOREIGN KEY (user_id) 		REFERENCES user(user_id);
 
 ALTER TABLE importReceipt
 ADD FOREIGN KEY (supplierId) 	REFERENCES supplier(supplierId),
-ADD FOREIGN KEY (userId) 		REFERENCES user(userId),
-ADD FOREIGN KEY (facilityId)	REFERENCES facility(facilityId),
+ADD FOREIGN KEY (user_id) 		REFERENCES user(user_id),
+ADD FOREIGN KEY (facility_id)	REFERENCES facility(facility_id),
 ADD CHECK (total >= 0),
 ADD CHECK (paid >= 0);
 
@@ -245,8 +245,8 @@ ADD CHECK (price > 0);
 
 ALTER TABLE exportReceipt
 ADD FOREIGN KEY (customerId) 	REFERENCES customer(customerId),
-ADD FOREIGN KEY (userId) 		REFERENCES user(userId),
-ADD FOREIGN KEY (facilityId)	REFERENCES facility(facilityId),
+ADD FOREIGN KEY (user_id) 		REFERENCES user(user_id),
+ADD FOREIGN KEY (facility_id)	REFERENCES facility(facility_id),
 ADD CHECK (total >= 0),
 ADD CHECK (paid >= 0);
 
@@ -259,7 +259,7 @@ ADD CHECK (amount > 0);
 
 ALTER TABLE machine
 ADD FOREIGN KEY (machineTypeId)	REFERENCES machineType(machineTypeId),
-ADD FOREIGN KEY (facilityId)	REFERENCES facility(facilityId),
+ADD FOREIGN KEY (facility_id)	REFERENCES facility(facility_id),
 ADD CHECK (maxCapacity >= 0),
 ADD CHECK (curCapacity >= 0);
 
@@ -273,14 +273,14 @@ ADD FOREIGN KEY (machineId)		REFERENCES machine(machineId),
 ADD CHECK (amount > 0);
 
 ALTER TABLE salary
-ADD FOREIGN KEY (userId)		REFERENCES user(userId),
+ADD FOREIGN KEY (user_id)		REFERENCES user(user_id),
 ADD CHECK (baseSalary > 0),
 ADD CHECK (bonus >= 0),
 ADD CHECK (fine >= 0);
 
 ALTER TABLE cost
-ADD FOREIGN KEY (userId)		REFERENCES user(userId),
-ADD FOREIGN KEY (facilityId)	REFERENCES facility(facilityId),
+ADD FOREIGN KEY (user_id)		REFERENCES user(user_id),
+ADD FOREIGN KEY (facility_id)	REFERENCES facility(facility_id),
 ADD CHECK (costAmount >= 0);
 
 ALTER TABLE subscription
@@ -289,23 +289,23 @@ ADD CHECK (duration >= 0),
 ADD CHECK (machineQuota >= 0);
 
 ALTER TABLE userSubsription
-ADD FOREIGN KEY (facilityId)	REFERENCES facility(facilityId),
+ADD FOREIGN KEY (facility_id)	REFERENCES facility(facility_id),
 ADD FOREIGN KEY (subscriptionId)REFERENCES subscription(subscriptionId);
 
 -- Insert Data into tables
 -- userRole
-INSERT INTO userRole (roleId, roleName, status)
+INSERT INTO userRole (role_id, roleName, status)
 VALUES 	(1, 'User', 1),
 		(2, 'Owner', 1),
 		(3, 'Employee', 1),
 		(4, 'Moderator', 1),
 		(5, 'Admin', 0);
 -- user
-INSERT INTO user(userId, roleId, userName, dob, phone, password, status)
-VALUES 	(1, '5', 'Default Data pack', '2001-12-16', '0969044714', 'a', 0);
+INSERT INTO user(user_id, role_id, userName, dob, phone, password, status)
+VALUES 	(1, '5', 'Default Data pack', '2001-12-16', '0969696696', 'a', 0);
 
 -- specie
-INSERT INTO specie(specieId, userId, specieName, incubationPeriod, status)
+INSERT INTO specie(specieId, user_id, specieName, incubationPeriod, status)
 VALUES 	(1, 1, 'Gà', 22, 1),
 		(2, 1, 'Vịt', 31, 1),
 		(3, 1, 'Ngan', 36, 1);

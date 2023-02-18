@@ -25,7 +25,7 @@ public class User {
     private Long roleId;
     @Column(name = "facilityId")
     private Long facilityId;
-    @Column(name = "userName")
+    @Column(name = "username")
     private String username;
     @Column(name = "dob")
     private Date dob;
