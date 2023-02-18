@@ -1,8 +1,9 @@
--- Version 0.3.0: Add data
+-- Version 0.4.0: Change attribute and table name from camelCase to camel_case
+-- V0.3.0: Add data
 -- V0.2.0: Add foreign key constraint
--- V0.2.1: Change attribute name, re-route foreign key constraint
+-- V0.2.1: Change attribute _name, re-route foreign key constraint
 -- V0.2.2: Add CHECK constraint
--- Last update: 11/02/2023
+-- Last up_date: 18/02/2023
 -- Script for generating EIMS - Eggs Incubating Management System.
 -- Check if database already exist. If yes then drop the database to ensure the script runs successfully with no variations.
 DROP DATABASE IF EXISTS eims;
@@ -10,195 +11,195 @@ CREATE DATABASE eims;
 USE eims;
 
 -- Create all tables with no foreign keys.
-CREATE TABLE userRole(
-	role_id 		integer 	AUTO_INCREMENT PRIMARY KEY,
-    roleName 	varchar(63) NOT NULL,
+CREATE TABLE user_role(
+	role_id 	integer 	AUTO_INCREMENT PRIMARY KEY,
+    role_name 	varchar(63) NOT NULL,
     status		boolean		NOT NULL
 );
 
 CREATE TABLE facility(
-	facility_id					integer 	AUTO_INCREMENT PRIMARY KEY,
-    user_id						integer		NOT NULL,
-    facilityName				varchar(63) NOT NULL,
-    facilityAddress				varchar(63) NOT NULL,
-    facilityFoundDate			date 		NOT NULL,
-    subscriptionExpirationDate	datetime,
-    hotline						varchar(15)	NOT NULL,
-    status						boolean		NOT NULL
+	facility_id						integer 	AUTO_INCREMENT PRIMARY KEY,
+    user_id							integer		NOT NULL,
+    facility_name					varchar(63) NOT NULL,
+    facility_address				varchar(63) NOT NULL,
+    facility_found_date				date 		NOT NULL,
+    subscription_expiration_date	datetime,
+    hotline							varchar(15)	NOT NULL,
+    status							boolean		NOT NULL
 );
 
 CREATE TABLE user(
 	user_id		integer 		AUTO_INCREMENT PRIMARY KEY,
     role_id		integer			NOT NULL,
     facility_id	integer,
-    userName	varchar(63)		NOT NULL,
+    user_name	varchar(63)		NOT NULL,
     dob			date			NOT NULL,
-    phone		varchar(15)		NOT NULL,
-    email		varchar(127),
+    _phone		varchar(15)		NOT NULL,
+    e_mail		varchar(127),
     salary		decimal(15,2),
     password	varchar(127)	NOT NULL,
-    address		varchar(127),
+    _address	varchar(127),
 	status		boolean			NOT NULL
 );
 
 CREATE TABLE specie(
-	specieId	integer		AUTO_INCREMENT PRIMARY KEY,
-    user_id		integer		NOT NULL,
-    specieName	varchar(63) NOT NULL,
-    incubationPeriod	integer,
-    status		boolean		NOT NULL
+	specie_id			integer		AUTO_INCREMENT PRIMARY KEY,
+    user_id				integer		NOT NULL,
+    specie_name			varchar(63) NOT NULL,
+    incubation_period	integer,
+    status				boolean		NOT NULL
 );
 
 CREATE TABLE breed(
-	breedId			integer 	AUTO_INCREMENT PRIMARY KEY,
-    specieId			integer,
+	breed_id			integer 	AUTO_INCREMENT PRIMARY KEY,
+    specie_id			integer,
     user_id				integer		NOT NULL,
-    breedName			varchar(63)	NOT NULL,
-    averageWeight		double		NOT NULL,
-    commonDisease		varchar(255),
-    growthTime			time		NOT NULL,
-    imageSrc			varchar(1027),
+    breed_name			varchar(63)	NOT NULL,
+    average_weight		double		NOT NULL,
+    common_disease		varchar(255),
+    growth_time			time		NOT NULL,
+    image_src			varchar(1027),
     status 				boolean		NOT NULL
 );
 
-CREATE TABLE incubationPhase(
-	incubationPhaseId 	integer 	AUTO_INCREMENT PRIMARY KEY,
-    specieId			integer		NOT NULL,
-    phaseNumber			integer		NOT NULL,
-    phasePeriod			integer		NOT NULL,
-    phaseDescription	varchar(255),		
+CREATE TABLE incubation_phase(
+	incubation_phase_id integer 	AUTO_INCREMENT PRIMARY KEY,
+    specie_id			integer		NOT NULL,
+    phase_number		integer		NOT NULL,
+    phase_period		integer		NOT NULL,
+    phase_description	varchar(255),		
     status				boolean 	NOT NULL
 );
 
-CREATE TABLE machineType(
-	machineTypeId	integer		AUTO_INCREMENT PRIMARY KEY,
-    machineTypeName	varchar(63)	NOT NULL,
-    description		varchar(255),
-    status			boolean		NOT NULL
+CREATE TABLE machine_type(
+	machine_type_id		integer		AUTO_INCREMENT PRIMARY KEY,
+    machine_type_name	varchar(63)	NOT NULL,
+    description			varchar(255),
+    status				boolean		NOT NULL
 );
 
 CREATE TABLE supplier(
-	supplierId		integer 		AUTO_INCREMENT PRIMARY KEY,
-    user_id			integer			NOT NULL,
-    supplierName	varchar(63)		NOT NULL,
-    supplierPhone	varchar(15)		NOT NULL,
-    supplierAddress	varchar(255)	NOT NULL,
-    supplierMail	varchar(127),
-    status			boolean		NOT NULL
+	supplier_id			integer 		AUTO_INCREMENT PRIMARY KEY,
+    user_id				integer			NOT NULL,
+    supplier_name		varchar(63)		NOT NULL,
+    supplier_phone		varchar(15)		NOT NULL,
+    supplier_address	varchar(255)	NOT NULL,
+    supplier_mail		varchar(127),
+    status				boolean		NOT NULL
 );
 
 CREATE TABLE customer(
-	customerId		integer 	AUTO_INCREMENT PRIMARY KEY,
-    user_id			integer		NOT NULL,
-    customerName	varchar(63)	NOT NULL,
-    customerPhone	varchar(15),
-    customerAddress	varchar(127),
-    customerMail	varchar(127),
-    status			boolean		NOT NULL
+	customer_id			integer 	AUTO_INCREMENT PRIMARY KEY,
+    user_id				integer		NOT NULL,
+    customer_name		varchar(63)	NOT NULL,
+    customer_phone		varchar(15),
+    customer_address	varchar(127),
+    customer_mail		varchar(127),
+    status				boolean		NOT NULL
 );
 
-CREATE TABLE importReceipt(
-	importId	integer			AUTO_INCREMENT PRIMARY KEY,
-    supplierId	integer			NOT NULL,
+CREATE TABLE import_receipt(
+	import_id	integer			AUTO_INCREMENT PRIMARY KEY,
+    supplier_id	integer			NOT NULL,
     user_id		integer			NOT NULL,	-- Importer
     facility_id	integer			NOT NULL,
-    importDate	datetime		NOT NULL,
+    import_date	datetime		NOT NULL,
     total		decimal(15,2)	NOT NULL,
     paid		decimal(15,2)	NOT NULL,
     status		boolean			NOT NULL
 );
 
-CREATE TABLE eggBatch(
-	eggBatchId	integer			AUTO_INCREMENT PRIMARY KEY,
-	importId		integer			NOT NULL,
-	breedId		integer			NOT NULL,
+CREATE TABLE egg_batch(
+	egg_batch_id	integer			AUTO_INCREMENT PRIMARY KEY,
+	import_id		integer			NOT NULL,
+	breed_id		integer			NOT NULL,
     amount			integer 		NOT NULL,
     price			decimal(15,2)	NOT NULL
 );
 
-CREATE TABLE exportReceipt(
-	exportId	integer			AUTO_INCREMENT PRIMARY KEY,
-    customerId	integer			NOT NULL,
+CREATE TABLE export_receipt(
+	export_id	integer			AUTO_INCREMENT PRIMARY KEY,
+    customer_id	integer			NOT NULL,
     user_id		integer			NOT NULL,	-- Exporter
     facility_id	integer			NOT NULL,
-    exportDate	datetime		NOT NULL,
+    export_date	datetime		NOT NULL,
     total		decimal(15,2)	NOT NULL,
     paid		decimal(15,2)	NOT NULL,
     status		boolean			NOT NULL
 );
 
-CREATE TABLE exportDetail(
-	exportId		integer			NOT NULL,
-    productId		integer			NOT NULL,
+CREATE TABLE export_detail(
+	export_id		integer			NOT NULL,
+    product_id		integer			NOT NULL,
     price			decimal(15,2)	NOT NULL,
-    vaccinePrice	decimal(15,2),
+    vaccine_price	decimal(15,2),
     amount			integer			NOT NULL
 );
 
 CREATE TABLE machine(
-	machineId		integer		AUTO_INCREMENT PRIMARY KEY,
-    machineTypeId	integer 	NOT NULL,
+	machine_id		integer		AUTO_INCREMENT PRIMARY KEY,
+    machine_type_id	integer 	NOT NULL,
     facility_id		integer		NOT NULL,
-    machineName		varchar(63)	NOT NULL,
-    maxCapacity		integer		NOT NULL,
-    curCapacity		integer		NOT NULL,
-    addedDate		date		NOT NULL,
+    machine_name	varchar(63)	NOT NULL,
+    max_capacity	integer		NOT NULL,
+    cur_capacity	integer		NOT NULL,
+    added_date		date		NOT NULL,
     active			boolean		NOT NULL,
     status			boolean		NOT NULL
 );
 
-CREATE TABLE eggProduct(
-	productId			integer	AUTO_INCREMENT PRIMARY KEY,
-	eggBatchId		integer	NOT NULL,
-    incubationPhaseId	integer	NOT NULL,
-    incubationDate		datetime,
+CREATE TABLE egg_product(
+	product_id			integer	AUTO_INCREMENT PRIMARY KEY,
+	egg_batch_id		integer	NOT NULL,
+    incubation_phase_id	integer	NOT NULL,
+    incubation_date		datetime,
     amount				integer NOT NULL,
-    curAmount			integer NOT NULL,
+    cur_amount			integer NOT NULL,
     status				boolean NOT NULL
 );
 
-CREATE TABLE eggLocation(
-	eggId		integer	AUTO_INCREMENT PRIMARY KEY,
-	productId	integer NOT NULL,
-    machineId	integer NOT NULL,
+CREATE TABLE egg_location(
+	egg_id		integer	AUTO_INCREMENT PRIMARY KEY,
+	product_id	integer NOT NULL,
+    machine_id	integer NOT NULL,
     amount		integer NOT NULL,
     status		boolean NOT NULL
 );
 
 CREATE TABLE salary(
-	salaryId	integer			AUTO_INCREMENT PRIMARY KEY,
+	salary_id	integer			AUTO_INCREMENT PRIMARY KEY,
 	user_id		integer			NOT NULL,
-    baseSalary	decimal(15,2)	NOT NULL,
+    base_salary	decimal(15,2)	NOT NULL,
     bonus		decimal(15,2),
     fine		decimal(15,2),
-	issueDate	date			NOT NULL,
+	issue_date	date			NOT NULL,
     note		varchar(255),
     status		boolean 		NOT NULL
 );
 
 CREATE TABLE cost(
-	costId 		integer 		AUTO_INCREMENT PRIMARY KEY,
+	cost_id 	integer 		AUTO_INCREMENT PRIMARY KEY,
     user_id		integer			NOT NULL,
     facility_id	integer 		NOT NULL,
-    costItem	varchar(63) 	NOT NULL,
-    costAmount	decimal(15,2) 	NOT NULL,
-    issueDate	datetime		NOT NULL,
+    cost_item	varchar(63) 	NOT NULL,
+    cost_amount	decimal(15,2) 	NOT NULL,
+    issue_date	datetime		NOT NULL,
     note		varchar(255),
     status 		boolean 		NOT NULL
 );
 
 CREATE TABLE subscription(
-	subscriptionId 	integer 		AUTO_INCREMENT PRIMARY KEY,
+	subscription_id integer 		AUTO_INCREMENT PRIMARY KEY,
     cost			decimal(15,2) 	NOT NULL,
     duration		integer			NOT NULL,
-    machineQuota	integer			NOT NULL,
+    machine_quota	integer			NOT NULL,
     status 			boolean			NOT NULL
 );
 
-CREATE TABLE userSubsription(
+CREATE TABLE user_subsription(
     facility_id		integer		NOT NULL,
-    subscriptionId	integer 	NOT NULL,
-    subscribeDate	datetime	NOT NULL,
+    subscription_id	integer 	NOT NULL,
+    subscribe_date	datetime	NOT NULL,
     status			boolean		NOT NULL
 );
 
@@ -207,22 +208,22 @@ ALTER TABLE facility
 ADD FOREIGN KEY (user_id) 		REFERENCES user(user_id);
 
 ALTER TABLE user
-ADD FOREIGN KEY (role_id) 		REFERENCES userRole(role_id),
+ADD FOREIGN KEY (role_id) 		REFERENCES user_role(role_id),
 ADD	FOREIGN KEY (facility_id) 	REFERENCES facility(facility_id),
 ADD CHECK (salary >= 0);
 
 ALTER TABLE specie
 ADD FOREIGN KEY (user_id) 		REFERENCES user(user_id),
-ADD CHECK (incubationPeriod > 0);
+ADD CHECK (incubation_period > 0);
 
 ALTER TABLE breed
-ADD FOREIGN KEY (specieId) 		REFERENCES specie(specieId),
+ADD FOREIGN KEY (specie_id) 		REFERENCES specie(specie_id),
 ADD FOREIGN KEY (user_id) 		REFERENCES user(user_id),
-ADD CHECK (averageWeight > 0),
-ADD CHECK (growthTime > 0);
+ADD CHECK (average_weight > 0),
+ADD CHECK (growth_time > 0);
 
-ALTER TABLE incubationPhase
-ADD FOREIGN KEY (specieId)		REFERENCES specie(specieId);
+ALTER TABLE incubation_phase
+ADD FOREIGN KEY (specie_id)		REFERENCES specie(specie_id);
 
 ALTER TABLE supplier
 ADD FOREIGN KEY (user_id) 		REFERENCES user(user_id);
@@ -230,88 +231,88 @@ ADD FOREIGN KEY (user_id) 		REFERENCES user(user_id);
 ALTER TABLE customer
 ADD FOREIGN KEY (user_id) 		REFERENCES user(user_id);
 
-ALTER TABLE importReceipt
-ADD FOREIGN KEY (supplierId) 	REFERENCES supplier(supplierId),
+ALTER TABLE import_receipt
+ADD FOREIGN KEY (supplier_id) 	REFERENCES supplier(supplier_id),
 ADD FOREIGN KEY (user_id) 		REFERENCES user(user_id),
 ADD FOREIGN KEY (facility_id)	REFERENCES facility(facility_id),
 ADD CHECK (total >= 0),
 ADD CHECK (paid >= 0);
 
-ALTER TABLE eggBatch
-ADD FOREIGN KEY (importId)		REFERENCES importReceipt(importId),
-ADD FOREIGN KEY (breedId)		REFERENCES breed(breedId),
+ALTER TABLE egg_batch
+ADD FOREIGN KEY (import_id)		REFERENCES import_receipt(import_id),
+ADD FOREIGN KEY (breed_id)		REFERENCES breed(breed_id),
 ADD CHECK (amount > 0),
 ADD CHECK (price > 0);
 
-ALTER TABLE exportReceipt
-ADD FOREIGN KEY (customerId) 	REFERENCES customer(customerId),
+ALTER TABLE export_receipt
+ADD FOREIGN KEY (customer_id) 	REFERENCES customer(customer_id),
 ADD FOREIGN KEY (user_id) 		REFERENCES user(user_id),
 ADD FOREIGN KEY (facility_id)	REFERENCES facility(facility_id),
 ADD CHECK (total >= 0),
 ADD CHECK (paid >= 0);
 
-ALTER TABLE exportDetail
-ADD FOREIGN KEY (exportId)		REFERENCES exportReceipt(exportId),
-ADD FOREIGN KEY (productId) 	REFERENCES eggProduct(productId),
+ALTER TABLE export_detail
+ADD FOREIGN KEY (export_id)		REFERENCES export_receipt(export_id),
+ADD FOREIGN KEY (product_id) 	REFERENCES egg_product(product_id),
 ADD CHECK (price > 0),
-ADD CHECK (vaccinePrice >= 0),
+ADD CHECK (vaccine_price >= 0),
 ADD CHECK (amount > 0);
 
 ALTER TABLE machine
-ADD FOREIGN KEY (machineTypeId)	REFERENCES machineType(machineTypeId),
+ADD FOREIGN KEY (machine_type_id)	REFERENCES machine_type(machine_type_id),
 ADD FOREIGN KEY (facility_id)	REFERENCES facility(facility_id),
-ADD CHECK (maxCapacity >= 0),
-ADD CHECK (curCapacity >= 0);
+ADD CHECK (max_capacity >= 0),
+ADD CHECK (cur_capacity >= 0);
 
-ALTER TABLE eggProduct
-ADD FOREIGN KEY (eggBatchId)	REFERENCES eggBatch(eggBatchId),
-ADD FOREIGN KEY (incubationPhaseId)	REFERENCES incubationPhase(incubationPhaseId);
+ALTER TABLE egg_product
+ADD FOREIGN KEY (egg_batch_id)	REFERENCES egg_batch(egg_batch_id),
+ADD FOREIGN KEY (incubation_phase_id)	REFERENCES incubation_phase(incubation_phase_id);
 
-ALTER TABLE eggLocation
-ADD FOREIGN KEY (productId)		REFERENCES eggProduct(productId),
-ADD FOREIGN KEY (machineId)		REFERENCES machine(machineId),
+ALTER TABLE egg_location
+ADD FOREIGN KEY (product_id)		REFERENCES egg_product(product_id),
+ADD FOREIGN KEY (machine_id)		REFERENCES machine(machine_id),
 ADD CHECK (amount > 0);
 
 ALTER TABLE salary
 ADD FOREIGN KEY (user_id)		REFERENCES user(user_id),
-ADD CHECK (baseSalary > 0),
+ADD CHECK (base_salary > 0),
 ADD CHECK (bonus >= 0),
 ADD CHECK (fine >= 0);
 
 ALTER TABLE cost
 ADD FOREIGN KEY (user_id)		REFERENCES user(user_id),
 ADD FOREIGN KEY (facility_id)	REFERENCES facility(facility_id),
-ADD CHECK (costAmount >= 0);
+ADD CHECK (cost_amount >= 0);
 
 ALTER TABLE subscription
 ADD CHECK (cost >= 0),
 ADD CHECK (duration >= 0),
-ADD CHECK (machineQuota >= 0);
+ADD CHECK (machine_quota >= 0);
 
-ALTER TABLE userSubsription
+ALTER TABLE user_subsription
 ADD FOREIGN KEY (facility_id)	REFERENCES facility(facility_id),
-ADD FOREIGN KEY (subscriptionId)REFERENCES subscription(subscriptionId);
+ADD FOREIGN KEY (subscription_id)REFERENCES subscription(subscription_id);
 
 -- Insert Data into tables
--- userRole
-INSERT INTO userRole (role_id, roleName, status)
+-- user_role
+INSERT INTO user_role (role_id, role_name, status)
 VALUES 	(1, 'User', 1),
 		(2, 'Owner', 1),
 		(3, 'Employee', 1),
 		(4, 'Moderator', 1),
 		(5, 'Admin', 0);
 -- user
-INSERT INTO user(user_id, role_id, userName, dob, phone, password, status)
+INSERT INTO user(user_id, role_id, user_name, dob, _phone, password, status)
 VALUES 	(1, '5', 'Default Data pack', '2001-12-16', '0969696696', 'a', 0);
 
 -- specie
-INSERT INTO specie(specieId, user_id, specieName, incubationPeriod, status)
+INSERT INTO specie(specie_id, user_id, specie_name, incubation_period, status)
 VALUES 	(1, 1, 'Gà', 22, 1),
 		(2, 1, 'Vịt', 31, 1),
 		(3, 1, 'Ngan', 36, 1);
 
--- incubationPhase
-INSERT INTO incubationPhase(specieId, phaseNumber, phasePeriod, phaseDescription, status)
+-- incubation_phase
+INSERT INTO incubation_phase(specie_id, phase_number, phase_period, phase_description, status)
 VALUES 	(1, 0, 0,'Trứng vỡ/dập', 1),
 		(1, 1, 0,'Trứng đang ấp', 1),
 		(1, 2, 3,'Trứng trắng/tròn, trứng không có phôi', 1),
@@ -342,13 +343,13 @@ VALUES 	(1, 0, 0,'Trứng vỡ/dập', 1),
 		(3, 7, 35,'Con nở', 1),
 		(3, 8, 35,'Con đực', 1),
 		(3, 9, 35,'Con cái', 1);
--- machineType
-INSERT INTO machineType(machineTypeId, machineTypeName, description, status)
+-- machine_type
+INSERT INTO machine_type(machine_type_id, machine_type_name, description, status)
 VALUES 	(1, 'Máy ấp', 'Máy dùng cho giai đoạn vừa mới ấp cho tới khi sắp nở, nhiệt cao, sức chứa cao', 1),
 		(2, 'Máy nở', 'Máy dùng cho giai đoạn từ trứng lộn đến khi nở ra con, nhiệt thấp hơn, sức chứa thấp hơn', 1);
 
 -- subscription
-INSERT INTO subscription(cost, duration, machineQuota, status)
+INSERT INTO subscription(cost, duration, machine_quota, status)
 VALUES 	(0, 30, 5, 1),
 		(500000, 30, 5, 1),
 		(1300000, 90, 5, 1),
