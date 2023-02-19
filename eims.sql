@@ -32,13 +32,13 @@ CREATE TABLE user(
 	user_id		integer 		AUTO_INCREMENT PRIMARY KEY,
     role_id		integer			NOT NULL,
     facility_id	integer,
-    user_name	varchar(63)		NOT NULL,
+    username	varchar(63)		NOT NULL,
     dob			date			NOT NULL,
-    _phone		varchar(15)		NOT NULL,
-    e_mail		varchar(127),
+    phone		varchar(15)		NOT NULL,
+    email		varchar(127),
     salary		decimal(15,2),
     password	varchar(127)	NOT NULL,
-    _address	varchar(127),
+    address	varchar(127),
 	status		boolean			NOT NULL
 );
 
@@ -296,14 +296,19 @@ ADD FOREIGN KEY (subscription_id)REFERENCES subscription(subscription_id);
 -- Insert Data into tables
 -- user_role
 INSERT INTO user_role (role_id, role_name, status)
-VALUES 	(1, 'User', 1),
-		(2, 'Owner', 1),
-		(3, 'Employee', 1),
-		(4, 'Moderator', 1),
-		(5, 'Admin', 0);
+VALUES 	(1, 'ROLE_USER', 1),
+		(2, 'ROLE_OWNER', 1),
+		(3, 'ROLE_EMPLOYEE', 1),
+		(4, 'ROLE_MODERATOR', 1),
+		(5, 'ROLE_ADMIN', 0);
 -- user
-INSERT INTO user(user_id, role_id, user_name, dob, _phone, password, status)
-VALUES 	(1, '5', 'Default Data pack', '2001-12-16', '0969696696', 'a', 0);
+INSERT INTO user(user_id, role_id, username, dob, phone, email, salary, password, address, status)
+VALUES 	(1, 5, 'Default Data pack', '2001-12-16', '0000000000','a@a.a', 0, 'a','nowhere', 0),
+		(2,	2,	'Nguyễn Chức', '2001-12-16', '0969044714',	'ownerchuc@gmail.com', 0, '$2a$10$Vp3h.q0WVd4LCt.jY4gbHe5bs2OKdQIa88oIFe7xR83m5UNRDaGPq',	'hải dương', 1),
+        (3,	2, 'Nguyễn Dương', '2001-01-01', '0852274855', 'ownerduong@gmail.com', 0, '$2a$10$UOEamoIHKWrb7BVNTOtZHebHBp6zPZ03STsKXDCZFD0BJusC9xFlO', 'hà nội', 1),
+		(4,	3, 'Dương Tùng', '2001-01-01', '0932321198', 'workertung@gmail.com', 0, '$2a$10$uRRgBmQCWBLgBsB4lImrguTBcHkx96MErC2fhvxmgUPDacoHPPr6W', 'hà nội', 1),
+		(5,	3, 'Vũ Dương', '2001-01-01', '0978815951', 'workerduong@gmail.com', 0, '$2a$10$NpyM9vyE2zQ7bTdEA7nYAeoirBlK5SqI/7v23kVQd7nCZq9nI.oUu', 'hải dương', 1),
+		(6, 4, 'Phạm Tuấn', '2001-01-01', '0985817104', 'moderatortuan@gmail.com', 0, '$2a$10$FNOLtGaY4coy0.CAHUxLpuBj9PIEO5J3/nqbORI8UmZuZd4eqARw2', 'hà nội', 1);
 
 -- specie
 INSERT INTO specie(specie_id, user_id, specie_name, incubation_period, status)

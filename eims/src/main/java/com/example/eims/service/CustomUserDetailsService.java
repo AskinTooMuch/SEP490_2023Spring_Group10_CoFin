@@ -1,7 +1,8 @@
 package com.example.eims.service;
 
+import com.example.eims.entity.UserRole;
 import com.example.eims.entity.User;
-import com.example.eims.repository.RoleRepository;
+import com.example.eims.repository.UserRoleRepository;
 import com.example.eims.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -13,14 +14,13 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
     @Autowired
     private UserRepository userRepository;
     @Autowired
-    private RoleRepository roleRepository;
+    private UserRoleRepository userRoleRepository;
     public CustomUserDetailsService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
@@ -28,18 +28,16 @@ public class CustomUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String phone) throws UsernameNotFoundException {
         User user = userRepository.findByPhone(phone)
                 .orElseThrow(() ->
-                        new UsernameNotFoundException("User not found with phone number [" + phone + "]"));
-
-
-        /*Set<GrantedAuthority> authorities = user
-                .getRoles()
-                .stream()
-                .map((role) -> new SimpleGrantedAuthority(role.getName())).collect(Collectors.toSet());*/
-
+                        new UsernameNotFoundException("User not found with phone [" + phone + "]"));
+        System.out.println(user);
+        UserRole userRole = new UserRole();
+        if (userRoleRepository.findByRoleId(user.getRoleId()).isPresent()){
+            userRole = userRoleRepository.findByRoleId(user.getRoleId()).get();
+        }
+        System.out.println(userRole.getRoleName());
         Set<GrantedAuthority> authorities = new HashSet<>();
-        authorities.add(new SimpleGrantedAuthority(roleRepository.getById(user.getRoleId()).getName()));
-
-        System.out.println(authorities);
+        authorities.add(new SimpleGrantedAuthority(userRole.getRoleName()));
+//        authorities.add(new SimpleGrantedAuthority("ROLE_OWNER"));
         return new org.springframework.security.core.userdetails.User(
                 user.getEmail(),
                 user.getPassword(),

@@ -1,10 +1,10 @@
 package com.example.eims.controller;
 
+import com.example.eims.dto.ChangePasswordDTO;
 import com.example.eims.dto.LoginDTO;
 import com.example.eims.dto.SignUpDTO;
-import com.example.eims.entity.Role;
 import com.example.eims.entity.User;
-import com.example.eims.repository.RoleRepository;
+import com.example.eims.repository.UserRoleRepository;
 import com.example.eims.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Optional;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
@@ -31,12 +32,13 @@ public class AuthController {
     @Autowired
     private UserRepository userRepository;
     @Autowired
-    private RoleRepository roleRepository;
+    private UserRoleRepository userRoleRepository;
     @Autowired
     private PasswordEncoder passwordEncoder;
 
     @PostMapping("/signin")
     public ResponseEntity<String> authenticateUser(@RequestBody LoginDTO loginDTO){
+        System.out.println(loginDTO);
         Authentication auth = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                 loginDTO.getPhone(), loginDTO.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(auth);
@@ -83,5 +85,30 @@ public class AuthController {
         userRepository.save(user);
 
         return new ResponseEntity<>("User registered successfully", HttpStatus.OK);
+    }
+
+    /**
+     * API for the user to change password.
+     * The DTO contails the login phone, old password and new password
+     * @param changePasswordDTO
+     * @return
+     */
+    @PostMapping("/changePassword")
+    public ResponseEntity<?> changePassword(@RequestBody ChangePasswordDTO changePasswordDTO){
+        //Encode the passwords
+        changePasswordDTO.setNewPassword(passwordEncoder.encode(changePasswordDTO.getNewPassword()));
+        //Local variable for the user
+        Optional<User> userOpt;
+        //Check credentials, if not valid then return Bad request (403)
+        userOpt = userRepository.findByPhone(changePasswordDTO.getPhone());
+        if(userOpt.isEmpty() ||
+                !passwordEncoder.matches(changePasswordDTO.getPassword(), userOpt.get().getPassword())){
+            return new ResponseEntity<>("Old password is wrong.", HttpStatus.BAD_REQUEST);
+        }
+        //If the old password is correct:
+        User user = userOpt.get();
+        user.setPassword(changePasswordDTO.getNewPassword());
+        userRepository.save(user);
+        return new ResponseEntity<>("Password changed successfully", HttpStatus.OK);
     }
 }

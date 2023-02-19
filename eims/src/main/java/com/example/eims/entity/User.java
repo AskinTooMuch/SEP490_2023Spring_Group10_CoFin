@@ -19,27 +19,16 @@ import java.util.Set;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "userId")
-    private Long id;
-    @Column(name = "roleId")
+    private Long userId = 100L;
     private Long roleId;
-    @Column(name = "facilityId")
     private Long facilityId;
-    @Column(name = "username")
     private String username;
-    @Column(name = "dob")
     private Date dob;
-    @Column(name = "phone")
     private String phone;
-    @Column(name = "email")
     private String email;
-    @Column(name = "salary")
     private Float salary;
-    @Column(name = "password")
     private String password;
-    @Column(name = "address")
     private String address;
-    @Column(name = "status")
     private boolean status;
 
 /*    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
