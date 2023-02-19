@@ -77,7 +77,7 @@ const Nav = () => {
             <MenuItem style={{fontSize:"medium"}}onClick={handleMenuClose}><AccountCircle fontSize="small"/><Link to="/profile" > Thông tin cá nhân</Link></MenuItem>
             <MenuItem style={{fontSize:"medium"}} onClick={handleMenuClose}><SettingsIcon fontSize="small"/> Cài đặt</MenuItem>
             <MenuItem style={{fontSize:"medium"}} onClick={handleMenuClose}><HelpIcon fontSize="small"/> Trợ giúp & hỗ trợ</MenuItem>
-            <MenuItem style={{fontSize:"medium"}} onClick={logout}><LogoutIcon fontSize="small"/> Logout</MenuItem>
+            <MenuItem style={{fontSize:"medium"}} onClick={logout}><LogoutIcon fontSize="small"/> Đăng xuất</MenuItem>
         </Menu>
     );
 
