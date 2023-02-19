@@ -28,7 +28,7 @@ const Login = () => {
   const userRef = useRef();
   const errRef = useRef();
   const [loginDetail, setLoginDetail] = useState({
-    usernameOrEmail: "",
+    phone: "",
     password: ""
   })
   const [errMsg, setErrMsg] = useState('');
@@ -89,9 +89,8 @@ const Login = () => {
             <div className="form-group mt-3">
               <label>
                 Tài khoản</label>
-              <input type="text" name="usernameOrEmail" className="form-control mt-1" placeholder="Nhập tên hoạc email"
-                required ref={userRef} onChange={e => handleChange(e, "usernameOrEmail")} value={loginDetail.usernameOrEmail} />
-
+                <input type="text" name="phone" className="form-control mt-1" placeholder="Nhập số điện thoại"
+                required ref={userRef} onChange={e => handleChange(e, "phone")} value={loginDetail.phone} />
             </div>
             <div className="form-group mt-3">
               <label>
