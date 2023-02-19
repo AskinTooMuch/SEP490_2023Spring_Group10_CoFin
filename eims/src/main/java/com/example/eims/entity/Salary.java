@@ -13,20 +13,12 @@ import java.util.Date;
 @Table(name = "salary")
 public class Salary {
     @Id
-    @Column(name = "salaryId")
     private Long salaryId;
-    @Column(name = "userId")
     private Long userId;
-    @Column(name = "baseSalary")
     private Float baseSalary;
-    @Column(name = "bonus")
     private Float bonus;
-    @Column(name = "fine")
     private Float fine;
-    @Column(name = "issueDate")
     private Date issueDate;
-    @Column(name = "note")
     private String note;
-    @Column(name = "status")
     private boolean status;
 }

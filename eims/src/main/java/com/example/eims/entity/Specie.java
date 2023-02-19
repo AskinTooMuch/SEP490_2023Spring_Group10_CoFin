@@ -11,14 +11,9 @@ import lombok.Data;
 @Table(name = "specie")
 public class Specie {
     @Id
-    @Column(name = "specieId")
     private Long specieId;
-    @Column(name = "userId")
     private Long userId;
-    @Column(name = "specieName")
     private String specieName;
-    @Column(name = "incubationPeriod")
     private int incubationPeriod;
-    @Column(name = "status")
     private boolean status;
 }

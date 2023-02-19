@@ -11,14 +11,9 @@ import lombok.Data;
 @Table(name = "subscription")
 public class Subcsription {
     @Id
-    @Column(name = "subscriptionId")
     private Long subscriptionId;
-    @Column(name = "cost")
     private Float cost;
-    @Column(name = "duration")
     private int duration;
-    @Column(name = "machineQuota")
     private int machineQuota;
-    @Column(name = "status")
     private boolean status;
 }

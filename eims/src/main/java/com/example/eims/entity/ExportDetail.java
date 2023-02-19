@@ -11,14 +11,9 @@ import lombok.Data;
 @Table(name = "exportDetail")
 public class ExportDetail {
     @Id
-    @Column(name = "exportId")
     private Long exportId;
-    @Column(name = "productId")
     private Long productId;
-    @Column(name = "price")
     private Float price;
-    @Column(name = "vaccinePrice")
     private Float vaccinePrice;
-    @Column(name = "amount")
     private int amount;
 }

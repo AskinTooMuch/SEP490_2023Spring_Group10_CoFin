@@ -13,20 +13,12 @@ import java.util.Date;
 @Table(name = "importReceipt")
 public class ImportReceipt {
     @Id
-    @Column(name = "importId")
     private Long importId;
-    @Column(name = "supplierId")
     private Long supplierId;
-    @Column(name = "userId")
     private Long userId;
-    @Column(name = "facilityId")
     private Long facilityId;
-    @Column(name = "importDate")
     private Date importDate;
-    @Column(name = "total")
     private Float total;
-    @Column(name = "paid")
     private Float paid;
-    @Column(name = "status")
     private boolean status;
 }

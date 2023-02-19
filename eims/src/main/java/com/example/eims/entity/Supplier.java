@@ -11,18 +11,11 @@ import lombok.Data;
 @Table(name = "supplier")
 public class Supplier {
     @Id
-    @Column(name = "supplierId")
     private Long supplierId;
-    @Column(name = "userId")
     private Long userId;
-    @Column(name = "supplierName")
     private String supplierName;
-    @Column(name = "supplierPhone")
     private String supplierPhone;
-    @Column(name = "supplierAddress")
     private String supplierAddress;
-    @Column(name = "supplierMail")
     private String supplierMail;
-    @Column(name = "status")
     private boolean status;
 }

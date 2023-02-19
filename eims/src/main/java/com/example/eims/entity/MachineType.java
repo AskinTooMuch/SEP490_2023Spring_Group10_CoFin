@@ -11,12 +11,8 @@ import lombok.Data;
 @Table(name = "machineType")
 public class MachineType {
     @Id
-    @Column(name = "machineTypeId")
     private Long machineTypeId;
-    @Column(name = "machineTypeName")
     private String machineTypeName;
-    @Column(name = "description")
     private String description;
-    @Column(name = "status")
     private boolean status;
 }

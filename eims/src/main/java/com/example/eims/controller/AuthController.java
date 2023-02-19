@@ -1,6 +1,7 @@
 package com.example.eims.controller;
 
 import com.example.eims.dto.ChangePasswordDTO;
+import com.example.eims.dto.ForgotPasswordDTO;
 import com.example.eims.dto.LoginDTO;
 import com.example.eims.dto.SignUpDTO;
 import com.example.eims.entity.User;
@@ -36,18 +37,33 @@ public class AuthController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    /**
+     * API for the user to sign in.
+     * The DTO contains the login phone and password
+     *
+     * @param loginDTO
+     * @return
+     */
     @PostMapping("/signin")
-    public ResponseEntity<String> authenticateUser(@RequestBody LoginDTO loginDTO){
+    public ResponseEntity<String> authenticateUser(@RequestBody LoginDTO loginDTO) {
         System.out.println(loginDTO);
         Authentication auth = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                 loginDTO.getPhone(), loginDTO.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(auth);
         return new ResponseEntity<>("User signed-in successfully.", HttpStatus.OK);
     }
+
+    /**
+     * API for the user to sign up.
+     * The DTO contains the User's name, email, phone number, date of birth, address.
+     *
+     * @param signUpDTO
+     * @return
+     */
     @PostMapping("/signup")
-    public ResponseEntity<?> registerUser(@RequestBody SignUpDTO signUpDTO){
+    public ResponseEntity<?> registerUser(@RequestBody SignUpDTO signUpDTO) {
         //Check if already Existed: username or email
-        if(userRepository.existsByPhone(signUpDTO.getPhone())){
+        if (userRepository.existsByPhone(signUpDTO.getPhone())) {
             return new ResponseEntity<>("Phone already registered.", HttpStatus.BAD_REQUEST);
         }
 
@@ -55,9 +71,7 @@ public class AuthController {
         User user = new User();
         user.setUsername(signUpDTO.getUsername());
         user.setEmail(signUpDTO.getEmail());
-
-        //String sDate="31-12-1998";
-        String sDate=signUpDTO.getDob();
+        String sDate = signUpDTO.getDob();
         Date date;
         try {
             date = new Date(
@@ -66,21 +80,12 @@ public class AuthController {
             throw new RuntimeException(e);
         }
         user.setDob(date);
-//
-//        user.setPhone("0123456789");
-//        user.setAddress("hai duong");
         user.setPhone(signUpDTO.getPhone());
         user.setAddress(signUpDTO.getAddress());
+        user.setRoleId(signUpDTO.getRoleId());
         user.setStatus(false);
         //Encode password
         user.setPassword(passwordEncoder.encode(signUpDTO.getPassword()));
-///----------------------------
-        //Role roles = roleRepository.findByName("ROLE_ADMIN").get();
-
-        /*Role role = roleRepository.findByName("Owner").get();
-        user.setRoleId(role.getId());*/
-
-        user.setRoleId(signUpDTO.getRoleId());
         System.out.println(user.toString());
         userRepository.save(user);
 
@@ -90,19 +95,20 @@ public class AuthController {
     /**
      * API for the user to change password.
      * The DTO contails the login phone, old password and new password
+     *
      * @param changePasswordDTO
      * @return
      */
     @PostMapping("/changePassword")
-    public ResponseEntity<?> changePassword(@RequestBody ChangePasswordDTO changePasswordDTO){
+    public ResponseEntity<?> changePassword(@RequestBody ChangePasswordDTO changePasswordDTO) {
         //Encode the passwords
         changePasswordDTO.setNewPassword(passwordEncoder.encode(changePasswordDTO.getNewPassword()));
         //Local variable for the user
         Optional<User> userOpt;
         //Check credentials, if not valid then return Bad request (403)
         userOpt = userRepository.findByPhone(changePasswordDTO.getPhone());
-        if(userOpt.isEmpty() ||
-                !passwordEncoder.matches(changePasswordDTO.getPassword(), userOpt.get().getPassword())){
+        if (userOpt.isEmpty() ||
+                !passwordEncoder.matches(changePasswordDTO.getPassword(), userOpt.get().getPassword())) {
             return new ResponseEntity<>("Old password is wrong.", HttpStatus.BAD_REQUEST);
         }
         //If the old password is correct:
@@ -110,5 +116,69 @@ public class AuthController {
         user.setPassword(changePasswordDTO.getNewPassword());
         userRepository.save(user);
         return new ResponseEntity<>("Password changed successfully", HttpStatus.OK);
+    }
+
+    /**
+     * API for the user to receive OTP to reset password.
+     * The DTO contains the login phone
+     *
+     * @param forgotPasswordDTO
+     * @return
+     */
+    @PostMapping("/forgotPassword/sendOTP")
+    public ResponseEntity<?> sendOTPForgotPassword(@RequestBody ForgotPasswordDTO forgotPasswordDTO) {
+        //Local variable for the user
+        Optional<User> userOpt;
+        //Check credentials, if not valid then return Bad request (403)
+        userOpt = userRepository.findByPhone(forgotPasswordDTO.getPhone());
+        if (userOpt.isEmpty()) {
+            return new ResponseEntity<>("No phone number found!", HttpStatus.BAD_REQUEST);
+        } else {
+            // send OTP
+            return new ResponseEntity<>("OTP send!", HttpStatus.OK);
+        }
+    }
+
+    /**
+     * API for the user to verify OTP to reset password.
+     * The DTO contains the OTP, login phone
+     *
+     * @param forgotPasswordDTO
+     * @return
+     */
+    @PostMapping("/forgotPassword/verifyOTP")
+    public ResponseEntity<?> verifyOTPForgotPassword(@RequestBody ForgotPasswordDTO forgotPasswordDTO) {
+        //Check if the OTP match
+        String OPT_REAL = "111";
+        if (forgotPasswordDTO.getOTP().equalsIgnoreCase(OPT_REAL)){
+            return new ResponseEntity<>("OTP confirmed! Please enter your new password.", HttpStatus.OK);
+        } else {
+            // wait 3m to re-send the OTP
+            // resend OTP
+            return new ResponseEntity<>("OTP re-send!", HttpStatus.OK);
+        }
+    }
+
+    /**
+     * API for the user to reset password after verify OTP.
+     * The DTO contains the new password, login phone
+     *
+     * @param forgotPasswordDTO
+     * @return
+     */
+    @PostMapping("/forgotPassword")
+    public ResponseEntity<?> resetPassword(@RequestBody ForgotPasswordDTO forgotPasswordDTO) {
+        //Encode the passwords
+        forgotPasswordDTO.setNewPassword(passwordEncoder.encode(forgotPasswordDTO.getNewPassword()));
+        //Get user
+        User user = userRepository.findByPhone(forgotPasswordDTO.getPhone()).get();
+        //Confirm password
+        if (passwordEncoder.matches(forgotPasswordDTO.getConfirmPassword(), forgotPasswordDTO.getNewPassword())) {
+            user.setPassword(forgotPasswordDTO.getNewPassword());
+            userRepository.save(user);
+            return new ResponseEntity<>("Password changed successfully", HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("Password not match!", HttpStatus.OK);
+        }
     }
 }

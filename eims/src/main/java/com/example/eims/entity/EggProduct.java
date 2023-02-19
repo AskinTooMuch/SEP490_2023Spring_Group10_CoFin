@@ -13,18 +13,11 @@ import java.util.Date;
 @Table(name = "eggProduct")
 public class EggProduct {
     @Id
-    @Column(name = "productId")
     private Long productId;
-    @Column(name = "eggBatchId")
     private Long eggBatchId;
-    @Column(name = "incubationPhaseId")
     private Long incubationPhaseId;
-    @Column(name = "incubationDate")
     private Date incubationDate;
-    @Column(name = "amount")
     private int amount;
-    @Column(name = "curAmount")
     private int curAmount;
-    @Column(name = "status")
     private boolean status;
 }
