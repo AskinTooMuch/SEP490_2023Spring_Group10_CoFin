@@ -3,7 +3,7 @@ package com.example.eims.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.sql.Date;
+import java.util.Date;
 import java.util.Set;
 
 @Data
