@@ -2,24 +2,36 @@ import { useRef, useState, useEffect } from "react";
 import { faCheck, faTimes, faInfoCircle, faStarOfLife } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from '../api/axios';
-
-const NAME_REGEX = /^[a-zA-Z]+$/;
+import  '../api/provinces.js';
 const EMAIL_REGEX = /^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/;
-const USER_REGEX = /^[A-z][A-z0-9-_]{3,23}$/;
+
 const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
 const REGISTER_URL = '/api/auth/signup';
 
 const Register = () => {
+    
     const userRef = useRef();
     const errRef = useRef();
+    const [date, setDate] = useState('');
+    const [setDateFocus] = useState(false);
 
-    const [name, setName] = useState('');
-    const [validName, setValidName] = useState(false);
-    const [nameFocus, setNameFocus] = useState(false);
+    const [brn, setBusinessNumber] = useState('');
+    const [setBNFocus] = useState(false);
 
-    const [username, setUser] = useState('');
-    const [validUser, setValidUserName] = useState(false);
-    const [userFocus, setUserFocus] = useState(false);
+    const [hotline, setHotline] = useState('');
+    const [setHotlineFocus] = useState(false);
+
+    const [homenum, setHomeNum] = useState('');
+    const [homeNumFocus, setHomeNumFocus] = useState(false);
+
+    const [street, setStreet] = useState('');
+    const [setStreetFocus] = useState(false);
+
+    const [district, setDistrict] = useState('');
+    const [setDistrictFocus] = useState(false);
+
+    const [province, setProvince] = useState('');
+    const [setProvinceFocus] = useState(false);
 
     const [email, setEmail] = useState('');
     const [validEmail, setValidEmail] = useState(false);
@@ -41,18 +53,12 @@ const Register = () => {
         userRef.current.focus();
     }, [])
 
-    useEffect(() => {
-        setValidName(NAME_REGEX.test(name));
-    }, [name])
-
+    
     useEffect(() => {
         setValidEmail(EMAIL_REGEX.test(email));
     }, [email])
 
-    useEffect(() => {
-        setValidUserName(USER_REGEX.test(username));
-    }, [username])
-
+    
     useEffect(() => {
         setValidPwd(PWD_REGEX.test(password));
         setValidMatch(password === matchPwd);
@@ -60,22 +66,19 @@ const Register = () => {
 
     useEffect(() => {
         setErrMsg('');
-    }, [name, email, username, password, matchPwd])
+    }, [ email, password, matchPwd])
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        // if button enabled with JS hack
-        const v1 = USER_REGEX.test(username);
         const v2 = PWD_REGEX.test(password);
         const v3 = EMAIL_REGEX.test(email);
-        const v4 = NAME_REGEX.test(name);
-        if (!v1 || !v2 || !v3 || !v4) {
+        if ( !v2 || !v3 ) {
             setErrMsg("Invalid Entry");
             return;
         }
         try {
             const response = await axios.post(REGISTER_URL,
-                ({ username, password, email, name }),
+                ({password, email }),
                 {
                     headers: { 'Content-Type': 'application/json' },
                     withCredentials: false
@@ -86,7 +89,6 @@ const Register = () => {
             setSuccess(true);
             //clear state and controlled inputs
             //need value attrib on inputs for this
-            setUser('');
             setPwd('');
             setMatchPwd('');
         } catch (err) {
@@ -117,136 +119,217 @@ const Register = () => {
                         <div className="Auth-form-content">
                             <h3 className="Auth-form-title">Đăng ký</h3>
                             <div className="form-group mt-3">
-                                <label htmlFor="name">
-                                    Tên<FontAwesomeIcon className="star" icon={faStarOfLife} />
-                                    <FontAwesomeIcon icon={faCheck} className={validName ? "valid" : "hide"} />
-                                    <FontAwesomeIcon icon={faTimes} className={validName || !name ? "hide" : "invalid"} />
+
+
+                                <label htmlFor="email">
+                                    Email<FontAwesomeIcon className="star" icon={faStarOfLife} />
+                                    <FontAwesomeIcon icon={faCheck} className={validEmail ? "valid" : "hide"} />
+                                    <FontAwesomeIcon icon={faTimes} className={validEmail || !email ? "hide" : "invalid"} />
                                 </label>
                                 <input
                                     className="form-control mt-1"
                                     type="text"
-                                    id="name"
+                                    id="email"
                                     ref={userRef}
                                     autoComplete="off"
-                                    onChange={(e) => setName(e.target.value)}
-                                    value={name}
+                                    onChange={(e) => setEmail(e.target.value)}
+                                    value={email}
                                     required
-                                    aria-invalid={validUser ? "false" : "true"}
-                                    aria-describedby="namenote"
-                                    onFocus={() => setNameFocus(true)}
-                                    onBlur={() => setNameFocus(false)}
+                                    aria-invalid={validEmail ? "false" : "true"}
+                                    aria-describedby="emailnote"
+                                    onFocus={() => setEmailFocus(true)}
+                                    onBlur={() => setEmailFocus(false)}
                                 />
-                                <p id="namenote" className={nameFocus && name && !validName ? "instructions" : "offscreen"}>
-                                    <FontAwesomeIcon className="star" icon={faInfoCircle} />
-                                    Tên thật của bạn<br />
-                                    Viết dưới dạng chữ<br />
-                                    Số và các kí tự đặc biệt không được sử dụng.
+                                <p id="emailnote" className={emailFocus && email && !validEmail ? "instructions" : "offscreen"}>
+                                    <FontAwesomeIcon icon={faInfoCircle} />
+                                    Bắt đầu bằng 1 chữ cái + @example.com<br />
+                                    Số và các kí tự đặc biệt được sử dụng.
                                 </p>
-                            </div>
-                            <label htmlFor="username">
-                                Tên người dùng<FontAwesomeIcon className="star" icon={faStarOfLife} />
-                                <FontAwesomeIcon icon={faCheck} className={validUser ? "valid" : "hide"} />
-                                <FontAwesomeIcon icon={faTimes} className={validUser || !username ? "hide" : "invalid"} />
+
+                                <label htmlFor="password">
+                                    Mật khẩu<FontAwesomeIcon className="star" icon={faStarOfLife} />
+                                    <FontAwesomeIcon icon={faCheck} className={validPwd ? "valid" : "hide"} />
+                                    <FontAwesomeIcon icon={faTimes} className={validPwd || !password ? "hide" : "invalid"} />
+                                </label>
+                                <input
+                                    className="form-control mt-1"
+                                    type="password"
+                                    id="password"
+                                    onChange={(e) => setPwd(e.target.value)}
+                                    value={password}
+                                    required
+                                    aria-invalid={validPwd ? "false" : "true"}
+                                    aria-describedby="pwdnote"
+                                    onFocus={() => setPwdFocus(true)}
+                                    onBlur={() => setPwdFocus(false)}
+                                />
+                                <p id="pwdnote" className={pwdFocus && !validPwd ? "instructions" : "offscreen"}>
+                                    <FontAwesomeIcon icon={faInfoCircle} />
+                                    8 - 24 kí tự.<br />
+                                    Bao gồm 1 chữ cái viết hoa, 1 số và 1 kí tự đặc biệt.<br />
+                                    Các kí tự đặc biệt cho phép: <span aria-label="exclamation mark">!</span> <span aria-label="at symbol">@</span> <span aria-label="hashtag">#</span> <span aria-label="dollar sign">$</span> <span aria-label="percent">%</span>
+                                </p>
+
+
+                                <label htmlFor="confirm_pwd">
+                                    Xác nhận lại mật khẩu<FontAwesomeIcon className="star" icon={faStarOfLife} />
+                                    <FontAwesomeIcon icon={faCheck} className={validMatch && matchPwd ? "valid" : "hide"} />
+                                    <FontAwesomeIcon icon={faTimes} className={validMatch || !matchPwd ? "hide" : "invalid"} />
+                                </label>
+                                <input
+                                    className="form-control mt-1"
+                                    type="password"
+                                    id="confirm_pwd"
+                                    onChange={(e) => setMatchPwd(e.target.value)}
+                                    value={matchPwd}
+                                    required
+                                    aria-invalid={validMatch ? "false" : "true"}
+                                    aria-describedby="confirmnote"
+                                    onFocus={() => setMatchFocus(true)}
+                                    onBlur={() => setMatchFocus(false)}
+                                />
+                                <p id="confirmnote" className={matchFocus && !validMatch ? "instructions" : "offscreen"}>
+                                    <FontAwesomeIcon icon={faInfoCircle} />
+                                    Mật khẩu phải trùng với mẩt khẩu đã nhập ở trên
+                                </p>
+                                
+                            <br/>
+                            <label htmlFor="sonha">
+                                Địa chỉ cơ sở<FontAwesomeIcon className="star" icon={faStarOfLife} /> <br/>
+                                Số nhà <FontAwesomeIcon className="star" icon={faStarOfLife} />
                             </label>
                             <input
                                 className="form-control mt-1"
                                 type="text"
-                                id="username"
+                                id="sonha"
                                 ref={userRef}
                                 autoComplete="off"
-                                onChange={(e) => setUser(e.target.value)}
-                                value={username}
+                                onChange={(e) => setHomeNum(e.target.value)}
+                                value={homenum}
                                 required
-                                aria-invalid={validUser ? "false" : "true"}
-                                aria-describedby="uidnote"
-                                onFocus={() => setUserFocus(true)}
-                                onBlur={() => setUserFocus(false)}
+                                aria-describedby="naddress"
+                                onFocus={() => setHomeNumFocus(true)}
+                                onBlur={() => setHomeNumFocus(false)}
                             />
-                            <p id="uidnote" className={userFocus && username && !validUser ? "instructions" : "offscreen"}>
+                            <p id="naddress" className={homeNumFocus && homenum  ? "instructions" : "offscreen"}>
                                 <FontAwesomeIcon className="star" icon={faInfoCircle} />
-                                4 - 24 kí tự.<br />
-                                Bắt đầu bằng 1 chữ cái<br />
-                                Các kí tự đặc biệt không được sử dụng
+                               Số nhà của bạn<br />
+                                
                             </p>
 
-                            <label htmlFor="email">
-                                Email<FontAwesomeIcon className="star" icon={faStarOfLife} />
-                                <FontAwesomeIcon icon={faCheck} className={validEmail ? "valid" : "hide"} />
-                                <FontAwesomeIcon icon={faTimes} className={validEmail || !email ? "hide" : "invalid"} />
+                            <label htmlFor="duong">
+                                
+                                Đường <FontAwesomeIcon className="star" icon={faStarOfLife} />
                             </label>
                             <input
                                 className="form-control mt-1"
                                 type="text"
-                                id="email"
+                                id="duong"
                                 ref={userRef}
                                 autoComplete="off"
-                                onChange={(e) => setEmail(e.target.value)}
-                                value={email}
+                                onChange={(e) => setStreet(e.target.value)}
+                                value={street}
                                 required
-                                aria-invalid={validEmail ? "false" : "true"}
-                                aria-describedby="emailnote"
-                                onFocus={() => setEmailFocus(true)}
-                                onBlur={() => setEmailFocus(false)}
+                                onFocus={() => setStreetFocus(true)}
+                                onBlur={() => setStreetFocus(false)}
                             />
-                            <p id="emailnote" className={emailFocus && email && !validEmail ? "instructions" : "offscreen"}>
-                                <FontAwesomeIcon icon={faInfoCircle} />
-                                Bắt đầu bằng 1 chữ cái + @example.com<br />
-                                Số và các kí tự đặc biệt được sử dụng.
-                            </p>
+                            
+                            <label htmlFor="quan">
+                                
+                                Quận/Huyện <FontAwesomeIcon className="star" icon={faStarOfLife} />
+                            </label>
+                            <select name="calc_shipping_district" 
+                                className="form-control mt-1"
+                                type="text"
+                                id="district"
+                                ref={userRef}
+                                autoComplete="off"
+                                onChange={(e) => setDistrict(e.target.value)}
+                                value={district}
+                                required
+                                onFocus={() => setDistrictFocus(true)}
+                                onBlur={() => setDistrictFocus(false)}
+                            > <option value="">Chọn Quận/Huyện của bạn</option>
+                            <option value="Đống Đa">Đống Đa</option>
+                            </select>
 
-                            <label htmlFor="password">
-                                Mật khẩu<FontAwesomeIcon className="star" icon={faStarOfLife} />
-                                <FontAwesomeIcon icon={faCheck} className={validPwd ? "valid" : "hide"} />
-                                <FontAwesomeIcon icon={faTimes} className={validPwd || !password ? "hide" : "invalid"} />
+                            <label htmlFor="province">
+                                
+                                Tỉnh/Thành phố <FontAwesomeIcon className="star" icon={faStarOfLife} />
+                            </label>
+                            <select name="calc_shipping_district" 
+                                className="form-control mt-1"
+                                type="text"
+                                id="province"
+                                ref={userRef}
+                                autoComplete="off"
+                                onChange={(e) => setProvince(e.target.value)}
+                                value={province}
+                                required
+                                onFocus={() => setProvinceFocus(true)}
+                                onBlur={() => setProvinceFocus(false)}
+                            > <option value="">Chọn Tỉnh/Thành phố của bạn</option>
+                            <option value="Hà Nội">Hà Nội</option>
+                            </select>
+                            <label htmlFor="date">
+                                
+                                Ngày thành lập <FontAwesomeIcon className="star" icon={faStarOfLife} />
                             </label>
                             <input
                                 className="form-control mt-1"
-                                type="password"
-                                id="password"
-                                onChange={(e) => setPwd(e.target.value)}
-                                value={password}
+                                type="date"
+                                id="date"
+                                ref={userRef}
+                                autoComplete="off"
+                                onChange={(e) => setDate(e.target.value)}
+                                value={date}
                                 required
-                                aria-invalid={validPwd ? "false" : "true"}
-                                aria-describedby="pwdnote"
-                                onFocus={() => setPwdFocus(true)}
-                                onBlur={() => setPwdFocus(false)}
+                                onFocus={() => setDateFocus(true)}
+                                onBlur={() => setDateFocus(false)}
                             />
-                            <p id="pwdnote" className={pwdFocus && !validPwd ? "instructions" : "offscreen"}>
-                                <FontAwesomeIcon icon={faInfoCircle} />
-                                8 - 24 kí tự.<br />
-                                Bao gồm 1 chữ cái viết hoa, 1 số và 1 kí tự đặc biệt.<br />
-                                Các kí tự đặc biệt cho phép: <span aria-label="exclamation mark">!</span> <span aria-label="at symbol">@</span> <span aria-label="hashtag">#</span> <span aria-label="dollar sign">$</span> <span aria-label="percent">%</span>
-                            </p>
 
-
-                            <label htmlFor="confirm_pwd">
-                                Xác nhận lại mật khẩu<FontAwesomeIcon className="star" icon={faStarOfLife} />
-                                <FontAwesomeIcon icon={faCheck} className={validMatch && matchPwd ? "valid" : "hide"} />
-                                <FontAwesomeIcon icon={faTimes} className={validMatch || !matchPwd ? "hide" : "invalid"} />
+                            <label htmlFor="brn">
+                                
+                                Mã số đăng ký kinh doanh <FontAwesomeIcon className="star" icon={faStarOfLife} />
                             </label>
                             <input
                                 className="form-control mt-1"
-                                type="password"
-                                id="confirm_pwd"
-                                onChange={(e) => setMatchPwd(e.target.value)}
-                                value={matchPwd}
+                                type="text"
+                                id="brn"
+                                ref={userRef}
+                                autoComplete="off"
+                                onChange={(e) => setBusinessNumber(e.target.value)}
+                                value={brn}
                                 required
-                                aria-invalid={validMatch ? "false" : "true"}
-                                aria-describedby="confirmnote"
-                                onFocus={() => setMatchFocus(true)}
-                                onBlur={() => setMatchFocus(false)}
+                                onFocus={() => setBNFocus(true)}
+                                onBlur={() => setBNFocus(false)}
                             />
-                            <p id="confirmnote" className={matchFocus && !validMatch ? "instructions" : "offscreen"}>
-                                <FontAwesomeIcon icon={faInfoCircle} />
-                                Mật khẩu phải trùng với mẩt khẩu đã nhập ở trên
-                            </p>
+
+                            <label htmlFor="hotline">
+                                
+                                Hotline <FontAwesomeIcon className="star" icon={faStarOfLife} />
+                            </label>
+                            <input
+                                className="form-control mt-1"
+                                type="text"
+                                id="hotline"
+                                ref={userRef}
+                                autoComplete="off"
+                                onChange={(e) => setHotline(e.target.value)}
+                                value={hotline}
+                                required
+                                onFocus={() => setHotlineFocus(true)}
+                                onBlur={() => setHotlineFocus(false)}
+                            />
+                            </div>
+                            
                             <div className="d-grid gap-2 mt-3">
-                                <button className="btn btn-info" disabled={!validUser || !validPwd || !validEmail || !validName || !validMatch ? true : false}>
+                                <button className="btn btn-info" disabled={ !validPwd || !validEmail ||  !validMatch ? true : false}>
                                     Đăng ký</button>
                                 <p ref={errRef} className={errMsg ? "errmsg" : "offscreen"} aria-live="assertive">{errMsg}</p>
                                 <p className="regislink">
-                                   <label> Bạn đã có tài khoản?</label><a style={{fontSize:"small",fontWeight:"initial",textDecoration:"underline"}} href="login">Đăng nhập</a><br />
-                                
+                                    <label> Bạn đã có tài khoản?</label><a style={{ fontSize: "small", fontWeight: "initial", textDecoration: "underline" }} href="login">Đăng nhập</a><br />
+
                                 </p>
                             </div>
                         </div>
@@ -256,6 +339,7 @@ const Register = () => {
                 </div>
             )}
         </>
+        
     )
 }
 
