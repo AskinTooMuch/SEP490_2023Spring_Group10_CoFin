@@ -10,7 +10,7 @@ const Profile = () => {
     const handleShow = () => setShow(true);
 
     const [show2, setShow2] = useState(false);
-    
+
     const handleClose2 = () => setShow2(false);
     const handleShow2 = () => setShow2(true);
 
@@ -18,53 +18,53 @@ const Profile = () => {
     const errRef = useRef();
 
     const [changePasswordDTO, setChangePasswordDTO] = useState({
-        phone: "0969044714",
+        phone: sessionStorage.getItem("curPhone"),
         password: "",
-        newPassword:""
-      })
-      const [errMsg, setErrMsg] = useState('');
-    
-      useEffect(() => {
+        newPassword: ""
+    })
+    const [errMsg, setErrMsg] = useState('');
+
+    useEffect(() => {
         setErrMsg('');
-      }, [changePasswordDTO])
-    
-      const handleChange = (event, field) => {
+    }, [changePasswordDTO])
+
+    const handleChange = (event, field) => {
         let actualValue = event.target.value
         setChangePasswordDTO({
-          ...changePasswordDTO,
-          [field]: actualValue
+            ...changePasswordDTO,
+            [field]: actualValue
         })
-      }
-    
-      const handleSubmit = async (event) => {
+    }
+
+    const handleSubmit = async (event) => {
         event.preventDefault();
         try {
-          const response = await axios.post(CHANGE_PASS_URL,
-            changePasswordDTO,
-            {
-              headers: {
-                'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*'
-              },
-              withCredentials: false
-            }
-          );
-          console.log(JSON.stringify(response?.data));
-          setChangePasswordDTO('');
+            const response = await axios.post(CHANGE_PASS_URL,
+                changePasswordDTO,
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Access-Control-Allow-Origin': '*'
+                    },
+                    withCredentials: false
+                }
+            );
+            console.log(JSON.stringify(response?.data));
+            setChangePasswordDTO('');
         } catch (err) {
-          if (!err?.response) {
-            setErrMsg('No Server Response');
-          } else if (err.response?.status === 400) {
-            setErrMsg('Mật khẩu cũ không đúng.');
-          } else if (err.response?.status === 401) {
-            setErrMsg('Không có quyền truy cập');
-          } else {
-            setErrMsg('Sai tài khoản/ mật khẩu');
-          }
-          errRef.current.focus();
+            if (!err?.response) {
+                setErrMsg('No Server Response');
+            } else if (err.response?.status === 400) {
+                setErrMsg('Mật khẩu cũ không đúng.');
+            } else if (err.response?.status === 401) {
+                setErrMsg('Không có quyền truy cập');
+            } else {
+                setErrMsg('Sai tài khoản/ mật khẩu');
+            }
+            errRef.current.focus();
         }
-    
-      }
+
+    }
 
     return (
 
@@ -130,7 +130,7 @@ const Profile = () => {
                                                                 <p>Mật khẩu cũ</p>
                                                             </div>
                                                             <div className="col-md-6">
-                                                                <input onChange={e => handleChange(e, "password")} value={changePasswordDTO.password}/>
+                                                                <input onChange={e => handleChange(e, "password")} value={changePasswordDTO.password} />
                                                             </div>
                                                         </div>
                                                         <div className="row">
@@ -138,7 +138,7 @@ const Profile = () => {
                                                                 <p>Mật khẩu mới</p>
                                                             </div>
                                                             <div className="col-md-6">
-                                                                <input onChange={e => handleChange(e, "newPassword")} value={changePasswordDTO.newPassword}/>
+                                                                <input onChange={e => handleChange(e, "newPassword")} value={changePasswordDTO.newPassword} />
                                                             </div>
                                                         </div>
                                                         <div className="row">
@@ -146,7 +146,7 @@ const Profile = () => {
                                                                 <p>Xác nhận lại</p>
                                                             </div>
                                                             <div className="col-md-6">
-                                                                <input onChange={e => handleChange(e, "newPassword")} value={changePasswordDTO.newPassword}/>
+                                                                <input onChange={e => handleChange(e, "newPassword")} value={changePasswordDTO.newPassword} />
                                                             </div>
                                                         </div>
                                                         <p ref={errRef} className={errMsg ? "errmsg" : "offscreen"}><span>{errMsg}</span></p>
@@ -159,7 +159,7 @@ const Profile = () => {
                                                         Huỷ
                                                     </Button>
 
-                                                    <Button variant="dark" style={{ width: "30%" }} className="col-md-6" type="submit"> 
+                                                    <Button variant="dark" style={{ width: "30%" }} className="col-md-6" type="submit">
                                                         Đổi mật khẩu
                                                     </Button>
 
@@ -173,24 +173,24 @@ const Profile = () => {
                                                 size="lg"
                                                 aria-labelledby="contained-modal-title-vcenter"
                                                 centered >
-                                                    <h3>Chỉnh sửa thông tin cá nhân</h3>
+                                                <h3>Chỉnh sửa thông tin cá nhân</h3>
                                                 <Modal.Body>
                                                     <div class="mb-3">
                                                         <label class="form-label">Họ và Tên</label>
-                                                        <input type="text" class="form-control"/>
-                                                            
+                                                        <input type="text" class="form-control" />
+
                                                     </div>
                                                     <div class="mb-3">
-                                                        <label  class="form-label">Ngày sinh</label>
-                                                        <input type="date" class="form-control"/>
+                                                        <label class="form-label">Ngày sinh</label>
+                                                        <input type="date" class="form-control" />
                                                     </div>
                                                     <div class="mb-3">
-                                                        <label  class="form-label">Email</label>
-                                                        <input type="email" class="form-control"/>
+                                                        <label class="form-label">Email</label>
+                                                        <input type="email" class="form-control" />
                                                     </div>
                                                     <div class="mb-3">
-                                                        <label  class="form-label">Địa chỉ</label>
-                                                        <input type="text" style={{minHeight:"50px"}} class="form-control"/>
+                                                        <label class="form-label">Địa chỉ</label>
+                                                        <input type="text" style={{ minHeight: "50px" }} class="form-control" />
                                                     </div>
                                                 </Modal.Body>
 

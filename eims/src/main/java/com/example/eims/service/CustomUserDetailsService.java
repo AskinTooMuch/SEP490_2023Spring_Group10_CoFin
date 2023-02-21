@@ -29,12 +29,10 @@ public class CustomUserDetailsService implements UserDetailsService {
         User user = userRepository.findByPhone(phone)
                 .orElseThrow(() ->
                         new UsernameNotFoundException("User not found with phone [" + phone + "]"));
-        System.out.println(user);
         UserRole userRole = new UserRole();
         if (userRoleRepository.findByRoleId(user.getRoleId()).isPresent()){
             userRole = userRoleRepository.findByRoleId(user.getRoleId()).get();
         }
-        System.out.println(userRole.getRoleName());
         Set<GrantedAuthority> authorities = new HashSet<>();
         authorities.add(new SimpleGrantedAuthority(userRole.getRoleName()));
 //        authorities.add(new SimpleGrantedAuthority("ROLE_OWNER"));

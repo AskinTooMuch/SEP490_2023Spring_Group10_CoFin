@@ -63,6 +63,9 @@ const Login = () => {
       console.log(JSON.stringify(response?.data));
       localStorage.setItem("user", loginDetail)
       setLoginDetail('');
+      //Set user's phone number in session
+      sessionStorage.setItem("curPhone", loginDetail.phone);
+      console.log(sessionStorage.getItem("curPhone"));
       navigate("/dashboard");
     } catch (err) {
       if (!err?.response) {

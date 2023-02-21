@@ -21,7 +21,6 @@ public class User {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long userId = 100L;
     private Long roleId;
-    private Long facilityId;
     private String username;
     private Date dob;
     private String phone;
