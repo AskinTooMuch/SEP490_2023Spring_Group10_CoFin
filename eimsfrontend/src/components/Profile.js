@@ -1,7 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from 'react';
+import axios from '../api/axios';
 import "../css/profile.css"
 import { Modal, Button } from 'react-bootstrap'
 const Profile = () => {
+    const CHANGE_PASS_URL = '/api/auth/changePassword';
     const [show, setShow] = useState(false);
 
     const handleClose = () => setShow(false);
@@ -11,6 +13,59 @@ const Profile = () => {
     
     const handleClose2 = () => setShow2(false);
     const handleShow2 = () => setShow2(true);
+
+    const userRef = useRef();
+    const errRef = useRef();
+
+    const [changePasswordDTO, setChangePasswordDTO] = useState({
+        phone: "0969044714",
+        password: "",
+        newPassword:""
+      })
+      const [errMsg, setErrMsg] = useState('');
+    
+      useEffect(() => {
+        setErrMsg('');
+      }, [changePasswordDTO])
+    
+      const handleChange = (event, field) => {
+        let actualValue = event.target.value
+        setChangePasswordDTO({
+          ...changePasswordDTO,
+          [field]: actualValue
+        })
+      }
+    
+      const handleSubmit = async (event) => {
+        event.preventDefault();
+        try {
+          const response = await axios.post(CHANGE_PASS_URL,
+            changePasswordDTO,
+            {
+              headers: {
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*'
+              },
+              withCredentials: false
+            }
+          );
+          console.log(JSON.stringify(response?.data));
+          setChangePasswordDTO('');
+        } catch (err) {
+          if (!err?.response) {
+            setErrMsg('No Server Response');
+          } else if (err.response?.status === 400) {
+            setErrMsg('Mật khẩu cũ không đúng.');
+          } else if (err.response?.status === 401) {
+            setErrMsg('Không có quyền truy cập');
+          } else {
+            setErrMsg('Sai tài khoản/ mật khẩu');
+          }
+          errRef.current.focus();
+        }
+    
+      }
+
     return (
 
         <div className="profile-info">
@@ -60,7 +115,7 @@ const Profile = () => {
                                     <div className="row">
                                         <div className="col-md-6">
                                             <Button onClick={handleShow} className="btn btn-info">Đổi mật khẩu</Button >
-                                            <form><Modal show={show} onHide={handleClose}
+                                            <form onSubmit={handleSubmit}><Modal show={show} onHide={handleClose}
                                                 size="lg"
                                                 aria-labelledby="contained-modal-title-vcenter"
                                                 centered >
@@ -75,7 +130,7 @@ const Profile = () => {
                                                                 <p>Mật khẩu cũ</p>
                                                             </div>
                                                             <div className="col-md-6">
-                                                                <input />
+                                                                <input onChange={e => handleChange(e, "password")} value={changePasswordDTO.password}/>
                                                             </div>
                                                         </div>
                                                         <div className="row">
@@ -83,7 +138,7 @@ const Profile = () => {
                                                                 <p>Mật khẩu mới</p>
                                                             </div>
                                                             <div className="col-md-6">
-                                                                <input />
+                                                                <input onChange={e => handleChange(e, "newPassword")} value={changePasswordDTO.newPassword}/>
                                                             </div>
                                                         </div>
                                                         <div className="row">
@@ -91,9 +146,10 @@ const Profile = () => {
                                                                 <p>Xác nhận lại</p>
                                                             </div>
                                                             <div className="col-md-6">
-                                                                <input />
+                                                                <input onChange={e => handleChange(e, "newPassword")} value={changePasswordDTO.newPassword}/>
                                                             </div>
                                                         </div>
+                                                        <p ref={errRef} className={errMsg ? "errmsg" : "offscreen"}><span>{errMsg}</span></p>
                                                     </div>
 
                                                 </Modal.Body>
@@ -103,7 +159,7 @@ const Profile = () => {
                                                         Huỷ
                                                     </Button>
 
-                                                    <Button variant="dark" style={{ width: "30%" }} className="col-md-6" onClick={handleClose}>
+                                                    <Button variant="dark" style={{ width: "30%" }} className="col-md-6" type="submit"> 
                                                         Đổi mật khẩu
                                                     </Button>
 

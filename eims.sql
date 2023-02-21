@@ -1,9 +1,10 @@
--- Version 0.4.0: Change attribute and table name from camelCase to camel_case
+-- Version 0.5.0: Added tables: salary_history, registration, notification. Modified a few tables
+-- V0.4.0: Change attribute and table name from camelCase to camel_case
 -- V0.3.0: Add data
 -- V0.2.0: Add foreign key constraint
 -- V0.2.1: Change attribute _name, re-route foreign key constraint
 -- V0.2.2: Add CHECK constraint
--- Last up_date: 18/02/2023
+-- Last up_date: 21/02/2023
 -- Script for generating EIMS - Eggs Incubating Management System.
 -- Check if database already exist. If yes then drop the database to ensure the script runs successfully with no variations.
 DROP DATABASE IF EXISTS eims;
@@ -31,7 +32,6 @@ CREATE TABLE facility(
 CREATE TABLE user(
 	user_id		integer 		AUTO_INCREMENT PRIMARY KEY,
     role_id		integer			NOT NULL,
-    facility_id	integer,
     username	varchar(63)		NOT NULL,
     dob			date			NOT NULL,
     phone		varchar(15)		NOT NULL,
@@ -40,6 +40,13 @@ CREATE TABLE user(
     password	varchar(127)	NOT NULL,
     address	varchar(127),
 	status		boolean			NOT NULL
+);
+
+CREATE TABLE salary_history(
+	salary_history_id	integer	AUTO_INCREMENT PRIMARY KEY,
+    user_id				integer,
+    salary				decimal(15,2),
+    issue_date			date
 );
 
 CREATE TABLE specie(
@@ -159,21 +166,20 @@ CREATE TABLE egg_product(
 );
 
 CREATE TABLE egg_location(
-	egg_id		integer	AUTO_INCREMENT PRIMARY KEY,
-	product_id	integer NOT NULL,
-    machine_id	integer NOT NULL,
-    amount		integer NOT NULL,
-    status		boolean NOT NULL
+	egg_location_id	integer	AUTO_INCREMENT PRIMARY KEY,
+	product_id		integer NOT NULL,
+    machine_id		integer NOT NULL,
+    amount			integer NOT NULL,
+    status			boolean NOT NULL
 );
 
-CREATE TABLE salary(
-	salary_id	integer			AUTO_INCREMENT PRIMARY KEY,
-	user_id		integer			NOT NULL,
-    base_salary	decimal(15,2)	NOT NULL,
-    bonus		decimal(15,2),
-    fine		decimal(15,2),
-	issue_date	date			NOT NULL,
-    note		varchar(255),
+CREATE TABLE payroll(
+	payroll_id		integer		AUTO_INCREMENT PRIMARY KEY,
+	user_id			integer			NOT NULL,
+    payroll_item	varchar(255)	NOT NULL,
+    payroll_amount	decimal(15,2)	NOT NULL,
+	issue_date		date			NOT NULL,
+    note			varchar(255),
     status		boolean 		NOT NULL
 );
 
@@ -203,13 +209,31 @@ CREATE TABLE user_subsription(
     status			boolean		NOT NULL
 );
 
+CREATE TABLE registration(
+	registration_id integer 	AUTO_INCREMENT PRIMARY KEY,
+    user_id			integer 	NOT NULL,
+    register_date	date		NOT NULL,
+    status			smallint	NOT NULL	-- 0: Not viewed, 1: Rejected, 2: Approved
+);
+
+CREATE TABLE notification(
+	notification_id		integer	AUTO_INCREMENT PRIMARY KEY,
+    user_id				integer,
+    notification_brief	varchar(255),
+    product_id			integer,
+    status				boolean
+);
+
 -- Add the foreign keys and references to created tables.
 ALTER TABLE facility 
 ADD FOREIGN KEY (user_id) 		REFERENCES user(user_id);
 
 ALTER TABLE user
 ADD FOREIGN KEY (role_id) 		REFERENCES user_role(role_id),
-ADD	FOREIGN KEY (facility_id) 	REFERENCES facility(facility_id),
+ADD CHECK (salary >= 0);
+
+ALTER TABLE salary_history
+ADD FOREIGN KEY (user_id)		REFERENCES user(user_id),
 ADD CHECK (salary >= 0);
 
 ALTER TABLE specie
@@ -217,7 +241,7 @@ ADD FOREIGN KEY (user_id) 		REFERENCES user(user_id),
 ADD CHECK (incubation_period > 0);
 
 ALTER TABLE breed
-ADD FOREIGN KEY (specie_id) 		REFERENCES specie(specie_id),
+ADD FOREIGN KEY (specie_id) 	REFERENCES specie(specie_id),
 ADD FOREIGN KEY (user_id) 		REFERENCES user(user_id),
 ADD CHECK (average_weight > 0),
 ADD CHECK (growth_time > 0);
@@ -273,11 +297,9 @@ ADD FOREIGN KEY (product_id)		REFERENCES egg_product(product_id),
 ADD FOREIGN KEY (machine_id)		REFERENCES machine(machine_id),
 ADD CHECK (amount > 0);
 
-ALTER TABLE salary
+ALTER TABLE payroll
 ADD FOREIGN KEY (user_id)		REFERENCES user(user_id),
-ADD CHECK (base_salary > 0),
-ADD CHECK (bonus >= 0),
-ADD CHECK (fine >= 0);
+ADD CHECK (payroll_amount != 0);
 
 ALTER TABLE cost
 ADD FOREIGN KEY (user_id)		REFERENCES user(user_id),
@@ -292,6 +314,13 @@ ADD CHECK (machine_quota >= 0);
 ALTER TABLE user_subsription
 ADD FOREIGN KEY (facility_id)	REFERENCES facility(facility_id),
 ADD FOREIGN KEY (subscription_id)REFERENCES subscription(subscription_id);
+
+ALTER TABLE registration
+ADD FOREIGN KEY (user_id)	REFERENCES user(user_id);
+
+ALTER TABLE notification
+ADD FOREIGN KEY (user_id)	REFERENCES user(user_id),
+ADD FOREIGN KEY (product_id)REFERENCES egg_product(product_id);
 
 -- Insert Data into tables
 -- user_role
