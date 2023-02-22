@@ -51,6 +51,7 @@ public class SecurityConfig {
 //                        auth.anyRequest().authenticated() // Authenticate all Requests
                                 auth.requestMatchers(HttpMethod.GET, "/api/**").permitAll() //Allow anyone can access login API
                                         .requestMatchers("/api/auth/**").permitAll()
+                                        .requestMatchers("/api/user/**").permitAll()
                                         .anyRequest().authenticated()
                 );
         return http.build();

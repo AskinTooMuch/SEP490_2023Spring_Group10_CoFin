@@ -322,6 +322,22 @@ ALTER TABLE notification
 ADD FOREIGN KEY (user_id)	REFERENCES user(user_id),
 ADD FOREIGN KEY (product_id)REFERENCES egg_product(product_id);
 
+-- Create Procedures:
+-- Select user and facility of an user
+DELIMITER //
+CREATE PROCEDURE user_and_facility(phone varchar(15)) 
+BEGIN
+SELECT U.user_id, UR.role_name, U.username, U.dob, U.email, U.salary, U.address, U.status AS USER_STATUS, 
+		F.facility_id, F.facility_name, F.facility_address, F.facility_found_date, F.hotline, F.status AS FACILITY_STATUS, F.subscription_expiration_date,
+        US.subscription_id
+
+FROM user U JOIN user_role UR ON U.role_id = UR.role_id
+		LEFT JOIN facility F ON U.user_id = F.user_id
+        LEFT JOIN user_subsription US ON F.facility_id = US.facility_id
+WHERE U.phone = phone;
+END //
+DELIMITER ;
+
 -- Insert Data into tables
 -- user_role
 INSERT INTO user_role (role_id, role_name, status)
@@ -339,6 +355,11 @@ VALUES 	(1, 5, 'Default Data pack', '2001-12-16', '0000000000','a@a.a', 0, 'a','
 		(5,	3, 'Vũ Dương', '2001-01-01', '0978815951', 'workerduong@gmail.com', 0, '$2a$10$NpyM9vyE2zQ7bTdEA7nYAeoirBlK5SqI/7v23kVQd7nCZq9nI.oUu', 'hải dương', 1),
 		(6, 4, 'Phạm Tuấn', '2001-01-01', '0985817104', 'moderatortuan@gmail.com', 0, '$2a$10$FNOLtGaY4coy0.CAHUxLpuBj9PIEO5J3/nqbORI8UmZuZd4eqARw2', 'hà nội', 1);
 
+-- facility
+INSERT INTO facility(facility_id, user_id, facility_name, facility_address, facility_found_date, subscription_expiration_date, hotline, status)
+VALUES 	(1, 2, 'Chu Xuong Trung', 'Gia Loc, Hai Duong', '2019-02-17', '2023-5-31', '0969044714', 1),
+		(2, 3, 'ZTrung09', 'Dau do Ha Noi', '2011-05-09', '2021-10-22', '0852274855', 0);
+        
 -- specie
 INSERT INTO specie(specie_id, user_id, specie_name, incubation_period, status)
 VALUES 	(1, 1, 'Gà', 22, 1),
@@ -383,9 +404,14 @@ VALUES 	(1, 'Máy ấp', 'Máy dùng cho giai đoạn vừa mới ấp cho tới
 		(2, 'Máy nở', 'Máy dùng cho giai đoạn từ trứng lộn đến khi nở ra con, nhiệt thấp hơn, sức chứa thấp hơn', 1);
 
 -- subscription
-INSERT INTO subscription(cost, duration, machine_quota, status)
-VALUES 	(0, 30, 5, 1),
-		(500000, 30, 5, 1),
-		(1300000, 90, 5, 1),
-		(2400000, 180, 10, 1),
-		(4000000, 365, 15, 1);
+INSERT INTO subscription(subscription_id, cost, duration, machine_quota, status)
+VALUES 	(1, 0, 30, 5, 1),
+		(2, 500000, 30, 5, 1),
+		(3, 1300000, 90, 5, 1),
+		(4, 2400000, 180, 10, 1),
+		(5, 4000000, 365, 15, 1);
+        
+-- user_subscription
+INSERT INTO user_subsription(facility_id, subscription_id, subscribe_date, status)
+VALUES	('1', '5', '2022-05-31', 1),
+		('2', '4', '2021-04-25', 0);

@@ -8,6 +8,9 @@ import com.example.eims.entity.UserRole;
 import com.example.eims.repository.FacilityRepisitory;
 import com.example.eims.repository.UserRepository;
 import com.example.eims.repository.UserRoleRepository;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,6 +36,9 @@ public class UserController {
     @Autowired
     private UserRoleRepository userRoleRepository;
 
+    @PersistenceContext
+    private EntityManager em;
+
     /**
      * The API requesting user information and facility information with the requesting DTO consists of user phone number.
      * The API returns the details of a user and it's facility in the form of a UserDetailDTO
@@ -40,34 +46,42 @@ public class UserController {
      * @return
      */
     @PostMapping("/details")
-    @Secured({"ROLE_OWNER", "ROLE_EMPLOYEE"})
+    //@Secured({"ROLE_OWNER", "ROLE_EMPLOYEE"})
     public ResponseEntity<UserDetailDTO> sendUserDetail(@RequestBody PhoneNumberDTO phoneNumberDTO){
-        User user = userRepository.findByPhone(phoneNumberDTO.getPhone()).get();
-        Optional<Facility> facilityOpt = facilityRepisitory.findByUserId(user.getUserId());
-        //User information
-        UserDetailDTO userDetailDTO = new UserDetailDTO();
-        userDetailDTO.setUserId(user.getUserId());
-        UserRole userRole = new UserRole();
-        if (userRoleRepository.findByRoleId(user.getRoleId()).isPresent()){
-            userRole = userRoleRepository.findByRoleId(user.getRoleId()).get();
-        }
-        userDetailDTO.setUserRoleName(userRole.getRoleName());
-        userDetailDTO.setUsername(user.getUsername());
-        userDetailDTO.setUserDob(user.getDob());
-        userDetailDTO.setUserEmail(user.getEmail());
-        userDetailDTO.setUserSalary(user.getSalary());
-        userDetailDTO.setUserAddress(user.getAddress());
-        userDetailDTO.setUserStatus(user.isStatus());
-        //Facility information
-        if (facilityOpt.isPresent()) {
-            Facility facility = facilityOpt.get();
-            userDetailDTO.setFacilityId(facility.getFacilityId());
-            userDetailDTO.setFacilityName(facility.getFacilityName());
-            userDetailDTO.setFacilityAddress(facility.getFacilityAddress());
-            userDetailDTO.setFacilityFoundDate(facility.getFacilityFoundDate());
-            userDetailDTO.setFacilityId(facility.getFacilityId());
-        }
+//        UserDetailDTO userDetailDTO = (UserDetailDTO) em.createNativeQuery("CALL user_and_facility('" +
+//                phoneNumberDTO.getPhone() + "')", "UserDetailMapping").getSingleResult();
 
-        return new ResponseEntity<UserDetailDTO>(new UserDetailDTO(), HttpStatus.OK);
+        Query q = em.createNamedQuery("GetUserDetail");
+        q.setParameter(1, phoneNumberDTO.getPhone());
+        UserDetailDTO userDetailDTO = (UserDetailDTO) q.getSingleResult();
+//
+//        User user = userRepository.findByPhone(phoneNumberDTO.getPhone()).get();
+//        Optional<Facility> facilityOpt = facilityRepisitory.findByUserId(user.getUserId());
+//        //User information
+//        UserDetailDTO userDetailDTO = new UserDetailDTO();
+//        userDetailDTO.setUserId(user.getUserId());
+//        UserRole userRole = new UserRole();
+//        if (userRoleRepository.findByRoleId(user.getRoleId()).isPresent()){
+//            userRole = userRoleRepository.findByRoleId(user.getRoleId()).get();
+//        }
+//        userDetailDTO.setUserRoleName(userRole.getRoleName());
+//        userDetailDTO.setUsername(user.getUsername());
+//        userDetailDTO.setUserDob(user.getDob());
+//        userDetailDTO.setUserEmail(user.getEmail());
+//        userDetailDTO.setUserSalary(user.getSalary());
+//        userDetailDTO.setUserAddress(user.getAddress());
+//        userDetailDTO.setUserStatus(user.isStatus());
+//        //Facility information
+//        if (facilityOpt.isPresent()) {
+//            Facility facility = facilityOpt.get();
+//            userDetailDTO.setFacilityId(facility.getFacilityId());
+//            userDetailDTO.setFacilityName(facility.getFacilityName());
+//            userDetailDTO.setFacilityAddress(facility.getFacilityAddress());
+//            userDetailDTO.setFacilityFoundDate(facility.getFacilityFoundDate());
+//            userDetailDTO.setFacilityStatus(facility.isStatus());
+//
+//        }
+
+        return new ResponseEntity<>(userDetailDTO, HttpStatus.OK);
     }
 }
