@@ -6,14 +6,17 @@
  *
  * Record of change:<br>
  * DATE          Version    Author           DESCRIPTION<br>
- * 21/02/2023    1.0        ChucNV           First Deploy<br>
+ * 18/01/2023    1.0        ChucNV           First Deploy<br>
  */
 
-package com.example.eims.dto.user;
+package com.example.eims.dto.auth;
 
 import lombok.Data;
 
 @Data
-public class PhoneNumberDTO {
+public class ForgotPasswordDTO {
     private String phone;
+    private String newPassword;
+    private String confirmPassword;
+    private String OTP;
 }

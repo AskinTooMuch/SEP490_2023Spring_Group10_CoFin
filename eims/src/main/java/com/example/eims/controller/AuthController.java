@@ -1,9 +1,20 @@
+/*
+ * Copyright (C) 2023, FPT University <br>
+ * SEP490 - SEP490_G10 <br>
+ * EIMS <br>
+ * Eggs Incubating Management System <br>
+ *
+ * Record of change:<br>
+ * DATE          Version    Author           DESCRIPTION<br>
+ * 18/01/2023    1.0        ChucNV           First Deploy<br>
+ */
+
 package com.example.eims.controller;
 
-import com.example.eims.dto.ChangePasswordDTO;
-import com.example.eims.dto.ForgotPasswordDTO;
-import com.example.eims.dto.LoginDTO;
-import com.example.eims.dto.SignUpDTO;
+import com.example.eims.dto.auth.ChangePasswordDTO;
+import com.example.eims.dto.auth.ForgotPasswordDTO;
+import com.example.eims.dto.auth.LoginDTO;
+import com.example.eims.dto.auth.SignUpDTO;
 import com.example.eims.entity.User;
 import com.example.eims.repository.UserRoleRepository;
 import com.example.eims.repository.UserRepository;
@@ -73,7 +84,7 @@ public class AuthController {
         Date date;
         try {
             date = new Date(
-                    (new SimpleDateFormat("dd-MM-yyyy").parse(sDate)).getTime());
+                    (new SimpleDateFormat("yyyy-mm-dd").parse(sDate)).getTime());
         } catch (ParseException e) {
             throw new RuntimeException(e);
         }
@@ -81,7 +92,7 @@ public class AuthController {
         user.setPhone(signUpDTO.getPhone());
         user.setAddress(signUpDTO.getAddress());
         user.setRoleId(signUpDTO.getRoleId());
-        user.setStatus(false);
+        user.setStatus(1);
         //Encode password
         user.setPassword(passwordEncoder.encode(signUpDTO.getPassword()));
         System.out.println(user.toString());
@@ -92,7 +103,7 @@ public class AuthController {
 
     /**
      * API for the user to change password.
-     * The DTO contails the login phone, old password and new password
+     * The DTO contains the login phone, old password and new password
      *
      * @param changePasswordDTO
      * @return

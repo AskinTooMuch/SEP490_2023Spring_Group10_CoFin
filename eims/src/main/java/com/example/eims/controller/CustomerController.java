@@ -1,6 +1,18 @@
+/*
+ * Copyright (C) 2023, FPT University <br>
+ * SEP490 - SEP490_G10 <br>
+ * EIMS <br>
+ * Eggs Incubating Management System <br>
+ *
+ * Record of change:<br>
+ * DATE          Version    Author           DESCRIPTION<br>
+ * 18/02/2023    1.0        DuongVV          First Deploy<br>
+ */
+
 package com.example.eims.controller;
 
-import com.example.eims.dto.NewCustomerDTO;
+import com.example.eims.dto.customer.CreateCustomerDTO;
+import com.example.eims.dto.customer.UpdateCustomerDTO;
 import com.example.eims.entity.Customer;
 import com.example.eims.repository.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,10 +31,10 @@ public class CustomerController {
 
     /**
      * API to get all of their customers.
-     * The userId is the id of current logged-in user.
+     * userId is the id of current logged-in user.
      *
      * @param userId
-     * @return list of Customer
+     * @return list of Customers
      */
     @GetMapping("/all")
     public List<Customer> getAllCustomer(Long userId) {
@@ -33,33 +45,35 @@ public class CustomerController {
 
     /**
      * API to get a customer.
-     * id is the id of the customer
+     * customerId is the id of the customer
      *
-     * @param id
+     * @param customerId
      * @return
      */
-    @GetMapping("/{id}")
-    public Customer getCustomer(@PathVariable Long id) {
+    @GetMapping("/{customerId}")
+    public Customer getCustomer(@PathVariable Long customerId) {
         // Get a customer of the current User
-        Customer customer = customerRepository.findById(id).get();
+        Customer customer = customerRepository.findById(customerId).get();
         return customer;
     }
 
     /**
      * API to create a customer of a user.
-     * The DTO contains the user's id, name, phone number and address of the customer
+     * createCustomerDTO contains the user's id, name, phone number and address of the customer
      *
-     * @param newCustomerDTO
+     * @param createCustomerDTO
      * @return
      */
-    @PostMapping()
-    public ResponseEntity<?> createCustomer(NewCustomerDTO newCustomerDTO) {
+    @PostMapping("/create")
+    public ResponseEntity<?> createCustomer(CreateCustomerDTO createCustomerDTO) {
         // Retrieve customer information and create new customer
         Customer customer = new Customer();
-        customer.setUserId(newCustomerDTO.getUserId());
-        customer.setName(newCustomerDTO.getName());
-        customer.setPhone(newCustomerDTO.getPhone());
-        customer.setAddress(newCustomerDTO.getAddress());
+        customer.setUserId(createCustomerDTO.getUserId());
+        customer.setCustomerName(createCustomerDTO.getName());
+        customer.setCustomerPhone(createCustomerDTO.getPhone());
+        customer.setCustomerAddress(createCustomerDTO.getAddress());
+        customer.setCustomerMail(createCustomerDTO.getMail());
+        customer.setStatus(1);
         // Save
         customerRepository.save(customer);
         return new ResponseEntity<>("Customer created!", HttpStatus.OK);
@@ -67,20 +81,22 @@ public class CustomerController {
 
     /**
      * API to update a customer of a user.
-     * id is the id of the customer
-     * The DTO contains the user's id, new name, phone number and address of the customer
+     * customerId is the id of the customer
+     * updateCustomerDTO contains the new name, phone number and address, email and status of the customer
      *
-     * @param id, newCustomerDTO
+     * @param customerId
+     * @param updateCustomerDTO
      * @return
      */
-    @PutMapping("/{id}")
-    public ResponseEntity<?> updateCustomer(@PathVariable Long id, NewCustomerDTO newCustomerDTO) {
+    @PutMapping("/update/{customerId}")
+    public ResponseEntity<?> updateCustomer(@PathVariable Long customerId, UpdateCustomerDTO updateCustomerDTO) {
         // Retrieve customer's new information
-        Customer customer = new Customer();
-        customer.setUserId(newCustomerDTO.getUserId());
-        customer.setName(newCustomerDTO.getName());
-        customer.setPhone(newCustomerDTO.getPhone());
-        customer.setAddress(newCustomerDTO.getAddress());
+        Customer customer = customerRepository.findByCustomerId(customerId);
+        customer.setCustomerName(updateCustomerDTO.getName());
+        customer.setCustomerPhone(updateCustomerDTO.getPhone());
+        customer.setCustomerAddress(updateCustomerDTO.getAddress());
+        customer.setCustomerMail(updateCustomerDTO.getMail());
+        customer.setStatus(updateCustomerDTO.getStatus());
         // Save
         customerRepository.save(customer);
         return new ResponseEntity<>("Customer updated!", HttpStatus.OK);
@@ -88,15 +104,15 @@ public class CustomerController {
 
     /**
      * API to delete a customer of a user.
-     * id is the id of the customer
+     * customerId is the id of the customer
      *
-     * @param id
+     * @param customerId
      * @return
      */
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteCustomer(@PathVariable Long id) {
+    @DeleteMapping("/delete/{customerId}")
+    public ResponseEntity<?> deleteCustomer(@PathVariable Long customerId) {
         // Delete
-        customerRepository.deleteById(id);
+        customerRepository.deleteById(customerId);
         return new ResponseEntity<>("Customer deleted!", HttpStatus.OK);
     }
 }
