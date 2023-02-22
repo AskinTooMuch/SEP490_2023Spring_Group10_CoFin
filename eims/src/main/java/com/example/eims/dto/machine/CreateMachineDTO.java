@@ -6,14 +6,17 @@
  *
  * Record of change:<br>
  * DATE          Version    Author           DESCRIPTION<br>
- * 21/02/2023    1.0        ChucNV           First Deploy<br>
+ * 18/02/2023    1.0        DuongVV          First Deploy<br>
  */
 
-package com.example.eims.dto.user;
+package com.example.eims.dto.machine;
 
 import lombok.Data;
 
 @Data
-public class PhoneNumberDTO {
-    private String phone;
+public class CreateMachineDTO {
+    private Long machineTypeId;
+    private Long facilityId;
+    private String name;
+    private int maxCapacity;
 }

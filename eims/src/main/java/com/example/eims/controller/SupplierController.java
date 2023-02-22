@@ -1,6 +1,18 @@
+/*
+ * Copyright (C) 2023, FPT University <br>
+ * SEP490 - SEP490_G10 <br>
+ * EIMS <br>
+ * Eggs Incubating Management System <br>
+ *
+ * Record of change:<br>
+ * DATE          Version    Author           DESCRIPTION<br>
+ * 18/02/2023    1.0        DuongVV          First Deploy<br>
+ */
+
 package com.example.eims.controller;
 
-import com.example.eims.dto.NewSupplierDTO;
+import com.example.eims.dto.supplier.CreateSupplierDTO;
+import com.example.eims.dto.supplier.UpdateSupplierDTO;
 import com.example.eims.entity.Supplier;
 import com.example.eims.repository.SupplierRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,13 +31,13 @@ public class SupplierController {
 
     /**
      * API to get all of their suppliers.
-     * The userId is the id of current logged-in user.
+     * userId is the id of current logged-in user.
      *
      * @param userId
-     * @return list of Supplier
+     * @return list of Suppliers
      */
     @GetMapping("/all")
-    public List<Supplier> getAllCustomer(Long userId) {
+    public List<Supplier> getAllSupplier(Long userId) {
         // Get all suppliers of the current User
         List<Supplier> supplierList = supplierRepository.findByUserId(userId);
         return supplierList;
@@ -33,34 +45,35 @@ public class SupplierController {
 
     /**
      * API to get a supplier.
-     * id is the id of the supplier
+     * supplierId is the id of the supplier
      *
-     * @param id
+     * @param supplierId
      * @return
      */
-    @GetMapping("/{id}")
-    public Supplier getCustomer(@PathVariable Long id) {
-        // Get all supplier of current User
-        Supplier supplier = supplierRepository.findById(id).get();
+    @GetMapping("/{supplierId}")
+    public Supplier getSupplier(@PathVariable Long supplierId) {
+        // Get a supplier
+        Supplier supplier = supplierRepository.findById(supplierId).get();
         return supplier;
     }
 
     /**
      * API to create a supplier of a user.
-     * id is the id of the supplier
-     * The DTO contains the user's id, name, phone number and address of the supplier
+     * newSupplierDTO contains the user's id, name, phone number and address of the supplier
      *
-     * @param newSupplierDTO
+     * @param createSupplierDTO
      * @return
      */
-    @PostMapping()
-    public ResponseEntity<?> createSupplier(NewSupplierDTO newSupplierDTO) {
+    @PostMapping("/create")
+    public ResponseEntity<?> createSupplier(CreateSupplierDTO createSupplierDTO) {
         // Retrieve supplier information and create new supplier
         Supplier supplier = new Supplier();
-        supplier.setUserId(newSupplierDTO.getUserId());
-        supplier.setSupplierName(newSupplierDTO.getName());
-        supplier.setSupplierPhone(newSupplierDTO.getPhone());
-        supplier.setSupplierAddress(newSupplierDTO.getAddress());
+        supplier.setUserId(createSupplierDTO.getUserId());
+        supplier.setSupplierName(createSupplierDTO.getSupplierName());
+        supplier.setSupplierPhone(createSupplierDTO.getSupplierPhone());
+        supplier.setSupplierAddress(createSupplierDTO.getSupplierAddress());
+        supplier.setSupplierMail(createSupplierDTO.getSupplierMail());
+        supplier.setStatus(1);
         // Save
         supplierRepository.save(supplier);
         return new ResponseEntity<>("Supplier created!", HttpStatus.OK);
@@ -68,20 +81,22 @@ public class SupplierController {
 
     /**
      * API to update a supplier of a user.
-     * id is the id of the supplier
-     * The DTO contains the user's id, new name, phone number and address of the supplier
+     * supplierId is the id of the supplier
+     * newSupplierDTO contains the user's id, new name, phone number and address of the supplier
      *
-     * @param newSupplierDTO, id
+     * @param updateSupplierDTO
+     * @param supplierId
      * @return
      */
-    @PutMapping("/{id}")
-    public ResponseEntity<?> updateSupplier(@PathVariable Long id, NewSupplierDTO newSupplierDTO) {
+    @PutMapping("/update/{supplierId}")
+    public ResponseEntity<?> updateSupplier(@PathVariable Long supplierId, UpdateSupplierDTO updateSupplierDTO) {
         // Retrieve supplier's new information
-        Supplier supplier = new Supplier();
-        supplier.setUserId(newSupplierDTO.getUserId());
-        supplier.setSupplierName(newSupplierDTO.getName());
-        supplier.setSupplierPhone(newSupplierDTO.getPhone());
-        supplier.setSupplierAddress(newSupplierDTO.getAddress());
+        Supplier supplier = supplierRepository.findBySupplierId(supplierId);
+        supplier.setSupplierName(updateSupplierDTO.getSupplierName());
+        supplier.setSupplierPhone(updateSupplierDTO.getSupplierPhone());
+        supplier.setSupplierAddress(updateSupplierDTO.getSupplierAddress());
+        supplier.setSupplierMail(updateSupplierDTO.getSupplierMail());
+        supplier.setStatus(updateSupplierDTO.getStatus());
         // Save
         supplierRepository.save(supplier);
         return new ResponseEntity<>("Supplier updated!", HttpStatus.OK);
@@ -89,15 +104,15 @@ public class SupplierController {
 
     /**
      * API to delete a supplier of a user.
-     * id is the id of the supplier
+     * supplierId is the id of the supplier
      *
-     * @param id
+     * @param supplierId
      * @return
      */
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteSupplier(@PathVariable Long id) {
+    @DeleteMapping("/delete/{supplierId}")
+    public ResponseEntity<?> deleteSupplier(@PathVariable Long supplierId) {
         // Delete
-        supplierRepository.deleteById(id);
+        supplierRepository.deleteById(supplierId);
         return new ResponseEntity<>("Supplier deleted!", HttpStatus.OK);
     }
 }

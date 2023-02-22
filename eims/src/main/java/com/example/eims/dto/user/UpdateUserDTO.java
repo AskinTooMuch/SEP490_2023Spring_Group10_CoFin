@@ -13,7 +13,15 @@ package com.example.eims.dto.user;
 
 import lombok.Data;
 
+import java.util.Date;
+
 @Data
-public class PhoneNumberDTO {
+public class UpdateUserDTO {
+    private String username;
+    private String dob;
     private String phone;
+    private String email;
+    private Float salary;
+    private String address;
+    private int status;
 }

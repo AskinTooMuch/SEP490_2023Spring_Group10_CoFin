@@ -1,3 +1,15 @@
+/*
+ * Copyright (C) 2023, FPT University <br>
+ * SEP490 - SEP490_G10 <br>
+ * EIMS <br>
+ * Eggs Incubating Management System <br>
+ *
+ * Record of change:<br>
+ * DATE          Version    Author           DESCRIPTION<br>
+ * 16/02/2023    1.0        DuongVV          First Deploy<br>
+ * 19/02/2023    2.0        DuongVV          Fix notation, id filed
+ */
+
 package com.example.eims.entity;
 
 import jakarta.persistence.*;
@@ -8,11 +20,12 @@ import lombok.Data;
 @Table(name = "customer")
 public class Customer {
     @Id
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long customerId;
     private Long userId;
-    private String name;
-    private String phone;
-    private String address;
-    private String mail;
-    private boolean status;
+    private String customerName;
+    private String customerPhone;
+    private String customerAddress;
+    private String customerMail;
+    private int status;
 }
