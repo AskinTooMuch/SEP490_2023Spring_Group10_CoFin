@@ -48,9 +48,6 @@ public class UserController {
     @PostMapping("/details")
     //@Secured({"ROLE_OWNER", "ROLE_EMPLOYEE"})
     public ResponseEntity<UserDetailDTO> sendUserDetail(@RequestBody PhoneNumberDTO phoneNumberDTO){
-//        UserDetailDTO userDetailDTO = (UserDetailDTO) em.createNativeQuery("CALL user_and_facility('" +
-//                phoneNumberDTO.getPhone() + "')", "UserDetailMapping").getSingleResult();
-
         Query q = em.createNamedQuery("GetUserDetail");
         q.setParameter(1, phoneNumberDTO.getPhone());
         UserDetailDTO userDetailDTO = (UserDetailDTO) q.getSingleResult();

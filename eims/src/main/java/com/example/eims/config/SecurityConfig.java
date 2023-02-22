@@ -52,6 +52,7 @@ public class SecurityConfig {
                                 auth.requestMatchers(HttpMethod.GET, "/api/**").permitAll() //Allow anyone can access login API
                                         .requestMatchers("/api/auth/**").permitAll()
                                         .requestMatchers("/api/user/**").permitAll()
+                                        .requestMatchers("/api/specie/**").permitAll()
                                         .anyRequest().authenticated()
                 );
         return http.build();

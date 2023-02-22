@@ -9,6 +9,7 @@ import { Modal, Button } from 'react-bootstrap'
 const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
 const Profile = () => {
     const CHANGE_PASS_URL = '/api/auth/changePassword';
+    const USER_DETAIL_URL = '/api/user/details';
 
     const [show, setShow] = useState(false);
 
@@ -31,14 +32,31 @@ const Profile = () => {
 
     const [validPwd, setValidPwd] = useState(false);
     const [pwdFocus, setPwdFocus] = useState(false);
-
     const [matchPwd, setMatchPwd] = useState('');
     const [validMatch, setValidMatch] = useState(false);
     const [matchFocus, setMatchFocus] = useState(false);
 
     const [errMsg, setErrMsg] = useState('');
 
+    //Get user details
+    const [userDetails, setUserDetails] = useState();
     useEffect(() => {
+        async function getUserDetails() {
+          const headers = {
+            //Authorization: authProps.idToken
+          };
+          const response = await axios.post(USER_DETAIL_URL,
+            {phone: sessionStorage.getItem("curPhone")},
+            { headers }
+          );
+          const data = await response.json();
+          console.log(data);
+          setUserDetails(data);
+        };
+      }, []); 
+
+    useEffect(() => {
+        
         setErrMsg('');
     }, [changePasswordDTO.newPassword, matchPwd])
 

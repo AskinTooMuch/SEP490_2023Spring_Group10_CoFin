@@ -1,9 +1,6 @@
 package com.example.eims.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Data;
 
 @Data
@@ -11,7 +8,8 @@ import lombok.Data;
 @Table(name = "specie")
 public class Specie {
     @Id
-    private Long specieId;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long specieId = 100L;
     private Long userId;
     private String specieName;
     private int incubationPeriod;
