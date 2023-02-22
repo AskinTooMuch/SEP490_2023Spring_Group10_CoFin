@@ -16,20 +16,11 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import { Button } from '@mui/material';
 import HelpIcon from '@mui/icons-material/Help';
 import LogoutIcon from '@mui/icons-material/Logout';
-import axios from '../api/axios';
-const USER_URL = '/api/auth/users';
+import "../css/navbar.css"
 const Nav = () => {
-    const auth = localStorage.getItem("user");
+    const auth = sessionStorage.getItem("curPhone");
     const navigate = useNavigate();
-    const [users, setUsers] = useState([]);
-    useEffect(() => {
-        loadUsers();
-    });
-
-    const loadUsers = async () => {
-        const result = await axios.get(USER_URL)
-        console.log(result)
-    }
+    
     const [anchorEl, setAnchorEl] = React.useState(null);
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
 
@@ -49,7 +40,7 @@ const Nav = () => {
         handleMobileMenuClose();
     };
     const logout = () => {
-        localStorage.clear();
+        sessionStorage.clear();
         handleMenuClose();
         navigate("/")
     }
@@ -146,7 +137,7 @@ const Nav = () => {
                             component="div"
                             sx={{ display: { xs: 'none', sm: 'block' } }}
                         >
-                            <Link to="/">EIMS</Link>
+                            <Link className='title' to="/">EIMS</Link>
                         </Typography>
                         {
                             auth ?
@@ -195,8 +186,8 @@ const Nav = () => {
                                 </>
                                 :
                                 <Box sx={{ flexGrow: 1 }}>
-                                    <Button className="loginbutton" color="inherit"><Link style={{ textDecoration: "none" }} to="/register">Đăng ký</Link></Button>
-                                    <Button className="signupbutton" color="inherit"><Link style={{ textDecoration: "none" }} to="/login">Đăng nhập</Link></Button>
+                                    <Button className="signupbutton" color="inherit"><Link style={{ textDecoration: "none",textTransform:"capitalize" }} to="/register">Đăng ký</Link></Button>
+                                    <Button className="loginbutton" color="inherit"><Link style={{ textDecoration: "none",textTransform:"capitalize" }} to="/login">Đăng nhập</Link></Button>
                                 </Box>
 
 
