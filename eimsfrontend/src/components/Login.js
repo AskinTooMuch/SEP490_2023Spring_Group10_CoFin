@@ -127,7 +127,7 @@ const Login = () => {
               </span>
 
             </p>
-            <p className='link'> <label><a href="#">Quên mật khẩu?</a></label>
+            <p className='link'> <label><Link to="/forgotpassword">Quên mật khẩu?</Link></label>
 
             </p>
           </div>

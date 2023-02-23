@@ -9,8 +9,8 @@
 }
 
 .btn-light:hover {
-    background-color: black;
-    color: white;
+    background-color: #ffcc00;
+    color: black;
 }
 
 .input-group-prepend button {
