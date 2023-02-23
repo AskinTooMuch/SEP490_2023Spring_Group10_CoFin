@@ -1,22 +1,28 @@
 /*
- * Copyright (C) 2023, FPT University <br>
- * SEP490 - SEP490_G10 <br>
- * EIMS <br>
- * Eggs Incubating Management System <br>
+ * Copyright (C) 2023, FPT University<br>
+ * SEP490 - SEP490_G10<br>
+ * EIMS<br>
+ * Eggs Incubating Management System<br>
  *
  * Record of change:<br>
  * DATE          Version    Author           DESCRIPTION<br>
  * 17/02/2023    1.0        DuongVV          First Deploy<br>
+ * 23/02/2023    2.0        DuongVV          Add search<br>
  */
 
 package com.example.eims.repository;
 
 import com.example.eims.entity.Customer;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
 public interface CustomerRepository extends JpaRepository<Customer, Long> {
     List<Customer> findByUserId(Long userId);
     Customer findByCustomerId(Long customerId);
+    boolean existsByCustomerPhone(String phoneNumber);
+    @Query(value = "SELECT c from eims.customer c where c.user_id = ?1 " +
+            "and c.customer_phone like %?2% or c.customer_name like %?2%", nativeQuery = true)
+    List<Customer> findByUsernameOrPhone(Long userId, String key);
 }

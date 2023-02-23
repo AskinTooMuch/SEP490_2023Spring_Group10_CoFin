@@ -28,7 +28,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
+import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Optional;
@@ -84,7 +84,7 @@ public class AuthController {
         Date date;
         try {
             date = new Date(
-                    (new SimpleDateFormat("yyyy-mm-dd").parse(sDate)).getTime());
+                    (new SimpleDateFormat("yyyy-MM-dd").parse(sDate)).getTime());
         } catch (ParseException e) {
             throw new RuntimeException(e);
         }
@@ -158,8 +158,8 @@ public class AuthController {
     @PostMapping("/forgotPassword/verifyOTP")
     public ResponseEntity<?> verifyOTPForgotPassword(@RequestBody ForgotPasswordDTO forgotPasswordDTO) {
         //Check if the OTP match
-        String OPT_REAL = "111";
-        if (forgotPasswordDTO.getOTP().equalsIgnoreCase(OPT_REAL)){
+        String OTP_REAL = "111";
+        if (forgotPasswordDTO.getOTP().equalsIgnoreCase(OTP_REAL)){
             return new ResponseEntity<>("OTP confirmed! Please enter your new password.", HttpStatus.OK);
         } else {
             // wait 3m to re-send the OTP

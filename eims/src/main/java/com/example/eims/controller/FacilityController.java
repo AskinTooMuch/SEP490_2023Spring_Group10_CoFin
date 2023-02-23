@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.sql.Date;
 import java.util.List;
 
 @CrossOrigin(origins = "http://localhost:3000")

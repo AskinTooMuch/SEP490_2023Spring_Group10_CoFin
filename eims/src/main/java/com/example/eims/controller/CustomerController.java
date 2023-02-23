@@ -1,12 +1,13 @@
 /*
- * Copyright (C) 2023, FPT University <br>
- * SEP490 - SEP490_G10 <br>
- * EIMS <br>
- * Eggs Incubating Management System <br>
+ * Copyright (C) 2023, FPT University<br>
+ * SEP490 - SEP490_G10<br>
+ * EIMS<br>
+ * Eggs Incubating Management System<br>
  *
  * Record of change:<br>
  * DATE          Version    Author           DESCRIPTION<br>
  * 18/02/2023    1.0        DuongVV          First Deploy<br>
+ * 23/02/2023    2.0        DuongVV          Add search<br>
  */
 
 package com.example.eims.controller;
@@ -15,6 +16,7 @@ import com.example.eims.dto.customer.CreateCustomerDTO;
 import com.example.eims.dto.customer.UpdateCustomerDTO;
 import com.example.eims.entity.Customer;
 import com.example.eims.repository.CustomerRepository;
+import com.example.eims.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,16 +30,20 @@ import java.util.List;
 public class CustomerController {
     @Autowired
     private CustomerRepository customerRepository;
+    @Autowired
+    private UserRepository userRepository;
 
     /**
      * API to get all of their customers.
-     * userId is the id of current logged-in user.
+     * phone is the phone number of current logged-in user.
      *
-     * @param userId
+     * @param phone
      * @return list of Customers
      */
     @GetMapping("/all")
-    public List<Customer> getAllCustomer(Long userId) {
+    public List<Customer> getAllCustomer(String phone) {
+        // Get current user's id
+        Long userId = userRepository.findIdByPhone(phone);
         // Get all customers of the current User
         List<Customer> customerList = customerRepository.findByUserId(userId);
         return customerList;
@@ -66,17 +72,23 @@ public class CustomerController {
      */
     @PostMapping("/create")
     public ResponseEntity<?> createCustomer(CreateCustomerDTO createCustomerDTO) {
-        // Retrieve customer information and create new customer
-        Customer customer = new Customer();
-        customer.setUserId(createCustomerDTO.getUserId());
-        customer.setCustomerName(createCustomerDTO.getName());
-        customer.setCustomerPhone(createCustomerDTO.getPhone());
-        customer.setCustomerAddress(createCustomerDTO.getAddress());
-        customer.setCustomerMail(createCustomerDTO.getMail());
-        customer.setStatus(1);
-        // Save
-        customerRepository.save(customer);
-        return new ResponseEntity<>("Customer created!", HttpStatus.OK);
+        // Check phone number existed or not
+        boolean existed = customerRepository.existsByCustomerPhone(createCustomerDTO.getPhone());
+        if (existed) { /* if phone number existed */
+            return new ResponseEntity<>("Customer's phone existed!", HttpStatus.OK);
+        } else { /* if phone number not existed */
+            // Retrieve customer information and create new customer
+            Customer customer = new Customer();
+            customer.setUserId(createCustomerDTO.getUserId());
+            customer.setCustomerName(createCustomerDTO.getName());
+            customer.setCustomerPhone(createCustomerDTO.getPhone());
+            customer.setCustomerAddress(createCustomerDTO.getAddress());
+            customer.setCustomerMail(createCustomerDTO.getMail());
+            customer.setStatus(1);
+            // Save
+            customerRepository.save(customer);
+            return new ResponseEntity<>("Customer created!", HttpStatus.OK);
+        }
     }
 
     /**
@@ -114,5 +126,25 @@ public class CustomerController {
         // Delete
         customerRepository.deleteById(customerId);
         return new ResponseEntity<>("Customer deleted!", HttpStatus.OK);
+    }
+
+    /**
+     * API to search customer of the user by their name or phone number.
+     * key is the search key (name or phone number)
+     * phone is the phone number of current user
+     *
+     * @param key
+     * @param phone
+     * @return list of customers
+     */
+    @GetMapping("/search")
+    public ResponseEntity<?> searchCustomer(@RequestParam String key, String phone) {
+        // Get current user's id
+        Long userId = userRepository.findIdByPhone(phone);
+        // Trim spaces
+        key = key.trim().replaceAll("\\s+"," ");
+        // Search
+        List<Customer> customerList = customerRepository.findByUsernameOrPhone(userId, key);
+        return new ResponseEntity<>(customerList, HttpStatus.OK);
     }
 }

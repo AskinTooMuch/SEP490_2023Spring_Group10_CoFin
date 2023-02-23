@@ -20,9 +20,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 @CrossOrigin(origins = "http://localhost:3000")
@@ -65,7 +64,6 @@ public class MachineController {
      * createMachineDTO contains the facility id, machine type id, name, max and current capacity
      *
      * @param createMachineDTO
-     *
      * @return
      */
     @PostMapping("/create")
@@ -77,16 +75,21 @@ public class MachineController {
         machine.setMachineName(createMachineDTO.getName());
         machine.setMaxCapacity(createMachineDTO.getMaxCapacity());
         machine.setCurCapacity(0);
-        String date = new SimpleDateFormat("dd-MM-yyyy").format(new Date());
+        Date date = Date.valueOf(LocalDate.now());/* format yyyy-MM-dd*/
+
+        /*
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        String dateString = format.format(date);
         Date addedDate;
         try {
-            addedDate = new Date(
-                    (new SimpleDateFormat("yyyy-mm-dd").parse(date)).getTime());
+            addedDate = new Date(format.parse(dateString).getTime());
         } catch (ParseException e) {
             throw new RuntimeException(e);
         }
-
         machine.setAddedDate(addedDate);
+        */
+
+        machine.setAddedDate(date);
         machine.setActive(0);
         // Save
         machineRepository.save(machine);

@@ -9,19 +9,14 @@
  * 18/02/2023    1.0        DuongVV          First Deploy<br>
  */
 
-package com.example.eims.dto.user;
+package com.example.eims.dto.machineType;
 
 import lombok.Data;
 
-import java.util.Date;
-
 @Data
-public class UpdateUserDTO {
-    private String username;
-    private String dob;
-    private String phone;
-    private String email;
-    private Float salary;
-    private String address;
-    private int status;
+public class CreateMachineTypeDTO {
+    private Long machineTypeId;
+    private Long facilityId;
+    private String name;
+    private int maxCapacity;
 }

@@ -61,9 +61,13 @@ public class SecurityConfig {
                 .authorizeHttpRequests((auth) ->
 //                        auth.anyRequest().authenticated() // Authenticate all Requests
                                 auth.requestMatchers(HttpMethod.GET, "/api/**").permitAll() //Allow anyone can access login API
-                                        .requestMatchers(HttpMethod.POST, "/api/**").permitAll()
-                                        .requestMatchers(HttpMethod.PUT, "/api/**").permitAll()
-                                        .requestMatchers(HttpMethod.DELETE, "/api/**").permitAll()
+                                        .requestMatchers("/api/auth/**").permitAll()
+                                        .requestMatchers("/api/user/**").permitAll()
+                                        .requestMatchers("/api/specie/**").permitAll()
+                                        .requestMatchers("/api/supplier/**").permitAll()
+                                        .requestMatchers("/api/customer/**").permitAll()
+                                        .requestMatchers("/api/facility/**").permitAll()
+                                        .requestMatchers("/api/machine/**").permitAll()
                                         .anyRequest().authenticated()
                 );
         return http.build();
