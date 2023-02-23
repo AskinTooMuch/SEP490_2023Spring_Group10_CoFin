@@ -13,6 +13,7 @@ package com.example.eims.dto.user;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 @Data
@@ -73,6 +74,7 @@ public class UserDetailDTO {
     private String userRoleName;
     private String username;
     @Column(name = "dob")
+    @DateTimeFormat(pattern="dd/MM/yyyy")
     private Date userDob;
     @Column(name = "email")
     private String userEmail;
@@ -90,6 +92,7 @@ public class UserDetailDTO {
     @Column(name = "facility_address")
     private String facilityAddress;
     @Column(name = "facility_found_date")
+    @DateTimeFormat(pattern="dd/MM/yyyy")
     private Date facilityFoundDate;
     private String hotline;
     @Column(name = "FACILITY_STATUS")

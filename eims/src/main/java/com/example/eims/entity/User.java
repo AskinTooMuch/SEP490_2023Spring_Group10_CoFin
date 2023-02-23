@@ -14,6 +14,7 @@ package com.example.eims.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 import java.util.Set;
@@ -34,6 +35,7 @@ public class User {
     private Long userId = 100L;
     private Long roleId;
     private String username;
+    @DateTimeFormat(pattern="dd/MM/yyyy")
     private Date dob;
     private String phone;
     private String email;

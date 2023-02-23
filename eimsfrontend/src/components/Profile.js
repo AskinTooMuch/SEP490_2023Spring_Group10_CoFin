@@ -41,22 +41,37 @@ const Profile = () => {
     //Get user details
     const [userDetails, setUserDetails] = useState();
     useEffect(() => {
-        async function getUserDetails() {
-          const headers = {
-            //Authorization: authProps.idToken
-          };
-          const response = await axios.post(USER_DETAIL_URL,
-            {phone: sessionStorage.getItem("curPhone")},
-            { headers }
-          );
-          const data = await response.json();
-          console.log(data);
-          setUserDetails(data);
-        };
-      }, []); 
+        loadUserDetails();
+    }, []);
+
+    const loadUserDetails = async () => {
+        const result = await axios.get(USER_DETAIL_URL, 
+            {params : {phone : sessionStorage.getItem("curPhone")}},
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Access-Control-Allow-Origin': '*'
+                },
+                withCredentials: false
+            });
+        const responseJson = result.data;
+        console.log(responseJson);
+        document.getElementById("account").innerText = sessionStorage.getItem("curPhone").substring(0,2) + "*****" + sessionStorage.getItem("curPhone").substring(7);
+        document.getElementById("username").innerText = responseJson.username;
+        document.getElementById("dob").innerText = responseJson.userDob;
+        document.getElementById("email").innerText = responseJson.userEmail;
+
+        document.getElementById("houseNumber").innerText = responseJson.houseNumber;
+        document.getElementById("street").innerText = responseJson.street;
+        document.getElementById("state").innerText = responseJson.state;
+        document.getElementById("city").innerText = responseJson.city;
+        document.getElementById("hotline").innerText = responseJson.hotline;
+        document.getElementById("subscripton").innerText = "Gói " + responseJson.subscriptionId;
+    }
+    
+     
 
     useEffect(() => {
-        
         setErrMsg('');
     }, [changePasswordDTO.newPassword, matchPwd])
 
@@ -111,7 +126,6 @@ const Profile = () => {
     }
 
     return (
-
         <div className="profile-info">
             <div className="head">
                 <h3>Thông tin cá nhân</h3>
@@ -129,7 +143,7 @@ const Profile = () => {
                                         <p>Tài khoản</p>
                                     </div>
                                     <div className="col-md-6">
-                                        <p>0*********0</p>
+                                        <p id = "account">0*********0</p>
                                     </div>
                                 </div>
                                 <div className="row">
@@ -137,7 +151,7 @@ const Profile = () => {
                                         <p>Họ và Tên</p>
                                     </div>
                                     <div className="col-md-6">
-                                        <p>Phạm Anh Tùng</p>
+                                        <p id = "username">Phạm Anh Tùng</p>
                                     </div>
                                 </div>
                                 <div className="row">
@@ -145,7 +159,7 @@ const Profile = () => {
                                         <p>Ngày sinh</p>
                                     </div>
                                     <div className="col-md-6">
-                                        <p>12/05/2001</p>
+                                        <p id = "dob">12/05/2001</p>
                                     </div>
                                 </div>
                                 <div className="row">
@@ -153,7 +167,7 @@ const Profile = () => {
                                         <p>Email</p>
                                     </div>
                                     <div className="col-md-6">
-                                        <p>@gmail.com</p>
+                                        <p id = "email">@gmail.com</p>
                                     </div>
                                 </div>
                                 <div className="row">
@@ -305,14 +319,13 @@ const Profile = () => {
                         <div className="card-header">Thông tin cơ sở</div>
                         <div className="card-body">
                             <form>
-
                                 <div className="tab-pane " >
                                     <div className="row">
                                         <div className="col-md-6">
                                             <p>Số nhà</p>
                                         </div>
                                         <div className="col-md-6">
-                                            <p>69</p>
+                                            <p id="houseNumber">69</p>
                                         </div>
                                     </div>
                                     <div className="row">
@@ -320,7 +333,7 @@ const Profile = () => {
                                             <p>Đường</p>
                                         </div>
                                         <div className="col-md-6">
-                                            <p>...</p>
+                                            <p id="street">...</p>
                                         </div>
                                     </div>
                                     <div className="row">
@@ -328,7 +341,7 @@ const Profile = () => {
                                             <p>Quận/Huyện</p>
                                         </div>
                                         <div className="col-md-6">
-                                            <p>Thạch Thất</p>
+                                            <p id="state">Thạch Thất</p>
                                         </div>
                                     </div>
                                     <div className="row">
@@ -336,7 +349,7 @@ const Profile = () => {
                                             <p>Thành phố</p>
                                         </div>
                                         <div className="col-md-6">
-                                            <p>Hà Nội</p>
+                                            <p id="city">Hà Nội</p>
                                         </div>
                                     </div>
                                     <div className="row">
@@ -344,7 +357,7 @@ const Profile = () => {
                                             <p>Hotline</p>
                                         </div>
                                         <div className="col-md-6">
-                                            <p>096969696</p>
+                                            <p id="hotline">096969696</p>
                                         </div>
                                     </div>
                                     <div className="row">
@@ -352,7 +365,7 @@ const Profile = () => {
                                             <p>Gói đăng ký</p>
                                         </div>
                                         <div className="col-md-6">
-                                            <p>Gói 1</p>
+                                            <p id="subscription">Gói 1</p>
                                         </div>
                                     </div>
                                     <div style={{ textAlign: "center" }}>

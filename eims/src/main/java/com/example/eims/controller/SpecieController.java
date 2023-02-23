@@ -28,7 +28,7 @@ public class SpecieController {
     @PersistenceContext
     private EntityManager em;
     @PostMapping("/new")
-    //@Secured({"ROLE_OWNER"})
+    @Secured({"ROLE_OWNER"})
     public ResponseEntity<String> sendUserDetail(@RequestBody NewSpecieDTO newSpecieDTO){
         Optional<User> userOpt = userRepository.findByPhone(newSpecieDTO.getPhone());
         if (userOpt.isPresent()) {

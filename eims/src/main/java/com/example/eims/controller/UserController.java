@@ -54,18 +54,20 @@ public class UserController {
     /**
      * The API requesting user information and facility information with the requesting DTO consists of user phone number.
      * The API returns the details of a user and it's facility in the form of a UserDetailDTO
-     * @param phoneNumberDTO
+     * @param phone
      * @return
      */
-    @PostMapping("/details")
+    @GetMapping("/details")
     //@Secured({"ROLE_OWNER", "ROLE_EMPLOYEE"})
-    public ResponseEntity<UserDetailDTO> sendUserDetail(@RequestBody PhoneNumberDTO phoneNumberDTO){
+    public ResponseEntity<UserDetailDTO> sendUserDetail(@RequestParam String phone){
+        System.out.println(phone);
         Query q = em.createNamedQuery("GetUserDetail");
-        q.setParameter(1, phoneNumberDTO.getPhone());
+        q.setParameter(1, phone);
         UserDetailDTO userDetailDTO = (UserDetailDTO) q.getSingleResult();
-//
+        System.out.println(userDetailDTO);
+
 //        User user = userRepository.findByPhone(phoneNumberDTO.getPhone()).get();
-//        Optional<Facility> facilityOpt = facilityRepisitory.findByUserId(user.getUserId());
+//        Optional<Facility> facilityOpt = facilityRepository.findByUserId(user.getUserId());
 //        //User information
 //        UserDetailDTO userDetailDTO = new UserDetailDTO();
 //        userDetailDTO.setUserId(user.getUserId());
