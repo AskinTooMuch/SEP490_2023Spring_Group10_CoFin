@@ -17,6 +17,7 @@ import com.example.eims.dto.customer.UpdateCustomerDTO;
 import com.example.eims.entity.Customer;
 import com.example.eims.repository.CustomerRepository;
 import com.example.eims.repository.UserRepository;
+import com.example.eims.utils.StringDealer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -43,7 +44,7 @@ public class CustomerController {
     @GetMapping("/all")
     public List<Customer> getAllCustomer(String phone) {
         // Get current user's id
-        Long userId = userRepository.findIdByPhone(phone);
+        Long userId = Long.parseLong(userRepository.findIdByPhone(phone));
         // Get all customers of the current User
         List<Customer> customerList = customerRepository.findByUserId(userId);
         return customerList;
@@ -131,20 +132,19 @@ public class CustomerController {
     /**
      * API to search customer of the user by their name or phone number.
      * key is the search key (name or phone number)
-     * phone is the phone number of current user
+     * userId is the id of current logged-in user
      *
      * @param key
-     * @param phone
+     * @param userId
      * @return list of customers
      */
     @GetMapping("/search")
-    public ResponseEntity<?> searchCustomer(@RequestParam String key, String phone) {
-        // Get current user's id
-        Long userId = userRepository.findIdByPhone(phone);
+    public ResponseEntity<?> searchCustomer(@RequestParam String key, Long userId) {
         // Trim spaces
-        key = key.trim().replaceAll("\\s+"," ");
+        StringDealer stringDealer = new StringDealer();
+        key = stringDealer.trimMax(key);
         // Search
-        List<Customer> customerList = customerRepository.findByUsernameOrPhone(userId, key);
+        List<Customer> customerList = customerRepository.searchByUsernameOrPhone(userId, key);
         return new ResponseEntity<>(customerList, HttpStatus.OK);
     }
 }

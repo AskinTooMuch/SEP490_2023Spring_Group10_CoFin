@@ -15,6 +15,7 @@ import com.example.eims.dto.facility.CreateFacilityDTO;
 import com.example.eims.dto.facility.UpdateFacilityDTO;
 import com.example.eims.entity.Facility;
 import com.example.eims.repository.FacilityRepository;
+import com.example.eims.utils.StringDealer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -74,24 +75,15 @@ public class FacilityController {
         facility.setUserId(createFacilityDTO.getUserId());
         facility.setFacilityName(createFacilityDTO.getFacilityName());
         facility.setFacilityAddress(createFacilityDTO.getFacilityAddress());
-        Date foundDate;
-        Date expirationDate;
+
+        StringDealer stringDealer = new StringDealer();
         String fDate = createFacilityDTO.getFoundDate();
         String eDate = createFacilityDTO.getExpirationDate();
-        try {
-            foundDate = new Date(
-                    (new SimpleDateFormat("yyyy-MM-dd").parse(fDate)).getTime());
-        } catch (ParseException e) {
-            throw new RuntimeException(e);
-        }
-        try {
-            expirationDate = new Date(
-                    (new SimpleDateFormat("yyyy-MM-dd").parse(eDate)).getTime());
-        } catch (ParseException e) {
-            throw new RuntimeException(e);
-        }
+        Date foundDate = stringDealer.convertToDateAndFormat(fDate);
+        Date expirationDate = stringDealer.convertToDateAndFormat(eDate);
         facility.setFacilityFoundDate(foundDate);
         facility.setSubscriptionExpirationDate(expirationDate);
+
         facility.setHotline(createFacilityDTO.getHotline());
         facility.setStatus(createFacilityDTO.getStatus());
         // Save
@@ -115,22 +107,15 @@ public class FacilityController {
         Facility facility = facilityRepository.findById(facilityId).get();
         facility.setFacilityName(updateFacilityDTO.getFacilityName());
         facility.setFacilityAddress(updateFacilityDTO.getFacilityAddress());
-        Date foundDate;
-        Date expirationDate;
+
+        StringDealer stringDealer = new StringDealer();
         String fDate = updateFacilityDTO.getFoundDate();
         String eDate = updateFacilityDTO.getExpirationDate();
-        try {
-            foundDate = new Date(
-                    (new SimpleDateFormat("yyyy-MM-dd").parse(fDate)).getTime());
-        } catch (ParseException e) {
-            throw new RuntimeException(e);
-        }
-        try {
-            expirationDate = new Date(
-                    (new SimpleDateFormat("yyyy-mm-dd").parse(eDate)).getTime());
-        } catch (ParseException e) {
-            throw new RuntimeException(e);
-        }
+        Date foundDate = stringDealer.convertToDateAndFormat(fDate);
+        Date expirationDate = stringDealer.convertToDateAndFormat(eDate);
+        facility.setFacilityFoundDate(foundDate);
+
+        facility.setSubscriptionExpirationDate(expirationDate);
         facility.setSubscriptionExpirationDate(expirationDate);
         facility.setHotline(updateFacilityDTO.getHotline());
         facility.setStatus(updateFacilityDTO.getStatus());
@@ -147,7 +132,7 @@ public class FacilityController {
      * @return
      */
     @DeleteMapping("/delete/{facilityId}")
-    public ResponseEntity<?> deleteCustomer(@PathVariable Long facilityId) {
+    public ResponseEntity<?> deleteFacility(@PathVariable Long facilityId) {
         // Delete
         facilityRepository.deleteById(facilityId);
         return new ResponseEntity<>("Facility deleted!", HttpStatus.OK);
