@@ -45,8 +45,8 @@ const Profile = () => {
     }, []);
 
     const loadUserDetails = async () => {
-        const result = await axios.get(USER_DETAIL_URL, 
-            {params : {phone : sessionStorage.getItem("curPhone")}},
+        const result = await axios.get(USER_DETAIL_URL,
+            { params: { phone: sessionStorage.getItem("curPhone") } },
             {
                 headers: {
                     'Content-Type': 'application/json',
@@ -56,7 +56,7 @@ const Profile = () => {
             });
         const responseJson = result.data;
         console.log(responseJson);
-        document.getElementById("account").innerText = sessionStorage.getItem("curPhone").substring(0,2) + "*****" + sessionStorage.getItem("curPhone").substring(7);
+        document.getElementById("account").innerText = sessionStorage.getItem("curPhone").substring(0, 2) + "*****" + sessionStorage.getItem("curPhone").substring(7);
         document.getElementById("username").innerText = responseJson.username;
         document.getElementById("dob").innerText = responseJson.userDob;
         document.getElementById("email").innerText = responseJson.userEmail;
@@ -68,8 +68,8 @@ const Profile = () => {
         document.getElementById("hotline").innerText = responseJson.hotline;
         document.getElementById("subscripton").innerText = "Gói " + responseJson.subscriptionId;
     }
-    
-     
+
+
 
     useEffect(() => {
         setErrMsg('');
@@ -143,7 +143,7 @@ const Profile = () => {
                                         <p>Tài khoản</p>
                                     </div>
                                     <div className="col-md-6">
-                                        <p id = "account">0*********0</p>
+                                        <p id="account">0*********0</p>
                                     </div>
                                 </div>
                                 <div className="row">
@@ -151,7 +151,7 @@ const Profile = () => {
                                         <p>Họ và Tên</p>
                                     </div>
                                     <div className="col-md-6">
-                                        <p id = "username">Phạm Anh Tùng</p>
+                                        <p id="username">Phạm Anh Tùng</p>
                                     </div>
                                 </div>
                                 <div className="row">
@@ -159,7 +159,7 @@ const Profile = () => {
                                         <p>Ngày sinh</p>
                                     </div>
                                     <div className="col-md-6">
-                                        <p id = "dob">12/05/2001</p>
+                                        <p id="dob">12/05/2001</p>
                                     </div>
                                 </div>
                                 <div className="row">
@@ -167,7 +167,7 @@ const Profile = () => {
                                         <p>Email</p>
                                     </div>
                                     <div className="col-md-6">
-                                        <p id = "email">@gmail.com</p>
+                                        <p id="email">@gmail.com</p>
                                     </div>
                                 </div>
                                 <div className="row">
@@ -233,7 +233,7 @@ const Profile = () => {
                                                                     onFocus={() => setMatchFocus(true)}
                                                                     onBlur={() => setMatchFocus(false)} />
                                                             </div>
-                                                            
+
                                                             <p id="confirmnote" className={matchFocus && !validMatch ? "instructions" : "offscreen"}>
                                                                 <FontAwesomeIcon icon={faInfoCircle} />
                                                                 Mật khẩu phải trùng với mẩt khẩu đã nhập ở trên
@@ -252,17 +252,17 @@ const Profile = () => {
                                                     <Button variant="dark" style={{ width: "30%" }} className="col-md-6" onClick={handleSubmit}>
                                                         Đổi mật khẩu
                                                         <ToastContainer position="top-left"
-                                                        autoClose={5000}
-                                                        hideProgressBar={false}
-                                                        newestOnTop={false}
-                                                        closeOnClick
-                                                        rtl={false}
-                                                        pauseOnFocusLoss
-                                                        draggable
-                                                        pauseOnHover
-                                                        theme="colored" />
+                                                            autoClose={5000}
+                                                            hideProgressBar={false}
+                                                            newestOnTop={false}
+                                                            closeOnClick
+                                                            rtl={false}
+                                                            pauseOnFocusLoss
+                                                            draggable
+                                                            pauseOnHover
+                                                            theme="colored" />
                                                     </Button>
-                                                    
+
                                                 </Modal.Footer>
                                             </Modal>
                                         </form>
