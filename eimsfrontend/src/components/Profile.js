@@ -8,9 +8,11 @@ import "../css/profile.css"
 import { Modal, Button } from 'react-bootstrap'
 const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
 const Profile = () => {
+    //API url
     const CHANGE_PASS_URL = '/api/auth/changePassword';
     const USER_DETAIL_URL = '/api/user/details';
 
+    //Hide & show popup
     const [show, setShow] = useState(false);
 
     const handleClose = () => setShow(false);
@@ -22,8 +24,8 @@ const Profile = () => {
     const handleShow2 = () => setShow2(true);
 
     const userRef = useRef();
-    const errRef = useRef();
 
+    //User password by current phone
     const [changePasswordDTO, setChangePasswordDTO] = useState({
         phone: sessionStorage.getItem("curPhone"),
         password: "",
@@ -31,40 +33,36 @@ const Profile = () => {
     })
 
     const [validPwd, setValidPwd] = useState(false);
-    const [pwdFocus, setPwdFocus] = useState(false);
+    const [setPwdFocus] = useState(false);
     const [matchPwd, setMatchPwd] = useState('');
     const [validMatch, setValidMatch] = useState(false);
-    const [matchFocus, setMatchFocus] = useState(false);
+    const [setMatchFocus] = useState(false);
 
-    const [errMsg, setErrMsg] = useState('');
 
     //Get user details
-    const [userDetails, setUserDetails] = useState();
+    const [userDetails, setUserDetails] = useState([]);
     useEffect(() => {
         async function getUserDetails() {
-          const headers = {
-            //Authorization: authProps.idToken
-          };
-          const response = await axios.post(USER_DETAIL_URL,
-            {phone: sessionStorage.getItem("curPhone")},
-            { headers }
-          );
-          const data = await response.json();
-          console.log(data);
-          setUserDetails(data);
+            const headers = {
+                //Authorization: authProps.idToken
+            };
+            const response = await axios.post(USER_DETAIL_URL,
+                { phone: sessionStorage.getItem("curPhone") },
+                { headers }
+            );
+            const data = await response.json();
+            console.log(data);
+            setUserDetails(data);
         };
-      }, []); 
+    }, []);
 
-    useEffect(() => {
-        
-        setErrMsg('');
-    }, [changePasswordDTO.newPassword, matchPwd])
-
+    //Check match password
     useEffect(() => {
         setValidPwd(PWD_REGEX.test(changePasswordDTO.newPassword));
         setValidMatch(changePasswordDTO.newPassword === matchPwd);
     }, [changePasswordDTO.newPassword, matchPwd])
 
+    //When input change value
     const handleChange = (event, field) => {
         let actualValue = event.target.value
         setChangePasswordDTO({
@@ -73,6 +71,7 @@ const Profile = () => {
         })
     }
 
+    //Submit action
     const handleSubmit = async (event) => {
         event.preventDefault();
         const v2 = PWD_REGEX.test(changePasswordDTO.newPassword);
@@ -105,7 +104,6 @@ const Profile = () => {
             } else {
                 toast.error('Sai mật khẩu');
             }
-            errRef.current.focus();
         }
 
     }
@@ -183,7 +181,13 @@ const Profile = () => {
                                                             <div className="col-md-6">
                                                                 <p>Mật khẩu mới <FontAwesomeIcon className="star" icon={faStarOfLife} />
                                                                     <FontAwesomeIcon icon={faCheck} className={validPwd ? "valid" : "hide"} />
-                                                                    <FontAwesomeIcon icon={faTimes} className={validPwd || !changePasswordDTO.password ? "hide" : "invalid"} /></p>
+                                                                    <FontAwesomeIcon icon={faTimes} className={validPwd || !changePasswordDTO.password ? "hide" : "invalid"} />
+                                                                    <h6 id="pwdnote">
+                                                                        <FontAwesomeIcon icon={faInfoCircle} /> 
+                                                                        8 - 24 kí tự.<br />
+                                                                        Bao gồm 1 chữ cái viết hoa, 1 số và 1 kí tự đặc biệt.<br />
+                                                                        Các kí tự đặc biệt cho phép: <span aria-label="exclamation mark">!</span> <span aria-label="at symbol">@</span> <span aria-label="hashtag">#</span> <span aria-label="dollar sign">$</span> <span aria-label="percent">%</span>
+                                                                    </h6></p>
                                                             </div>
                                                             <div className="col-md-6">
                                                                 <input ref={userRef} onChange={e => handleChange(e, "newPassword")}
@@ -194,21 +198,22 @@ const Profile = () => {
                                                                     onFocus={() => setPwdFocus(true)}
                                                                     onBlur={() => setPwdFocus(false)} />
                                                             </div>
-                                                            <p id="pwdnote" className={pwdFocus && !validPwd ? "instructions" : "offscreen"}>
-                                                                <FontAwesomeIcon icon={faInfoCircle} />
-                                                                8 - 24 kí tự.<br />
-                                                                Bao gồm 1 chữ cái viết hoa, 1 số và 1 kí tự đặc biệt.<br />
-                                                                Các kí tự đặc biệt cho phép: <span aria-label="exclamation mark">!</span> <span aria-label="at symbol">@</span> <span aria-label="hashtag">#</span> <span aria-label="dollar sign">$</span> <span aria-label="percent">%</span>
-                                                            </p>
+
                                                         </div>
                                                         <div className="row">
                                                             <div className="col-md-6">
                                                                 <p>Xác nhận lại
                                                                     <FontAwesomeIcon className="star" icon={faStarOfLife} />
                                                                     <FontAwesomeIcon icon={faCheck} className={validMatch && matchPwd ? "valid" : "hide"} />
-                                                                    <FontAwesomeIcon icon={faTimes} className={validMatch || !matchPwd ? "hide" : "invalid"} /></p>
+                                                                    <FontAwesomeIcon icon={faTimes} className={validMatch || !matchPwd ? "hide" : "invalid"} />
+                                                                    <h6 id="confirmnote" >
+                                                                        <FontAwesomeIcon icon={faInfoCircle} />
+                                                                        Mật khẩu phải trùng với mật khẩu đã nhập ở trên
+                                                                    </h6></p>
+
                                                             </div>
                                                             <div className="col-md-6">
+
                                                                 <input ref={userRef}
                                                                     id="confirm_pwd"
                                                                     onChange={(e) => setMatchPwd(e.target.value)}
@@ -218,16 +223,14 @@ const Profile = () => {
                                                                     aria-describedby="confirmnote"
                                                                     onFocus={() => setMatchFocus(true)}
                                                                     onBlur={() => setMatchFocus(false)} />
+
                                                             </div>
-                                                            
-                                                            <p id="confirmnote" className={matchFocus && !validMatch ? "instructions" : "offscreen"}>
-                                                                <FontAwesomeIcon icon={faInfoCircle} />
-                                                                Mật khẩu phải trùng với mẩt khẩu đã nhập ở trên
-                                                            </p>
+
+
                                                         </div>
 
                                                     </div>
-                                                    <p ref={errRef} className={errMsg ? "errmsg" : "offscreen"}><span>{errMsg}</span></p>
+
                                                 </Modal.Body>
 
                                                 <Modal.Footer>
@@ -238,17 +241,17 @@ const Profile = () => {
                                                     <Button variant="dark" style={{ width: "30%" }} className="col-md-6" onClick={handleSubmit}>
                                                         Đổi mật khẩu
                                                         <ToastContainer position="top-left"
-                                                        autoClose={5000}
-                                                        hideProgressBar={false}
-                                                        newestOnTop={false}
-                                                        closeOnClick
-                                                        rtl={false}
-                                                        pauseOnFocusLoss
-                                                        draggable
-                                                        pauseOnHover
-                                                        theme="colored" />
+                                                            autoClose={5000}
+                                                            hideProgressBar={false}
+                                                            newestOnTop={false}
+                                                            closeOnClick
+                                                            rtl={false}
+                                                            pauseOnFocusLoss
+                                                            draggable
+                                                            pauseOnHover
+                                                            theme="colored" />
                                                     </Button>
-                                                    
+
                                                 </Modal.Footer>
                                             </Modal>
                                         </form>

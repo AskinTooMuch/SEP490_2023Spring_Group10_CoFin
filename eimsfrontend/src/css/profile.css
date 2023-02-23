@@ -22,12 +22,20 @@ label{
     color: white;
   }
   
-.card-body{
+.outbox .card-body{
     background-color: #333333;
     color: white;
   }
-
+  .btn {
+    width: 100%;
+  }
   h3{
     text-align: center;
     padding: 10px;
+  }
+
+  h6{
+    font-size: small;
+    color: red;
+    display: block;
   }

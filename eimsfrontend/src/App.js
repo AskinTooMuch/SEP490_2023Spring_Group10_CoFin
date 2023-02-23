@@ -15,6 +15,7 @@ import BreedDetails from './components/BreedDetails'
 import MachineDetails from './components/MachineDetails'
 import SupplierDetails from './components/SupplierDetails'
 import Subscription from './components/Subscription';
+import ForgotPassword from './components/ForgotPassword';
 function App() {
   return (
     <>
@@ -36,6 +37,7 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="login" element={<Login />} />
         <Route path="register" element={<Register />} />
+        <Route path="forgotpassword" element={<ForgotPassword />} />
         <Route path="unauthorized" element={<Unauthorized />} />
       </Routes>
 

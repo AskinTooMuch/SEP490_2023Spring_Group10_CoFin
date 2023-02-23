@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import SearchIcon from '@mui/icons-material/Search';
@@ -6,15 +6,28 @@ import ImportExportIcon from '@mui/icons-material/ImportExport';
 import { Modal, Button } from 'react-bootstrap'
 import { faStarOfLife } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import axios from 'axios';
+const SUPPLIER_URL = '/api/supplier/all';
 const Supplier = () => {
+  //Show-hide Popup
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
   let navigate = useNavigate();
+  //Navigate to detail Page
   const routeChange = () => {
     let path = '/supplierdetail';
     navigate(path);
   }
+  const loadList = async() =>{
+    const result = await axios.get(SUPPLIER_URL);
+    
+    console.log(result.data);
+  }
+  const [supplierList, setSupplierList] = useState([]);
+  useEffect(() => {
+    loadList();
+  }, []);
   return (
     <>
       <nav className="navbar justify-content-between">
@@ -84,6 +97,18 @@ const Supplier = () => {
                   <input style={{width:"100%"}} />
                 </div>
               </div>
+              <div className="row">
+                <div className="col-md-3">
+                </div>
+                <div className="col-md-3">
+                </div>
+                <div className="col-md-3">
+                  <p>Thành phố <FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
+                </div>
+                <div className="col-md-3">
+                  <input style={{width:"100%"}} />
+                </div>
+              </div>
             </div>
 
           </Modal.Body>
@@ -126,24 +151,22 @@ const Supplier = () => {
             </tr>
           </thead>
           <tbody>
-            <tr className='trclick' onClick={routeChange}>
+            {
+              supplierList && supplierList.length >0 ?
+              supplierList.map(supplier =>
+               
+            <tr className='trclick' onClick={routeChange} key={supplier.userId}>
 
-              <th scope="row">1</th>
-              <td>Phạm Anh B</td>
+              <th scope="row">{supplier.supplierId}</th>
+              <td>{supplier.supplierName}</td>
               <td>Trang trại gà Thuân vài</td>
               <td>012345678910</td>
               <td>100.000.000 VNĐ</td>
-              <td className='text-green'>Đang hoạt động</td>
+              <td className='text-green'>{supplier.status}</td>
             </tr>
-            <tr>
-              <th scope="row">2</th>
-              <td>Bùi Thanh C</td>
-              <td>Trang trại gà Đình Dương</td>
-              <td>012345678910</td>
-              <td>100.000.000 VNĐ</td>
-              <td className='text-green'>Đang hoạt động</td>
-            </tr>
-
+           
+           ): 'Loading'
+          }
           </tbody>
         </table>
       </div>
