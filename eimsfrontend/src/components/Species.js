@@ -15,6 +15,10 @@ const Species = () => {
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
   const list_fetched_ref = useRef(false);
+
+  const [show2, setShow2] = useState(false);
+  const handleClose2 = () => setShow2(false);
+  const handleShow2 = () => setShow2(true);
   // Define urls
   const SPECIE_LIST = '/api/specie/list';
   const SPECIE_EDIT_GET = '/api/specie/edit/get';
@@ -38,6 +42,23 @@ const Species = () => {
     })
   }
 
+  const handleSubmit2 = async (event) => {
+    event.preventDefault();
+    try {
+      setShow2(false);
+    } catch (err) {
+      if (!err?.response) {
+        toast.error('Server không phản hồi');
+      } else if (err.response?.status === 400) {
+        toast.error('Mật khẩu cũ không đúng');
+      } else if (err.response?.status === 401) {
+        toast.error('Unauthorized');
+      } else {
+        toast.error('Sai mật khẩu');
+      }
+      errRef.current.focus();
+    }
+  }
   // Handle submit to send request to API
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -96,23 +117,7 @@ const Species = () => {
     console.log("Specie list :" + result.data);
   }
 
-  // Table rows of specie list
-  let i=1;
-  let tb_data = specieList.map((item, index) => {
-    return (
-      <tr key={item.specieId} data-key={index} className='trclick' onClick={() => handleSpecieClick(index)}>
-              <th scope="row">{index}</th>
-              <td>{item.specieName}</td>
-              <td>{item.incubationPeriod}</td>
-              <td><button className='btn btn-danger' style={{ width: "50%" }}>Xoá</button></td>
-      </tr>
-    )
-  })
 
-  // Define handle click on specie row
-  function handleSpecieClick(row) {
-    console.log(row);
-  }
 
   return (
     <div>
@@ -185,11 +190,87 @@ const Species = () => {
             </tr>
           </thead>
           <tbody id="specie_list_table_body">
-            {tb_data}
+            {
+              specieList.map((item, index) => (
+                <tr key={item.specieId} data-key={index} className='trclick2' onClick={handleShow2}>
+                  <th scope="row">{index}</th>
+                  <td>{item.specieName}</td>
+                  <td>{item.incubationPeriod}</td>
+                  <td><button className='btn btn-danger' style={{ width: "50%" }}>Xoá</button></td>
+
+                </tr>
+              ))
+            }
+
+            <form><Modal show={show2} onHide={() => handleClose2}
+              size="lg"
+              aria-labelledby="contained-modal-title-vcenter"
+              centered >
+              <Modal.Header closeButton onClick={handleClose2}>
+                <Modal.Title>Sửa thông tin loài</Modal.Title>
+              </Modal.Header>
+              <Modal.Body>
+                <div className="speiciesfix">
+                  <div className="row">
+                    <div className="col-md-6 ">
+                      <p>Tên loài<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
+                    </div>
+                    <div className="col-md-6">
+                      <input placeholder='Gà, Ngan, Vịt, v.v' />
+                    </div>
+                  </div>
+                  <div className="row">
+                    <div className="col-md-6 ">
+                      <p>Thời gian ấp lần 1<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
+                    </div>
+                    <div className="col-md-6">
+                      <input placeholder='Số ngày ấp' />
+                    </div>
+                  </div>
+                  <div className="row">
+                    <div className="col-md-6 ">
+                      <p>Thời gian ấp lần 2<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
+                    </div>
+                    <div className="col-md-6">
+                      <input placeholder='Số ngày ấp' />
+                    </div>
+                  </div>
+                  <div className="row">
+                    <div className="col-md-6 ">
+                      <p>Thời gian ấp lần 3<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
+                    </div>
+                    <div className="col-md-6">
+                      <input placeholder='Số ngày ấp' />
+                    </div>
+                  </div>
+                  <div className="row">
+                    <div className="col-md-6 ">
+                      <p>Thời gian nở<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
+                    </div>
+                    <div className="col-md-6">
+                      <input placeholder='Số ngày ấp' />
+                    </div>
+                  </div>
+                </div>
+
+              </Modal.Body>
+
+              <Modal.Footer>
+                <Button variant="danger" style={{ width: "20%" }} onClick={handleClose2}>
+                  Huỷ
+                </Button>
+
+                <Button variant="success" style={{ width: "20%" }} className="col-md-6" onClick={handleSubmit2}>
+                  Cập nhật
+                </Button>
+
+              </Modal.Footer>
+            </Modal>
+            </form>
           </tbody>
         </table>
       </div>
-      </div>
+    </div>
   );
 }
 export default Species;
