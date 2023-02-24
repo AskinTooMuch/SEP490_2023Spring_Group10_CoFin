@@ -42,12 +42,16 @@ public class CustomerController {
      * @return list of Customers
      */
     @GetMapping("/all")
-    public List<Customer> getAllCustomer(String phone) {
+    public ResponseEntity<?> getAllCustomer(String phone) {
         // Get current user's id
         Long userId = Long.parseLong(userRepository.findIdByPhone(phone));
         // Get all customers of the current User
         List<Customer> customerList = customerRepository.findByUserId(userId);
-        return customerList;
+        if (customerList.isEmpty()) {
+            return new ResponseEntity<>("No customer found", HttpStatus.OK);
+        }else {
+            return new ResponseEntity<>(customerList, HttpStatus.OK);
+        }
     }
 
     /**
@@ -58,10 +62,14 @@ public class CustomerController {
      * @return
      */
     @GetMapping("/{customerId}")
-    public Customer getCustomer(@PathVariable Long customerId) {
+    public ResponseEntity<?> getCustomer(@PathVariable Long customerId) {
         // Get a customer of the current User
-        Customer customer = customerRepository.findById(customerId).get();
-        return customer;
+        Customer customer = customerRepository.findByCustomerId(customerId).orElse(null);
+        if (customer != null) {
+            return new ResponseEntity<>(customer, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("No customer", HttpStatus.OK);
+        }
     }
 
     /**
@@ -104,7 +112,7 @@ public class CustomerController {
     @PutMapping("/update/{customerId}")
     public ResponseEntity<?> updateCustomer(@PathVariable Long customerId, UpdateCustomerDTO updateCustomerDTO) {
         // Retrieve customer's new information
-        Customer customer = customerRepository.findByCustomerId(customerId);
+        Customer customer = customerRepository.findByCustomerId(customerId).get();
         customer.setCustomerName(updateCustomerDTO.getName());
         customer.setCustomerPhone(updateCustomerDTO.getPhone());
         customer.setCustomerAddress(updateCustomerDTO.getAddress());

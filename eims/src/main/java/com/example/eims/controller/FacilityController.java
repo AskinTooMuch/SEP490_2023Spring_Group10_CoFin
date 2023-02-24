@@ -21,8 +21,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.sql.Date;
 import java.util.List;
 
@@ -40,10 +38,10 @@ public class FacilityController {
      * @return list of Facilities
      */
     @GetMapping("/all")
-    public List<Facility> getAllFacility() {
+    public ResponseEntity<?> getAllFacility() {
         // Get all facilities
         List<Facility> facilityList = facilityRepository.findAll();
-        return facilityList;
+        return new ResponseEntity<>(facilityList, HttpStatus.OK);
     }
 
     /**
@@ -54,10 +52,14 @@ public class FacilityController {
      * @return
      */
     @GetMapping("/{userId}")
-    public Facility getFacility(@PathVariable Long userId) {
+    public ResponseEntity<?> getFacility(@PathVariable Long userId) {
         // Get a facility of the current User
-        Facility facility = facilityRepository.findByUserId(userId).get();
-        return facility;
+        Facility facility = facilityRepository.findByUserId(userId).orElse(null);
+        if (facility != null) {
+            return new ResponseEntity<>(facility, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("No facility", HttpStatus.OK);
+        }
     }
 
     /**
@@ -113,8 +115,9 @@ public class FacilityController {
         String eDate = updateFacilityDTO.getExpirationDate();
         Date foundDate = stringDealer.convertToDateAndFormat(fDate);
         Date expirationDate = stringDealer.convertToDateAndFormat(eDate);
+        System.out.println(foundDate);
+        System.out.println(expirationDate);
         facility.setFacilityFoundDate(foundDate);
-
         facility.setSubscriptionExpirationDate(expirationDate);
         facility.setSubscriptionExpirationDate(expirationDate);
         facility.setHotline(updateFacilityDTO.getHotline());

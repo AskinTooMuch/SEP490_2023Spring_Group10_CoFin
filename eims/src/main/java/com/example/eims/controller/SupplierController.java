@@ -14,7 +14,6 @@ package com.example.eims.controller;
 
 import com.example.eims.dto.supplier.CreateSupplierDTO;
 import com.example.eims.dto.supplier.UpdateSupplierDTO;
-import com.example.eims.entity.Customer;
 import com.example.eims.entity.Supplier;
 import com.example.eims.repository.SupplierRepository;
 import com.example.eims.repository.UserRepository;
@@ -43,12 +42,16 @@ public class SupplierController {
      * @return list of Suppliers
      */
     @GetMapping("/all")
-    public List<Supplier> getAllSupplier(String phone) {
+    public ResponseEntity<?> getAllSupplier(String phone) {
         // Get current user's id
         Long userId = Long.parseLong(userRepository.findIdByPhone(phone));
         // Get all suppliers of the current User
         List<Supplier> supplierList = supplierRepository.findByUserId(userId);
-        return supplierList;
+        if (supplierList.isEmpty()) {
+            return new ResponseEntity<>("No supplier found", HttpStatus.OK);
+        }else {
+            return new ResponseEntity<>(supplierList, HttpStatus.OK);
+        }
     }
 
 /*    @GetMapping("/all")
@@ -66,10 +69,14 @@ public class SupplierController {
      * @return
      */
     @GetMapping("/{supplierId}")
-    public Supplier getSupplier(@PathVariable Long supplierId) {
+    public ResponseEntity<?> getSupplier(@PathVariable Long supplierId) {
         // Get a supplier
-        Supplier supplier = supplierRepository.findById(supplierId).get();
-        return supplier;
+        Supplier supplier = supplierRepository.findBySupplierId(supplierId).orElse(null);
+        if (supplier != null) {
+            return new ResponseEntity<>(supplier, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("No supplier", HttpStatus.OK);
+        }
     }
 
     /**
@@ -112,7 +119,7 @@ public class SupplierController {
     @PutMapping("/update/{supplierId}")
     public ResponseEntity<?> updateSupplier(@PathVariable Long supplierId, UpdateSupplierDTO updateSupplierDTO) {
         // Retrieve supplier's new information
-        Supplier supplier = supplierRepository.findBySupplierId(supplierId);
+        Supplier supplier = supplierRepository.findBySupplierId(supplierId).get();
         supplier.setSupplierName(updateSupplierDTO.getSupplierName());
         supplier.setSupplierPhone(updateSupplierDTO.getSupplierPhone());
         supplier.setSupplierAddress(updateSupplierDTO.getSupplierAddress());

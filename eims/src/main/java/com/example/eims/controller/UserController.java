@@ -27,9 +27,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.web.bind.annotation.*;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.sql.Date;
+import java.util.List;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
@@ -89,6 +88,22 @@ public class UserController {
 
         return new ResponseEntity<>(userDetailDTO, HttpStatus.OK);
     }
+
+
+    /**
+     * API to get all user.
+     *
+     * @param
+     * @return
+     */
+    @GetMapping("/all")
+    public ResponseEntity<?> getAllUser() {
+        // Retrieve users
+        List<User> userList = userRepository.findAll();
+        // Return
+        return new ResponseEntity<>(userList, HttpStatus.OK);
+    }
+
 
     /**
      * API to update a user.

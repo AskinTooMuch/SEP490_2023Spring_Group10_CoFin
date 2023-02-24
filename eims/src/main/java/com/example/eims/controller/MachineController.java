@@ -39,10 +39,10 @@ public class MachineController {
      * @return list of Machines
      */
     @GetMapping("/all")
-    public List<Machine> getAllMachine(Long facilityId) {
+    public ResponseEntity<?> getAllMachine(Long facilityId) {
         // Get all machines of the current facility
         List<Machine> machineList = machineRepository.findByFacilityId(facilityId);
-        return machineList;
+        return new ResponseEntity<>(machineList, HttpStatus.OK);
     }
 
     /**
@@ -53,10 +53,14 @@ public class MachineController {
      * @return
      */
     @GetMapping("/{machineId}")
-    public Machine getMachine(@PathVariable Long machineId) {
+    public ResponseEntity<?> getMachine(@PathVariable Long machineId) {
         // Get a machine of the current facility
-        Machine machine = machineRepository.findById(machineId).get();
-        return machine;
+        Machine machine = machineRepository.findById(machineId).orElse(null);
+        if (machine != null) {
+            return new ResponseEntity<>(machine, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("No machine", HttpStatus.OK);
+        }
     }
 
     /**

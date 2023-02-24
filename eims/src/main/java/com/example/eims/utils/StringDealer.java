@@ -12,11 +12,11 @@ public class StringDealer {
     public Date convertToDateAndFormat (String str) {
         Date date;
         try {
-            date = new Date(
-                    (new SimpleDateFormat("yyyy-MM-dd").parse(str)).getTime());
+            date = new Date((new SimpleDateFormat("yyyy-MM-dd").parse(str)).getTime());
         } catch (ParseException e) {
             throw new RuntimeException(e);
         }
+        System.out.println(date);
         return date;
     }
 }
