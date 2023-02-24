@@ -80,6 +80,7 @@ const Species = () => {
     loadSpecieList();
   }, []);
 
+  // Request specie list and load the specie list into the table rows
   const loadSpecieList = async () => {
     console.log("axios run");
     const result = await axios.get(SPECIE_LIST,
@@ -92,20 +93,26 @@ const Species = () => {
         withCredentials: false
       });
     setSpecieList(result.data);
-    console.log(result.data);
+    console.log("Specie list :" + result.data);
   }
 
+  // Table rows of specie list
   let i=1;
-  let tb_data = specieList.map((item) => {
+  let tb_data = specieList.map((item, index) => {
     return (
-      <tr key={item.specieId} className='trclick' >
-              <th scope="row">{i++}</th>
+      <tr key={item.specieId} data-key={index} className='trclick' onClick={() => handleSpecieClick(index)}>
+              <th scope="row">{index}</th>
               <td>{item.specieName}</td>
               <td>{item.incubationPeriod}</td>
               <td><button className='btn btn-danger' style={{ width: "50%" }}>Xoá</button></td>
       </tr>
     )
   })
+
+  // Define handle click on specie row
+  function handleSpecieClick(row) {
+    console.log(row);
+  }
 
   return (
     <div>
