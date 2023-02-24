@@ -9,12 +9,18 @@ import { Modal, Button } from 'react-bootstrap'
 import { faStarOfLife } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 const Species = () => {
-  const NEW_SPECIE_URL = "/api/specie/new";
+
   const errRef = useRef();
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
-
+  const list_fetched_ref = useRef(false);
+  // Define urls
+  const SPECIE_LIST = '/api/specie/list';
+  const SPECIE_EDIT_GET = '/api/specie/edit/get';
+  const SPECIE_EDIT_SAVE = '/api/specie/edit/save';
+  const SPECIE_DELETE = '/api/specie/delete';
+  const SPECIE_NEW = "/api/specie/new";
 
   // Create new specie JSON
   const [newSpecieDTO, setNewSpecieDTO] = useState({
@@ -36,7 +42,7 @@ const Species = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      const response = await axios.post(NEW_SPECIE_URL,
+      const response = await axios.post(SPECIE_NEW,
         newSpecieDTO,
         {
           headers: {
@@ -46,7 +52,6 @@ const Species = () => {
           withCredentials: false
         }
       );
-      console.log(JSON.stringify(response?.data));
       setNewSpecieDTO('');
       toast.success("Tạo loài mới thành công")
       setShow(false)
@@ -65,9 +70,45 @@ const Species = () => {
   }
   //
 
+  // Get list of specie and show
+  //Get specie list
+  const [specieList, setSpecieList] = useState([]);
+
+  useEffect(() => {
+    if (list_fetched_ref.current) return;
+    list_fetched_ref.current = true;
+    loadSpecieList();
+  }, []);
+
+  const loadSpecieList = async () => {
+    console.log("axios run");
+    const result = await axios.get(SPECIE_LIST,
+      { params: { userId: sessionStorage.getItem("curUserId") } },
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': '*'
+        },
+        withCredentials: false
+      });
+    setSpecieList(result.data);
+    console.log(result.data);
+  }
+
+  let i=1;
+  let tb_data = specieList.map((item) => {
+    return (
+      <tr key={item.specieId} className='trclick' >
+              <th scope="row">{i++}</th>
+              <td>{item.specieName}</td>
+              <td>{item.incubationPeriod}</td>
+              <td><button className='btn btn-danger' style={{ width: "50%" }}>Xoá</button></td>
+      </tr>
+    )
+  })
 
   return (
-    <>
+    <div>
       <nav className="navbar justify-content-between">
         <button className='btn btn-light' onClick={handleShow}>+ Thêm</button>
         <form><Modal show={show} onHide={handleClose}
@@ -127,7 +168,7 @@ const Species = () => {
         </div>
       </nav>
       <div>
-        <table class="table table-bordered">
+        <table className="table table-bordered" id="list_specie_table">
           <thead>
             <tr>
               <th scope="col">STT</th>
@@ -136,26 +177,12 @@ const Species = () => {
               <th scope="col"> </th>
             </tr>
           </thead>
-          <tbody>
-            <tr className='trclick' >
-
-              <th scope="row">1</th>
-              <td>Gà</td>
-              <td>3 ngày 12 tiếng</td>
-              <td><button className='btn btn-danger' style={{ width: "50%" }}>Xoá</button></td>
-
-            </tr>
-            <tr>
-              <th scope="row">2</th>
-              <td>Vịt</td>
-              <td>3 ngày 6 tiếng</td>
-              <td><button className='btn btn-danger' style={{ width: "50%" }}>Xoá</button></td>
-            </tr>
-
+          <tbody id="specie_list_table_body">
+            {tb_data}
           </tbody>
         </table>
       </div>
-    </>
+      </div>
   );
 }
 export default Species;

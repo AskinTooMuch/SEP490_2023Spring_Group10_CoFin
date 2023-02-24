@@ -55,11 +55,13 @@ public class AuthController {
      * @return
      */
     @PostMapping("/signin")
-    public ResponseEntity<String> authenticateUser(@RequestBody LoginDTO loginDTO) {
+    public ResponseEntity<Long> authenticateUser(@RequestBody LoginDTO loginDTO) {
         Authentication auth = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                 loginDTO.getPhone(), loginDTO.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(auth);
-        return new ResponseEntity<>("User signed-in successfully.", HttpStatus.OK);
+        System.out.println(loginDTO);
+        User user = userRepository.findByPhone(loginDTO.getPhone()).get();
+        return new ResponseEntity<>(user.getUserId(), HttpStatus.OK);
     }
 
     /**

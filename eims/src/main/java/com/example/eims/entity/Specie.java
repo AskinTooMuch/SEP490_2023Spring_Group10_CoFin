@@ -20,8 +20,8 @@ import lombok.Data;
 @Table(name = "specie")
 public class Specie {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long specieId = 100L;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long specieId;
     private Long userId;
     private String specieName;
     private int incubationPeriod;

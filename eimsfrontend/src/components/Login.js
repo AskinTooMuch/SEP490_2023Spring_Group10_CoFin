@@ -64,9 +64,8 @@ const Login = () => {
       localStorage.setItem("user", loginDetail)
       setLoginDetail('');
       //Set user's phone number in session
+      sessionStorage.setItem("curUserId", response.data);
       sessionStorage.setItem("curPhone", loginDetail.phone);
-      console.log(sessionStorage.getItem("curPhone"));
-      
       navigate("/dashboard");
       toast.success("Đăng nhập thành công")
     } catch (err) {
