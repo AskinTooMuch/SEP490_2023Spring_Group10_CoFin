@@ -8,9 +8,23 @@ import ImportExportIcon from '@mui/icons-material/ImportExport';
 import { Modal, Button } from 'react-bootstrap'
 import { faStarOfLife } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { integerPropType } from '@mui/utils';
 const Species = () => {
 
   const errRef = useRef();
+  const [specieList, setSpecieList] = useState([]);
+  // Create new specie JSON
+  const [newSpecieDTO, setNewSpecieDTO] = useState({
+    phone: sessionStorage.getItem("curPhone"),
+    specieName: "",
+    incubationPeriod: ""
+  })
+  // Save specie JSON
+  const [editSpecieDTO, setEditSpecieDTO] = useState({
+    specieId: "",
+    specieName: "",
+    incubationPeriod: ""
+  })
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -26,13 +40,6 @@ const Species = () => {
   const SPECIE_DELETE = '/api/specie/delete';
   const SPECIE_NEW = "/api/specie/new";
 
-  // Create new specie JSON
-  const [newSpecieDTO, setNewSpecieDTO] = useState({
-    phone: sessionStorage.getItem("curPhone"),
-    specieName: "",
-    incubationPeriod: ""
-  })
-  //
   //Handle change: update new specie JSON
   const handleChange = (event, field) => {
     let actualValue = event.target.value
@@ -45,6 +52,18 @@ const Species = () => {
   const handleSubmit2 = async (event) => {
     event.preventDefault();
     try {
+      const response = await axios.post(SPECIE_NEW,
+        newSpecieDTO,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*'
+          },
+          withCredentials: false
+        }
+      );
+      setNewSpecieDTO('');
+      toast.success("Tạo loài mới thành công")
       setShow2(false);
     } catch (err) {
       if (!err?.response) {
@@ -59,7 +78,7 @@ const Species = () => {
       errRef.current.focus();
     }
   }
-  // Handle submit to send request to API
+  // Handle submit to send request to API (Create new specie)
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
@@ -93,8 +112,6 @@ const Species = () => {
 
   // Get list of specie and show
   //Get specie list
-  const [specieList, setSpecieList] = useState([]);
-
   useEffect(() => {
     if (list_fetched_ref.current) return;
     list_fetched_ref.current = true;
@@ -117,7 +134,14 @@ const Species = () => {
     console.log("Specie list :" + result.data);
   }
 
-
+  // Load data into edit specie fields
+  function LoadData(index){
+    console.log(index);
+    editSpecieDTO.specieId = specieList[index].specieId;
+    editSpecieDTO.specieName = specieList[index].specieName;
+    editSpecieDTO.incubationPeriod = specieList[index].incubationPeriod;
+    setShow2(true);
+  }
 
   return (
     <div>
@@ -192,10 +216,10 @@ const Species = () => {
           <tbody id="specie_list_table_body">
             {
               specieList.map((item, index) => (
-                <tr key={item.specieId} data-key={index} className='trclick2' onClick={handleShow2}>
-                  <th scope="row">{index}</th>
+                <tr key={item.specieId} data-key={index} className='trclick2' onClick={() => LoadData(index)}>
+                  <th scope="row">{index+1}</th>
                   <td>{item.specieName}</td>
-                  <td>{item.incubationPeriod}</td>
+                  <td>{item.incubationPeriod} (ngày)</td>
                   <td><button className='btn btn-danger' style={{ width: "50%" }}>Xoá</button></td>
 
                 </tr>
@@ -216,39 +240,15 @@ const Species = () => {
                       <p>Tên loài<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                     </div>
                     <div className="col-md-6">
-                      <input placeholder='Gà, Ngan, Vịt, v.v' />
+                      <input placeholder='Gà, Ngan, Vịt, v.v' id="editSpecieName" value={editSpecieDTO.specieName}/>
                     </div>
                   </div>
                   <div className="row">
                     <div className="col-md-6 ">
-                      <p>Thời gian ấp lần 1<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
+                      <p>Thời gian ấp<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                     </div>
                     <div className="col-md-6">
-                      <input placeholder='Số ngày ấp' />
-                    </div>
-                  </div>
-                  <div className="row">
-                    <div className="col-md-6 ">
-                      <p>Thời gian ấp lần 2<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
-                    </div>
-                    <div className="col-md-6">
-                      <input placeholder='Số ngày ấp' />
-                    </div>
-                  </div>
-                  <div className="row">
-                    <div className="col-md-6 ">
-                      <p>Thời gian ấp lần 3<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
-                    </div>
-                    <div className="col-md-6">
-                      <input placeholder='Số ngày ấp' />
-                    </div>
-                  </div>
-                  <div className="row">
-                    <div className="col-md-6 ">
-                      <p>Thời gian nở<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
-                    </div>
-                    <div className="col-md-6">
-                      <input placeholder='Số ngày ấp' />
+                      <input placeholder='Số ngày ấp' id="editIncubationPeriod" type={integerPropType} value={editSpecieDTO.incubationPeriod}/>
                     </div>
                   </div>
                 </div>
