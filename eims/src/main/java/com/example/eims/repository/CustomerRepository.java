@@ -17,12 +17,13 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface CustomerRepository extends JpaRepository<Customer, Long> {
     List<Customer> findByUserId(Long userId);
     Customer findByCustomerId(Long customerId);
     boolean existsByCustomerPhone(String phoneNumber);
-    @Query(value = "SELECT c from eims.customer c where c.user_id = ?1 " +
-            "and c.customer_phone like %?2% or c.customer_name like %?2%", nativeQuery = true)
-    List<Customer> findByUsernameOrPhone(Long userId, String key);
+    @Query(value = "SELECT * FROM eims.customer WHERE user_id = ?1 " +
+            "AND customer_name LIKE %?2% OR customer_phone LIKE %?2%", nativeQuery = true)
+    List<Customer> searchByUsernameOrPhone(Long userId, String key);
 }

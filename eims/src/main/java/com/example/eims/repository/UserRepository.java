@@ -21,6 +21,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByPhone(String phone);
     Optional<User> findByPhoneAndPassword(String phone, String password);
     Boolean existsByPhone(String phone);
-    @Query(value = "SELECT u.user_id from eims.user u where u.phone = ?1", nativeQuery = true)
-    Long findIdByPhone(String phone);
+    @Query(value = "SELECT user_id FROM eims.user where phone = ?1", nativeQuery = true)
+    String findIdByPhone(String phone);
 }

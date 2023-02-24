@@ -17,6 +17,7 @@ import com.example.eims.dto.user.UserDetailDTO;
 import com.example.eims.entity.User;
 import com.example.eims.repository.UserRepository;
 import com.example.eims.repository.UserRoleRepository;
+import com.example.eims.utils.StringDealer;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;
@@ -103,15 +104,12 @@ public class UserController {
         // Retrieve user's new information
         User user = userRepository.findById(userId).get();
         user.setUsername(updateUserDTO.getUsername());
+
+        StringDealer stringDealer = new StringDealer();
         String sDate = updateUserDTO.getDob();
-        Date date;
-        try {
-            date = new Date(
-                    (new SimpleDateFormat("yyyy-MM-dd").parse(sDate)).getTime());
-        } catch (ParseException e) {
-            throw new RuntimeException(e);
-        }
+        Date date = stringDealer.convertToDateAndFormat(sDate);
         user.setDob(date);
+
         user.setPhone(updateUserDTO.getPhone());
         user.setAddress(updateUserDTO.getAddress());
         user.setEmail(updateUserDTO.getEmail());

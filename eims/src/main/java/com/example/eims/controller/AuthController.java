@@ -18,6 +18,7 @@ import com.example.eims.dto.auth.SignUpDTO;
 import com.example.eims.entity.User;
 import com.example.eims.repository.UserRoleRepository;
 import com.example.eims.repository.UserRepository;
+import com.example.eims.utils.StringDealer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,8 +30,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.Date;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Optional;
 
 @CrossOrigin(origins = "http://localhost:3000")
@@ -82,15 +81,12 @@ public class AuthController {
         User user = new User();
         user.setUsername(signUpDTO.getUsername());
         user.setEmail(signUpDTO.getEmail());
+
         String sDate = signUpDTO.getDob();
-        Date date;
-        try {
-            date = new Date(
-                    (new SimpleDateFormat("yyyy-MM-dd").parse(sDate)).getTime());
-        } catch (ParseException e) {
-            throw new RuntimeException(e);
-        }
+        StringDealer stringDealer = new StringDealer();
+        Date date = stringDealer.convertToDateAndFormat(sDate);
         user.setDob(date);
+
         user.setPhone(signUpDTO.getPhone());
         user.setAddress(signUpDTO.getAddress());
         user.setRoleId(signUpDTO.getRoleId());
