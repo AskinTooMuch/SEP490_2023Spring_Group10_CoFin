@@ -8,23 +8,10 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 const LOGIN_URL = '/api/auth/signin';
 const Login = () => {
-
-  const [type, setType] = useState('password');
-  const [icon, setIcon] = useState(VisibilityOffOutlined);
-
-  const handleToggle = () => {
-    if (type === 'password') {
-      setIcon(VisibilityOutlined);
-      setType('text');
-    }
-    else {
-      setIcon(VisibilityOffOutlined);
-      setType('password');
-    }
-  }
+  const [pwd, setPwd] = useState('');
+  const [isRevealPwd, setIsRevealPwd] = useState(false);
+ 
   const navigate = useNavigate();
-  const location = useLocation();
-
   const userRef = useRef();
   const errRef = useRef();
   const [loginDetail, setLoginDetail] = useState({
@@ -97,10 +84,14 @@ const Login = () => {
             </div>
             <div className="form-group mt-3">
 
-              <input type={type} name="password" className="form-control mt-1" placeholder="Nhập mật khẩu"
+              <input type={isRevealPwd ? "text" : "password"} name="password" className="form-control mt-1" placeholder="Nhập mật khẩu"
                 required ref={userRef} onChange={e => handleChange(e, "password")}
                 value={loginDetail.password}
-              />
+              /> <Icon
+              title={isRevealPwd ? "Hide password" : "Show password"}
+              src={isRevealPwd ? VisibilityOffOutlined : VisibilityOutlined}
+              onClick={() => setIsRevealPwd(prevState => !prevState)}
+            />
 
             </div>
             <div className="d-grid gap-2 mt-3">

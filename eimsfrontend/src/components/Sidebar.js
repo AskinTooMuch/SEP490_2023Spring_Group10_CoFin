@@ -34,7 +34,7 @@ function Sidebar(props, {defaultActive,}) {
                         SidebarItems.map((item, index)=> {
                             return (
                                 <Link to={item.route}>
-                                    <SidebarItem key={item.name}
+                                    <SidebarItem key={item.id}
                                                  active={index === activeIndex}
                                     >
                                         {item.icon}<p>{item.name}</p>

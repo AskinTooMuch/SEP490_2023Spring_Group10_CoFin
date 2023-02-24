@@ -20,7 +20,14 @@ const Supplier = () => {
     navigate(path);
   }
   const loadList = async() =>{
-    const result = await axios.get(SUPPLIER_URL);
+    const result = await axios.get(SUPPLIER_URL, { params: { phone: sessionStorage.getItem("curPhone") }  },
+    {
+        headers: {
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*'
+        },
+        withCredentials: false
+    });
     
     console.log(result.data);
   }
@@ -29,7 +36,7 @@ const Supplier = () => {
     loadList();
   }, []);
   return (
-    <>
+    <div>
       <nav className="navbar justify-content-between">
         <button className='btn btn-light' onClick={handleShow}>+ Thêm</button>
         <form><Modal show={show} onHide={handleClose}
@@ -139,7 +146,7 @@ const Supplier = () => {
         </div>
       </nav>
       <div>
-        <table class="table table-bordered">
+        <table className="table table-bordered">
           <thead>
             <tr>
               <th scope="col">STT</th>
@@ -170,7 +177,7 @@ const Supplier = () => {
           </tbody>
         </table>
       </div>
-    </>
+    </div>
   );
 }
 export default Supplier;

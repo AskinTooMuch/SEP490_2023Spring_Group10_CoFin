@@ -26,7 +26,7 @@ function Machine(props) {
         >
             {value === index && (
                 <Box sx={{ p: 3 }}>
-                    <Typography>{children}</Typography>
+                    <Typography component="span">{children}</Typography>
                 </Box>
             )}
         </div>
@@ -92,7 +92,7 @@ export default function BasicTabs() {
                                         <p>Loại máy<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                     </div>
                                     <div className="col-md-6">
-                                    <select class="form-select" aria-label="Default select example">
+                                    <select className="form-select" aria-label="Default select example">
                                             <option selected>Open this select menu</option>
                                             <option value="1" >Oneg</option>
                                             <option value="2">Two</option>
@@ -138,7 +138,7 @@ export default function BasicTabs() {
                     </div>
                 </nav>
                 <div>
-                    <table class="table table-bordered">
+                    <table className="table table-bordered">
                         <thead>
                             <tr>
                                 <th scope="col">STT</th>
