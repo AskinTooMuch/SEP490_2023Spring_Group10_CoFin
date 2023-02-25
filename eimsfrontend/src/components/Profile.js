@@ -4,13 +4,23 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { faCheck, faTimes, faInfoCircle, faStarOfLife } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEye } from "@fortawesome/free-solid-svg-icons";
 import "../css/profile.css"
 import { Modal, Button } from 'react-bootstrap'
+const eye = <FontAwesomeIcon icon={faEye} />;
 const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
 const Profile = () => {
+    //api
     const CHANGE_PASS_URL = '/api/auth/changePassword';
     const USER_DETAIL_URL = '/api/user/details';
 
+    //show-hide password 
+    const [passwordShown, setPasswordShown] = useState(false);
+    const togglePasswordVisiblity = () => {
+        setPasswordShown(passwordShown ? false : true);
+    };
+
+    //show-hide popup
     const [show, setShow] = useState(false);
 
     const handleClose = () => setShow(false);
@@ -22,7 +32,8 @@ const Profile = () => {
     const handleShow2 = () => setShow2(true);
 
     const userRef = useRef();
-    const errRef = useRef();
+    
+    
 
     const [changePasswordDTO, setChangePasswordDTO] = useState({
         phone: sessionStorage.getItem("curPhone"),
@@ -30,20 +41,19 @@ const Profile = () => {
         newPassword: ""
     })
 
+    
     const [validPwd, setValidPwd] = useState(false);
     const [pwdFocus, setPwdFocus] = useState(false);
     const [matchPwd, setMatchPwd] = useState('');
     const [validMatch, setValidMatch] = useState(false);
     const [matchFocus, setMatchFocus] = useState(false);
 
-    const [errMsg, setErrMsg] = useState('');
 
     //Get user details
     const [userDetails, setUserDetails] = useState();
     useEffect(() => {
         loadUserDetails();
     }, []);
-
     const loadUserDetails = async () => {
         const result = await axios.get(USER_DETAIL_URL,
             { params: { phone: sessionStorage.getItem("curPhone") } },
@@ -70,10 +80,6 @@ const Profile = () => {
     }
 
 
-
-    useEffect(() => {
-        setErrMsg('');
-    }, [changePasswordDTO.newPassword, matchPwd])
 
     useEffect(() => {
         setValidPwd(PWD_REGEX.test(changePasswordDTO.newPassword));
@@ -110,7 +116,9 @@ const Profile = () => {
             setChangePasswordDTO('');
             toast.success("Đổi mật khẩu thành công")
             setShow(false)
+            window.location.reload(false);
         } catch (err) {
+            toast.success("Đổi mật khẩu thành công");
             if (!err?.response) {
                 toast.error('Server không phản hồi');
             } else if (err.response?.status === 400) {
@@ -120,7 +128,6 @@ const Profile = () => {
             } else {
                 toast.error('Sai mật khẩu');
             }
-            errRef.current.focus();
         }
 
     }
@@ -188,9 +195,11 @@ const Profile = () => {
                                                             <div className="col-md-6 ">
                                                                 <p>Mật khẩu cũ</p>
                                                             </div>
-                                                            <div className="col-md-6">
+                                                            <div className="col-md-6 pass-wrapper">
                                                                 <input ref={userRef} onChange={e => handleChange(e, "password")}
-                                                                    value={changePasswordDTO.password} required />
+                                                                    value={changePasswordDTO.password} required 
+                                                                    type={passwordShown ? "text" : "password"}/>
+                                                                    <i onClick={togglePasswordVisiblity}>{eye}</i>
                                                             </div>
                                                         </div>
                                                         <div className="row">
@@ -199,14 +208,16 @@ const Profile = () => {
                                                                     <FontAwesomeIcon icon={faCheck} className={validPwd ? "valid" : "hide"} />
                                                                     <FontAwesomeIcon icon={faTimes} className={validPwd || !changePasswordDTO.password ? "hide" : "invalid"} /></p>
                                                             </div>
-                                                            <div className="col-md-6">
+                                                            <div className="col-md-6 pass-wrapper">
                                                                 <input ref={userRef} onChange={e => handleChange(e, "newPassword")}
                                                                     value={changePasswordDTO.newPassword} required
                                                                     id="newPassword"
                                                                     aria-invalid={validPwd ? "false" : "true"}
                                                                     aria-describedby="pwdnote"
                                                                     onFocus={() => setPwdFocus(true)}
-                                                                    onBlur={() => setPwdFocus(false)} />
+                                                                    onBlur={() => setPwdFocus(false)}
+                                                                    type={passwordShown ? "text" : "password"} />
+                                                                    <i onClick={togglePasswordVisiblity}>{eye}</i>
                                                             </div>
                                                             <p id="pwdnote" className={pwdFocus && !validPwd ? "instructions" : "offscreen"}>
                                                                 <FontAwesomeIcon icon={faInfoCircle} />
@@ -222,7 +233,7 @@ const Profile = () => {
                                                                     <FontAwesomeIcon icon={faCheck} className={validMatch && matchPwd ? "valid" : "hide"} />
                                                                     <FontAwesomeIcon icon={faTimes} className={validMatch || !matchPwd ? "hide" : "invalid"} /></p>
                                                             </div>
-                                                            <div className="col-md-6">
+                                                            <div className="col-md-6 pass-wrapper">
                                                                 <input ref={userRef}
                                                                     id="confirm_pwd"
                                                                     onChange={(e) => setMatchPwd(e.target.value)}
@@ -231,7 +242,9 @@ const Profile = () => {
                                                                     aria-invalid={validMatch ? "false" : "true"}
                                                                     aria-describedby="confirmnote"
                                                                     onFocus={() => setMatchFocus(true)}
-                                                                    onBlur={() => setMatchFocus(false)} />
+                                                                    onBlur={() => setMatchFocus(false)} 
+                                                                    type={passwordShown ? "text" : "password"}/>
+                                                                    <i onClick={togglePasswordVisiblity}>{eye}</i>
                                                             </div>
 
                                                             <p id="confirmnote" className={matchFocus && !validMatch ? "instructions" : "offscreen"}>
@@ -241,7 +254,6 @@ const Profile = () => {
                                                         </div>
 
                                                     </div>
-                                                    <p ref={errRef} className={errMsg ? "errmsg" : "offscreen"}><span>{errMsg}</span></p>
                                                 </Modal.Body>
 
                                                 <Modal.Footer>
