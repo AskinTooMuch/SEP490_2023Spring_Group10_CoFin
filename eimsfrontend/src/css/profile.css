@@ -1,41 +1,63 @@
-.head{
-    padding: 20px;
-    border-bottom: 1px black;
-    text-align: center;
+.head {
+  padding: 20px;
+  border-bottom: 1px black;
+  text-align: center;
 }
 
 
-.modal-body{
-    border:none;
+.modal-body {
+  border: none;
 }
 
-.modal-footer{
-    display: inline-flex;
+.modal-footer {
+  display: inline-flex;
 }
 
-label{
-    font-size: large;
-    color: black;
+label {
+  font-size: large;
+  color: black;
 }
-.card-header{
-    background-color: #52565B;
-    color: white;
-  }
-  
-.outbox .card-body{
-    background-color: #333333;
-    color: white;
-  }
-  .btn {
-    width: 100%;
-  }
-  h3{
-    text-align: center;
-    padding: 10px;
-  }
 
-  h6{
-    font-size: small;
-    color: red;
-    display: block;
-  }
+.card-header {
+  background-color: #52565B;
+  color: white;
+}
+
+.outbox .card-body {
+  background-color: #333333;
+  color: white;
+}
+
+.btn {
+  width: 100%;
+}
+
+h3 {
+  text-align: center;
+  padding: 10px;
+}
+
+h6 {
+  font-size: small;
+  color: red;
+  display: block;
+}
+
+.pass-wrapper {
+  position: relative;
+  display: flex;
+}
+
+i {
+  position: absolute;
+  top: 28%;
+  right: 5%;
+}
+
+i:hover {
+  color: #00fcb6;
+  cursor: pointer;
+}
+input{
+  width: 100%;
+}

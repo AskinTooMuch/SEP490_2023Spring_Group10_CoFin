@@ -93,8 +93,10 @@ const Species = () => {
         }
       );
       setNewSpecieDTO('');
+      
       toast.success("Tạo loài mới thành công")
       setShow(false)
+      window.location.reload(false);
     } catch (err) {
       if (!err?.response) {
         toast.error('Server không phản hồi');

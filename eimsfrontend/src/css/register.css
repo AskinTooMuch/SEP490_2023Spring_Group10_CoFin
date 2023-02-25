@@ -33,5 +33,21 @@
 
 label {
     font-weight: 600;
-  }
-  
+}
+
+.pass-wrapper {
+    position: relative;
+    display: flex;
+    margin-bottom: 14px;
+}
+
+i {
+    position: absolute;
+    top: 28%;
+    right: 5%;
+}
+
+i:hover {
+    color: #00fcb6;
+    cursor: pointer;
+}
