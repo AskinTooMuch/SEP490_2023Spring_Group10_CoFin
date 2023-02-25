@@ -35,13 +35,12 @@ const Species = () => {
   const handleShow2 = () => setShow2(true);
   // Define urls
   const SPECIE_LIST = '/api/specie/list';
-  const SPECIE_EDIT_GET = '/api/specie/edit/get';
   const SPECIE_EDIT_SAVE = '/api/specie/edit/save';
   const SPECIE_DELETE = '/api/specie/delete';
   const SPECIE_NEW = "/api/specie/new";
 
   //Handle change: update new specie JSON
-  const handleChange = (event, field) => {
+  const handleNewSpecieChange = (event, field) => {
     let actualValue = event.target.value
     setNewSpecieDTO({
       ...newSpecieDTO,
@@ -49,11 +48,22 @@ const Species = () => {
     })
   }
 
-  const handleSubmit2 = async (event) => {
+  //Handle change: update edit specie JSON
+  const handleEditSpecieChange = (event, field) => {
+    let actualValue = event.target.value
+    setEditSpecieDTO({
+      ...editSpecieDTO,
+      [field]: actualValue
+    })
+  }
+
+  //Handle submit: update specie
+  const handleEditSpecieSubmit = async (event) => {
     event.preventDefault();
+    console.log(editSpecieDTO);
     try {
-      const response = await axios.post(SPECIE_NEW,
-        newSpecieDTO,
+      const response = await axios.post(SPECIE_EDIT_SAVE,
+        editSpecieDTO,
         {
           headers: {
             'Content-Type': 'application/json',
@@ -62,9 +72,11 @@ const Species = () => {
           withCredentials: false
         }
       );
-      setNewSpecieDTO('');
-      toast.success("Tạo loài mới thành công")
-      setShow2(false);
+    editSpecieDTO.specieId = "";
+    editSpecieDTO.specieName = "";
+    editSpecieDTO.incubationPeriod = "";
+    toast.success("Sửa loài mới thành công")
+    setShow2(false);
     } catch (err) {
       if (!err?.response) {
         toast.error('Server không phản hồi');
@@ -79,7 +91,7 @@ const Species = () => {
     }
   }
   // Handle submit to send request to API (Create new specie)
-  const handleSubmit = async (event) => {
+  const handleNewSpecieSubmit = async (event) => {
     event.preventDefault();
     try {
       const response = await axios.post(SPECIE_NEW,
@@ -92,9 +104,43 @@ const Species = () => {
           withCredentials: false
         }
       );
-      setNewSpecieDTO('');
-      toast.success("Tạo loài mới thành công")
-      setShow(false)
+      setNewSpecieDTO({
+        phone: sessionStorage.getItem("curPhone"),
+        specieName: "",
+        incubationPeriod: ""
+      });
+      loadSpecieList();
+      toast.success("Tạo loài mới thành công");
+      setShow(false);
+    } catch (err) {
+      if (!err?.response) {
+        toast.error('Server không phản hồi');
+      } else if (err.response?.status === 400) {
+        toast.error('Mật khẩu cũ không đúng');
+      } else if (err.response?.status === 401) {
+        toast.error('Unauthorized');
+      } else {
+        toast.error('Sai mật khẩu');
+      }
+      errRef.current.focus();
+    }
+  }
+  //
+
+  // Handle submit to send request to API (Create new specie)
+  const handleDelete = async (index) => {
+    try {
+      const response = await axios.get(SPECIE_DELETE,
+        { params: { specieId: specieList[index].specieId } },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*'
+          },
+          withCredentials: false
+        });
+      loadSpecieList();
+      toast.success("Xóa loài thành công");
     } catch (err) {
       if (!err?.response) {
         toast.error('Server không phản hồi');
@@ -120,7 +166,6 @@ const Species = () => {
 
   // Request specie list and load the specie list into the table rows
   const loadSpecieList = async () => {
-    console.log("axios run");
     const result = await axios.get(SPECIE_LIST,
       { params: { userId: sessionStorage.getItem("curUserId") } },
       {
@@ -131,7 +176,6 @@ const Species = () => {
         withCredentials: false
       });
     setSpecieList(result.data);
-    console.log("Specie list :" + result.data);
   }
 
   // Load data into edit specie fields
@@ -161,7 +205,7 @@ const Species = () => {
                   <p>Tên loài<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                 </div>
                 <div className="col-md-6">
-                  <input placeholder='Gà, Ngan, Vịt, v.v' onChange={e => handleChange(e, "specieName")}
+                  <input placeholder='Gà, Ngan, Vịt, v.v' onChange={e => handleNewSpecieChange(e, "specieName")}
                     value={newSpecieDTO.specieName} />
                 </div>
               </div>
@@ -170,7 +214,7 @@ const Species = () => {
                   <p>Thời gian ấp<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                 </div>
                 <div className="col-md-6">
-                  <input placeholder='Số ngày ấp' onChange={e => handleChange(e, "incubationPeriod")}
+                  <input placeholder='Số ngày ấp' onChange={e => handleNewSpecieChange(e, "incubationPeriod")}
                     value={newSpecieDTO.incubationPeriod} />
                 </div>
               </div>
@@ -183,7 +227,7 @@ const Species = () => {
               Huỷ
             </Button>
 
-            <Button variant="success" style={{ width: "20%" }} className="col-md-6" onClick={handleSubmit}>
+            <Button variant="success" style={{ width: "20%" }} className="col-md-6" onClick={handleNewSpecieSubmit}>
               Tạo
             </Button>
 
@@ -216,12 +260,11 @@ const Species = () => {
           <tbody id="specie_list_table_body">
             {
               specieList.map((item, index) => (
-                <tr key={item.specieId} data-key={index} className='trclick2' onClick={() => LoadData(index)}>
-                  <th scope="row">{index+1}</th>
-                  <td>{item.specieName}</td>
-                  <td>{item.incubationPeriod} (ngày)</td>
-                  <td><button className='btn btn-danger' style={{ width: "50%" }}>Xoá</button></td>
-
+                <tr key={item.specieId} data-key={index} className='trclick2'>
+                  <th scope="row" onClick={() => LoadData(index)}>{index+1} </th>
+                  <td onClick={() => LoadData(index)}>{item.specieName}</td>
+                  <td onClick={() => LoadData(index)}>{item.incubationPeriod} (ngày)</td>
+                  <td><button className='btn btn-danger' style={{ width: "50%" }} onClick={() => handleDelete(index)}>Xoá</button></td>
                 </tr>
               ))
             }
@@ -240,7 +283,8 @@ const Species = () => {
                       <p>Tên loài<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                     </div>
                     <div className="col-md-6">
-                      <input placeholder='Gà, Ngan, Vịt, v.v' id="editSpecieName" value={editSpecieDTO.specieName}/>
+                      <input placeholder='Gà, Ngan, Vịt, v.v' id="editSpecieName" 
+                      value={editSpecieDTO.specieName} onChange={e => handleEditSpecieChange(e, "specieName")}/>
                     </div>
                   </div>
                   <div className="row">
@@ -248,7 +292,8 @@ const Species = () => {
                       <p>Thời gian ấp<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                     </div>
                     <div className="col-md-6">
-                      <input placeholder='Số ngày ấp' id="editIncubationPeriod" type={integerPropType} value={editSpecieDTO.incubationPeriod}/>
+                      <input placeholder='Số ngày ấp' id="editIncubationPeriod" type="number" 
+                      value={editSpecieDTO.incubationPeriod} onChange={e => handleEditSpecieChange(e, "incubationPeriod")}/>
                     </div>
                   </div>
                 </div>
@@ -260,7 +305,7 @@ const Species = () => {
                   Huỷ
                 </Button>
 
-                <Button variant="success" style={{ width: "20%" }} className="col-md-6" onClick={handleSubmit2}>
+                <Button variant="success" style={{ width: "20%" }} className="col-md-6" onClick={handleEditSpecieSubmit}>
                   Cập nhật
                 </Button>
 

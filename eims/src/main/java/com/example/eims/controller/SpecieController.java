@@ -124,8 +124,8 @@ public class SpecieController {
      * @param specieId
      * @return
      */
-    @PostMapping("/delete")
-    public ResponseEntity<String> deleteSpecie(@RequestParam Long specieId){
+    @GetMapping("/delete")
+    public ResponseEntity<String> deleteSpecie(@RequestParam(value = "specieId") Long specieId){
         if (specieRepository.findById(specieId).isPresent()){
             specieRepository.deleteById(specieId);
             return new ResponseEntity<>("Specie delete successfully", HttpStatus.OK);
