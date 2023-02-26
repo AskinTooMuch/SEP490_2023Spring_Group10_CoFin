@@ -8,6 +8,7 @@
  * DATE          Version    Author           DESCRIPTION<br>
  * 18/02/2023    1.0        DuongVV          First Deploy<br>
  * 23/02/2023    2.0        DuongVV          Add search<br>
+ * 26/02/2023    2.1        ChucNV           Fix create supplier
  */
 
 package com.example.eims.controller;
@@ -38,18 +39,16 @@ public class SupplierController {
      * API to get all of their suppliers.
      * phone is the phone number of current logged-in user.
      *
-     * @param phone
+     * @param userId
      * @return list of Suppliers
      */
     @GetMapping("/all")
-    public ResponseEntity<?> getAllSupplier(String phone) {
-        // Get current user's id
-        Long userId = Long.parseLong(userRepository.findIdByPhone(phone));
+    public ResponseEntity<?> getAllSupplier(@RequestParam Long userId) {
         // Get all suppliers of the current User
         List<Supplier> supplierList = supplierRepository.findByUserId(userId);
         if (supplierList.isEmpty()) {
-            return new ResponseEntity<>("No supplier found", HttpStatus.OK);
-        }else {
+            return new ResponseEntity<>("No supplier found", HttpStatus.NO_CONTENT); // 204
+        } else {
             return new ResponseEntity<>(supplierList, HttpStatus.OK);
         }
     }
@@ -87,7 +86,8 @@ public class SupplierController {
      * @return
      */
     @PostMapping("/create")
-    public ResponseEntity<?> createSupplier(CreateSupplierDTO createSupplierDTO) {
+    public ResponseEntity<?> createSupplier(@RequestBody CreateSupplierDTO createSupplierDTO) {
+        System.out.println(createSupplierDTO);
         // Check phone number existed or not
         boolean existed = supplierRepository.existsBySupplierPhone(createSupplierDTO.getSupplierPhone());
         if (existed) { /* if phone number existed */

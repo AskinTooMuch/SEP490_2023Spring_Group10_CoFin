@@ -113,14 +113,25 @@ const Profile = () => {
         //console.log(accountInformation);
 
         //Set facility information
-        facilityInformation.facilityId = responseJson.facilityId;
-        facilityInformation.facilityName = responseJson.facilityName;
-        facilityInformation.facilityAddress = responseJson.facilityAddress;
-        facilityInformation.facilityFoundDate = responseJson.facilityFoundDate;
-        facilityInformation.hotline = responseJson.hotline;
-        facilityInformation.facilityStatus = responseJson.facilityStatus;
-        facilityInformation.subscriptionId = responseJson.subscriptionId;
-        facilityInformation.subscriptionExpirationDate = responseJson.subscriptionExpirationDate;
+        setFacilityInformation({
+            facilityId: responseJson.facilityId,
+            facilityName: responseJson.facilityName,
+            facilityAddress: responseJson.facilityAddress,
+            facilityFoundDate: responseJson.facilityFoundDate,
+            hotline: responseJson.hotline,
+            facilityStatus: responseJson.facilityStatus,
+            subscriptionId: responseJson.subscriptionId,
+            subscriptionExpirationDate: responseJson.subscriptionExpirationDate
+        })
+
+        // facilityInformation.facilityId = responseJson.facilityId;
+        // facilityInformation.facilityName = responseJson.facilityName;
+        // facilityInformation.facilityAddress = responseJson.facilityAddress;
+        // facilityInformation.facilityFoundDate = responseJson.facilityFoundDate;
+        // facilityInformation.hotline = responseJson.hotline;
+        // facilityInformation.facilityStatus = responseJson.facilityStatus;
+        // facilityInformation.subscriptionId = responseJson.subscriptionId;
+        // facilityInformation.subscriptionExpirationDate = responseJson.subscriptionExpirationDate;
         //console.log(facilityInformation);
     }
 

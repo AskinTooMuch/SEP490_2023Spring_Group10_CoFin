@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from '../api/axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -26,7 +26,6 @@ const Species = () => {
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
-  const list_fetched_ref = useRef(false);
 
   const [show2, setShow2] = useState(false);
   const handleClose2 = () => setShow2(false);
@@ -158,8 +157,6 @@ const Species = () => {
   // Get list of specie and show
   //Get specie list
   useEffect(() => {
-    if (list_fetched_ref.current) return;
-    list_fetched_ref.current = true;
     loadSpecieList();
   }, []);
 
