@@ -96,7 +96,7 @@ public class UserDetailDTO {
     private Date facilityFoundDate;
     private String hotline;
     @Column(name = "FACILITY_STATUS")
-    private boolean facilityStatus;
+    private Boolean facilityStatus;
     @Column(name = "subscription_expiration_date")
     private Date subscriptionExpirationDate;
     @Column(name = "subscription_id")

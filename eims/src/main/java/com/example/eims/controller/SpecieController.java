@@ -9,6 +9,7 @@
  * 22/02/2023    1.0        ChucNV      First Deploy<br>
  * 22/02/2023    1.0        ChucNV      Add new specie API
  * 23/02/2023    2.0        ChucNV      Add edit, list, delete specie API
+ * 26/02/2023    2.1        ChucNV      Fix API to work with userId
  */
 
 package com.example.eims.controller;
@@ -52,7 +53,7 @@ public class SpecieController {
     //@Secured({"ROLE_OWNER"})
     public ResponseEntity<String> newSpecie(@RequestBody NewSpecieDTO newSpecieDTO){
         System.out.println(newSpecieDTO);
-        Optional<User> userOpt = userRepository.findByPhone(newSpecieDTO.getPhone());
+        Optional<User> userOpt = userRepository.findById(newSpecieDTO.getUserId());
         if (userOpt.isPresent()) {
             User user = userOpt.get();
             Specie specie = new Specie();
@@ -64,7 +65,7 @@ public class SpecieController {
             specieRepository.save(specie);
             return new ResponseEntity<>("Specie added successfully", HttpStatus.OK);
         }
-        return new ResponseEntity<>("Account not found with phone number "+newSpecieDTO.getPhone(), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>("Account not found with Id number "+newSpecieDTO.getUserId(), HttpStatus.BAD_REQUEST);
     }
 
     /**

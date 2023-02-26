@@ -1,10 +1,12 @@
--- Version 0.5.0: Added tables: salary_history, registration, notification. Modified a few tables
+-- Version 0.6.1: Fix stored procedure to work with user_id
+-- V0.6.0: Add stored procedure user_and_facility
+-- V0.5.0: Added tables: salary_history, registration, notification. Modified a few tables
 -- V0.4.0: Change attribute and table name from camelCase to camel_case
 -- V0.3.0: Add data
 -- V0.2.0: Add foreign key constraint
 -- V0.2.1: Change attribute _name, re-route foreign key constraint
 -- V0.2.2: Add CHECK constraint
--- Last up_date: 21/02/2023
+-- Last up_date: 26/02/2023
 -- Script for generating EIMS - Eggs Incubating Management System.
 -- Check if database already exist. If yes then drop the database to ensure the script runs successfully with no variations.
 DROP DATABASE IF EXISTS eims;
@@ -325,7 +327,7 @@ ADD FOREIGN KEY (product_id)REFERENCES egg_product(product_id);
 -- Create Procedures:
 -- Select user and facility of an user
 DELIMITER //
-CREATE PROCEDURE user_and_facility(phone varchar(15)) 
+CREATE PROCEDURE user_and_facility(uid integer) 
 BEGIN
 SELECT U.user_id, UR.role_name, U.username, U.dob, U.email, U.salary, U.address, U.status AS USER_STATUS, 
 		F.facility_id, F.facility_name, F.facility_address, F.facility_found_date, F.hotline, F.status AS FACILITY_STATUS, F.subscription_expiration_date,
@@ -334,7 +336,7 @@ SELECT U.user_id, UR.role_name, U.username, U.dob, U.email, U.salary, U.address,
 FROM user U JOIN user_role UR ON U.role_id = UR.role_id
 		LEFT JOIN facility F ON U.user_id = F.user_id
         LEFT JOIN user_subsription US ON F.facility_id = US.facility_id
-WHERE U.phone = phone;
+WHERE U.user_id = uid;
 END //
 DELIMITER ;
 

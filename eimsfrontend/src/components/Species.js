@@ -13,7 +13,7 @@ const Species = () => {
   const [specieList, setSpecieList] = useState([]);
   // Create new specie JSON
   const [newSpecieDTO, setNewSpecieDTO] = useState({
-    phone: sessionStorage.getItem("curPhone"),
+    userId: sessionStorage.getItem("curUserId"),
     specieName: "",
     incubationPeriod: ""
   })
@@ -104,7 +104,7 @@ const Species = () => {
         }
       );
       setNewSpecieDTO({
-        phone: sessionStorage.getItem("curPhone"),
+        userId: sessionStorage.getItem("curUserId"),
         specieName: "",
         incubationPeriod: ""
       });

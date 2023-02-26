@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class NewSpecieDTO {
-    private String phone;
+    private Long userId;
     private String specieName;
     private int incubationPeriod;
 }
