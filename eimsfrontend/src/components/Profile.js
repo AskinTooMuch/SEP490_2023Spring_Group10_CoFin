@@ -8,9 +8,10 @@ import { faEye } from "@fortawesome/free-solid-svg-icons";
 import "../css/profile.css"
 import { Modal, Button } from 'react-bootstrap'
 const eye = <FontAwesomeIcon icon={faEye} />;
+    //regex check password
 const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
 const Profile = () => {
-    //api
+    //api url
     const CHANGE_PASS_URL = '/api/auth/changePassword';
     const USER_DETAIL_URL = '/api/user/details';
 
@@ -32,25 +33,19 @@ const Profile = () => {
     const handleShow2 = () => setShow2(true);
 
     const userRef = useRef();
-    
-    
-
     const [changePasswordDTO, setChangePasswordDTO] = useState({
         phone: sessionStorage.getItem("curPhone"),
         password: "",
         newPassword: ""
     })
 
-    
+
     const [validPwd, setValidPwd] = useState(false);
-    const [pwdFocus, setPwdFocus] = useState(false);
     const [matchPwd, setMatchPwd] = useState('');
     const [validMatch, setValidMatch] = useState(false);
-    const [matchFocus, setMatchFocus] = useState(false);
 
 
     //Get user details
-    const [userDetails, setUserDetails] = useState();
     useEffect(() => {
         loadUserDetails();
     }, []);
@@ -80,7 +75,7 @@ const Profile = () => {
     }
 
 
-
+    //Check Repassword and Regex password
     useEffect(() => {
         setValidPwd(PWD_REGEX.test(changePasswordDTO.newPassword));
         setValidMatch(changePasswordDTO.newPassword === matchPwd);
@@ -94,6 +89,7 @@ const Profile = () => {
         })
     }
 
+    //Change password through Axios
     const handleSubmit = async (event) => {
         event.preventDefault();
         const v2 = PWD_REGEX.test(changePasswordDTO.newPassword);
@@ -116,18 +112,18 @@ const Profile = () => {
             setChangePasswordDTO('');
             toast.success("Đổi mật khẩu thành công")
             setShow(false)
-            window.location.reload(false);
         } catch (err) {
-            toast.success("Đổi mật khẩu thành công");
             if (!err?.response) {
                 toast.error('Server không phản hồi');
             } else if (err.response?.status === 400) {
                 toast.error('Mật khẩu cũ không đúng');
             } else if (err.response?.status === 401) {
                 toast.error('Unauthorized');
-            } else {
+            }
+            else {
                 toast.error('Sai mật khẩu');
             }
+
         }
 
     }
@@ -180,104 +176,94 @@ const Profile = () => {
                                 <div className="row">
                                     <div className="col-md-6">
                                         <Button onClick={handleShow} className="btn btn-info">Đổi mật khẩu</Button >
-                                        <form onSubmit={handleSubmit} >
-                                            <Modal show={show} onHide={handleClose}
-                                                size="lg"
-                                                aria-labelledby="contained-modal-title-vcenter"
-                                                centered >
-                                                <Modal.Header closeButton onClick={handleClose}>
-                                                    <Modal.Title>Thay đổi mật khẩu</Modal.Title>
-                                                </Modal.Header>
-                                                <Modal.Body>
 
-                                                    <div className="changepass">
-                                                        <div className="row">
-                                                            <div className="col-md-6 ">
-                                                                <p>Mật khẩu cũ</p>
-                                                            </div>
-                                                            <div className="col-md-6 pass-wrapper">
-                                                                <input ref={userRef} onChange={e => handleChange(e, "password")}
-                                                                    value={changePasswordDTO.password} required 
-                                                                    type={passwordShown ? "text" : "password"}/>
-                                                                    <i onClick={togglePasswordVisiblity}>{eye}</i>
-                                                            </div>
+                                        <Modal show={show} onHide={handleClose}
+                                            size="lg"
+                                            aria-labelledby="contained-modal-title-vcenter"
+                                            centered >
+                                            <Modal.Header closeButton onClick={handleClose}>
+                                                <Modal.Title>Thay đổi mật khẩu</Modal.Title>
+                                            </Modal.Header>
+                                            <form onSubmit={handleSubmit} style={{ margin: "10px" }}>
+
+                                                <div className="changepass">
+                                                    <div className="row">
+                                                        <div className="col-md-6 ">
+                                                            <p>Mật khẩu cũ</p>
                                                         </div>
-                                                        <div className="row">
-                                                            <div className="col-md-6">
-                                                                <p>Mật khẩu mới <FontAwesomeIcon className="star" icon={faStarOfLife} />
-                                                                    <FontAwesomeIcon icon={faCheck} className={validPwd ? "valid" : "hide"} />
-                                                                    <FontAwesomeIcon icon={faTimes} className={validPwd || !changePasswordDTO.password ? "hide" : "invalid"} /></p>
-                                                            </div>
-                                                            <div className="col-md-6 pass-wrapper">
-                                                                <input ref={userRef} onChange={e => handleChange(e, "newPassword")}
-                                                                    value={changePasswordDTO.newPassword} required
-                                                                    id="newPassword"
-                                                                    aria-invalid={validPwd ? "false" : "true"}
-                                                                    aria-describedby="pwdnote"
-                                                                    onFocus={() => setPwdFocus(true)}
-                                                                    onBlur={() => setPwdFocus(false)}
-                                                                    type={passwordShown ? "text" : "password"} />
-                                                                    <i onClick={togglePasswordVisiblity}>{eye}</i>
-                                                            </div>
-                                                            <p id="pwdnote" className={pwdFocus && !validPwd ? "instructions" : "offscreen"}>
-                                                                <FontAwesomeIcon icon={faInfoCircle} />
-                                                                8 - 24 kí tự.<br />
-                                                                Bao gồm 1 chữ cái viết hoa, 1 số và 1 kí tự đặc biệt.<br />
-                                                                Các kí tự đặc biệt cho phép: <span aria-label="exclamation mark">!</span> <span aria-label="at symbol">@</span> <span aria-label="hashtag">#</span> <span aria-label="dollar sign">$</span> <span aria-label="percent">%</span>
+                                                        <div className="col-md-6 pass-wrapper">
+                                                            <input ref={userRef} onChange={e => handleChange(e, "password")}
+                                                                value={changePasswordDTO.password} required
+                                                                type={passwordShown ? "text" : "password"}
+                                                                minLength="8" maxLength="20" />
+                                                            <i onClick={togglePasswordVisiblity}>{eye}</i>
+                                                        </div>
+                                                    </div>
+                                                    <div className="row">
+                                                        <div className="col-md-6">
+                                                            <p>Mật khẩu mới <FontAwesomeIcon className="star" icon={faStarOfLife} />
                                                             </p>
                                                         </div>
-                                                        <div className="row">
-                                                            <div className="col-md-6">
-                                                                <p>Xác nhận lại
-                                                                    <FontAwesomeIcon className="star" icon={faStarOfLife} />
-                                                                    <FontAwesomeIcon icon={faCheck} className={validMatch && matchPwd ? "valid" : "hide"} />
-                                                                    <FontAwesomeIcon icon={faTimes} className={validMatch || !matchPwd ? "hide" : "invalid"} /></p>
-                                                            </div>
-                                                            <div className="col-md-6 pass-wrapper">
-                                                                <input ref={userRef}
-                                                                    id="confirm_pwd"
-                                                                    onChange={(e) => setMatchPwd(e.target.value)}
-                                                                    value={matchPwd}
-                                                                    required
-                                                                    aria-invalid={validMatch ? "false" : "true"}
-                                                                    aria-describedby="confirmnote"
-                                                                    onFocus={() => setMatchFocus(true)}
-                                                                    onBlur={() => setMatchFocus(false)} 
-                                                                    type={passwordShown ? "text" : "password"}/>
-                                                                    <i onClick={togglePasswordVisiblity}>{eye}</i>
-                                                            </div>
-
-                                                            <p id="confirmnote" className={matchFocus && !validMatch ? "instructions" : "offscreen"}>
-                                                                <FontAwesomeIcon icon={faInfoCircle} />
-                                                                Mật khẩu phải trùng với mẩt khẩu đã nhập ở trên
-                                                            </p>
+                                                        <div className="col-md-6 pass-wrapper">
+                                                            <input ref={userRef} onChange={e => handleChange(e, "newPassword")}
+                                                                value={changePasswordDTO.newPassword} required
+                                                                id="newPassword"
+                                                                aria-invalid={validPwd ? "false" : "true"}
+                                                                aria-describedby="pwdnote"
+                                                                type={passwordShown ? "text" : "password"}
+                                                                className={changePasswordDTO.password !== changePasswordDTO.newPassword && validPwd  ? "valid" : "invalid"}
+                                                                minLength="8" maxLength="20"
+                                                                />
+                                                            <i onClick={togglePasswordVisiblity}>{eye}</i>
                                                         </div>
 
                                                     </div>
-                                                </Modal.Body>
+                                                    <div className="row">
+                                                        <div className="col-md-6">
+                                                            <p>Xác nhận lại
+                                                                <FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
+                                                        </div>
+                                                        <div className="col-md-6 pass-wrapper">
+                                                            <input ref={userRef}
+                                                                id="confirm_pwd"
+                                                                onChange={(e) => setMatchPwd(e.target.value)}
+                                                                value={matchPwd}
+                                                                required
+                                                                aria-invalid={validMatch ? "false" : "true"}
+                                                                aria-describedby="confirmnote"
+                                                                type={passwordShown ? "text" : "password"} 
+                                                                className={validMatch && matchPwd ? "valid" : "invalid"}
+                                                                minLength="8" maxLength="20"/>
+                                                            <i onClick={togglePasswordVisiblity}>{eye}</i>
+                                                        </div>
 
-                                                <Modal.Footer>
-                                                    <Button variant="danger" style={{ width: "20%" }} onClick={handleClose}>
-                                                        Huỷ
-                                                    </Button>
+                                                    </div>
 
-                                                    <Button variant="dark" style={{ width: "30%" }} className="col-md-6" onClick={handleSubmit}>
-                                                        Đổi mật khẩu
-                                                        <ToastContainer position="top-left"
-                                                            autoClose={5000}
-                                                            hideProgressBar={false}
-                                                            newestOnTop={false}
-                                                            closeOnClick
-                                                            rtl={false}
-                                                            pauseOnFocusLoss
-                                                            draggable
-                                                            pauseOnHover
-                                                            theme="colored" />
-                                                    </Button>
+                                                </div>
+                                                <h6 id="pwdnote" >
+                                                    <FontAwesomeIcon icon={faInfoCircle} />
+                                                    8 - 20 kí tự.<br />
+                                                    Bao gồm 1 chữ cái viết hoa, 1 số và 1 kí tự đặc biệt.<br />
+                                                    Các kí tự đặc biệt cho phép: <span aria-label="exclamation mark">!</span> <span aria-label="at symbol">@</span> <span aria-label="hashtag">#</span> <span aria-label="dollar sign">$</span> <span aria-label="percent">%</span>
+                                                    <br/> Mật khẩu mới không được trùng với mật khẩu cũ
+                                                    <br />Mật khẩu xác nhận lại phải trùng với mẩt khẩu đã nhập ở trên
+                                                    
+                                                </h6>
+                                                <button className="btn btn-danger" style={{ width: "20%" }} onClick={handleClose}>
+                                                    Huỷ
+                                                </button>
 
-                                                </Modal.Footer>
-                                            </Modal>
-                                        </form>
+                                                <button className="btn btn-success" style={{ width: "30%" }} >
+                                                    Đổi mật khẩu
+
+                                                </button>
+
+
+                                            </form>
+
+
+                                        </Modal>
+
                                     </div>
                                     <div className="col-md-6">
                                         <Button onClick={handleShow2} className="btn btn-info">Cập nhật</Button >
@@ -391,7 +377,16 @@ const Profile = () => {
                     </div>
                 </div>
             </div>
-
+            <ToastContainer position="top-left"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="colored" />
         </div>
     )
 }

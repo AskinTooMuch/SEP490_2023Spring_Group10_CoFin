@@ -50,8 +50,8 @@ h6 {
 
 i {
   position: absolute;
-  top: 28%;
-  right: 5%;
+  top: 5%;
+  right: 6%;
 }
 
 i:hover {
@@ -60,4 +60,5 @@ i:hover {
 }
 input{
   width: 100%;
+  height: fit-content;
 }

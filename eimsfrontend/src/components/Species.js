@@ -8,10 +8,8 @@ import ImportExportIcon from '@mui/icons-material/ImportExport';
 import { Modal, Button } from 'react-bootstrap'
 import { faStarOfLife } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { integerPropType } from '@mui/utils';
 const Species = () => {
 
-  const errRef = useRef();
   const [specieList, setSpecieList] = useState([]);
   // Create new specie JSON
   const [newSpecieDTO, setNewSpecieDTO] = useState({
@@ -32,7 +30,7 @@ const Species = () => {
 
   const [show2, setShow2] = useState(false);
   const handleClose2 = () => setShow2(false);
-  const handleShow2 = () => setShow2(true);
+ 
   // Define urls
   const SPECIE_LIST = '/api/specie/list';
   const SPECIE_EDIT_SAVE = '/api/specie/edit/save';
@@ -72,11 +70,13 @@ const Species = () => {
           withCredentials: false
         }
       );
-    editSpecieDTO.specieId = "";
-    editSpecieDTO.specieName = "";
-    editSpecieDTO.incubationPeriod = "";
-    toast.success("Sửa loài mới thành công")
-    setShow2(false);
+      editSpecieDTO.specieId = "";
+      editSpecieDTO.specieName = "";
+      editSpecieDTO.incubationPeriod = "";
+      console.log(response)
+      loadSpecieList();
+      toast.success("Sửa thông tin loài thành công");
+      setShow2(false);
     } catch (err) {
       if (!err?.response) {
         toast.error('Server không phản hồi');
@@ -87,7 +87,6 @@ const Species = () => {
       } else {
         toast.error('Sai mật khẩu');
       }
-      errRef.current.focus();
     }
   }
   // Handle submit to send request to API (Create new specie)
@@ -109,6 +108,7 @@ const Species = () => {
         specieName: "",
         incubationPeriod: ""
       });
+      console.log(response)
       loadSpecieList();
       toast.success("Tạo loài mới thành công");
       setShow(false);
@@ -122,7 +122,6 @@ const Species = () => {
       } else {
         toast.error('Sai mật khẩu');
       }
-      errRef.current.focus();
     }
   }
   //
@@ -139,6 +138,7 @@ const Species = () => {
           },
           withCredentials: false
         });
+        console.clear(response)
       loadSpecieList();
       toast.success("Xóa loài thành công");
     } catch (err) {
@@ -151,7 +151,6 @@ const Species = () => {
       } else {
         toast.error('Sai mật khẩu');
       }
-      errRef.current.focus();
     }
   }
   //
@@ -179,7 +178,7 @@ const Species = () => {
   }
 
   // Load data into edit specie fields
-  function LoadData(index){
+  function LoadData(index) {
     console.log(index);
     editSpecieDTO.specieId = specieList[index].specieId;
     editSpecieDTO.specieName = specieList[index].specieName;
@@ -261,7 +260,7 @@ const Species = () => {
             {
               specieList.map((item, index) => (
                 <tr key={item.specieId} data-key={index} className='trclick2'>
-                  <th scope="row" onClick={() => LoadData(index)}>{index+1} </th>
+                  <th scope="row" onClick={() => LoadData(index)}>{index + 1} </th>
                   <td onClick={() => LoadData(index)}>{item.specieName}</td>
                   <td onClick={() => LoadData(index)}>{item.incubationPeriod} (ngày)</td>
                   <td><button className='btn btn-danger' style={{ width: "50%" }} onClick={() => handleDelete(index)}>Xoá</button></td>
@@ -283,8 +282,8 @@ const Species = () => {
                       <p>Tên loài<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                     </div>
                     <div className="col-md-6">
-                      <input placeholder='Gà, Ngan, Vịt, v.v' id="editSpecieName" 
-                      value={editSpecieDTO.specieName} onChange={e => handleEditSpecieChange(e, "specieName")}/>
+                      <input placeholder='Gà, Ngan, Vịt, v.v' id="editSpecieName"
+                        value={editSpecieDTO.specieName} onChange={e => handleEditSpecieChange(e, "specieName")} />
                     </div>
                   </div>
                   <div className="row">
@@ -292,8 +291,8 @@ const Species = () => {
                       <p>Thời gian ấp<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                     </div>
                     <div className="col-md-6">
-                      <input placeholder='Số ngày ấp' id="editIncubationPeriod" type="number" 
-                      value={editSpecieDTO.incubationPeriod} onChange={e => handleEditSpecieChange(e, "incubationPeriod")}/>
+                      <input placeholder='Số ngày ấp' id="editIncubationPeriod" type="number"
+                        value={editSpecieDTO.incubationPeriod} onChange={e => handleEditSpecieChange(e, "incubationPeriod")} />
                     </div>
                   </div>
                 </div>
@@ -314,6 +313,16 @@ const Species = () => {
             </form>
           </tbody>
         </table>
+        <ToastContainer position="top-left"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="colored" />
       </div>
     </div>
   );

@@ -11,11 +11,13 @@ import Profile from './components/Profile';
 import Order from './components/Order';
 import Machine from './components/Machine'
 import Egg from './components/Eggs'
+import EggBatchDetail from './components/EggBatchDetail'
 import BreedDetails from './components/BreedDetails'
 import MachineDetails from './components/MachineDetails'
 import SupplierDetails from './components/SupplierDetails'
 import Subscription from './components/Subscription';
 import ForgotPassword from './components/ForgotPassword';
+import EggBatch from './components/EggBatch';
 function App() {
   return (
     <>
@@ -25,12 +27,14 @@ function App() {
           <Route path="/subcribe" element={<Subscription />} />
           <Route path="/egg" element={<Egg />} />
           <Route path="/machine" element={<Machine />} />
+          <Route path="/eggbatchdetail" element={<EggBatchDetail />} />
           <Route path="/breeddetail" element={<BreedDetails />} />
           <Route path="/machinedetail" element={<MachineDetails />} />
           <Route path="/supplierdetail" element={<SupplierDetails />} />
           <Route path="/order" element={<Order />} />
           <Route path="/dashboard" element={<DashBoard />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/eggbatch" element={<EggBatch />} />
         </Route>
 
         {/* public routes */}

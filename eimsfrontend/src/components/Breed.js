@@ -29,7 +29,7 @@ const Breed = () => {
         setImages([...e.target.files]);
     }
     return (
-        <>
+        <div>
             <nav className="navbar justify-content-between">
                 <button className='btn btn-light' onClick={handleShow}>+ Thêm</button>
                 <form><Modal show={show} onHide={handleClose}
@@ -46,7 +46,7 @@ const Breed = () => {
                                     <p>Loài<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                 </div>
                                 <div className="col-md-6">
-                                    <select class="form-select" aria-label="Default select example">
+                                    <select className="form-select" aria-label="Default select example">
                                         <option selected>Open this select menu</option>
                                         <option value="1" >One</option>
                                         <option value="2">Two</option>
@@ -125,7 +125,7 @@ const Breed = () => {
                 </div>
             </nav>
             <div>
-                <table class="table table-bordered">
+                <table className="table table-bordered">
                     <thead>
                         <tr>
                             <th scope="col">STT</th>
@@ -153,7 +153,7 @@ const Breed = () => {
                     </tbody>
                 </table>
             </div>
-        </>
+        </div>
     );
 }
 export default Breed;

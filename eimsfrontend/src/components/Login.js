@@ -81,7 +81,7 @@ const Login = () => {
               <input type="text" name="phone" className="form-control mt-1" placeholder="Nhập số điện thoại"
                 required ref={userRef} onChange={e => handleChange(e, "phone")} value={loginDetail.phone} />
             </div>
-            <div className="form-group mt-3 pass-wrapper">
+            <div className="form-group mt-3 login-wrapper">
 
               <input type={passwordShown ? "text" : "password"} name="password" className="form-control mt-1" placeholder="Nhập mật khẩu"
                 required ref={userRef} onChange={e => handleChange(e, "password")}

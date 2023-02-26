@@ -93,7 +93,7 @@ export default function BasicTabs() {
                                     </div>
                                     <div className="col-md-6">
                                     <select className="form-select" aria-label="Default select example">
-                                            <option selected>Open this select menu</option>
+                                            <option defaultValue="0">Open this select menu</option>
                                             <option value="1" >Oneg</option>
                                             <option value="2">Two</option>
                                             <option value="3">Three</option>

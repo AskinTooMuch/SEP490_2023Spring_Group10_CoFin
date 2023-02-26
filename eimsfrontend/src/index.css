@@ -10,7 +10,6 @@
 html {
   font-family: 'Nunito', sans-serif;
   font-size: 22px;
-  color: #fff;
 }
 
 body {
@@ -18,7 +17,15 @@ body {
 
 }
 
-
+::selection {
+  background:#0150fa; 
+}
+::-moz-selection {
+  background:#0150fa; 
+}
+::-webkit-selection {
+  background:#0150fa; 
+}
 
 a,
 a:visited {
@@ -50,16 +57,16 @@ a:visited {
   display: none;
 }
 
-.valid {
-  color: limegreen;
-  margin-left: 0.25rem;
+.valid  { 
+  outline: none !important;
+  border-bottom: #198754 3px solid;
+  box-shadow: 0 0 10px #36b177;
 }
-
-.invalid {
-  color: red;
-  margin-left: 0.25rem;
+.invalid  { 
+  outline: none !important;
+  border-bottom: #DC3545 3px solid;
+  box-shadow: 0 0 10px #ce7171;
 }
-
 .errmsg {
   color: red;
   font-weight: bold;
@@ -107,7 +114,7 @@ a:visited {
   box-shadow: rgb(0 0 0 / 16%) 1px 1px 10px;
   padding-top: 30px;
   padding-bottom: 20px;
-  border-radius: 8px;
+  border-radius: 25px;
   background-color: white;
 }
 
@@ -142,4 +149,18 @@ a:visited {
 
 .card {
   margin: 20px;
+}
+.text-green {
+  color: green;
+  font-weight: bold;
+}
+
+.text-red {
+  color: red;
+  font-weight: bold;
+}
+
+.text-blue {
+  color: rgb(0, 140, 255);
+  font-weight: bold;
 }
