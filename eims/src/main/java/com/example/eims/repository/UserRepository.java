@@ -7,6 +7,7 @@
  * Record of change:<br>
  * DATE          Version    Author           DESCRIPTION<br>
  * 18/01/2023    1.0        ChucNV           First Deploy<br>
+ * 27/02/2023    1.1        ChucNV           Add findByUserId
  */
 
 package com.example.eims.repository;
@@ -21,6 +22,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByPhone(String phone);
     Optional<User> findByPhoneAndPassword(String phone, String password);
     Boolean existsByPhone(String phone);
+    Optional<User> findByUserId(Long userId);
     @Query(value = "SELECT user_id FROM eims.user where phone = ?1", nativeQuery = true)
     String findIdByPhone(String phone);
 }

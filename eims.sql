@@ -28,6 +28,7 @@ CREATE TABLE facility(
     facility_found_date				date 		NOT NULL,
     subscription_expiration_date	datetime,
     hotline							varchar(15)	NOT NULL,
+    businessLicenseNumber			varchar(31) NOT NULL,
     status							boolean		NOT NULL
 );
 
@@ -60,15 +61,16 @@ CREATE TABLE specie(
 );
 
 CREATE TABLE breed(
-	breed_id			integer 	AUTO_INCREMENT PRIMARY KEY,
-    specie_id			integer,
-    user_id				integer		NOT NULL,
-    breed_name			varchar(63)	NOT NULL,
-    average_weight		double		NOT NULL,
-    common_disease		varchar(255),
-    growth_time			time		NOT NULL,
-    image_src			varchar(1027),
-    status 				boolean		NOT NULL
+	breed_id				integer 	AUTO_INCREMENT PRIMARY KEY,
+    specie_id				integer,
+    user_id					integer		NOT NULL,
+    breed_name				varchar(63)	NOT NULL,
+    average_weight_male		double,
+    average_weight_female	double,
+    common_disease			varchar(255),
+    growth_time				time		NOT NULL,
+    image_src				varchar(1027),
+    status 					boolean		NOT NULL
 );
 
 CREATE TABLE incubation_phase(

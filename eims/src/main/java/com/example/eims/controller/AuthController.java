@@ -113,7 +113,7 @@ public class AuthController {
         //Local variable for the user
         Optional<User> userOpt;
         //Check credentials, if not valid then return Bad request (403)
-        userOpt = userRepository.findByPhone(changePasswordDTO.getPhone());
+        userOpt = userRepository.findByUserId(changePasswordDTO.getUserId());
         if (userOpt.isEmpty() ||
                 !passwordEncoder.matches(changePasswordDTO.getPassword(), userOpt.get().getPassword())) {
             return new ResponseEntity<>("Old password is wrong.", HttpStatus.BAD_REQUEST);
