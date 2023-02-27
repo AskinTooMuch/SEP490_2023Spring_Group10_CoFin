@@ -21,6 +21,8 @@ const Profile = () => {
         setPasswordShown(passwordShown ? false : true);
     };
 
+
+
     //show-hide popup
     const [show, setShow] = useState(false);
 
@@ -33,6 +35,7 @@ const Profile = () => {
     const handleShow2 = () => setShow2(true);
     const inf_fetched_ref = useRef(false);
 
+    const [passFocus, setPassFocus] = useState(false);
 
     const userRef = useRef();
 
@@ -247,11 +250,11 @@ const Profile = () => {
                                             </Modal.Header>
                                             <form onSubmit={handleSubmit} style={{ margin: "10px" }}>
                                                 <div className="changepass">
-                                                    <div className="row">
+                                                    <div className="row ">
                                                         <div className="col-md-6 ">
                                                             <p>Mật khẩu cũ</p>
                                                         </div>
-                                                        <div className="col-md-6 pass-wrapper">
+                                                        <div className="col-md-6 pass-wrapper ">
                                                             <input ref={userRef} onChange={e => handleChange(e, "password")}
                                                                 value={changePasswordDTO.password} required
                                                                 type={passwordShown ? "text" : "password"}
@@ -272,7 +275,8 @@ const Profile = () => {
                                                                 aria-describedby="pwdnote"
                                                                 type={passwordShown ? "text" : "password"}
                                                                 className={changePasswordDTO.password !== changePasswordDTO.newPassword && validPwd ? "valid" : "invalid"}
-                                                                minLength="8" maxLength="20"
+                                                                minLength="8" maxLength="20"  onFocus={() => setPassFocus(true)}
+                                                                onBlur={() => setPassFocus(false)}
                                                             />
                                                             <i onClick={togglePasswordVisiblity}>{eye}</i>
                                                         </div>
@@ -298,7 +302,7 @@ const Profile = () => {
 
                                                     </div>
                                                 </div>
-                                                <h6 id="pwdnote" >
+                                                {/* <h6 id="pwdnote" >
                                                     <FontAwesomeIcon icon={faInfoCircle} />
                                                     &nbsp; 8 - 20 kí tự.<br />
                                                     Bao gồm 1 chữ cái viết hoa, 1 số và 1 kí tự đặc biệt.<br />
@@ -306,7 +310,7 @@ const Profile = () => {
                                                     <br /> Mật khẩu mới không được trùng với mật khẩu cũ
                                                     <br />Mật khẩu xác nhận lại phải trùng với mẩt khẩu đã nhập ở trên
 
-                                                </h6>
+                                                </h6> */}
                                                 <button className="btn btn-danger" style={{ width: "20%" }} onClick={handleClose}>
                                                     Huỷ
                                                 </button>

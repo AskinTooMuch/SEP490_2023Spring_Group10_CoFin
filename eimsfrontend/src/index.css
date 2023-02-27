@@ -37,8 +37,8 @@ a:visited {
 .instructions {
   font-size: 0.75rem;
   border-radius: 0.5rem;
-  background: #000;
-  color: #fff;
+  background: #d7fcfd;
+  color: #ff0000;
   padding: 0.25rem;
   position: relative;
   bottom: -10px;
@@ -60,12 +60,11 @@ a:visited {
 .valid  { 
   outline: none !important;
   border-bottom: #198754 3px solid;
-  box-shadow: 0 0 10px #36b177;
+  border-radius: 25px;
 }
 .invalid  { 
   outline: none !important;
   border-bottom: #DC3545 3px solid;
-  box-shadow: 0 0 10px #ce7171;
 }
 .errmsg {
   color: red;
@@ -164,3 +163,4 @@ a:visited {
   color: rgb(0, 140, 255);
   font-weight: bold;
 }
+

@@ -58,7 +58,8 @@ i:hover {
   color: #00fcb6;
   cursor: pointer;
 }
-input{
+.pass-wrapper input{
   width: 100%;
   height: fit-content;
+  border-radius: 5px;
 }
