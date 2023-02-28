@@ -8,12 +8,14 @@
  * DATE          Version    Author           DESCRIPTION<br>
  * 17/02/2023    1.0        DuongVV          First Deploy<br>
  * 23/02/2023    2.0        DuongVV          Add search<br>
+ * 28/02/2023    3.0        DuongVV          Add paging<br>
  */
 
 package com.example.eims.repository;
 
 import com.example.eims.entity.Supplier;
-import jakarta.annotation.Nullable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -27,4 +29,5 @@ public interface SupplierRepository extends JpaRepository<Supplier, Long> {
     @Query(value = "SELECT FROM eims.supplier WHERE user_id = ?1 " +
             "AND supplier_phone LIKE %?2% OR supplier_name LIKE %?2%", nativeQuery = true)
     List<Supplier> searchByUsernameOrPhone(Long userId, String key);
+    Page<Supplier> findAllByUserId(Long userId, Pageable pageable);
 }

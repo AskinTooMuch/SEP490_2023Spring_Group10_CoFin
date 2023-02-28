@@ -7,6 +7,7 @@
  * Record of change:<br>
  * DATE          Version    Author           DESCRIPTION<br>
  * 18/02/2023    1.0        DuongVV          First Deploy<br>
+ * 28/02/2023    2.0        DuongVV          Add Paging<br>
  */
 
 package com.example.eims.controller;
@@ -16,8 +17,12 @@ import com.example.eims.dto.machine.UpdateMachineDTO;
 import com.example.eims.entity.Machine;
 import com.example.eims.repository.MachineRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.Date;
@@ -32,10 +37,9 @@ public class MachineController {
     private MachineRepository machineRepository;
 
     /**
-     * API to get all of their machines.
-     * facilityId is the id of current logged-in user's selected facility.
+     * Get all of their machines.
      *
-     * @param facilityId
+     * @param facilityId the id of current logged-in user's selected facility.
      * @return list of Machines
      */
     @GetMapping("/all")
@@ -46,10 +50,9 @@ public class MachineController {
     }
 
     /**
-     * API to get a machine.
-     * machineId is the id of the machine
+     * Get a machine.
      *
-     * @param machineId
+     * @param machineId the id of the machine
      * @return
      */
     @GetMapping("/get")
@@ -64,10 +67,9 @@ public class MachineController {
     }
 
     /**
-     * API to create a machine of a facility.
-     * createMachineDTO contains the facility id, machine type id, name, max and current capacity
+     * Create a machine of a facility.
      *
-     * @param createMachineDTO
+     * @param createMachineDTO contains the facility id, machine type id, name, max and current capacity
      * @return
      */
     @PostMapping("/create")
@@ -101,10 +103,9 @@ public class MachineController {
     }
 
     /**
-     * API to show form update a machine.
-     * machineId is the id of the machine
+     * Show form update a machine.
      *
-     * @param machineId
+     * @param machineId the id of the machine
      * @return
      */
     @GetMapping("/update/get")
@@ -119,12 +120,10 @@ public class MachineController {
     }
 
     /**
-     * API to update a machine of a facility.
-     * The DTO contains the facility id, machine type id, name, max and current capacity, status
-     * id is the id of the machine
+     * Update a machine of a facility.
      *
-     * @param updateMachineDTO
-     * @param machineId
+     * @param machineId the id of the machine
+     * @param updateMachineDTO contains the facility id, machine type id, name, max and current capacity, status
      * @return
      */
     @PutMapping("/update/save")
@@ -141,10 +140,9 @@ public class MachineController {
     }
 
     /**
-     * API to delete a machine of a facility.
-     * machineId is the id of the machine
+     * Delete a machine of a facility.
      *
-     * @param machineId
+     * @param machineId the id of the machine
      * @return
      */
     @DeleteMapping("/delete")
@@ -152,5 +150,35 @@ public class MachineController {
         // Delete
         machineRepository.deleteById(machineId);
         return new ResponseEntity<>("Machine deleted!", HttpStatus.OK);
+    }
+
+    /**
+     * Get all of facility's machines with Paging.
+     * facilityId is the id of current logged-in user's facility.
+     *
+     * @param facilityId
+     * @param page the page number
+     * @param size the size of page
+     * @param sort sorting type
+     * @return page of machines
+     */
+    @GetMapping("/allPaging")
+    @Secured({"ROLE_OWNER"})
+    public ResponseEntity<?> getAllSupplierPaging(@RequestParam(name = "facilityId") Long facilityId,
+                                                  @RequestParam(name = "page", required = false, defaultValue = "0") Integer page,
+                                                  @RequestParam(name = "size", required = false, defaultValue = "5") Integer size,
+                                                  @RequestParam(name = "sort", required = false, defaultValue = "ASC") String sort) {
+
+        // Get sorting type
+        Sort sortable = null;
+        if (sort.equals("ASC")) {
+            sortable = Sort.by("machineId").ascending();
+        }
+        if (sort.equals("DESC")) {
+            sortable = Sort.by("machineId").descending();
+        }
+        // Get all customers of the current User with Paging
+        Page<Machine> machinePage = machineRepository.findAllByFacilityId(facilityId, PageRequest.of(page, size, sortable));
+        return new ResponseEntity<>(machinePage, HttpStatus.OK);
     }
 }

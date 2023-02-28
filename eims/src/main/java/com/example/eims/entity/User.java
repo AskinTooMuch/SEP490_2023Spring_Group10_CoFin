@@ -17,7 +17,6 @@ import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.sql.Date;
-import java.util.Set;
 
 @Data
 @Entity
@@ -32,7 +31,7 @@ import java.util.Set;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long userId = 100L;
+    private Long userId;
     private Long roleId;
     private String username;
     @DateTimeFormat(pattern="dd/MM/yyyy")

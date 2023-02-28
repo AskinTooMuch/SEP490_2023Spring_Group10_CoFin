@@ -32,9 +32,8 @@ public class FacilityController {
     private FacilityRepository facilityRepository;
 
     /**
-     * API to get all facilities.
+     * Get all facilities.
      *
-     * @param
      * @return list of Facilities
      */
     @GetMapping("/all")
@@ -45,11 +44,10 @@ public class FacilityController {
     }
 
     /**
-     * API to get the facility of a user.
-     * userId is the id of the user
+     * Get the facility of a user.
      *
-     * @param userId
-     * @return
+     * @param userId the id of the user
+     * @return a facility
      */
     @GetMapping("/get")
     public ResponseEntity<?> getFacilityOfOwner(@RequestParam Long userId) {
@@ -63,11 +61,10 @@ public class FacilityController {
     }
 
     /**
-     * API to create a facility of a user.
-     * The DTO contains the name, address, found date, subscription's expiration date,
-     * hotline and status of the facility
+     * Create a facility of a user.
      *
-     * @param createFacilityDTO
+     * @param createFacilityDTO contains the name, address, found date, subscription's expiration date, hotline and
+     *                          status of the facility
      * @return
      */
     @PostMapping("/create")
@@ -94,10 +91,9 @@ public class FacilityController {
     }
 
     /**
-     * API to show form to update the facility of a user.
-     * facilityId is the id of the user
+     * Show form to update the facility of a user.
      *
-     * @param facilityId
+     * @param facilityId the id of the user
      * @return
      */
     @GetMapping("/update/get")
@@ -112,13 +108,10 @@ public class FacilityController {
     }
 
     /**
-     * API to create a facility of a user.
-     * userId is the id of the user
-     * updateFacilityDTO contains the new name, address, found date, subscription's expiration date,
-     * hotline and status of the facility
+     * Update a facility of a user.
      *
-     * @param facilityId
-     * @param updateFacilityDTO
+     * @param facilityId the id of facility
+     * @param updateFacilityDTO contains the new name, address, found date, subscription's expiration date,
      * @return
      */
     @PutMapping("/update/save")
@@ -146,10 +139,9 @@ public class FacilityController {
     }
 
     /**
-     * API to delete a facility of a user.
-     * facilityId is the id of the facility
+     * Delete a facility of a user.
      *
-     * @param facilityId
+     * @param facilityId the id of the facility
      * @return
      */
     @DeleteMapping("/delete")

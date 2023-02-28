@@ -11,17 +11,27 @@
 
 package com.example.eims.dto.user;
 
+import com.example.eims.entity.User;
 import lombok.Data;
 
-import java.util.Date;
+import java.sql.Date;
 
 @Data
 public class UpdateUserDTO {
+    public void getFromEntity(User user) {
+        this.userId = user.getUserId();
+        this.username = user.getUsername();
+        this.dob = user.getDob().toString();
+        this.email = user.getEmail();
+        //this.salary = user.getSalary();
+        this.address = user.getAddress();
+        //this.status = user.getStatus();
+    }
+    private Long userId;
     private String username;
     private String dob;
-    private String phone;
     private String email;
-    private Float salary;
+    //private Float salary;
     private String address;
-    private int status;
+    //private int status;
 }

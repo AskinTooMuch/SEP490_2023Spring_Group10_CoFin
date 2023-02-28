@@ -9,6 +9,7 @@
  * 18/02/2023   1.0         DuongVV     First Deploy<br>
  * 23/02/2023   2.0         DuongVV     Add search<br>
  * 28/02/2023   3.0         ChucNV      Enable Security<br>
+ * 28/02/2023   4.0         DuongVV     Add paging<br>
  */
 
 package com.example.eims.controller;
@@ -20,6 +21,9 @@ import com.example.eims.repository.CustomerRepository;
 import com.example.eims.repository.UserRepository;
 import com.example.eims.utils.StringDealer;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
@@ -37,10 +41,9 @@ public class CustomerController {
     private UserRepository userRepository;
 
     /**
-     * API to get all of user's customers.
-     * userId is the id of current logged-in user.
+     * Get all of user's customers.
      *
-     * @param userId
+     * @param userId the id of current logged-in user.
      * @return list of Customers
      */
     @GetMapping("/all")
@@ -50,17 +53,16 @@ public class CustomerController {
         List<Customer> customerList = customerRepository.findByUserId(userId);
         if (customerList.isEmpty()) {
             return new ResponseEntity<>("No customer found", HttpStatus.OK);
-        }else {
+        } else {
             return new ResponseEntity<>(customerList, HttpStatus.OK);
         }
     }
 
     /**
-     * API to get a customer.
-     * customerId is the id of the customer
+     * Get a customer.
      *
-     * @param customerId
-     * @return
+     * @param customerId the id of the customer
+     * @return a customer
      */
     @Secured({"ROLE_OWNER"})
     @GetMapping("/get")
@@ -75,10 +77,9 @@ public class CustomerController {
     }
 
     /**
-     * API to create a customer of a user.
-     * createCustomerDTO contains the user's id, name, phone number and address of the customer
+     * Create a customer of a user.
      *
-     * @param createCustomerDTO
+     * @param createCustomerDTO contains the user's id, name, phone number and address of the customer
      * @return
      */
     @PostMapping("/create")
@@ -105,11 +106,10 @@ public class CustomerController {
 
 
     /**
-     * API to show form to update a customer of a user.
-     * customerId is the id of the customer
+     * Show form to update a customer of a user.
      *
-     * @param customerId
-     * @return
+     * @param customerId the id of the customer
+     * @return a customer
      */
     @GetMapping("/update/get")
     public ResponseEntity<?> showFormUpdate(@RequestParam Long customerId) {
@@ -123,12 +123,10 @@ public class CustomerController {
     }
 
     /**
-     * API to update a customer of a user.
-     * customerId is the id of the customer
-     * updateCustomerDTO contains the new name, phone number and address, email and status of the customer
+     * Update a customer of a user.
      *
-     * @param customerId
-     * @param updateCustomerDTO
+     * @param customerId the id of the customer
+     * @param updateCustomerDTO contains the new name, phone number and address, email and status of the customer
      * @return
      */
     @Secured({"ROLE_OWNER"})
@@ -147,10 +145,9 @@ public class CustomerController {
     }
 
     /**
-     * API to delete a customer of a user.
-     * customerId is the id of the customer
+     * Delete a customer of a user.
      *
-     * @param customerId
+     * @param customerId the id of the customer
      * @return
      */
     @Secured({"ROLE_OWNER"})
@@ -162,13 +159,11 @@ public class CustomerController {
     }
 
     /**
-     * API to search customer of the user by their name or phone number.
-     * key is the search key (name or phone number)
-     * userId is the id of current logged-in user
+     * Search customer of the user by their name or phone number.
      *
-     * @param key
-     * @param userId
-     * @return list of customers
+     * @param key the search key (name or phone number)
+     * @param userId the id of current logged-in user
+     * @return list of customers match the key search item.
      */
     @GetMapping("/search")
     @Secured({"ROLE_OWNER"})
@@ -180,4 +175,34 @@ public class CustomerController {
         List<Customer> customerList = customerRepository.searchByUsernameOrPhone(userId, key);
         return new ResponseEntity<>(customerList, HttpStatus.OK);
     }
+
+    /**
+     * Get all of user's customers with Paging.
+     *
+     * @param userId the id of current logged-in user.
+     * @param page the page number
+     * @param size the size of page
+     * @param sort sorting type
+     * @return list of Customers
+     */
+    @GetMapping("/allPaging")
+    @Secured({"ROLE_OWNER"})
+    public ResponseEntity<?> getAllCustomerPaging(@RequestParam(name = "userId") Long userId,
+                                                    @RequestParam(name = "page", required = false, defaultValue = "0") Integer page,
+                                                    @RequestParam(name = "size", required = false, defaultValue = "5") Integer size,
+                                                    @RequestParam(name = "sort", required = false, defaultValue = "ASC") String sort) {
+
+        // Get sorting type
+        Sort sortable = null;
+        if (sort.equals("ASC")) {
+            sortable = Sort.by("customerId").ascending();
+        }
+        if (sort.equals("DESC")) {
+            sortable = Sort.by("customerId").descending();
+        }
+        // Get all customers of the current User with Paging
+        Page<Customer> customerPage = customerRepository.findAllByUserId(userId, PageRequest.of(page, size, sortable));
+        return new ResponseEntity<>(customerPage, HttpStatus.OK);
+    }
+
 }

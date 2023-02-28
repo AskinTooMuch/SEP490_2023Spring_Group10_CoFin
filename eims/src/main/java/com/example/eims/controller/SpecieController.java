@@ -46,7 +46,8 @@ public class SpecieController {
 
     /**
      * Create a new specie after checking the phone number (session) is valid
-     * @param newSpecieDTO
+     *
+     * @param newSpecieDTO contains user's id, specie's name and incubation period
      * @return
      */
     @PostMapping("/new")
@@ -70,7 +71,8 @@ public class SpecieController {
 
     /**
      * Get list species of a user
-     * @param userId
+     *
+     * @param userId the id of current logged-in user
      * @return
      */
     @GetMapping("/list")
@@ -87,7 +89,8 @@ public class SpecieController {
 
     /**
      * Edit specie's information : Getting the original values
-     * @param specieId
+     *
+     * @param specieId the id of the specie
      * @return
      */
     @PostMapping("/edit/get")
@@ -103,7 +106,8 @@ public class SpecieController {
 
     /**
      * Edit specie's information : Saving the data
-     * @param editSpecieDTO
+     *
+     * @param editSpecieDTO contains user's id, specie's name and incubation period
      * @return
      */
     @PostMapping("/edit/save")
@@ -122,7 +126,8 @@ public class SpecieController {
 
     /**
      * Delete one user's specie
-     * @param specieId
+     *
+     * @param specieId the id of the specie
      * @return
      */
     @GetMapping("/delete")

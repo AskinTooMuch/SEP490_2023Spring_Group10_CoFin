@@ -49,10 +49,9 @@ public class AuthController {
     private PasswordEncoder passwordEncoder;
 
     /**
-     * API for the user to sign in.
-     * The DTO contains the login phone and password
+     * Sign in .
      *
-     * @param loginDTO
+     * @param loginDTO contains the login phone and password
      * @return
      */
     @PostMapping("/signin")
@@ -66,10 +65,9 @@ public class AuthController {
     }
 
     /**
-     * API for the user to sign up.
-     * The DTO contains the User's name, email, phone number, date of birth, address.
+     * Sign up.
      *
-     * @param signUpDTO
+     * @param signUpDTO contains the User's name, email, phone number, date of birth, address.
      * @return
      */
     @PostMapping("/signup")
@@ -102,10 +100,9 @@ public class AuthController {
     }
 
     /**
-     * API for the user to change password.
-     * The DTO contains the login phone, old password and new password
+     * Change password.
      *
-     * @param changePasswordDTO
+     * @param changePasswordDTO contains the login phone, old password and new password
      * @return
      */
     @PostMapping("/changePassword")
@@ -129,19 +126,16 @@ public class AuthController {
     }
 
     /**
-     * API for the user to receive OTP to reset password.
-     * phone is the phone number of the account
+     * Send OTP to reset password.
      *
-     * @param phone
+     * @param phone the phone number of the account
      * @return
      */
     @GetMapping("/forgotPassword/sendOTP")
     public ResponseEntity<?> sendOTP(@RequestParam String phone) {
-        //Local variable for the user
-        Optional<User> userOpt;
         //Check credentials, if not valid then return Bad request (403)
-        userOpt = userRepository.findByPhone(phone.trim());
-        if (userOpt.isEmpty()) {
+        User user = userRepository.findByPhone(phone).orElse(null);
+        if (user == null) {
             return new ResponseEntity<>("No phone number found!", HttpStatus.BAD_REQUEST);
         } else {
             // create OTP
@@ -153,10 +147,9 @@ public class AuthController {
     }
 
     /**
-     * API for the user to verify OTP to reset password.
-     * OTP
+     * Verify OTP forgot password.
      *
-     * @param OTP
+     * @param OTP code to verify phone number
      * @return
      */
     @PostMapping("/forgotPassword/verifyOTP")
@@ -172,9 +165,8 @@ public class AuthController {
     }
 
     /**
-     * API for the user to re-send OTP.
+     * Re-send OTP forgot password.
      *
-     * @param
      * @return
      */
     @GetMapping("/forgotPassword/resendOTP")
@@ -187,10 +179,9 @@ public class AuthController {
     }
 
     /**
-     * API for the user to reset password after verify OTP.
-     * The DTO contains the new password, login phone
+     * Change password after verify OTP.
      *
-     * @param forgotPasswordDTO
+     * @param forgotPasswordDTO contains the new password, login phone
      * @return
      */
     @PostMapping("/forgotPassword/changePassword")

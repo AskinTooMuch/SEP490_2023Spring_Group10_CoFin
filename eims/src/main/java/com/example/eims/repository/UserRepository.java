@@ -13,6 +13,8 @@
 package com.example.eims.repository;
 
 import com.example.eims.entity.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -25,4 +27,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByUserId(Long userId);
     @Query(value = "SELECT user_id FROM eims.user where phone = ?1", nativeQuery = true)
     String findIdByPhone(String phone);
+    Page<User> findAll(Pageable pageable);
 }

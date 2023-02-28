@@ -21,8 +21,8 @@ const ForgotPassword = () => {
   const handleSend = async (event) => {
     event.preventDefault();
     try {
-      const response = await axios.post(SEND_OTP_URL,
-        account,
+      const response = await axios.get(SEND_OTP_URL,
+        { params: { phone: account} },
         {
           headers: {
             'Content-Type': 'application/json',
@@ -32,8 +32,9 @@ const ForgotPassword = () => {
         }
       );
       console.log(JSON.stringify(response?.data));
-      setAccount('');
       //Set user's phone number in session
+      sessionStorage.setItem("curPhone", account.phone);
+      setAccount('');
       toast.success("OTP đã gửi")
     } catch (err) {
       if (!err?.response) {
@@ -66,7 +67,7 @@ const ForgotPassword = () => {
       setAccount('');
       //Set user's phone number in session
       toast.success("OTP chính xác")
-      navigate("/changepassword")
+      navigate("/changePassword")
     } catch (err) {
       if (!err?.response) {
         toast.error('Server không phản hồi');
@@ -91,7 +92,8 @@ const ForgotPassword = () => {
             <div className="form-group mt-3">
 
               <input type="text" name="account" className="form-control mt-1" placeholder="Nhập số điện thoại"
-                required ref={userRef} onChange={(e) => setAccount(e.target.value)}  /> <button onClick={handleSend}>Gửi mã</button>
+                required ref={userRef} onChange={(e) => setAccount(e.target.value)}  /> 
+                <button onClick={handleSend}>Gửi mã</button>
             </div>
             <div className="form-group mt-3">
 
@@ -113,11 +115,8 @@ const ForgotPassword = () => {
                 pauseOnHover
                 theme="colored" />
             </div>
-
             <hr />
-            
           </div>
-
         </form>
 
 

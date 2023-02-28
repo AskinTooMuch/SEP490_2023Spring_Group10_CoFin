@@ -14,6 +14,8 @@ const Profile = () => {
     //api url
     const CHANGE_PASS_URL = '/api/auth/changePassword';
     const USER_DETAIL_URL = '/api/user/details';
+    const USER_UPDATE_GET = '/api/user/update/get';
+    const USER_UPDATE_SAVE = '/api/user/update/save';
 
     //show-hide password 
     const [passwordShown, setPasswordShown] = useState(false);
@@ -44,6 +46,15 @@ const Profile = () => {
         userId: sessionStorage.getItem("curUserId"),
         password: "",
         newPassword: ""
+    });
+
+    // DTO for displaying user's information
+    const [updateUserDTO, setUpdateUserDTO] = useState({
+        userId: "",
+        username: "",
+        dob: "",
+        email: "",
+        address: ""
     });
 
     //Spliting the user's information into 2 objects: user account information and facility information
@@ -97,9 +108,9 @@ const Profile = () => {
         //Set account information
         setAccountInformation({
             userId: responseJson.userId,
-            userRoleName: responseJson.userRoleName, 
-            username: responseJson.username, 
-            userDob: responseJson.userDob, 
+            userRoleName: responseJson.userRoleName,
+            username: responseJson.username,
+            userDob: responseJson.userDob,
             userEmail: responseJson.userEmail,
             userSalary: responseJson.userSalary,
             userAddress: responseJson.userAddress,
@@ -138,6 +149,88 @@ const Profile = () => {
         //console.log(facilityInformation);
     }
 
+
+    // Get user's information to update
+    const handleUpdateGet = async () => {
+        setShow2(true);
+        try {
+            const response = await axios.get(USER_UPDATE_GET,
+                { params: { userId: sessionStorage.getItem("curUserId") } },
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Access-Control-Allow-Origin': '*'
+                    },
+                    withCredentials: false
+                }
+            );
+            const responseJson = response.data;
+            console.log(responseJson);
+            //Set User information
+            setUpdateUserDTO({
+                userId: sessionStorage.getItem("curUserId"),
+                username: responseJson.username,
+                dob: responseJson.dob,
+                email: responseJson.email,
+                address: responseJson.address
+            })
+
+        } catch (err) {
+            if (!err?.response) {
+                toast.error('Server không phản hồi');
+            } else if (err.response?.status === 400) {
+                toast.error('Error 400');
+            } else if (err.response?.status === 401) {
+                toast.error('Không có quyền truy cập');
+            } else {
+                toast.error('Errorr');
+            }
+        }
+    }
+
+
+    // Update user's information
+    const handleUpdateSave = async (event) => {
+        setShow2(false);
+        console.log("userId===" + sessionStorage.getItem("curUserId"));
+        console.log(updateUserDTO);
+        event.preventDefault();
+        try {
+            const response = await axios.put(USER_UPDATE_SAVE,
+                updateUserDTO,
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Access-Control-Allow-Origin': '*'
+                    },
+                    withCredentials: false
+                }
+            );
+            const responseJson = response.data;
+            console.log(responseJson);
+            setUpdateUserDTO('');
+            toast.success("Cập nhật thông tin thành công")
+        } catch (err) {
+            if (!err?.response) {
+                toast.error('Server không phản hồi');
+            } else if (err.response?.status === 400) {
+                toast.error('Error 400');
+            } else if (err.response?.status === 401) {
+                toast.error('Không có quyền truy cập');
+            } else {
+                toast.error('Errorr');
+            }
+        }
+    }
+
+    // Handle input update information
+    const handleChangeUpdate = (event, field) => {
+        let actualValue = event.target.value
+        setUpdateUserDTO({
+            ...updateUserDTO,
+            [field]: actualValue
+        })
+    }
 
     //Check Repassword and Regex password
     useEffect(() => {
@@ -275,7 +368,7 @@ const Profile = () => {
                                                                 aria-describedby="pwdnote"
                                                                 type={passwordShown ? "text" : "password"}
                                                                 className={changePasswordDTO.password !== changePasswordDTO.newPassword && validPwd ? "valid" : "invalid"}
-                                                                minLength="8" maxLength="20"  onFocus={() => setPassFocus(true)}
+                                                                minLength="8" maxLength="20" onFocus={() => setPassFocus(true)}
                                                                 onBlur={() => setPassFocus(false)}
                                                             />
                                                             <i onClick={togglePasswordVisiblity}>{eye}</i>
@@ -322,7 +415,7 @@ const Profile = () => {
                                         </Modal>
                                     </div>
                                     <div className="col-md-6">
-                                        <Button onClick={handleShow2} className="btn btn-info">Cập nhật</Button >
+                                        <Button onClick={handleUpdateGet} className="btn btn-info">Cập nhật</Button >
                                         <form><Modal show={show2} onHide={handleClose2}
                                             size="lg"
                                             aria-labelledby="contained-modal-title-vcenter"
@@ -331,20 +424,27 @@ const Profile = () => {
                                             <Modal.Body>
                                                 <div className="mb-3">
                                                     <label className="form-label">Họ và Tên</label>
-                                                    <input type="text" className="form-control" />
-
+                                                    <input type="text" className="form-control" name="username"
+                                                        required ref={userRef} onChange={e => handleChangeUpdate(e, "username")}
+                                                        value={updateUserDTO.username} />
                                                 </div>
                                                 <div className="mb-3">
                                                     <label className="form-label">Ngày sinh</label>
-                                                    <input type="date" className="form-control" />
+                                                    <input type="date" className="form-control"  name="dob"
+                                                        required ref={userRef} onChange={e => handleChangeUpdate(e, "dob")}
+                                                        value={updateUserDTO.dob} />
                                                 </div>
                                                 <div className="mb-3">
                                                     <label className="form-label">Email</label>
-                                                    <input type="email" className="form-control" />
+                                                    <input type="email" className="form-control"  name="email"
+                                                        required ref={userRef} onChange={e => handleChangeUpdate(e, "email")}
+                                                        value={updateUserDTO.email} />
                                                 </div>
                                                 <div className="mb-3">
                                                     <label className="form-label">Địa chỉ</label>
-                                                    <input type="text" style={{ minHeight: "50px" }} className="form-control" />
+                                                    <input type="text" style={{ minHeight: "50px" }} className="form-control"  name="address"
+                                                        required ref={userRef} onChange={e => handleChangeUpdate(e, "address")}
+                                                        value={updateUserDTO.address} />
                                                 </div>
                                             </Modal.Body>
 
@@ -353,7 +453,7 @@ const Profile = () => {
                                                     Huỷ
                                                 </Button>
 
-                                                <Button variant="dark" style={{ width: "30%" }} className="col-md-6" onClick={handleClose2}>
+                                                <Button variant="dark" style={{ width: "30%" }} className="col-md-6" onClick={handleUpdateSave}>
                                                     Xác nhận
                                                 </Button>
 

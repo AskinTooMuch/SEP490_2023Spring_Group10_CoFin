@@ -8,14 +8,16 @@
  * DATE         Version     Author      DESCRIPTION<br>
  * 18/02/2023   1.0         DuongVV     First Deploy<br>
  * 23/02/2023   2.0         DuongVV     Add search<br>
- * 26/02/2023   2.1         ChucNV      Fix create supplier
- * 28/02/2023   3.0         ChucNV      Enable Security
+ * 26/02/2023   2.1         ChucNV      Fix create supplier<br>
+ * 28/02/2023   3.0         ChucNV      Enable Security<br>
+ * 28/02/2023   4.0         DuongVV     Add Paging<br>
  */
 
 package com.example.eims.controller;
 
 import com.example.eims.dto.supplier.CreateSupplierDTO;
 import com.example.eims.dto.supplier.UpdateSupplierDTO;
+import com.example.eims.entity.Customer;
 import com.example.eims.entity.ImportReceipt;
 import com.example.eims.entity.Supplier;
 import com.example.eims.repository.ImportReceiptRepository;
@@ -23,6 +25,9 @@ import com.example.eims.repository.SupplierRepository;
 import com.example.eims.repository.UserRepository;
 import com.example.eims.utils.StringDealer;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
@@ -40,10 +45,9 @@ public class SupplierController {
     private ImportReceiptRepository importReceiptRepository;
 
     /**
-     * API to get all of their suppliers.
-     * phone is the phone number of current logged-in user.
+     * Get all of their suppliers.
      *
-     * @param userId
+     * @param userId the id of current logged-in user
      * @return list of Suppliers
      */
     @GetMapping("/all")
@@ -59,10 +63,9 @@ public class SupplierController {
     }
 
     /**
-     * API to get a supplier.
-     * supplierId is the id of the supplier
+     * Get a supplier.
      *
-     * @param supplierId
+     * @param supplierId the id of the supplier
      * @return
      */
     @GetMapping("/{supplierId}")
@@ -78,10 +81,9 @@ public class SupplierController {
     }
 
     /**
-     * API to create a supplier of a user.
-     * newSupplierDTO contains the user's id, name, phone number and address of the supplier
+     * Create a supplier of a user.
      *
-     * @param createSupplierDTO
+     * @param createSupplierDTO contains the user's id, name, phone number and address of the supplier
      * @return
      */
     @PostMapping("/create")
@@ -108,10 +110,9 @@ public class SupplierController {
     }
 
     /**
-     * API to show form to update a supplier.
-     * supplierId is the id of the supplier
+     * Show form to update a supplier.
      *
-     * @param supplierId
+     * @param supplierId the id of the supplier
      * @return
      */
     @GetMapping("/update/showForm/{supplierId}")
@@ -126,12 +127,10 @@ public class SupplierController {
     }
 
     /**
-     * API to update a supplier of a user.
-     * supplierId is the id of the supplier
-     * newSupplierDTO contains the user's id, new name, phone number and address of the supplier
+     * Update a supplier of a user.
      *
-     * @param updateSupplierDTO
-     * @param supplierId
+     * @param supplierId the id of the supplier
+     * @param updateSupplierDTO contains the user's id, new name, phone number and address of the supplier
      * @return
      */
     @PutMapping("/update/{supplierId}")
@@ -150,10 +149,9 @@ public class SupplierController {
     }
 
     /**
-     * API to delete a supplier of a user.
-     * supplierId is the id of the supplier
+     * Delete a supplier of a user.
      *
-     * @param supplierId
+     * @param supplierId the id of the supplier
      * @return
      */
     @DeleteMapping("/delete/{supplierId}")
@@ -165,12 +163,10 @@ public class SupplierController {
     }
 
     /**
-     * API to search supplier of the user by their name or phone number.
-     * key is the search key (name or phone number)
-     * userId is the id of current logged-in user
+     * Search supplier of the user by their name or phone number.
      *
-     * @param key
-     * @param userId
+     * @param key the search key (name or phone number)
+     * @param userId the id of current logged-in user
      * @return list of suppliers
      */
     @GetMapping("/search")
@@ -186,10 +182,9 @@ public class SupplierController {
     }
 
     /**
-     * API to get all import bill from supplier.
-     * userId is the id of supplier
+     * Get all import bill from supplier.
      *
-     * @param supplierId
+     * @param supplierId the id of supplier
      * @return list of import receipts
      */
     @GetMapping("/imports/{supplierId}")
@@ -198,5 +193,29 @@ public class SupplierController {
         return new ResponseEntity<>(importReceiptList, HttpStatus.OK);
     }
 
+    /**
+     * Get all of user's Suppliers with Paging.
+     *
+     * @param userId the id of current logged-in user.
+     * @return list of Suppliers
+     */
+    @GetMapping("/allPaging")
+    @Secured({"ROLE_OWNER"})
+    public ResponseEntity<?> getAllSupplierPaging(@RequestParam(name = "userId") Long userId,
+                                                    @RequestParam(name = "page", required = false, defaultValue = "0") Integer page,
+                                                    @RequestParam(name = "size", required = false, defaultValue = "5") Integer size,
+                                                    @RequestParam(name = "sort", required = false, defaultValue = "ASC") String sort) {
 
+        // Get sorting type
+        Sort sortable = null;
+        if (sort.equals("ASC")) {
+            sortable = Sort.by("supplierId").ascending();
+        }
+        if (sort.equals("DESC")) {
+            sortable = Sort.by("supplierId").descending();
+        }
+        // Get all customers of the current User with Paging
+        Page<Supplier> supplierPage = supplierRepository.findAllByUserId(userId, PageRequest.of(page, size, sortable));
+        return new ResponseEntity<>(supplierPage, HttpStatus.OK);
+    }
 }

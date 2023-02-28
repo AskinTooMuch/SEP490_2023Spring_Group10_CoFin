@@ -9,11 +9,8 @@
  * DATE          Version    Author           DESCRIPTION<br>
  * 18/01/2023    1.0        ChucNV           First Deploy<br>
  * 21/02/2023    1.1        DuongVV          Add Update<br>
-=======
- * DATE         Version     Author      DESCRIPTION<br>
- * 18/01/2023   1.0         ChucNV      First Deploy<br>
- * 28/02/2023   2.0         ChucNV      Enable security<br>
->>>>>>> Stashed changes
+ * 28/02/2023    2.0        ChucNV           Enable security<br>
+ * 28/02/2023    2.1        DuongVV          Add Paging<br>
  */
 
 package com.example.eims.controller;
@@ -21,7 +18,6 @@ package com.example.eims.controller;
 import com.example.eims.dto.user.UpdateUserDTO;
 import com.example.eims.dto.user.UserDetailDTO;
 import com.example.eims.entity.User;
-import com.example.eims.repository.ImportReceiptRepository;
 import com.example.eims.repository.UserRepository;
 import com.example.eims.repository.UserRoleRepository;
 import com.example.eims.utils.StringDealer;
@@ -29,6 +25,9 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
@@ -53,10 +52,10 @@ public class UserController {
     private EntityManager em;
 
     /**
-     * The API requesting user information and facility information with the requesting DTO consists of user phone number.
-     * The API returns the details of a user and it's facility in the form of a UserDetailDTO
+     * Requesting user information and facility information with the requesting DTO consists of user phone number.
+     *
      * @param userId
-     * @return
+     * @return the details of a user and it's facility in the form of a UserDetailDTO
      */
     @GetMapping("/details")
     @Secured({"ROLE_OWNER", "ROLE_EMPLOYEE"})
@@ -70,7 +69,7 @@ public class UserController {
 
 
     /**
-     * API to get all user.
+     * Get all user.
      *
      * @param
      * @return
@@ -85,33 +84,58 @@ public class UserController {
     }
 
     /**
-     * API to show form to update user's information.
-     * userId is id of the user
-     * @param userId
+     * Get all user with Paging.
+     *
+     * @param page the page number
+     * @param size the size of page
+     * @param sort sorting type
      * @return
      */
-    @GetMapping("/update/showForm/{userId}")
-    public ResponseEntity<?> showFormUpdate(@PathVariable Long userId) {
-        // Retrieve user
-        User user = userRepository.findById(userId).get();
-        // Return
-        return new ResponseEntity<>(user, HttpStatus.OK);
+    @GetMapping("/allPaging")
+    @Secured({"ROLE_MANAGER","ROLE_ADMIN"})
+    public ResponseEntity<?> getAllUser(@RequestParam(name = "page", required = false, defaultValue = "0") Integer page,
+                                        @RequestParam(name = "size", required = false, defaultValue = "5") Integer size,
+                                        @RequestParam(name = "sort", required = false, defaultValue = "ASC") String sort) {
+
+        Sort sortable = null;
+        if (sort.equals("ASC")) {
+            sortable = Sort.by("userId").ascending();
+        }
+        if (sort.equals("DESC")) {
+            sortable = Sort.by("userId").descending();
+        }
+        // Get all users with Paging
+        Page<User> userPage = userRepository.findAll(PageRequest.of(page, size, sortable));
+        return new ResponseEntity<>(userPage, HttpStatus.OK);
     }
 
     /**
-     * API to update a user.
-     * userId is the id of the user
-     * The DTO contains the user's new name,date of birth, phone number, address, email, salary and status
+     * Show form to update user's information.
      *
-     * @param userId
-     * @param updateUserDTO
+     * @param userId the id of the user
      * @return
      */
-    @PutMapping("/update/{userId}")
-    @Secured({"ROLE_OWNER", "ROLE_EMPLOYEE", "ROLE_MANAGER", "ROLE_ADMIN"})
-    public ResponseEntity<?> updateUser(@PathVariable Long userId, @RequestBody UpdateUserDTO updateUserDTO) {
-        // Retrieve user's new information
+    @GetMapping("/update/get")
+    public ResponseEntity<?> showFormUpdate(@RequestParam Long userId) {
+        // Retrieve user
         User user = userRepository.findById(userId).get();
+        UpdateUserDTO updateUserDTO = new UpdateUserDTO();
+        updateUserDTO.getFromEntity(user);
+        // Return
+        return new ResponseEntity<>(updateUserDTO, HttpStatus.OK);
+    }
+
+    /**
+     * Update a user.
+     *
+     * @param updateUserDTO contains the user's new name,date of birth, phone number, address, email, salary and status
+     * @return
+     */
+    @PutMapping("/update/save")
+    @Secured({"ROLE_OWNER", "ROLE_EMPLOYEE", "ROLE_MANAGER", "ROLE_ADMIN"})
+    public ResponseEntity<?> updateUser(@RequestBody UpdateUserDTO updateUserDTO) {
+        // Retrieve user's new information
+        User user = userRepository.findById(updateUserDTO.getUserId()).get();
         user.setUsername(updateUserDTO.getUsername());
 
         StringDealer stringDealer = new StringDealer();
@@ -119,10 +143,10 @@ public class UserController {
         Date date = stringDealer.convertToDateAndFormat(sDate);
         user.setDob(date);
 
-        user.setPhone(updateUserDTO.getPhone());
+        //user.setPhone(updateUserDTO.getPhone());
         user.setAddress(updateUserDTO.getAddress());
         user.setEmail(updateUserDTO.getEmail());
-        user.setStatus(updateUserDTO.getStatus());
+        //user.setStatus(updateUserDTO.getStatus());
         // Save
         userRepository.save(user);
         return new ResponseEntity<>("User information updated!", HttpStatus.OK);
