@@ -5,8 +5,9 @@
  * Eggs Incubating Management System <br>
  *
  * Record of change:<br>
- * DATE          Version    Author           DESCRIPTION<br>
- * 18/01/2023    1.0        ChucNV           First Deploy<br>
+ * DATE         Version     Author      DESCRIPTION<br>
+ * 18/01/2023   1.0         ChucNV      First Deploy<br>
+ * 28/02/2023   2.0         ChucNV      Enable Security
  */
 
 package com.example.eims.controller;
@@ -22,6 +23,7 @@ import com.example.eims.utils.StringDealer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -56,9 +58,9 @@ public class AuthController {
     @PostMapping("/signin")
     public ResponseEntity<Long> authenticateUser(@RequestBody LoginDTO loginDTO) {
         Authentication auth = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-                loginDTO.getPhone(), loginDTO.getPassword()));
+                loginDTO.getPhone().trim(), loginDTO.getPassword().trim()));
         SecurityContextHolder.getContext().setAuthentication(auth);
-        System.out.println(loginDTO);
+        System.out.println(SecurityContextHolder.getContext().getAuthentication().getAuthorities());
         User user = userRepository.findByPhone(loginDTO.getPhone()).get();
         return new ResponseEntity<>(user.getUserId(), HttpStatus.OK);
     }
@@ -79,21 +81,21 @@ public class AuthController {
 
         //If not existed: Create new user, add into database and return.
         User user = new User();
-        user.setUsername(signUpDTO.getUsername());
-        user.setEmail(signUpDTO.getEmail());
+        user.setUsername(signUpDTO.getUsername().trim());
+        user.setEmail(signUpDTO.getEmail().trim());
 
-        String sDate = signUpDTO.getDob();
+        String sDate = signUpDTO.getDob().trim();
         StringDealer stringDealer = new StringDealer();
         Date date = stringDealer.convertToDateAndFormat(sDate);
         user.setDob(date);
 
-        user.setPhone(signUpDTO.getPhone());
-        user.setAddress(signUpDTO.getAddress());
+        user.setPhone(signUpDTO.getPhone().trim());
+        user.setAddress(signUpDTO.getAddress().trim());
         user.setRoleId(signUpDTO.getRoleId());
         user.setStatus(1);
         //Encode password
-        user.setPassword(passwordEncoder.encode(signUpDTO.getPassword()));
-        System.out.println(user.toString());
+        user.setPassword(passwordEncoder.encode(signUpDTO.getPassword().trim()));
+        System.out.println(user);
         userRepository.save(user);
 
         return new ResponseEntity<>("User registered successfully", HttpStatus.OK);
@@ -107,20 +109,21 @@ public class AuthController {
      * @return
      */
     @PostMapping("/changePassword")
+    @Secured({"ROLE_OWNER", "ROLE_EMPLOYEE", "ROLE_MODERATOR", "ROLE_ADMIN"})
     public ResponseEntity<?> changePassword(@RequestBody ChangePasswordDTO changePasswordDTO) {
         //Encode the passwords
-        changePasswordDTO.setNewPassword(passwordEncoder.encode(changePasswordDTO.getNewPassword()));
+        changePasswordDTO.setNewPassword(passwordEncoder.encode(changePasswordDTO.getNewPassword().trim()));
         //Local variable for the user
         Optional<User> userOpt;
         //Check credentials, if not valid then return Bad request (403)
         userOpt = userRepository.findByUserId(changePasswordDTO.getUserId());
         if (userOpt.isEmpty() ||
-                !passwordEncoder.matches(changePasswordDTO.getPassword(), userOpt.get().getPassword())) {
+                !passwordEncoder.matches(changePasswordDTO.getPassword().trim(), userOpt.get().getPassword().trim())) {
             return new ResponseEntity<>("Old password is wrong.", HttpStatus.BAD_REQUEST);
         }
         //If the old password is correct:
         User user = userOpt.get();
-        user.setPassword(changePasswordDTO.getNewPassword());
+        user.setPassword(changePasswordDTO.getNewPassword().trim());
         userRepository.save(user);
         return new ResponseEntity<>("Password changed successfully", HttpStatus.OK);
     }
@@ -137,7 +140,7 @@ public class AuthController {
         //Local variable for the user
         Optional<User> userOpt;
         //Check credentials, if not valid then return Bad request (403)
-        userOpt = userRepository.findByPhone(phone);
+        userOpt = userRepository.findByPhone(phone.trim());
         if (userOpt.isEmpty()) {
             return new ResponseEntity<>("No phone number found!", HttpStatus.BAD_REQUEST);
         } else {
@@ -193,12 +196,12 @@ public class AuthController {
     @PostMapping("/forgotPassword/changePassword")
     public ResponseEntity<?> resetPassword(@RequestBody ForgotPasswordDTO forgotPasswordDTO) {
         //Encode the passwords
-        forgotPasswordDTO.setNewPassword(passwordEncoder.encode(forgotPasswordDTO.getNewPassword()));
+        forgotPasswordDTO.setNewPassword(passwordEncoder.encode(forgotPasswordDTO.getNewPassword().trim()));
         //Get user
         User user = userRepository.findByPhone(forgotPasswordDTO.getPhone()).get();
         //Confirm password
         if (passwordEncoder.matches(forgotPasswordDTO.getConfirmPassword(), forgotPasswordDTO.getNewPassword())) {
-            user.setPassword(forgotPasswordDTO.getNewPassword());
+            user.setPassword(forgotPasswordDTO.getNewPassword().trim());
             userRepository.save(user);
             return new ResponseEntity<>("Password changed successfully", HttpStatus.OK);
         } else {

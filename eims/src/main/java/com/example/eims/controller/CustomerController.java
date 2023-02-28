@@ -5,9 +5,10 @@
  * Eggs Incubating Management System<br>
  *
  * Record of change:<br>
- * DATE          Version    Author           DESCRIPTION<br>
- * 18/02/2023    1.0        DuongVV          First Deploy<br>
- * 23/02/2023    2.0        DuongVV          Add search<br>
+ * DATE         Version     Author      DESCRIPTION<br>
+ * 18/02/2023   1.0         DuongVV     First Deploy<br>
+ * 23/02/2023   2.0         DuongVV     Add search<br>
+ * 28/02/2023   3.0         ChucNV      Enable Security<br>
  */
 
 package com.example.eims.controller;
@@ -21,6 +22,7 @@ import com.example.eims.utils.StringDealer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -42,6 +44,7 @@ public class CustomerController {
      * @return list of Customers
      */
     @GetMapping("/all")
+    @Secured({"ROLE_OWNER"})
     public ResponseEntity<?> getAllCustomer(@RequestParam Long userId) {
         // Get all customers of the current User
         List<Customer> customerList = customerRepository.findByUserId(userId);
@@ -59,6 +62,7 @@ public class CustomerController {
      * @param customerId
      * @return
      */
+    @Secured({"ROLE_OWNER"})
     @GetMapping("/get")
     public ResponseEntity<?> getCustomer(@RequestParam Long customerId) {
         // Get a customer of the current User
@@ -78,6 +82,7 @@ public class CustomerController {
      * @return
      */
     @PostMapping("/create")
+    @Secured({"ROLE_OWNER"})
     public ResponseEntity<?> createCustomer(@RequestBody CreateCustomerDTO createCustomerDTO) {
         // Check phone number existed or not
         boolean existed = customerRepository.existsByCustomerPhone(createCustomerDTO.getPhone());
@@ -126,6 +131,7 @@ public class CustomerController {
      * @param updateCustomerDTO
      * @return
      */
+    @Secured({"ROLE_OWNER"})
     @PutMapping("/update/save")
     public ResponseEntity<?> updateCustomer(@RequestParam Long customerId, @RequestBody UpdateCustomerDTO updateCustomerDTO) {
         // Retrieve customer's new information
@@ -147,6 +153,7 @@ public class CustomerController {
      * @param customerId
      * @return
      */
+    @Secured({"ROLE_OWNER"})
     @DeleteMapping("/delete")
     public ResponseEntity<?> deleteCustomer(@RequestParam Long customerId) {
         // Delete
@@ -164,6 +171,7 @@ public class CustomerController {
      * @return list of customers
      */
     @GetMapping("/search")
+    @Secured({"ROLE_OWNER"})
     public ResponseEntity<?> searchCustomer(@RequestParam String key, @RequestBody Long userId) {
         // Trim spaces
         StringDealer stringDealer = new StringDealer();

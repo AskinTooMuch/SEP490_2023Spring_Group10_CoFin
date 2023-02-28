@@ -5,10 +5,11 @@
  * Eggs Incubating Management System<br>
  *
  * Record of change:<br>
- * DATE          Version    Author           DESCRIPTION<br>
- * 18/02/2023    1.0        DuongVV          First Deploy<br>
- * 23/02/2023    2.0        DuongVV          Add search<br>
- * 26/02/2023    2.1        ChucNV           Fix create supplier
+ * DATE         Version     Author      DESCRIPTION<br>
+ * 18/02/2023   1.0         DuongVV     First Deploy<br>
+ * 23/02/2023   2.0         DuongVV     Add search<br>
+ * 26/02/2023   2.1         ChucNV      Fix create supplier
+ * 28/02/2023   3.0         ChucNV      Enable Security
  */
 
 package com.example.eims.controller;
@@ -24,6 +25,7 @@ import com.example.eims.utils.StringDealer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -45,6 +47,7 @@ public class SupplierController {
      * @return list of Suppliers
      */
     @GetMapping("/all")
+    @Secured({"ROLE_OWNER"})
     public ResponseEntity<?> getAllSupplier(@RequestParam Long userId) {
         // Get all suppliers of the current User
         List<Supplier> supplierList = supplierRepository.findByUserId(userId);
@@ -55,13 +58,6 @@ public class SupplierController {
         }
     }
 
-/*    @GetMapping("/all")
-    public List<Customer> getAllCustomer(Long userId) {
-        // Get all customers of the current User
-        List<Customer> customerList = customerRepository.findByUserId(userId);
-        return customerList;
-    }*/
-
     /**
      * API to get a supplier.
      * supplierId is the id of the supplier
@@ -70,6 +66,7 @@ public class SupplierController {
      * @return
      */
     @GetMapping("/{supplierId}")
+    @Secured({"ROLE_OWNER"})
     public ResponseEntity<?> getSupplier(@PathVariable Long supplierId) {
         // Get a supplier
         Supplier supplier = supplierRepository.findBySupplierId(supplierId).orElse(null);
@@ -88,6 +85,7 @@ public class SupplierController {
      * @return
      */
     @PostMapping("/create")
+    @Secured({"ROLE_OWNER"})
     public ResponseEntity<?> createSupplier(@RequestBody CreateSupplierDTO createSupplierDTO) {
         System.out.println(createSupplierDTO);
         // Check phone number existed or not
@@ -137,6 +135,7 @@ public class SupplierController {
      * @return
      */
     @PutMapping("/update/{supplierId}")
+    @Secured({"ROLE_OWNER"})
     public ResponseEntity<?> updateSupplier(@PathVariable Long supplierId, @RequestBody UpdateSupplierDTO updateSupplierDTO) {
         // Retrieve supplier's new information
         Supplier supplier = supplierRepository.findBySupplierId(supplierId).get();
@@ -158,6 +157,7 @@ public class SupplierController {
      * @return
      */
     @DeleteMapping("/delete/{supplierId}")
+    @Secured({"ROLE_OWNER"})
     public ResponseEntity<?> deleteSupplier(@PathVariable Long supplierId) {
         // Delete
         supplierRepository.deleteById(supplierId);
@@ -174,7 +174,9 @@ public class SupplierController {
      * @return list of suppliers
      */
     @GetMapping("/search")
+    @Secured({"ROLE_OWNER"})
     public ResponseEntity<?> searchSupplier(@RequestParam String key, @RequestBody Long userId) {
+
         // Trim spaces
         StringDealer stringDealer = new StringDealer();
         key = stringDealer.trimMax(key);

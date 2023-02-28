@@ -60,7 +60,7 @@ public class SecurityConfig {
         http.cors().and().csrf().disable()
                 .authorizeHttpRequests((auth) ->
 //                        auth.anyRequest().authenticated() // Authenticate all Requests
-                                auth.requestMatchers(HttpMethod.GET, "/api/**").permitAll() //Allow anyone can access login API
+                                auth.requestMatchers(HttpMethod.GET, "/api/auth/signin").permitAll() //Allow anyone can access login API
                                         .requestMatchers("/api/auth/**").permitAll()
                                         .requestMatchers("/api/user/**").permitAll()
                                         .requestMatchers("/api/specie/**").permitAll()

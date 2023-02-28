@@ -5,9 +5,15 @@
  * Eggs Incubating Management System <br>
  *
  * Record of change:<br>
+<<<<<<< Updated upstream
  * DATE          Version    Author           DESCRIPTION<br>
  * 18/01/2023    1.0        ChucNV           First Deploy<br>
  * 21/02/2023    1.1        DuongVV          Add Update<br>
+=======
+ * DATE         Version     Author      DESCRIPTION<br>
+ * 18/01/2023   1.0         ChucNV      First Deploy<br>
+ * 28/02/2023   2.0         ChucNV      Enable security<br>
+>>>>>>> Stashed changes
  */
 
 package com.example.eims.controller;
@@ -25,6 +31,7 @@ import jakarta.persistence.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.web.bind.annotation.*;
 
@@ -52,41 +59,12 @@ public class UserController {
      * @return
      */
     @GetMapping("/details")
-    //@Secured({"ROLE_OWNER", "ROLE_EMPLOYEE"})
+    @Secured({"ROLE_OWNER", "ROLE_EMPLOYEE"})
     public ResponseEntity<UserDetailDTO> sendUserDetail(@RequestParam Long userId){
-        System.out.println(userId);
         Query q = em.createNamedQuery("GetUserDetail");
         q.setParameter(1, userId);
         UserDetailDTO userDetailDTO = (UserDetailDTO) q.getSingleResult();
         System.out.println(userDetailDTO);
-
-//        User user = userRepository.findByPhone(phoneNumberDTO.getPhone()).get();
-//        Optional<Facility> facilityOpt = facilityRepository.findByUserId(user.getUserId());
-//        //User information
-//        UserDetailDTO userDetailDTO = new UserDetailDTO();
-//        userDetailDTO.setUserId(user.getUserId());
-//        UserRole userRole = new UserRole();
-//        if (userRoleRepository.findByRoleId(user.getRoleId()).isPresent()){
-//            userRole = userRoleRepository.findByRoleId(user.getRoleId()).get();
-//        }
-//        userDetailDTO.setUserRoleName(userRole.getRoleName());
-//        userDetailDTO.setUsername(user.getUsername());
-//        userDetailDTO.setUserDob(user.getDob());
-//        userDetailDTO.setUserEmail(user.getEmail());
-//        userDetailDTO.setUserSalary(user.getSalary());
-//        userDetailDTO.setUserAddress(user.getAddress());
-//        userDetailDTO.setUserStatus(user.isStatus());
-//        //Facility information
-//        if (facilityOpt.isPresent()) {
-//            Facility facility = facilityOpt.get();
-//            userDetailDTO.setFacilityId(facility.getFacilityId());
-//            userDetailDTO.setFacilityName(facility.getFacilityName());
-//            userDetailDTO.setFacilityAddress(facility.getFacilityAddress());
-//            userDetailDTO.setFacilityFoundDate(facility.getFacilityFoundDate());
-//            userDetailDTO.setFacilityStatus(facility.isStatus());
-//
-//        }
-
         return new ResponseEntity<>(userDetailDTO, HttpStatus.OK);
     }
 
@@ -98,6 +76,7 @@ public class UserController {
      * @return
      */
     @GetMapping("/all")
+    @Secured({"ROLE_MANAGER","ROLE_ADMIN"})
     public ResponseEntity<?> getAllUser() {
         // Retrieve users
         List<User> userList = userRepository.findAll();
@@ -129,6 +108,7 @@ public class UserController {
      * @return
      */
     @PutMapping("/update/{userId}")
+    @Secured({"ROLE_OWNER", "ROLE_EMPLOYEE", "ROLE_MANAGER", "ROLE_ADMIN"})
     public ResponseEntity<?> updateUser(@PathVariable Long userId, @RequestBody UpdateUserDTO updateUserDTO) {
         // Retrieve user's new information
         User user = userRepository.findById(userId).get();
