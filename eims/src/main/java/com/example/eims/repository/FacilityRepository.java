@@ -18,4 +18,5 @@ import java.util.Optional;
 
 public interface FacilityRepository extends JpaRepository<Facility, Long> {
     Optional<Facility> findByUserId(Long userId);
+    Optional<Facility> findByFacilityId(Long facilityId);
 }

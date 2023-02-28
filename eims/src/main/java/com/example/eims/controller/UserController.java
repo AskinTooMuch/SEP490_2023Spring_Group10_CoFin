@@ -7,14 +7,15 @@
  * Record of change:<br>
  * DATE          Version    Author           DESCRIPTION<br>
  * 18/01/2023    1.0        ChucNV           First Deploy<br>
+ * 21/02/2023    1.1        DuongVV          Add Update<br>
  */
 
 package com.example.eims.controller;
 
-import com.example.eims.dto.user.PhoneNumberDTO;
 import com.example.eims.dto.user.UpdateUserDTO;
 import com.example.eims.dto.user.UserDetailDTO;
 import com.example.eims.entity.User;
+import com.example.eims.repository.ImportReceiptRepository;
 import com.example.eims.repository.UserRepository;
 import com.example.eims.repository.UserRoleRepository;
 import com.example.eims.utils.StringDealer;
@@ -104,6 +105,19 @@ public class UserController {
         return new ResponseEntity<>(userList, HttpStatus.OK);
     }
 
+    /**
+     * API to show form to update user's information.
+     * userId is id of the user
+     * @param userId
+     * @return
+     */
+    @GetMapping("/update/showForm/{userId}")
+    public ResponseEntity<?> showFormUpdate(@PathVariable Long userId) {
+        // Retrieve user
+        User user = userRepository.findById(userId).get();
+        // Return
+        return new ResponseEntity<>(user, HttpStatus.OK);
+    }
 
     /**
      * API to update a user.
@@ -115,7 +129,7 @@ public class UserController {
      * @return
      */
     @PutMapping("/update/{userId}")
-    public ResponseEntity<?> updateUser(@PathVariable Long userId, UpdateUserDTO updateUserDTO) {
+    public ResponseEntity<?> updateUser(@PathVariable Long userId, @RequestBody UpdateUserDTO updateUserDTO) {
         // Retrieve user's new information
         User user = userRepository.findById(userId).get();
         user.setUsername(updateUserDTO.getUsername());

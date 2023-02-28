@@ -35,16 +35,14 @@ public class CustomerController {
     private UserRepository userRepository;
 
     /**
-     * API to get all of their customers.
-     * phone is the phone number of current logged-in user.
+     * API to get all of user's customers.
+     * userId is the id of current logged-in user.
      *
-     * @param phone
+     * @param userId
      * @return list of Customers
      */
     @GetMapping("/all")
-    public ResponseEntity<?> getAllCustomer(String phone) {
-        // Get current user's id
-        Long userId = Long.parseLong(userRepository.findIdByPhone(phone));
+    public ResponseEntity<?> getAllCustomer(@RequestParam Long userId) {
         // Get all customers of the current User
         List<Customer> customerList = customerRepository.findByUserId(userId);
         if (customerList.isEmpty()) {
@@ -61,8 +59,8 @@ public class CustomerController {
      * @param customerId
      * @return
      */
-    @GetMapping("/{customerId}")
-    public ResponseEntity<?> getCustomer(@PathVariable Long customerId) {
+    @GetMapping("/get")
+    public ResponseEntity<?> getCustomer(@RequestParam Long customerId) {
         // Get a customer of the current User
         Customer customer = customerRepository.findByCustomerId(customerId).orElse(null);
         if (customer != null) {
@@ -80,7 +78,7 @@ public class CustomerController {
      * @return
      */
     @PostMapping("/create")
-    public ResponseEntity<?> createCustomer(CreateCustomerDTO createCustomerDTO) {
+    public ResponseEntity<?> createCustomer(@RequestBody CreateCustomerDTO createCustomerDTO) {
         // Check phone number existed or not
         boolean existed = customerRepository.existsByCustomerPhone(createCustomerDTO.getPhone());
         if (existed) { /* if phone number existed */
@@ -100,6 +98,25 @@ public class CustomerController {
         }
     }
 
+
+    /**
+     * API to show form to update a customer of a user.
+     * customerId is the id of the customer
+     *
+     * @param customerId
+     * @return
+     */
+    @GetMapping("/update/get")
+    public ResponseEntity<?> showFormUpdate(@RequestParam Long customerId) {
+        // Get a customer of the current User
+        Customer customer = customerRepository.findByCustomerId(customerId).orElse(null);
+        if (customer != null) {
+            return new ResponseEntity<>(customer, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("No customer", HttpStatus.OK);
+        }
+    }
+
     /**
      * API to update a customer of a user.
      * customerId is the id of the customer
@@ -109,8 +126,8 @@ public class CustomerController {
      * @param updateCustomerDTO
      * @return
      */
-    @PutMapping("/update/{customerId}")
-    public ResponseEntity<?> updateCustomer(@PathVariable Long customerId, UpdateCustomerDTO updateCustomerDTO) {
+    @PutMapping("/update/save")
+    public ResponseEntity<?> updateCustomer(@RequestParam Long customerId, @RequestBody UpdateCustomerDTO updateCustomerDTO) {
         // Retrieve customer's new information
         Customer customer = customerRepository.findByCustomerId(customerId).get();
         customer.setCustomerName(updateCustomerDTO.getName());
@@ -130,8 +147,8 @@ public class CustomerController {
      * @param customerId
      * @return
      */
-    @DeleteMapping("/delete/{customerId}")
-    public ResponseEntity<?> deleteCustomer(@PathVariable Long customerId) {
+    @DeleteMapping("/delete")
+    public ResponseEntity<?> deleteCustomer(@RequestParam Long customerId) {
         // Delete
         customerRepository.deleteById(customerId);
         return new ResponseEntity<>("Customer deleted!", HttpStatus.OK);
@@ -147,7 +164,7 @@ public class CustomerController {
      * @return list of customers
      */
     @GetMapping("/search")
-    public ResponseEntity<?> searchCustomer(@RequestParam String key, Long userId) {
+    public ResponseEntity<?> searchCustomer(@RequestParam String key, @RequestBody Long userId) {
         // Trim spaces
         StringDealer stringDealer = new StringDealer();
         key = stringDealer.trimMax(key);

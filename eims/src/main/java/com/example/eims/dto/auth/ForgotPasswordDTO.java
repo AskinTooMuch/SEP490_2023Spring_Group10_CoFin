@@ -18,5 +18,4 @@ public class ForgotPasswordDTO {
     private String phone;
     private String newPassword;
     private String confirmPassword;
-    private String OTP;
 }

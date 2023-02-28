@@ -51,8 +51,8 @@ public class FacilityController {
      * @param userId
      * @return
      */
-    @GetMapping("/{userId}")
-    public ResponseEntity<?> getFacility(@PathVariable Long userId) {
+    @GetMapping("/get")
+    public ResponseEntity<?> getFacilityOfOwner(@RequestParam Long userId) {
         // Get a facility of the current User
         Facility facility = facilityRepository.findByUserId(userId).orElse(null);
         if (facility != null) {
@@ -71,7 +71,7 @@ public class FacilityController {
      * @return
      */
     @PostMapping("/create")
-    public ResponseEntity<?> createFacility(CreateFacilityDTO createFacilityDTO) {
+    public ResponseEntity<?> createFacility(@RequestBody CreateFacilityDTO createFacilityDTO) {
         // Retrieve facility information and create new one
         Facility facility = new Facility();
         facility.setUserId(createFacilityDTO.getUserId());
@@ -94,6 +94,24 @@ public class FacilityController {
     }
 
     /**
+     * API to show form to update the facility of a user.
+     * facilityId is the id of the user
+     *
+     * @param facilityId
+     * @return
+     */
+    @GetMapping("/update/get")
+    public ResponseEntity<?> showFormUpdate(@RequestParam Long facilityId) {
+        // Get a facility of the current User
+        Facility facility = facilityRepository.findByFacilityId(facilityId).orElse(null);
+        if (facility != null) {
+            return new ResponseEntity<>(facility, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("No facility", HttpStatus.OK);
+        }
+    }
+
+    /**
      * API to create a facility of a user.
      * userId is the id of the user
      * updateFacilityDTO contains the new name, address, found date, subscription's expiration date,
@@ -103,8 +121,8 @@ public class FacilityController {
      * @param updateFacilityDTO
      * @return
      */
-    @PutMapping("/update/{facilityId}")
-    public ResponseEntity<?> updateFacility(@PathVariable Long facilityId, UpdateFacilityDTO updateFacilityDTO) {
+    @PutMapping("/update/save")
+    public ResponseEntity<?> updateFacility(@RequestParam Long facilityId, @RequestBody UpdateFacilityDTO updateFacilityDTO) {
         // Retrieve facility's new information and create new one
         Facility facility = facilityRepository.findById(facilityId).get();
         facility.setFacilityName(updateFacilityDTO.getFacilityName());
@@ -134,8 +152,8 @@ public class FacilityController {
      * @param facilityId
      * @return
      */
-    @DeleteMapping("/delete/{facilityId}")
-    public ResponseEntity<?> deleteFacility(@PathVariable Long facilityId) {
+    @DeleteMapping("/delete")
+    public ResponseEntity<?> deleteFacility(@RequestParam Long facilityId) {
         // Delete
         facilityRepository.deleteById(facilityId);
         return new ResponseEntity<>("Facility deleted!", HttpStatus.OK);

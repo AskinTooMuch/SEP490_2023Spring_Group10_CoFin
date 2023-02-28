@@ -39,7 +39,7 @@ public class MachineController {
      * @return list of Machines
      */
     @GetMapping("/all")
-    public ResponseEntity<?> getAllMachine(Long facilityId) {
+    public ResponseEntity<?> getAllMachine(@RequestParam Long facilityId) {
         // Get all machines of the current facility
         List<Machine> machineList = machineRepository.findByFacilityId(facilityId);
         return new ResponseEntity<>(machineList, HttpStatus.OK);
@@ -52,14 +52,14 @@ public class MachineController {
      * @param machineId
      * @return
      */
-    @GetMapping("/{machineId}")
-    public ResponseEntity<?> getMachine(@PathVariable Long machineId) {
+    @GetMapping("/get")
+    public ResponseEntity<?> getMachine(@RequestParam Long machineId) {
         // Get a machine of the current facility
         Machine machine = machineRepository.findById(machineId).orElse(null);
         if (machine != null) {
             return new ResponseEntity<>(machine, HttpStatus.OK);
         } else {
-            return new ResponseEntity<>("No machine", HttpStatus.OK);
+            return new ResponseEntity<>("No machine", HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -71,7 +71,7 @@ public class MachineController {
      * @return
      */
     @PostMapping("/create")
-    public ResponseEntity<?> createMachine(CreateMachineDTO createMachineDTO) {
+    public ResponseEntity<?> createMachine(@RequestBody CreateMachineDTO createMachineDTO) {
         // Retrieve machine information and create new machine
         Machine machine = new Machine();
         machine.setMachineTypeId(createMachineDTO.getMachineTypeId());
@@ -101,6 +101,24 @@ public class MachineController {
     }
 
     /**
+     * API to show form update a machine.
+     * machineId is the id of the machine
+     *
+     * @param machineId
+     * @return
+     */
+    @GetMapping("/update/get")
+    public ResponseEntity<?> showFormUpdate(@RequestParam Long machineId) {
+        // Get a machine of the current facility
+        Machine machine = machineRepository.findById(machineId).orElse(null);
+        if (machine != null) {
+            return new ResponseEntity<>(machine, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("No machine", HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    /**
      * API to update a machine of a facility.
      * The DTO contains the facility id, machine type id, name, max and current capacity, status
      * id is the id of the machine
@@ -109,8 +127,8 @@ public class MachineController {
      * @param machineId
      * @return
      */
-    @PutMapping("/update/{machineId}")
-    public ResponseEntity<?> updateMachine(@PathVariable Long machineId, UpdateMachineDTO updateMachineDTO) {
+    @PutMapping("/update/save")
+    public ResponseEntity<?> updateMachine(@RequestParam Long machineId, @RequestBody UpdateMachineDTO updateMachineDTO) {
         // Retrieve machine's new information
         Machine machine = machineRepository.findByMachineId(machineId);
         machine.setMachineName(updateMachineDTO.getName());
@@ -124,15 +142,15 @@ public class MachineController {
 
     /**
      * API to delete a machine of a facility.
-     * id is the id of the machine
+     * machineId is the id of the machine
      *
-     * @param id
+     * @param machineId
      * @return
      */
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<?> deleteCustomer(@PathVariable Long id) {
+    @DeleteMapping("/delete")
+    public ResponseEntity<?> deleteCustomer(@RequestParam Long machineId) {
         // Delete
-        machineRepository.deleteById(id);
+        machineRepository.deleteById(machineId);
         return new ResponseEntity<>("Machine deleted!", HttpStatus.OK);
     }
 }

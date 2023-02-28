@@ -127,43 +127,60 @@ public class AuthController {
 
     /**
      * API for the user to receive OTP to reset password.
-     * The DTO contains the login phone
+     * phone is the phone number of the account
      *
-     * @param forgotPasswordDTO
+     * @param phone
      * @return
      */
-    @PostMapping("/forgotPassword/sendOTP")
-    public ResponseEntity<?> sendOTPForgotPassword(@RequestBody ForgotPasswordDTO forgotPasswordDTO) {
+    @GetMapping("/forgotPassword/sendOTP")
+    public ResponseEntity<?> sendOTP(@RequestParam String phone) {
         //Local variable for the user
         Optional<User> userOpt;
         //Check credentials, if not valid then return Bad request (403)
-        userOpt = userRepository.findByPhone(forgotPasswordDTO.getPhone());
+        userOpt = userRepository.findByPhone(phone);
         if (userOpt.isEmpty()) {
             return new ResponseEntity<>("No phone number found!", HttpStatus.BAD_REQUEST);
         } else {
+            // create OTP
+
             // send OTP
+
             return new ResponseEntity<>("OTP send!", HttpStatus.OK);
         }
     }
 
     /**
      * API for the user to verify OTP to reset password.
-     * The DTO contains the OTP, login phone
+     * OTP
      *
-     * @param forgotPasswordDTO
+     * @param OTP
      * @return
      */
     @PostMapping("/forgotPassword/verifyOTP")
-    public ResponseEntity<?> verifyOTPForgotPassword(@RequestBody ForgotPasswordDTO forgotPasswordDTO) {
+    public ResponseEntity<?> verifyOTP(@RequestBody String OTP) {
         //Check if the OTP match
         String OTP_REAL = "111";
-        if (forgotPasswordDTO.getOTP().equalsIgnoreCase(OTP_REAL)){
+        if (OTP.equals(OTP_REAL)){      /* OTP match*/
             return new ResponseEntity<>("OTP confirmed! Please enter your new password.", HttpStatus.OK);
-        } else {
-            // wait 3m to re-send the OTP
-            // resend OTP
-            return new ResponseEntity<>("OTP re-send!", HttpStatus.OK);
+        } else {                        /* OTP not match*/
+
+            return new ResponseEntity<>("OTP wrong!", HttpStatus.OK);
         }
+    }
+
+    /**
+     * API for the user to re-send OTP.
+     *
+     * @param
+     * @return
+     */
+    @GetMapping("/forgotPassword/resendOTP")
+    public ResponseEntity<?> resendOTP() {
+        // create OTP
+
+        // send OTP
+
+        return new ResponseEntity<>("OTP re-send!", HttpStatus.OK);
     }
 
     /**
@@ -173,7 +190,7 @@ public class AuthController {
      * @param forgotPasswordDTO
      * @return
      */
-    @PostMapping("/forgotPassword")
+    @PostMapping("/forgotPassword/changePassword")
     public ResponseEntity<?> resetPassword(@RequestBody ForgotPasswordDTO forgotPasswordDTO) {
         //Encode the passwords
         forgotPasswordDTO.setNewPassword(passwordEncoder.encode(forgotPasswordDTO.getNewPassword()));
