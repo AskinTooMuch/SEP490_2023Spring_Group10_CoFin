@@ -1,4 +1,5 @@
--- Version 0.6.1: Fix stored procedure to work with user_id
+-- V0.6.2: Minor audijustment at facility table and add data into machine table
+-- V0.6.1: Fix stored procedure to work with user_id
 -- V0.6.0: Add stored procedure user_and_facility
 -- V0.5.0: Added tables: salary_history, registration, notification. Modified a few tables
 -- V0.4.0: Change attribute and table name from camelCase to camel_case
@@ -28,7 +29,7 @@ CREATE TABLE facility(
     facility_found_date				date 		NOT NULL,
     subscription_expiration_date	datetime,
     hotline							varchar(15)	NOT NULL,
-    businessLicenseNumber			varchar(31) NOT NULL,
+    business_license_number			varchar(31) NOT NULL UNIQUE,
     status							boolean		NOT NULL
 );
 
@@ -247,7 +248,8 @@ ADD CHECK (incubation_period > 0);
 ALTER TABLE breed
 ADD FOREIGN KEY (specie_id) 	REFERENCES specie(specie_id),
 ADD FOREIGN KEY (user_id) 		REFERENCES user(user_id),
-ADD CHECK (average_weight > 0),
+ADD CHECK (average_weight_male > 0),
+ADD CHECK (average_weight_female > 0),
 ADD CHECK (growth_time > 0);
 
 ALTER TABLE incubation_phase
@@ -360,9 +362,9 @@ VALUES 	(1, 5, 'Default Data pack', '2001-12-16', '0000000000','a@a.a', 0, 'a','
 		(6, 4, 'Phạm Tuấn', '2001-01-01', '0985817104', 'moderatortuan@gmail.com', 0, '$2a$10$FNOLtGaY4coy0.CAHUxLpuBj9PIEO5J3/nqbORI8UmZuZd4eqARw2', 'hà nội', 1);
 
 -- facility
-INSERT INTO facility(facility_id, user_id, facility_name, facility_address, facility_found_date, subscription_expiration_date, hotline, status)
-VALUES 	(1, 2, 'Chu Xuong Trung', 'Gia Loc, Hai Duong', '2019-02-17', '2023-5-31', '0969044714', 1),
-		(2, 3, 'ZTrung09', 'Dau do Ha Noi', '2011-05-09', '2021-10-22', '0852274855', 0);
+INSERT INTO facility(facility_id, user_id, facility_name, facility_address, facility_found_date, subscription_expiration_date, hotline, business_license_number, status)
+VALUES 	(1, 2, 'Chu Xuong Trung', 'Gia Loc, Hai Duong', '2019-02-17', '2023-5-31', '0969044714', '4103012754', 1),
+		(2, 3, 'ZTrung09', 'Dau do Ha Noi', '2011-05-09', '2021-10-22', '0852274855', '7243012533', 0);
         
 -- specie
 INSERT INTO specie(specie_id, user_id, specie_name, incubation_period, status)
@@ -406,6 +408,12 @@ VALUES 	(1, 0, 0,'Trứng vỡ/dập', 1),
 INSERT INTO machine_type(machine_type_id, machine_type_name, description, status)
 VALUES 	(1, 'Máy ấp', 'Máy dùng cho giai đoạn vừa mới ấp cho tới khi sắp nở, nhiệt cao, sức chứa cao', 1),
 		(2, 'Máy nở', 'Máy dùng cho giai đoạn từ trứng lộn đến khi nở ra con, nhiệt thấp hơn, sức chứa thấp hơn', 1);
+        
+-- machine
+INSERT INTO machine(machine_type_id, facility_id, machine_name, max_capacity, cur_capacity, added_date, active, status)
+VALUES (1, 1, 'Máy ấp kho', '6000', '0', '2019-02-17', 0, 1),
+		(2, 1, 'Máy nở nhỏ', '2000', '0', '2019-02-17', 0, 1),
+        (2, 1, 'Máy nở to', '4000', '0', '2019-02-17', 0, 1);
 
 -- subscription
 INSERT INTO subscription(subscription_id, cost, duration, machine_quota, status)
