@@ -116,16 +116,6 @@ const Profile = () => {
             userAddress: responseJson.userAddress,
             userStatus: responseJson.userStatus
         })
-        // accountInformation.userId = responseJson.userId;
-        // accountInformation.userRoleName = responseJson.userRoleName;
-        // accountInformation.username = responseJson.username;
-        // accountInformation.userDob = responseJson.userDob;
-        // accountInformation.userEmail = responseJson.userEmail;
-        // accountInformation.userSalary = responseJson.userSalary;
-        // accountInformation.userAddress = responseJson.userAddress;
-        // accountInformation.userStatus = responseJson.userStatus;
-        //console.log(accountInformation);
-
         //Set facility information
         setFacilityInformation({
             facilityId: responseJson.facilityId,
@@ -137,16 +127,6 @@ const Profile = () => {
             subscriptionId: responseJson.subscriptionId,
             subscriptionExpirationDate: responseJson.subscriptionExpirationDate
         })
-
-        // facilityInformation.facilityId = responseJson.facilityId;
-        // facilityInformation.facilityName = responseJson.facilityName;
-        // facilityInformation.facilityAddress = responseJson.facilityAddress;
-        // facilityInformation.facilityFoundDate = responseJson.facilityFoundDate;
-        // facilityInformation.hotline = responseJson.hotline;
-        // facilityInformation.facilityStatus = responseJson.facilityStatus;
-        // facilityInformation.subscriptionId = responseJson.subscriptionId;
-        // facilityInformation.subscriptionExpirationDate = responseJson.subscriptionExpirationDate;
-        //console.log(facilityInformation);
     }
 
 

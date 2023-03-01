@@ -8,7 +8,7 @@
  * DATE          Version    Author           DESCRIPTION<br>
  * 22/02/2023    1.0        DuongVV          First Deploy<br>
  * 28/02/2023    2.0        DuongVV          Update function, add Paging<br>
- *
+ * 01/03-2023    2.1        ChucNV           (Line 64, method viewImportsByUserPaging) @GetMapping("/allByUserPaging") -> @GetMapping("/allImportByUserPaging")
  */
 package com.example.eims.controller;
 
@@ -61,7 +61,7 @@ public class ImportReceiptController {
      * @param sort sorting type
      * @return list of import receipts
      */
-    @GetMapping("/allByUserPaging")
+    @GetMapping("/allImportByUserPaging")
     @Secured({"ROLE_OWNER"})
     public ResponseEntity<?> viewImportsByUserPaging(@RequestParam(name = "userId") Long userId,
                                                   @RequestParam(name = "page", required = false, defaultValue = "0") Integer page,

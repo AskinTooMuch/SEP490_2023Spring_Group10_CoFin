@@ -1,10 +1,10 @@
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect, Component } from "react";
 import { faCheck, faTimes, faInfoCircle, faStarOfLife } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from '../api/axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import "../css/register.css"
+import "../css/register.css";
 //import  '../api/provinces.js';
 const EMAIL_REGEX = /^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/;
 const PHONE_REGEX = /(84|0[3|5|7|8|9])+([0-9]{8})\b/;
@@ -14,6 +14,22 @@ const REGISTER_URL = '/api/auth/signup';
 const Register = () => {
 
     const userRef = useRef();
+    const [fullAddresses, setFullAddresses] = useState('');
+    const options = [
+        { value: 'chocolate', label: 'Chocolate' },
+        { value: 'strawberry', label: 'Strawberry' },
+        { value: 'vanilla', label: 'Vanilla' }
+    ]
+    const [city, setCity] = useState([
+        { value: '', label: 'Chọn Tỉnh/Thành phố' }
+    ]);
+    //User Address data
+    const [citySelected, setCitySelected] = useState(false);
+    const [userDistrict, setUserDistrict] = useState('');
+    const [userDistrictIndex, setUserDistrictIndex] = useState();
+    const [districtSelected, setDistrictSelected] = useState(false);
+    const [userWard, setUserWard] = useState('');
+
     //Personal
     //Name
     const [name, setName] = useState('');
@@ -46,7 +62,6 @@ const Register = () => {
     const [validMatch, setValidMatch] = useState(false);
     const [matchFocus, setMatchFocus] = useState(false);
 
-
     //Facility
     //Name
     const [faciName, setFaciName] = useState('');
@@ -67,6 +82,53 @@ const Register = () => {
     const [brn, setBusinessNumber] = useState('');
 
     const [success, setSuccess] = useState(false);
+
+    // Set value for address fields
+    //User
+    useEffect(() => {
+        console.log("Load address");
+        loadAddress();
+    }, []);
+
+    const loadAddress = async () => {
+        const result = await axios.get("https://raw.githubusercontent.com/kenzouno1/DiaGioiHanhChinhVN/master/data.json",
+            {});
+        setFullAddresses(result.data);
+        console.log("Full address");
+        console.log(fullAddresses);
+        // Set inf
+
+        const cityList = fullAddresses.slice();
+        for (let i in cityList) {
+            cityList[i] = { value: cityList[i].Id, label: cityList[i].Name }
+        }
+        setCity(cityList);
+        
+    }
+
+    function loadUserDistrict(index) {
+        console.log(index);
+        setCitySelected(true);
+        setUserDistrictIndex(index);
+        const districtOnIndex = fullAddresses[index].Districts;
+        const districtList = districtOnIndex.slice();
+        for (let i in districtList) {
+            districtList[i] = { value: districtList[i].Id, label: districtList[i].Name }
+        }
+        setUserDistrict(districtList);
+    }
+
+    function loadUserWard(index) {
+        console.log(index);
+        setDistrictSelected(true);
+        const wardOnIndex = fullAddresses[userDistrictIndex].Districts[index].Wards;
+        const wardList = wardOnIndex.slice();
+        for (let i in wardList) {
+            wardList[i] = { value: wardList[i].Id, label: wardList[i].Name }
+        }
+        setUserWard(wardList);
+        console.log(wardList);
+    }
 
     useEffect(() => {
         userRef.current.focus();
@@ -97,7 +159,7 @@ const Register = () => {
         }
         try {
             const response = await axios.post(REGISTER_URL,
-                ({ name, email, password, dob, phone}),
+                ({ name, email, password, dob, phone }),
                 {
                     headers: { 'Content-Type': 'application/json' },
                     withCredentials: false
@@ -127,7 +189,6 @@ const Register = () => {
                 toast.success("Đăng ký thành công")
             ) : (
                 <div className="">
-
                     <form onSubmit={handleSubmit} className="">
                         <section className="h-100 h-custom gradient-custom-2">
                             <div className="container py-5 h-100">
@@ -136,10 +197,10 @@ const Register = () => {
                                         <div className="card card-registration card-registration-2" style={{ borderRadius: "15px" }}>
                                             <div className="card-body p-0">
                                                 <div className="row g-0">
+                                                    {/*Profile information*/}
                                                     <div className="col-lg-6">
                                                         <div className="p-5">
                                                             <h3 className="" style={{ color: " #4835d4" }}>Thông tin chung</h3>
-
                                                             <div className="mb-4 ">
                                                                 <div className="form-outline">
                                                                     <label htmlFor="name">Tên <FontAwesomeIcon className="star" icon={faStarOfLife} /></label>
@@ -152,7 +213,7 @@ const Register = () => {
                                                                         className="form-control " />
                                                                 </div>
                                                             </div>
-
+                                                            {/*Date of bird*/}
                                                             <div className="mb-4 ">
                                                                 <div className="form-outline">
                                                                     <label htmlFor="dob">Ngày sinh <FontAwesomeIcon className="star" icon={faStarOfLife} /></label>
@@ -165,7 +226,7 @@ const Register = () => {
                                                                         className="form-control " />
                                                                 </div>
                                                             </div>
-
+                                                            {/*Phone*/}
                                                             <div className="mb-4 ">
                                                                 <div className="form-outline">
                                                                     <label htmlFor="phone">Số điện thoại <FontAwesomeIcon className="star" icon={faStarOfLife} />
@@ -189,7 +250,7 @@ const Register = () => {
                                                                     </p>
                                                                 </div>
                                                             </div>
-
+                                                            {/*Email*/}
                                                             <div className="mb-4 ">
                                                                 <div className="form-outline">
                                                                     <label htmlFor="email">Email <FontAwesomeIcon className="star" icon={faStarOfLife} />
@@ -205,7 +266,6 @@ const Register = () => {
                                                                         aria-describedby="emailnote"
                                                                         onFocus={() => setEmailFocus(true)}
                                                                         onBlur={() => setEmailFocus(false)} className="form-control " />
-
                                                                     <p id="emailnote" className={emailFocus && email && !validEmail ? "instructions" : "offscreen"}>
                                                                         <FontAwesomeIcon icon={faInfoCircle} />
                                                                         Bắt đầu bằng 1 chữ cái + @example.com<br />
@@ -214,10 +274,74 @@ const Register = () => {
 
                                                                 </div>
                                                             </div>
-
-
+                                                            {/*User city*/}
+                                                            <div className="mb-4 ">
+                                                                <div className="form-outline">
+                                                                    <label htmlFor="uprovince" >Tỉnh/Thành Phố <FontAwesomeIcon className="star" icon={faStarOfLife} /></label>
+                                                                    <select className="form-control mt-1" id="uprovince"
+                                                                        ref={userRef}
+                                                                        autoComplete="off"
+                                                                        onChange={(e) => loadUserDistrict(e.target.value)}
+                                                                        required>
+                                                                        <option value="">Chọn Tỉnh/Thành phố của bạn</option>
+                                                                        {   city &&
+                                                                            city.map((item, index) => (
+                                                                                <option value={index}>{item.label}</option>
+                                                                            ))
+                                                                        }
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                            {/*User district*/}
+                                                            <div className="mb-4 ">
+                                                                <div className="form-outline">
+                                                                    <label htmlFor="udistrict" >Quận/Huyện <FontAwesomeIcon className="star" icon={faStarOfLife} /></label>
+                                                                    <select className="form-control mt-1" id="udistrict"
+                                                                        ref={userRef}
+                                                                        autoComplete="off"
+                                                                        onChange={(e) => loadUserWard(e.target.value)}
+                                                                        required>
+                                                                        <option value="">Chọn Quận/Huyện của bạn</option>
+                                                                        { userDistrict &&
+                                                                            userDistrict.map((item, index) => (
+                                                                                <option value={index}>{item.label}</option>
+                                                                            ))
+                                                                        }
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                            {/*User ward*/}
+                                                            <div className="mb-4 ">
+                                                                <div className="form-outline">
+                                                                    <label htmlFor="uward" >Phường/Xã <FontAwesomeIcon className="star" icon={faStarOfLife} /></label>
+                                                                    <select className="form-control mt-1" id="uward"
+                                                                        ref={userRef}
+                                                                        autoComplete="off"
+                                                                        onChange={(e) => setWard(e.target.value)}
+                                                                        required>
+                                                                        <option value="">Chọn Phường của bạn</option>
+                                                                        { userWard &&
+                                                                            userWard.map((item, index) => (
+                                                                                <option value={index}>{item.label}</option>
+                                                                            ))
+                                                                        }
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                            {/*User Street*/}
+                                                            <div className="mb-4 ">
+                                                                <div className="form-outline">
+                                                                    <label htmlFor="uhomenum">Số nhà <FontAwesomeIcon className="star" icon={faStarOfLife} /></label>
+                                                                    <input type="text" id="uhomenum"
+                                                                        ref={userRef}
+                                                                        autoComplete="off"
+                                                                        onChange={(e) => setHomeNum(e.target.value)}
+                                                                        value={homenum}
+                                                                        required
+                                                                        className="form-control " />
+                                                                </div>
+                                                            </div>
                                                             <div className="mb-4">
-
                                                                 <div className="form-outline">
                                                                     <label htmlFor="password">Mật khẩu <FontAwesomeIcon className="star" icon={faStarOfLife} /></label>
                                                                     <input type="password" id="password"
@@ -237,7 +361,6 @@ const Register = () => {
                                                                         Các kí tự đặc biệt cho phép: <span aria-label="exclamation mark">!</span> <span aria-label="at symbol">@</span> <span aria-label="hashtag">#</span> <span aria-label="dollar sign">$</span> <span aria-label="percent">%</span>
                                                                     </p>
                                                                 </div>
-
                                                             </div>
                                                             <div className="mb-4 ">
                                                                 <div className="form-outline">
@@ -257,68 +380,9 @@ const Register = () => {
                                                                     </p>
                                                                 </div>
                                                             </div>
-                                                            <div className="mb-4 ">
-                                                                <div className="form-outline">
-                                                                    <label htmlFor="homenum">Số nhà <FontAwesomeIcon className="star" icon={faStarOfLife} /></label>
-                                                                    <input type="text" id="homenum"
-                                                                        ref={userRef}
-                                                                        autoComplete="off"
-                                                                        onChange={(e) => setHomeNum(e.target.value)}
-                                                                        value={homenum}
-                                                                        required
-                                                                        className="form-control " />
-                                                                </div>
-                                                            </div>
-                                                            <div className="mb-4 ">
-                                                                <div className="form-outline">
-                                                                    <label htmlFor="ward" >Phường/Xã <FontAwesomeIcon className="star" icon={faStarOfLife} /></label>
-                                                                    <select className="form-control mt-1" id="ward"
-                                                                        ref={userRef}
-                                                                        autoComplete="off"
-                                                                        onChange={(e) => setWard(e.target.value)}
-                                                                        value={ward}
-                                                                        required>
-                                                                        <option value="">Chọn Phường của bạn</option>
-                                                                        <option value="Kim Liên">Kim Liên</option>
-                                                                        <option value="3">Three</option>
-                                                                        <option value="4">Four</option>
-                                                                    </select>
-                                                                </div>
-                                                            </div>
-                                                            <div className="mb-4 ">
-                                                                <div className="form-outline">
-                                                                    <label htmlFor="district" >Quận/Huyện <FontAwesomeIcon className="star" icon={faStarOfLife} /></label>
-                                                                    <select className="form-control mt-1" id="district"
-                                                                        ref={userRef}
-                                                                        autoComplete="off"
-                                                                        onChange={(e) => setDistrict(e.target.value)}
-                                                                        value={district}
-                                                                        required>
-                                                                        <option value="">Chọn Quận/Huyện của bạn</option>
-                                                                        <option value="Đống Đa">Đống Đa</option>
-                                                                        <option value="3">Three</option>
-                                                                        <option value="4">Four</option>
-                                                                    </select>
-                                                                </div>
-                                                            </div>
-                                                            <div className="mb-4 ">
-                                                                <div className="form-outline">
-                                                                    <label htmlFor="province" >Tỉnh/Thành Phố <FontAwesomeIcon className="star" icon={faStarOfLife} /></label>
-                                                                    <select className="form-control mt-1" id="province"
-                                                                        ref={userRef}
-                                                                        autoComplete="off"
-                                                                        onChange={(e) => setProvince(e.target.value)}
-                                                                        value={province}
-                                                                        required>
-                                                                        <option value="">Chọn Tỉnh/Thành phố của bạn</option>
-                                                                        <option value="Hà Nội">Hà Nội</option>
-                                                                        <option value="3">Three</option>
-                                                                        <option value="4">Four</option>
-                                                                    </select>
-                                                                </div>
-                                                            </div>
                                                         </div>
                                                     </div>
+                                                    {/*Facility information*/}
                                                     <div className="col-lg-6 bg-indigo text-white">
                                                         <div className="p-5">
                                                             <h3 className="fw-normal ">Cơ sở </h3>
@@ -387,7 +451,6 @@ const Register = () => {
                                                                 </div>
                                                             </div>
                                                             <div className="mb-4 pb-2">
-
                                                                 <div className="form-outline form-white">
                                                                     <label htmlFor="facidistrict" className="text-white">Quận/Huyện<FontAwesomeIcon className="star" icon={faStarOfLife} /></label>
                                                                     <select className="form-control mt-1" id="facidistrict"
@@ -402,11 +465,8 @@ const Register = () => {
                                                                         <option value="4">Four</option>
                                                                     </select>
                                                                 </div>
-
                                                             </div>
-
                                                             <div className="mb-4 ">
-
                                                                 <div className="form-outline form-white">
                                                                     <label htmlFor="faciprovince" className="text-white" >Tỉnh/Thành phố<FontAwesomeIcon className="star" icon={faStarOfLife} /></label>
                                                                     <select className="form-control mt-1" id="faciprovince"
@@ -414,19 +474,15 @@ const Register = () => {
                                                                         autoComplete="off"
                                                                         onChange={(e) => setFaciProvince(e.target.value)}
                                                                         value={faciProvince}
-                                                                        required
-                                                                    >
+                                                                        required>
                                                                         <option value="">Chọn Tỉnh/Thành phố của bạn</option>
                                                                         <option value="Hà Nội">Hà Nội</option>
                                                                         <option value="3">Three</option>
                                                                         <option value="4">Four</option>
                                                                     </select>
                                                                 </div>
-
                                                             </div>
-
                                                             <div className="mb-4 ">
-
                                                                 <div className="form-outline form-white">
                                                                     <label htmlFor="brn" className="text-white">Mã số đăng ký kinh doanh <FontAwesomeIcon className="star" icon={faStarOfLife} /></label>
                                                                     <input type="text" id="brn"
@@ -438,10 +494,7 @@ const Register = () => {
                                                                         className="form-control " />
 
                                                                 </div>
-
                                                             </div>
-
-
                                                             <button type="submit" className="btn btn-success" data-mdb-ripple-color="dark"
                                                             >Đăng ký</button>
                                                             <ToastContainer position="top-left"
