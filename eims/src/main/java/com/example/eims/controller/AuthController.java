@@ -8,6 +8,7 @@
  * DATE         Version     Author      DESCRIPTION<br>
  * 18/01/2023   1.0         ChucNV      First Deploy<br>
  * 28/02/2023   2.0         ChucNV      Enable Security
+ * 02/03/2023   2.1         ChucNV      Move Signup service to Service file
  */
 
 package com.example.eims.controller;
