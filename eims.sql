@@ -1,13 +1,10 @@
--- V0.6.2: Minor audijustment at facility table and add data into machine table
--- V0.6.1: Fix stored procedure to work with user_id
--- V0.6.0: Add stored procedure user_and_facility
--- V0.5.0: Added tables: salary_history, registration, notification. Modified a few tables
+-- Version 0.5.0: Added tables: salary_history, registration, notification. Modified a few tables
 -- V0.4.0: Change attribute and table name from camelCase to camel_case
 -- V0.3.0: Add data
 -- V0.2.0: Add foreign key constraint
 -- V0.2.1: Change attribute _name, re-route foreign key constraint
 -- V0.2.2: Add CHECK constraint
--- Last up_date: 26/02/2023
+-- Last up_date: 21/02/2023
 -- Script for generating EIMS - Eggs Incubating Management System.
 -- Check if database already exist. If yes then drop the database to ensure the script runs successfully with no variations.
 DROP DATABASE IF EXISTS eims;
@@ -25,11 +22,10 @@ CREATE TABLE facility(
 	facility_id						integer 	AUTO_INCREMENT PRIMARY KEY,
     user_id							integer		NOT NULL,
     facility_name					varchar(63) NOT NULL,
-    facility_address				varchar(511) NOT NULL,
+    facility_address				varchar(63) NOT NULL,
     facility_found_date				date 		NOT NULL,
     subscription_expiration_date	datetime,
     hotline							varchar(15)	NOT NULL,
-    business_license_number			varchar(31) NOT NULL UNIQUE,
     status							boolean		NOT NULL
 );
 
@@ -42,14 +38,8 @@ CREATE TABLE user(
     email		varchar(127),
     salary		decimal(15,2),
     password	varchar(127)	NOT NULL,
-    address	varchar(511),
+    address	varchar(127),
 	status		boolean			NOT NULL
-);
-
-CREATE TABLE work_in(
-	user_id		integer		NOT NULL,
-    facility_id	integer		NOT NULL,
-    status		boolean		NOT NULL
 );
 
 CREATE TABLE salary_history(
@@ -68,16 +58,15 @@ CREATE TABLE specie(
 );
 
 CREATE TABLE breed(
-	breed_id				integer 	AUTO_INCREMENT PRIMARY KEY,
-    specie_id				integer,
-    user_id					integer		NOT NULL,
-    breed_name				varchar(63)	NOT NULL,
-    average_weight_male		double,
-    average_weight_female	double,
-    common_disease			varchar(255),
-    growth_time				time		NOT NULL,
-    image_src				varchar(1027),
-    status 					boolean		NOT NULL
+	breed_id			integer 	AUTO_INCREMENT PRIMARY KEY,
+    specie_id			integer,
+    user_id				integer		NOT NULL,
+    breed_name			varchar(63)	NOT NULL,
+    average_weight		double		NOT NULL,
+    common_disease		varchar(255),
+    growth_time			time		NOT NULL,
+    image_src			varchar(1027),
+    status 				boolean		NOT NULL
 );
 
 CREATE TABLE incubation_phase(
@@ -113,7 +102,8 @@ CREATE TABLE customer(
     customer_phone		varchar(15),
     customer_address	varchar(127),
     customer_mail		varchar(127),
-    status				boolean		NOT NULL
+    status				boolean		NOT NULL,
+    fulltext key (customer_name)
 );
 
 CREATE TABLE import_receipt(
@@ -229,7 +219,7 @@ CREATE TABLE registration(
 
 CREATE TABLE notification(
 	notification_id		integer	AUTO_INCREMENT PRIMARY KEY,
-    facility_id		    integer		NOT NULL,
+    user_id				integer,
     notification_brief	varchar(255),
     product_id			integer,
     status				boolean
@@ -243,10 +233,6 @@ ALTER TABLE user
 ADD FOREIGN KEY (role_id) 		REFERENCES user_role(role_id),
 ADD CHECK (salary >= 0);
 
-ALTER TABLE work_in
-ADD FOREIGN KEY (user_id)		REFERENCES user(user_id),
-ADD FOREIGN KEY (facility_id)	REFERENCES facility(facility_id);
-
 ALTER TABLE salary_history
 ADD FOREIGN KEY (user_id)		REFERENCES user(user_id),
 ADD CHECK (salary >= 0);
@@ -258,8 +244,7 @@ ADD CHECK (incubation_period > 0);
 ALTER TABLE breed
 ADD FOREIGN KEY (specie_id) 	REFERENCES specie(specie_id),
 ADD FOREIGN KEY (user_id) 		REFERENCES user(user_id),
-ADD CHECK (average_weight_male > 0),
-ADD CHECK (average_weight_female > 0),
+ADD CHECK (average_weight > 0),
 ADD CHECK (growth_time > 0);
 
 ALTER TABLE incubation_phase
@@ -335,13 +320,13 @@ ALTER TABLE registration
 ADD FOREIGN KEY (user_id)	REFERENCES user(user_id);
 
 ALTER TABLE notification
-ADD FOREIGN KEY (facility_id)	REFERENCES facility(facility_id),
+ADD FOREIGN KEY (user_id)	REFERENCES user(user_id),
 ADD FOREIGN KEY (product_id)REFERENCES egg_product(product_id);
 
 -- Create Procedures:
 -- Select user and facility of an user
 DELIMITER //
-CREATE PROCEDURE user_and_facility(uid integer) 
+CREATE PROCEDURE user_and_facility(userId integer) 
 BEGIN
 SELECT U.user_id, UR.role_name, U.username, U.dob, U.email, U.salary, U.address, U.status AS USER_STATUS, 
 		F.facility_id, F.facility_name, F.facility_address, F.facility_found_date, F.hotline, F.status AS FACILITY_STATUS, F.subscription_expiration_date,
@@ -350,7 +335,7 @@ SELECT U.user_id, UR.role_name, U.username, U.dob, U.email, U.salary, U.address,
 FROM user U JOIN user_role UR ON U.role_id = UR.role_id
 		LEFT JOIN facility F ON U.user_id = F.user_id
         LEFT JOIN user_subsription US ON F.facility_id = US.facility_id
-WHERE U.user_id = uid;
+WHERE U.user_id = userId;
 END //
 DELIMITER ;
 
@@ -365,16 +350,16 @@ VALUES 	(1, 'ROLE_USER', 1),
 -- user
 INSERT INTO user(user_id, role_id, username, dob, phone, email, salary, password, address, status)
 VALUES 	(1, 5, 'Default Data pack', '2001-12-16', '0000000000','a@a.a', 0, 'a','nowhere', 0),
-		(2,	2,	'Nguyễn Chức', '2001-12-16', '0969044713',	'ownerchuc@gmail.com', 0, '$2a$10$Vp3h.q0WVd4LCt.jY4gbHe5bs2OKdQIa88oIFe7xR83m5UNRDaGPq',	'hải dương', 1),
+		(2,	2,	'Nguyễn Chức', '2001-12-16', '0969044714',	'ownerchuc@gmail.com', 0, '$2a$10$Vp3h.q0WVd4LCt.jY4gbHe5bs2OKdQIa88oIFe7xR83m5UNRDaGPq',	'hải dương', 1),
         (3,	2, 'Nguyễn Dương', '2001-01-01', '0852274855', 'ownerduong@gmail.com', 0, '$2a$10$UOEamoIHKWrb7BVNTOtZHebHBp6zPZ03STsKXDCZFD0BJusC9xFlO', 'hà nội', 1),
 		(4,	3, 'Dương Tùng', '2001-01-01', '0932321198', 'workertung@gmail.com', 0, '$2a$10$uRRgBmQCWBLgBsB4lImrguTBcHkx96MErC2fhvxmgUPDacoHPPr6W', 'hà nội', 1),
 		(5,	3, 'Vũ Dương', '2001-01-01', '0978815951', 'workerduong@gmail.com', 0, '$2a$10$NpyM9vyE2zQ7bTdEA7nYAeoirBlK5SqI/7v23kVQd7nCZq9nI.oUu', 'hải dương', 1),
 		(6, 4, 'Phạm Tuấn', '2001-01-01', '0985817104', 'moderatortuan@gmail.com', 0, '$2a$10$FNOLtGaY4coy0.CAHUxLpuBj9PIEO5J3/nqbORI8UmZuZd4eqARw2', 'hà nội', 1);
 
 -- facility
-INSERT INTO facility(facility_id, user_id, facility_name, facility_address, facility_found_date, subscription_expiration_date, hotline, business_license_number, status)
-VALUES 	(1, 2, 'Chu Xuong Trung', 'Gia Loc, Hai Duong', '2019-02-17', '2023-5-31', '0969044714', '4103012754', 1),
-		(2, 3, 'ZTrung09', 'Dau do Ha Noi', '2011-05-09', '2021-10-22', '0852274855', '7243012533', 0);
+INSERT INTO facility(facility_id, user_id, facility_name, facility_address, facility_found_date, subscription_expiration_date, hotline, status)
+VALUES 	(1, 2, 'Chu Xuong Trung', 'Gia Loc, Hai Duong', '2019-02-17', '2023-5-31', '0969044714', 1),
+		(2, 3, 'ZTrung09', 'Dau do Ha Noi', '2011-05-09', '2021-10-22', '0852274855', 0);
         
 -- specie
 INSERT INTO specie(specie_id, user_id, specie_name, incubation_period, status)
@@ -418,12 +403,6 @@ VALUES 	(1, 0, 0,'Trứng vỡ/dập', 1),
 INSERT INTO machine_type(machine_type_id, machine_type_name, description, status)
 VALUES 	(1, 'Máy ấp', 'Máy dùng cho giai đoạn vừa mới ấp cho tới khi sắp nở, nhiệt cao, sức chứa cao', 1),
 		(2, 'Máy nở', 'Máy dùng cho giai đoạn từ trứng lộn đến khi nở ra con, nhiệt thấp hơn, sức chứa thấp hơn', 1);
-        
--- machine
-INSERT INTO machine(machine_type_id, facility_id, machine_name, max_capacity, cur_capacity, added_date, active, status)
-VALUES (1, 1, 'Máy ấp kho', '6000', '0', '2019-02-17', 0, 1),
-		(2, 1, 'Máy nở nhỏ', '2000', '0', '2019-02-17', 0, 1),
-        (2, 1, 'Máy nở to', '4000', '0', '2019-02-17', 0, 1);
 
 -- subscription
 INSERT INTO subscription(subscription_id, cost, duration, machine_quota, status)
