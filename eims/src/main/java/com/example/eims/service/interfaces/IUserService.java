@@ -1,15 +1,61 @@
+/*
+ * Copyright (C) 2023, FPT University <br>
+ * SEP490 - SEP490_G10 <br>
+ * EIMS <br>
+ * Eggs Incubating Management System <br>
+ *
+ * Record of change:<br>
+ * DATE         Version     Author      DESCRIPTION<br>
+ * 02/03/2023   1.0         DuongVV     First Deploy<br>
+ */
+
 package com.example.eims.service.interfaces;
 
 import com.example.eims.dto.user.UpdateUserDTO;
 import com.example.eims.dto.user.UserDetailDTO;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 
 public interface IUserService {
+
+    /**
+     * Requesting user information and facility information with the requesting DTO consists of user phone number.
+     *
+     * @param userId
+     * @return the details of a user and it's facility in the form of a UserDetailDTO
+     */
     public ResponseEntity<UserDetailDTO> sendUserDetail(Long userId);
+
+    /**
+     * Get all user.
+     *
+     * @param
+     * @return
+     */
     public ResponseEntity<?> getAllUser();
-    public ResponseEntity<?> getAllUser(Integer page, Integer size, String sort);
+
+    /**
+     * Get all user with Paging.
+     *
+     * @param page the page number
+     * @param size the size of page
+     * @param sort sorting type
+     * @return
+     */
+    public ResponseEntity<?> getAllUserPaging(Integer page, Integer size, String sort);
+
+    /**
+     * Show form to update user's information.
+     *
+     * @param userId the id of the user
+     * @return
+     */
     public ResponseEntity<?> showFormUpdate(Long userId);
+
+    /**
+     * Update a user.
+     *
+     * @param updateUserDTO contains the user's new name,date of birth, phone number, address, email, salary and status
+     * @return
+     */
     public ResponseEntity<?> updateUser(UpdateUserDTO updateUserDTO);
 }

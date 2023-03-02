@@ -42,6 +42,12 @@ public class AuthServiceImpl implements IAuthService{
         this.passwordEncoder = passwordEncoder;
     }
 
+    /**
+     * Sign in.
+     *
+     * @param loginDTO contains the login phone and password
+     * @return
+     */
     @Override
     public ResponseEntity<?> authenticateUser(LoginDTO loginDTO) {
         return null;
@@ -85,28 +91,60 @@ public class AuthServiceImpl implements IAuthService{
         }
     }
 
+    /**
+     * Change password.
+     *
+     * @param changePasswordDTO contains the login phone, old password and new password
+     * @return
+     */
     @Override
     public ResponseEntity<?> changePassword(ChangePasswordDTO changePasswordDTO) {
         return null;
     }
 
+    /**
+     * Send OTP to reset password.
+     *
+     * @param phone the phone number of the account
+     * @return
+     */
     @Override
     public ResponseEntity<?> sendOTP(String phone) {
         return null;
     }
 
+    /**
+     * Verify OTP forgot password.
+     *
+     * @param OTP code to verify phone number
+     * @return
+     */
     @Override
     public ResponseEntity<?> verifyOTP(String OTP) {
         return null;
     }
 
+    /**
+     * Re-send OTP forgot password.
+     *
+     * @return
+     */
     @Override
     public ResponseEntity<?> resendOTP() {
         return null;
     }
 
+    /**
+     * Change password after verify OTP.
+     *
+     * @param forgotPasswordDTO contains the new password, login phone
+     * @return
+     */
     @Override
     public ResponseEntity<?> resetPassword(ForgotPasswordDTO forgotPasswordDTO) {
         return null;
     }
+
+
+
 }
