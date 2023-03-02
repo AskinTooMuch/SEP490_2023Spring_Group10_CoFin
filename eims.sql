@@ -223,7 +223,7 @@ CREATE TABLE registration(
 
 CREATE TABLE notification(
 	notification_id		integer	AUTO_INCREMENT PRIMARY KEY,
-    user_id				integer,
+    facility_id		    integer		NOT NULL,
     notification_brief	varchar(255),
     product_id			integer,
     status				boolean
@@ -325,7 +325,7 @@ ALTER TABLE registration
 ADD FOREIGN KEY (user_id)	REFERENCES user(user_id);
 
 ALTER TABLE notification
-ADD FOREIGN KEY (user_id)	REFERENCES user(user_id),
+ADD FOREIGN KEY (facility_id)	REFERENCES facility(facility_id),
 ADD FOREIGN KEY (product_id)REFERENCES egg_product(product_id);
 
 -- Create Procedures:
