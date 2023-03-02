@@ -25,18 +25,29 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
+import java.util.Optional;
 
 @Service
 public class AuthServiceImpl implements IAuthService{
+    @Autowired
+    private final AuthenticationManager authenticationManager;
+    @Autowired
     private final UserRepository userRepository;
+    @Autowired
     private final FacilityRepository facilityRepository;
+    @Autowired
     private final PasswordEncoder passwordEncoder;
 
-    public AuthServiceImpl(UserRepository userRepository, FacilityRepository facilityRepository, PasswordEncoder passwordEncoder) {
+    public AuthServiceImpl(AuthenticationManager authenticationManager, UserRepository userRepository, FacilityRepository facilityRepository, PasswordEncoder passwordEncoder) {
+        this.authenticationManager = authenticationManager;
         this.userRepository = userRepository;
         this.facilityRepository = facilityRepository;
         this.passwordEncoder = passwordEncoder;
@@ -49,8 +60,13 @@ public class AuthServiceImpl implements IAuthService{
      * @return
      */
     @Override
-    public ResponseEntity<?> authenticateUser(LoginDTO loginDTO) {
-        return null;
+    public ResponseEntity<Long> authenticateUser(LoginDTO loginDTO) {
+        Authentication auth = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+                loginDTO.getPhone().trim(), loginDTO.getPassword().trim()));
+        SecurityContextHolder.getContext().setAuthentication(auth);
+        System.out.println(SecurityContextHolder.getContext().getAuthentication().getAuthorities());
+        User user = userRepository.findByPhone(loginDTO.getPhone()).get();
+        return new ResponseEntity<>(user.getUserId(), HttpStatus.OK);
     }
 
     @Override
@@ -99,7 +115,21 @@ public class AuthServiceImpl implements IAuthService{
      */
     @Override
     public ResponseEntity<?> changePassword(ChangePasswordDTO changePasswordDTO) {
-        return null;
+        //Encode the passwords
+        changePasswordDTO.setNewPassword(passwordEncoder.encode(changePasswordDTO.getNewPassword().trim()));
+        //Local variable for the user
+        Optional<User> userOpt;
+        //Check credentials, if not valid then return Bad request (403)
+        userOpt = userRepository.findByUserId(changePasswordDTO.getUserId());
+        if (userOpt.isEmpty() ||
+                !passwordEncoder.matches(changePasswordDTO.getPassword().trim(), userOpt.get().getPassword().trim())) {
+            return new ResponseEntity<>("Old password is wrong.", HttpStatus.BAD_REQUEST);
+        }
+        //If the old password is correct:
+        User user = userOpt.get();
+        user.setPassword(changePasswordDTO.getNewPassword().trim());
+        userRepository.save(user);
+        return new ResponseEntity<>("Password changed successfully", HttpStatus.OK);
     }
 
     /**
@@ -110,7 +140,17 @@ public class AuthServiceImpl implements IAuthService{
      */
     @Override
     public ResponseEntity<?> sendOTP(String phone) {
-        return null;
+        //Check credentials, if not valid then return Bad request (403)
+        User user = userRepository.findByPhone(phone).orElse(null);
+        if (user == null) {
+            return new ResponseEntity<>("No phone number found!", HttpStatus.BAD_REQUEST);
+        } else {
+            // create OTP
+
+            // send OTP
+
+            return new ResponseEntity<>("OTP send!", HttpStatus.OK);
+        }
     }
 
     /**
@@ -121,7 +161,14 @@ public class AuthServiceImpl implements IAuthService{
      */
     @Override
     public ResponseEntity<?> verifyOTP(String OTP) {
-        return null;
+        //Check if the OTP match
+        String OTP_REAL = "111";
+        if (OTP.equals(OTP_REAL)){      /* OTP match*/
+            return new ResponseEntity<>("OTP confirmed! Please enter your new password.", HttpStatus.OK);
+        } else {                        /* OTP not match*/
+
+            return new ResponseEntity<>("OTP wrong!", HttpStatus.OK);
+        }
     }
 
     /**
@@ -131,7 +178,11 @@ public class AuthServiceImpl implements IAuthService{
      */
     @Override
     public ResponseEntity<?> resendOTP() {
-        return null;
+        // create OTP
+
+        // send OTP
+
+        return new ResponseEntity<>("OTP re-send!", HttpStatus.OK);
     }
 
     /**
@@ -142,7 +193,18 @@ public class AuthServiceImpl implements IAuthService{
      */
     @Override
     public ResponseEntity<?> resetPassword(ForgotPasswordDTO forgotPasswordDTO) {
-        return null;
+        //Encode the passwords
+        forgotPasswordDTO.setNewPassword(passwordEncoder.encode(forgotPasswordDTO.getNewPassword().trim()));
+        //Get user
+        User user = userRepository.findByPhone(forgotPasswordDTO.getPhone()).get();
+        //Confirm password
+        if (passwordEncoder.matches(forgotPasswordDTO.getConfirmPassword(), forgotPasswordDTO.getNewPassword())) {
+            user.setPassword(forgotPasswordDTO.getNewPassword().trim());
+            userRepository.save(user);
+            return new ResponseEntity<>("Password changed successfully", HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("Password not match!", HttpStatus.OK);
+        }
     }
 
 

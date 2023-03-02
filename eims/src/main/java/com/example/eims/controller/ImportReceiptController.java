@@ -8,37 +8,23 @@
  * DATE          Version    Author           DESCRIPTION<br>
  * 22/02/2023    1.0        DuongVV          First Deploy<br>
  * 28/02/2023    2.0        DuongVV          Update function, add Paging<br>
- * 01/03-2023    2.1        ChucNV           (Line 64, method viewImportsByUserPaging) @GetMapping("/allByUserPaging") -> @GetMapping("/allImportByUserPaging")
+ * 01/03/2023    2.1        ChucNV           (Line 64, method viewImportsByUserPaging) @GetMapping("/allByUserPaging") -> @GetMapping("/allImportByUserPaging")<br>
+ * 02/03/2023    3.0        DuongVV          New code structure<br>
  */
-package com.example.eims.controller;
 
-import com.example.eims.dto.importReceipt.ImportReceiptStatisticDTO;
-import com.example.eims.entity.ImportReceipt;
-import com.example.eims.entity.Machine;
-import com.example.eims.repository.ImportReceiptRepository;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
+package com.example.eims.controller;
+import com.example.eims.service.interfaces.IImportReceiptService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/api/import")
 public class ImportReceiptController {
     @Autowired
-    private ImportReceiptRepository importReceiptRepository;
-
-    @PersistenceContext
-    private EntityManager em;
-
+    private IImportReceiptService importReceiptService;
 
     /**
      * Get all import bill from suppliers of an Owner.
@@ -48,8 +34,7 @@ public class ImportReceiptController {
      */
     @GetMapping("/allByUser")
     public ResponseEntity<?> viewImportsByUser(@RequestParam Long userId) {
-        List<ImportReceipt> importReceiptList = importReceiptRepository.findByUserId(userId);
-        return new ResponseEntity<>(importReceiptList, HttpStatus.OK);
+        return importReceiptService.viewImportsByUser(userId);
     }
 
     /**
@@ -67,18 +52,7 @@ public class ImportReceiptController {
                                                   @RequestParam(name = "page", required = false, defaultValue = "0") Integer page,
                                                   @RequestParam(name = "size", required = false, defaultValue = "5") Integer size,
                                                   @RequestParam(name = "sort", required = false, defaultValue = "ASC") String sort) {
-
-        // Get sorting type
-        Sort sortable = null;
-        if (sort.equals("ASC")) {
-            sortable = Sort.by("importId").ascending();
-        }
-        if (sort.equals("DESC")) {
-            sortable = Sort.by("importId").descending();
-        }
-        // Get all customers of the current User with Paging
-        Page<ImportReceipt> importReceiptPage = importReceiptRepository.findAllByUserId(userId, PageRequest.of(page, size, sortable));
-        return new ResponseEntity<>(importReceiptPage, HttpStatus.OK);
+        return importReceiptService.viewImportsByUserPaging(userId, page, size, sort);
     }
 
     /**
@@ -89,8 +63,7 @@ public class ImportReceiptController {
      */
     @GetMapping("/allBySupplier")
     public ResponseEntity<?> viewImportsBySupplier(@RequestParam Long supplierId) {
-        List<ImportReceipt> importReceiptList = importReceiptRepository.findBySupplierId(supplierId);
-        return new ResponseEntity<>(importReceiptList, HttpStatus.OK);
+        return importReceiptService.viewImportsBySupplier(supplierId);
     }
 
     /**
@@ -108,18 +81,7 @@ public class ImportReceiptController {
                                                      @RequestParam(name = "page", required = false, defaultValue = "0") Integer page,
                                                      @RequestParam(name = "size", required = false, defaultValue = "5") Integer size,
                                                      @RequestParam(name = "sort", required = false, defaultValue = "ASC") String sort) {
-
-        // Get sorting type
-        Sort sortable = null;
-        if (sort.equals("ASC")) {
-            sortable = Sort.by("importId").ascending();
-        }
-        if (sort.equals("DESC")) {
-            sortable = Sort.by("importId").descending();
-        }
-        // Get all customers of the current User with Paging
-        Page<ImportReceipt> importReceiptPage = importReceiptRepository.findAllBySupplierId(supplierId, PageRequest.of(page, size, sortable));
-        return new ResponseEntity<>(importReceiptPage, HttpStatus.OK);
+        return importReceiptService.viewImportsBySupplierPaging(supplierId, page, size, sort);
     }
 
     /**
@@ -130,9 +92,6 @@ public class ImportReceiptController {
      */
     @GetMapping("/statistic")
     public ResponseEntity<?> viewImportStatistic(@RequestParam Long userId) {
-        List<ImportReceiptStatisticDTO> statistics = em.createNamedQuery("getImportReceiptStatisticByUserId")
-                .setParameter(1, userId)
-                .getResultList();
-        return new ResponseEntity<>(statistics, HttpStatus.OK);
+        return importReceiptService.viewImportStatistic(userId);
     }
 }

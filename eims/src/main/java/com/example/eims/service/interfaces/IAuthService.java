@@ -24,7 +24,7 @@ public interface IAuthService {
      * @param loginDTO contains the login phone and password
      * @return
      */
-    public ResponseEntity<?> authenticateUser(LoginDTO loginDTO);
+    public ResponseEntity<Long> authenticateUser(LoginDTO loginDTO);
 
     /**
      * Sign up.

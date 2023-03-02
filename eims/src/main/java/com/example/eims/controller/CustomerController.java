@@ -9,36 +9,27 @@
  * 18/02/2023   1.0         DuongVV     First Deploy<br>
  * 23/02/2023   2.0         DuongVV     Add search<br>
  * 28/02/2023   3.0         ChucNV      Enable Security<br>
- * 28/02/2023   4.0         DuongVV     Add paging<br>
+ * 28/02/2023   3.1         DuongVV     Add paging<br>
+ * 02/03/2023   4.0         DuongVV     New code structure<br>
  */
 
 package com.example.eims.controller;
 
 import com.example.eims.dto.customer.CreateCustomerDTO;
 import com.example.eims.dto.customer.UpdateCustomerDTO;
-import com.example.eims.entity.Customer;
-import com.example.eims.repository.CustomerRepository;
-import com.example.eims.repository.UserRepository;
-import com.example.eims.utils.StringDealer;
+import com.example.eims.service.interfaces.ICustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/api/customer")
 public class CustomerController {
+
     @Autowired
-    private CustomerRepository customerRepository;
-    @Autowired
-    private UserRepository userRepository;
+    private ICustomerService customerService;
 
     /**
      * Get all of user's customers.
@@ -49,13 +40,7 @@ public class CustomerController {
     @GetMapping("/all")
     @Secured({"ROLE_OWNER"})
     public ResponseEntity<?> getAllCustomer(@RequestParam Long userId) {
-        // Get all customers of the current User
-        List<Customer> customerList = customerRepository.findByUserId(userId);
-        if (customerList.isEmpty()) {
-            return new ResponseEntity<>("No customer found", HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(customerList, HttpStatus.OK);
-        }
+        return customerService.getAllCustomer(userId);
     }
 
     /**
@@ -67,13 +52,7 @@ public class CustomerController {
     @Secured({"ROLE_OWNER"})
     @GetMapping("/get")
     public ResponseEntity<?> getCustomer(@RequestParam Long customerId) {
-        // Get a customer of the current User
-        Customer customer = customerRepository.findByCustomerId(customerId).orElse(null);
-        if (customer != null) {
-            return new ResponseEntity<>(customer, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>("No customer", HttpStatus.OK);
-        }
+        return customerService.getCustomer(customerId);
     }
 
     /**
@@ -85,23 +64,7 @@ public class CustomerController {
     @PostMapping("/create")
     @Secured({"ROLE_OWNER"})
     public ResponseEntity<?> createCustomer(@RequestBody CreateCustomerDTO createCustomerDTO) {
-        // Check phone number existed or not
-        boolean existed = customerRepository.existsByCustomerPhone(createCustomerDTO.getPhone());
-        if (existed) { /* if phone number existed */
-            return new ResponseEntity<>("Customer's phone existed!", HttpStatus.OK);
-        } else { /* if phone number not existed */
-            // Retrieve customer information and create new customer
-            Customer customer = new Customer();
-            customer.setUserId(createCustomerDTO.getUserId());
-            customer.setCustomerName(createCustomerDTO.getName());
-            customer.setCustomerPhone(createCustomerDTO.getPhone());
-            customer.setCustomerAddress(createCustomerDTO.getAddress());
-            customer.setCustomerMail(createCustomerDTO.getMail());
-            customer.setStatus(1);
-            // Save
-            customerRepository.save(customer);
-            return new ResponseEntity<>("Customer created!", HttpStatus.OK);
-        }
+        return customerService.createCustomer(createCustomerDTO);
     }
 
 
@@ -113,13 +76,7 @@ public class CustomerController {
      */
     @GetMapping("/update/get")
     public ResponseEntity<?> showFormUpdate(@RequestParam Long customerId) {
-        // Get a customer of the current User
-        Customer customer = customerRepository.findByCustomerId(customerId).orElse(null);
-        if (customer != null) {
-            return new ResponseEntity<>(customer, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>("No customer", HttpStatus.OK);
-        }
+        return customerService.showFormUpdate(customerId);
     }
 
     /**
@@ -132,16 +89,7 @@ public class CustomerController {
     @Secured({"ROLE_OWNER"})
     @PutMapping("/update/save")
     public ResponseEntity<?> updateCustomer(@RequestParam Long customerId, @RequestBody UpdateCustomerDTO updateCustomerDTO) {
-        // Retrieve customer's new information
-        Customer customer = customerRepository.findByCustomerId(customerId).get();
-        customer.setCustomerName(updateCustomerDTO.getName());
-        customer.setCustomerPhone(updateCustomerDTO.getPhone());
-        customer.setCustomerAddress(updateCustomerDTO.getAddress());
-        customer.setCustomerMail(updateCustomerDTO.getMail());
-        customer.setStatus(updateCustomerDTO.getStatus());
-        // Save
-        customerRepository.save(customer);
-        return new ResponseEntity<>("Customer updated!", HttpStatus.OK);
+        return customerService.updateCustomer(customerId, updateCustomerDTO);
     }
 
     /**
@@ -153,9 +101,7 @@ public class CustomerController {
     @Secured({"ROLE_OWNER"})
     @DeleteMapping("/delete")
     public ResponseEntity<?> deleteCustomer(@RequestParam Long customerId) {
-        // Delete
-        customerRepository.deleteById(customerId);
-        return new ResponseEntity<>("Customer deleted!", HttpStatus.OK);
+        return customerService.deleteCustomer(customerId);
     }
 
     /**
@@ -168,12 +114,7 @@ public class CustomerController {
     @GetMapping("/search")
     @Secured({"ROLE_OWNER"})
     public ResponseEntity<?> searchCustomer(@RequestParam String key, @RequestBody Long userId) {
-        // Trim spaces
-        StringDealer stringDealer = new StringDealer();
-        key = stringDealer.trimMax(key);
-        // Search
-        List<Customer> customerList = customerRepository.searchByUsernameOrPhone(userId, key);
-        return new ResponseEntity<>(customerList, HttpStatus.OK);
+        return customerService.searchCustomer(key,userId);
     }
 
     /**
@@ -191,18 +132,7 @@ public class CustomerController {
                                                     @RequestParam(name = "page", required = false, defaultValue = "0") Integer page,
                                                     @RequestParam(name = "size", required = false, defaultValue = "5") Integer size,
                                                     @RequestParam(name = "sort", required = false, defaultValue = "ASC") String sort) {
-
-        // Get sorting type
-        Sort sortable = null;
-        if (sort.equals("ASC")) {
-            sortable = Sort.by("customerId").ascending();
-        }
-        if (sort.equals("DESC")) {
-            sortable = Sort.by("customerId").descending();
-        }
-        // Get all customers of the current User with Paging
-        Page<Customer> customerPage = customerRepository.findAllByUserId(userId, PageRequest.of(page, size, sortable));
-        return new ResponseEntity<>(customerPage, HttpStatus.OK);
+        return customerService.getAllCustomerPaging(userId, page, size, sort);
     }
 
 }
