@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect, Component } from "react";
+import { useRef, useState, useEffect } from "react";
 import { faCheck, faTimes, faInfoCircle, faStarOfLife } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from '../api/axios';
@@ -14,44 +14,25 @@ const REGISTER_URL = '/api/auth/signup';
 const Register = () => {
 
     const userRef = useRef();
+    //Full Json addresses
     const [fullAddresses, setFullAddresses] = useState('');
-    const options = [
-        { value: 'chocolate', label: 'Chocolate' },
-        { value: 'strawberry', label: 'Strawberry' },
-        { value: 'vanilla', label: 'Vanilla' }
-    ]
     const [city, setCity] = useState([
         { value: '', label: 'Chọn Tỉnh/Thành phố' }
     ]);
     //User Address data
-    const [citySelected, setCitySelected] = useState(false);
-    const [userDistrict, setUserDistrict] = useState('');
-    const [userDistrictIndex, setUserDistrictIndex] = useState();
-    const [districtSelected, setDistrictSelected] = useState(false);
+    const [userDistrict, setUserDistrict] = useState(''); //For populate dropdowns
     const [userWard, setUserWard] = useState('');
+    const [userCityIndex, setUserCityIndex] = useState(); //Save the index of selected dropdowns
+    const [userDistrictIndex, setUserDistrictIndex] = useState(); 
+    const [userWardIndex, setUserWardIndex] = useState();
+    
+    //Facility Address data
+    const [faciDistrict, setFaciDistrict] = useState(''); //For populate dropdowns
+    const [faciWard, setFaciWard] = useState('');
+    const [faciCityIndex, setFaciCityIndex] = useState(); //Save the index of selected dropdowns
+    const [faciDistrictIndex, setFaciDistrictIndex] = useState(); 
+    const [faciWardIndex, setFaciWardIndex] = useState();
 
-    //Personal
-    //Name
-    const [name, setName] = useState('');
-
-    //Date of birth
-    const [dob, setDob] = useState('');
-
-    //Phone Number
-    const [phone, setPhone] = useState('');
-    const [phoneFocus, setPhoneFocus] = useState(false);
-    const [validPhone, setValidPhone] = useState(false);
-
-    //Email
-    const [email, setEmail] = useState('');
-    const [validEmail, setValidEmail] = useState(false);
-    const [emailFocus, setEmailFocus] = useState(false);
-
-    //User address
-    const [homenum, setHomeNum] = useState(''); //số nhà
-    const [ward, setWard] = useState(''); //phường xã
-    const [district, setDistrict] = useState(''); //quận huyện
-    const [province, setProvince] = useState(''); //tỉnh thành phố
 
     //Mật khẩu
     const [password, setPwd] = useState('');
@@ -62,24 +43,35 @@ const Register = () => {
     const [validMatch, setValidMatch] = useState(false);
     const [matchFocus, setMatchFocus] = useState(false);
 
-    //Facility
-    //Name
-    const [faciName, setFaciName] = useState('');
+    const [phoneFocus, setPhoneFocus] = useState(false);
+    const [validPhone, setValidPhone] = useState(false);
 
-    //Found Date
-    const [date, setDate] = useState('');
+    const [validEmail, setValidEmail] = useState(false);
+    const [emailFocus, setEmailFocus] = useState(false);
 
-    //Hotline
-    const [hotline, setHotline] = useState('');
+    //Register DTO
+    const [signUpDTO, setSignUpDTO] = useState({
+        username: "",
+        userDob: "",
+        userPhone: "",
+        userEmail: "",
+        userAddress: "",
+        userPassword: "",
+        //Facility
+        facilityName: "",
+        facilityFoundDate: "",
+        facilityHotline: "",
+        facilityAddress: "",
+        businessLicenseNumber: ""
+    });
 
-    //Address
-    const [faciNum, setFaciNum] = useState(''); //số nhà
-    const [faciWard, setFaciWard] = useState(''); //phường xã
-    const [faciDistrict, setfaciDistrict] = useState(''); //quận huyện
-    const [faciProvince, setFaciProvince] = useState(''); //tỉnh thành phố
-
-    //Business License No.
-    const [brn, setBusinessNumber] = useState('');
+    const handleSignUpChange = (event, field) => {
+        let actualValue = event.target.value
+        setSignUpDTO({
+          ...signUpDTO,
+          [field]: actualValue
+        })
+      }
 
     const [success, setSuccess] = useState(false);
 
@@ -95,7 +87,7 @@ const Register = () => {
             {});
         setFullAddresses(result.data);
         console.log("Full address");
-        console.log(fullAddresses);
+        console.log(result.data);
         // Set inf
 
         const cityList = fullAddresses.slice();
@@ -103,31 +95,89 @@ const Register = () => {
             cityList[i] = { value: cityList[i].Id, label: cityList[i].Name }
         }
         setCity(cityList);
-        
     }
 
     function loadUserDistrict(index) {
-        console.log(index);
-        setCitySelected(true);
-        setUserDistrictIndex(index);
+        console.log("City "+index);
+        setUserCityIndex(index);
         const districtOnIndex = fullAddresses[index].Districts;
         const districtList = districtOnIndex.slice();
         for (let i in districtList) {
             districtList[i] = { value: districtList[i].Id, label: districtList[i].Name }
         }
         setUserDistrict(districtList);
+        //ALso set facility addresses
+        setFaciCityIndex(index);
+        setFaciDistrict(districtList);
     }
 
     function loadUserWard(index) {
-        console.log(index);
-        setDistrictSelected(true);
-        const wardOnIndex = fullAddresses[userDistrictIndex].Districts[index].Wards;
+        console.log("District "+index);
+        setUserDistrictIndex(index);
+        const wardOnIndex = fullAddresses[userCityIndex].Districts[index].Wards;
         const wardList = wardOnIndex.slice();
         for (let i in wardList) {
             wardList[i] = { value: wardList[i].Id, label: wardList[i].Name }
         }
         setUserWard(wardList);
-        console.log(wardList);
+        //ALso set facility addresses
+        if (faciCityIndex === userCityIndex) {
+            setFaciDistrictIndex(index);
+            setFaciWard(wardList);
+        }
+    }
+
+    function saveUserWard(index) {
+        console.log("Ward "+index);
+        setUserWardIndex(index);
+        //ALso set facility addresses
+        if (faciDistrictIndex === userDistrictIndex) {
+            setFaciWardIndex(index);
+        }
+    }
+
+    function loadUserAddress(street) {
+        console.log(fullAddresses[userCityIndex]);
+        signUpDTO.userAddress = "{city: " + fullAddresses[userCityIndex].Name + 
+                                ", district: " + fullAddresses[userCityIndex].Districts[userDistrictIndex].Name +
+                                ", ward: " + fullAddresses[userCityIndex].Districts[userDistrictIndex].Wards[userWardIndex].Name +
+                                ", street: " + street + "}"
+        console.log(signUpDTO.userAddress);
+    }
+
+    function loadFaciDistrict(index) {
+        console.log("FCity "+index);
+        setFaciCityIndex(index);
+        const districtOnIndex = fullAddresses[index].Districts;
+        const districtList = districtOnIndex.slice();
+        for (let i in districtList) {
+            districtList[i] = { value: districtList[i].Id, label: districtList[i].Name }
+        }
+        setFaciDistrict(districtList);
+    }
+
+    function loadFaciWard(index) {
+        console.log("FDistrict "+index);
+        setFaciDistrictIndex(index);
+        const wardOnIndex = fullAddresses[faciCityIndex].Districts[index].Wards;
+        const wardList = wardOnIndex.slice();
+        for (let i in wardList) {
+            wardList[i] = { value: wardList[i].Id, label: wardList[i].Name }
+        }
+        setFaciWard(wardList);
+    }
+
+    function saveFaciWard(index) {
+        console.log("FWard "+index);
+        setFaciWardIndex(index);
+    }
+
+    function loadFaciAddress(street) {
+        signUpDTO.facilityAddress = "{city: " + fullAddresses[faciCityIndex].Name + 
+                                ", district: " + fullAddresses[faciCityIndex].Districts[faciDistrictIndex].Name +
+                                ", ward: " + fullAddresses[faciCityIndex].Districts[faciDistrictIndex].Wards[faciWardIndex].Name +
+                                ", street: " + street + "}"
+        console.log(signUpDTO.facilityAddress);
     }
 
     useEffect(() => {
@@ -136,12 +186,12 @@ const Register = () => {
 
 
     useEffect(() => {
-        setValidEmail(EMAIL_REGEX.test(email));
-    }, [email])
+        setValidEmail(EMAIL_REGEX.test(signUpDTO.userEmail));
+    }, [signUpDTO.userEmail])
 
     useEffect(() => {
-        setValidPhone(PHONE_REGEX.test(phone));
-    }, [phone])
+        setValidPhone(PHONE_REGEX.test(signUpDTO.userPhone));
+    }, [signUpDTO.userPhone])
 
     useEffect(() => {
         setValidPwd(PWD_REGEX.test(password));
@@ -152,14 +202,15 @@ const Register = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         const v2 = PWD_REGEX.test(password);
-        const v3 = EMAIL_REGEX.test(email);
+        const v3 = EMAIL_REGEX.test(signUpDTO.userEmail);
         if (!v2 || !v3) {
             toast.error("Sai định dạng yêu cầu");
             return;
         }
+        signUpDTO.userPassword = password;
         try {
             const response = await axios.post(REGISTER_URL,
-                ({ name, email, password, dob, phone }),
+                signUpDTO,
                 {
                     headers: { 'Content-Type': 'application/json' },
                     withCredentials: false
@@ -203,25 +254,25 @@ const Register = () => {
                                                             <h3 className="" style={{ color: " #4835d4" }}>Thông tin chung</h3>
                                                             <div className="mb-4 ">
                                                                 <div className="form-outline">
-                                                                    <label htmlFor="name">Tên <FontAwesomeIcon className="star" icon={faStarOfLife} /></label>
-                                                                    <input type="text" id="name"
+                                                                    <label htmlFor="username">Tên <FontAwesomeIcon className="star" icon={faStarOfLife} /></label>
+                                                                    <input type="text" id="username"
                                                                         ref={userRef}
                                                                         autoComplete="off"
-                                                                        onChange={(e) => setName(e.target.value)}
-                                                                        value={name}
+                                                                        onChange={e => handleSignUpChange(e, "username")}
+                                                                        value={signUpDTO.username}
                                                                         required
                                                                         className="form-control " />
                                                                 </div>
                                                             </div>
-                                                            {/*Date of bird*/}
+                                                            {/*Date of birth*/}
                                                             <div className="mb-4 ">
                                                                 <div className="form-outline">
-                                                                    <label htmlFor="dob">Ngày sinh <FontAwesomeIcon className="star" icon={faStarOfLife} /></label>
-                                                                    <input type="date" id="dob"
+                                                                    <label htmlFor="userDob">Ngày sinh <FontAwesomeIcon className="star" icon={faStarOfLife} /></label>
+                                                                    <input type="date" id="userDob"
                                                                         ref={userRef}
                                                                         autoComplete="off"
-                                                                        onChange={(e) => setDob(e.target.value)}
-                                                                        value={dob}
+                                                                        onChange={(e) => handleSignUpChange(e, "userDob")}
+                                                                        value={signUpDTO.userDob}
                                                                         required
                                                                         className="form-control " />
                                                                 </div>
@@ -229,44 +280,44 @@ const Register = () => {
                                                             {/*Phone*/}
                                                             <div className="mb-4 ">
                                                                 <div className="form-outline">
-                                                                    <label htmlFor="phone">Số điện thoại <FontAwesomeIcon className="star" icon={faStarOfLife} />
+                                                                    <label htmlFor="userPhone">Số điện thoại <FontAwesomeIcon className="star" icon={faStarOfLife} />
                                                                         <FontAwesomeIcon icon={faCheck} className={validPhone ? "valid" : "hide"} />
-                                                                        <FontAwesomeIcon icon={faTimes} className={validPhone || !phone ? "hide" : "invalid"} />
+                                                                        <FontAwesomeIcon icon={faTimes} className={validPhone || !signUpDTO.userPhone ? "hide" : "invalid"} />
                                                                     </label>
-                                                                    <input type="text" id="phone"
+                                                                    <input type="text" id="userPhone"
                                                                         ref={userRef}
                                                                         autoComplete="off"
-                                                                        onChange={(e) => setPhone(e.target.value)}
-                                                                        value={phone}
+                                                                        onChange={(e) => handleSignUpChange(e, "userPhone")}
+                                                                        value={signUpDTO.userPhone}
                                                                         required
                                                                         aria-invalid={validPhone ? "false" : "true"}
                                                                         aria-describedby="phonenote"
                                                                         onFocus={() => setPhoneFocus(true)}
                                                                         onBlur={() => setPhoneFocus(false)}
                                                                         className="form-control " />
-                                                                    <p id="phonenote" className={phoneFocus && phone && !validPhone ? "instructions" : "offscreen"}>
+                                                                    <p id="phonenote" className={phoneFocus && signUpDTO.userPhone && !validPhone ? "instructions" : "offscreen"}>
                                                                         <FontAwesomeIcon icon={faInfoCircle} />
                                                                         Hãy điền đúng số điện thoại<br />
                                                                     </p>
                                                                 </div>
                                                             </div>
-                                                            {/*Email*/}
+                                                            {/*userEmail*/}
                                                             <div className="mb-4 ">
                                                                 <div className="form-outline">
-                                                                    <label htmlFor="email">Email <FontAwesomeIcon className="star" icon={faStarOfLife} />
+                                                                    <label htmlFor="userEmail">Email <FontAwesomeIcon className="star" icon={faStarOfLife} />
                                                                         <FontAwesomeIcon icon={faCheck} className={validEmail ? "valid" : "hide"} />
-                                                                        <FontAwesomeIcon icon={faTimes} className={validEmail || !email ? "hide" : "invalid"} /></label>
-                                                                    <input type="text" id="email"
+                                                                        <FontAwesomeIcon icon={faTimes} className={validEmail || !signUpDTO.userEmail ? "hide" : "invalid"} /></label>
+                                                                    <input type="text" id="userEmail"
                                                                         ref={userRef}
                                                                         autoComplete="off"
-                                                                        onChange={(e) => setEmail(e.target.value)}
-                                                                        value={email}
+                                                                        onChange={(e) => handleSignUpChange(e, "userEmail")}
+                                                                        value={signUpDTO.userEmail}
                                                                         required
                                                                         aria-invalid={validEmail ? "false" : "true"}
                                                                         aria-describedby="emailnote"
                                                                         onFocus={() => setEmailFocus(true)}
                                                                         onBlur={() => setEmailFocus(false)} className="form-control " />
-                                                                    <p id="emailnote" className={emailFocus && email && !validEmail ? "instructions" : "offscreen"}>
+                                                                    <p id="emailnote" className={emailFocus && signUpDTO.userEmail && !validEmail ? "instructions" : "offscreen"}>
                                                                         <FontAwesomeIcon icon={faInfoCircle} />
                                                                         Bắt đầu bằng 1 chữ cái + @example.com<br />
                                                                         Số và các kí tự đặc biệt được sử dụng.
@@ -282,8 +333,9 @@ const Register = () => {
                                                                         ref={userRef}
                                                                         autoComplete="off"
                                                                         onChange={(e) => loadUserDistrict(e.target.value)}
+                                                                        value={userCityIndex}
                                                                         required>
-                                                                        <option value="">Chọn Tỉnh/Thành phố của bạn</option>
+                                                                        <option value="" disabled>Chọn Tỉnh/Thành phố của bạn</option>
                                                                         {   city &&
                                                                             city.map((item, index) => (
                                                                                 <option value={index}>{item.label}</option>
@@ -300,8 +352,9 @@ const Register = () => {
                                                                         ref={userRef}
                                                                         autoComplete="off"
                                                                         onChange={(e) => loadUserWard(e.target.value)}
+                                                                        value={userDistrictIndex}
                                                                         required>
-                                                                        <option value="">Chọn Quận/Huyện của bạn</option>
+                                                                        <option value="" disabled>Chọn Quận/Huyện của bạn</option>
                                                                         { userDistrict &&
                                                                             userDistrict.map((item, index) => (
                                                                                 <option value={index}>{item.label}</option>
@@ -317,9 +370,10 @@ const Register = () => {
                                                                     <select className="form-control mt-1" id="uward"
                                                                         ref={userRef}
                                                                         autoComplete="off"
-                                                                        onChange={(e) => setWard(e.target.value)}
+                                                                        onChange={(e) => saveUserWard(e.target.value)}
+                                                                        value={userWardIndex}
                                                                         required>
-                                                                        <option value="">Chọn Phường của bạn</option>
+                                                                        <option value="" disabled>Chọn Phường của bạn</option>
                                                                         { userWard &&
                                                                             userWard.map((item, index) => (
                                                                                 <option value={index}>{item.label}</option>
@@ -335,8 +389,7 @@ const Register = () => {
                                                                     <input type="text" id="uhomenum"
                                                                         ref={userRef}
                                                                         autoComplete="off"
-                                                                        onChange={(e) => setHomeNum(e.target.value)}
-                                                                        value={homenum}
+                                                                        onChange={(e) => loadUserAddress(e.target.value)}
                                                                         required
                                                                         className="form-control " />
                                                                 </div>
@@ -367,13 +420,11 @@ const Register = () => {
                                                                     <label htmlFor="confirm_pwd">Xác nhận lại mật khẩu <FontAwesomeIcon className="star" icon={faStarOfLife} /></label>
                                                                     <input type="password" id="confirm_pwd"
                                                                         onChange={(e) => setMatchPwd(e.target.value)}
-                                                                        value={matchPwd}
                                                                         required
                                                                         aria-invalid={validMatch ? "false" : "true"}
                                                                         aria-describedby="confirmnote"
                                                                         onFocus={() => setMatchFocus(true)}
                                                                         onBlur={() => setMatchFocus(false)} className="form-control " />
-
                                                                     <p id="confirmnote" className={matchFocus && !validMatch ? "instructions" : "offscreen"}>
                                                                         <FontAwesomeIcon icon={faInfoCircle} />
                                                                         Mật khẩu phải trùng với mẩt khẩu đã nhập ở trên
@@ -392,8 +443,8 @@ const Register = () => {
                                                                     <input type="text" id="faciname"
                                                                         ref={userRef}
                                                                         autoComplete="off"
-                                                                        onChange={(e) => setFaciName(e.target.value)}
-                                                                        value={faciName}
+                                                                        onChange={(e) => handleSignUpChange(e, "facilityName")}
+                                                                        value={signUpDTO.facilityName}
                                                                         required
                                                                         className="form-control " />
                                                                 </div>
@@ -404,8 +455,8 @@ const Register = () => {
                                                                     <input type="date" id="date"
                                                                         ref={userRef}
                                                                         autoComplete="off"
-                                                                        onChange={(e) => setDate(e.target.value)}
-                                                                        value={date}
+                                                                        onChange={(e) => handleSignUpChange(e, "facilityFoundDate")}
+                                                                        value={signUpDTO.facilityFoundDate}
                                                                         required
                                                                         className="form-control " />
 
@@ -416,70 +467,79 @@ const Register = () => {
                                                                     <label htmlFor="hotline" className="text-white">Hotline <FontAwesomeIcon className="star" icon={faStarOfLife} /></label>
                                                                     <input type="text" id="hotline" ref={userRef}
                                                                         autoComplete="off"
-                                                                        onChange={(e) => setHotline(e.target.value)}
-                                                                        value={hotline}
+                                                                        onChange={(e) => handleSignUpChange(e, "facilityHotline")}
+                                                                        value={signUpDTO.facilityHotline}
                                                                         required
                                                                         className="form-control " />
                                                                 </div>
                                                             </div>
-                                                            <div className="mb-4 ">
-                                                                <div className="form-outline">
-                                                                    <label htmlFor="facinum" className="text-white">Số nhà <FontAwesomeIcon className="star" icon={faStarOfLife} /></label>
-                                                                    <input type="text" id="facinum"
-                                                                        ref={userRef}
-                                                                        autoComplete="off"
-                                                                        onChange={(e) => setFaciNum(e.target.value)}
-                                                                        value={faciNum}
-                                                                        required
-                                                                        className="form-control " />
-                                                                </div>
-                                                            </div>
-                                                            <div className="mb-4 ">
-                                                                <div className="form-outline">
-                                                                    <label htmlFor="faciward" className="text-white" >Phường/Xã <FontAwesomeIcon className="star" icon={faStarOfLife} /></label>
-                                                                    <select className="form-control mt-1" id="faciward"
-                                                                        ref={userRef}
-                                                                        autoComplete="off"
-                                                                        onChange={(e) => setFaciWard(e.target.value)}
-                                                                        value={faciWard}
-                                                                        required>
-                                                                        <option value="">Chọn Phường của bạn</option>
-                                                                        <option value="Kim Liên">Kim Liên</option>
-                                                                        <option value="3">Three</option>
-                                                                        <option value="4">Four</option>
-                                                                    </select>
-                                                                </div>
-                                                            </div>
-                                                            <div className="mb-4 pb-2">
-                                                                <div className="form-outline form-white">
-                                                                    <label htmlFor="facidistrict" className="text-white">Quận/Huyện<FontAwesomeIcon className="star" icon={faStarOfLife} /></label>
-                                                                    <select className="form-control mt-1" id="facidistrict"
-                                                                        ref={userRef}
-                                                                        autoComplete="off"
-                                                                        onChange={(e) => setfaciDistrict(e.target.value)}
-                                                                        value={faciDistrict}
-                                                                        required>
-                                                                        <option value="">Chọn Quận/Huyện của bạn</option>
-                                                                        <option value="Đống Đa">Đống Đa</option>
-                                                                        <option value="3">Three</option>
-                                                                        <option value="4">Four</option>
-                                                                    </select>
-                                                                </div>
-                                                            </div>
+                                                            {/*Facility City*/}
                                                             <div className="mb-4 ">
                                                                 <div className="form-outline form-white">
                                                                     <label htmlFor="faciprovince" className="text-white" >Tỉnh/Thành phố<FontAwesomeIcon className="star" icon={faStarOfLife} /></label>
                                                                     <select className="form-control mt-1" id="faciprovince"
                                                                         ref={userRef}
                                                                         autoComplete="off"
-                                                                        onChange={(e) => setFaciProvince(e.target.value)}
-                                                                        value={faciProvince}
+                                                                        onChange={(e) => loadFaciDistrict(e.target.value)}
+                                                                        value={faciCityIndex}
                                                                         required>
-                                                                        <option value="">Chọn Tỉnh/Thành phố của bạn</option>
-                                                                        <option value="Hà Nội">Hà Nội</option>
-                                                                        <option value="3">Three</option>
-                                                                        <option value="4">Four</option>
+                                                                        <option value="" disabled>Chọn Tỉnh/Thành phố của bạn</option>
+                                                                        {   city &&
+                                                                            city.map((item, index) => (
+                                                                                <option value={index}>{item.label}</option>
+                                                                            ))
+                                                                        }
                                                                     </select>
+                                                                </div>
+                                                            </div>
+                                                            {/*Facility District*/}
+                                                            <div className="mb-4 pb-2">
+                                                                <div className="form-outline form-white">
+                                                                    <label htmlFor="facidistrict" className="text-white">Quận/Huyện<FontAwesomeIcon className="star" icon={faStarOfLife} /></label>
+                                                                    <select className="form-control mt-1" id="facidistrict"
+                                                                        ref={userRef}
+                                                                        autoComplete="off"
+                                                                        onChange={(e) => loadFaciWard(e.target.value)}
+                                                                        value={faciDistrictIndex}
+                                                                        required>
+                                                                        <option value="" disabled>Chọn Quận/Huyện của bạn</option>
+                                                                        { faciDistrict &&
+                                                                            faciDistrict.map((item, index) => (
+                                                                                <option value={index}>{item.label}</option>
+                                                                            ))
+                                                                        }
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                            {/*Facility Ward*/}
+                                                            <div className="mb-4 ">
+                                                                <div className="form-outline">
+                                                                    <label htmlFor="faciward" className="text-white" >Phường/Xã <FontAwesomeIcon className="star" icon={faStarOfLife} /></label>
+                                                                    <select className="form-control mt-1" id="faciward"
+                                                                        ref={userRef}
+                                                                        autoComplete="off"
+                                                                        onChange={(e) => saveFaciWard(e.target.value)}
+                                                                        value={faciWardIndex}
+                                                                        required>
+                                                                        <option value="" disabled>Chọn Phường của bạn</option>
+                                                                        { faciWard &&
+                                                                            faciWard.map((item, index) => (
+                                                                                <option value={index}>{item.label}</option>
+                                                                            ))
+                                                                        }
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                            {/*Facility Street*/}
+                                                            <div className="mb-4 ">
+                                                                <div className="form-outline">
+                                                                    <label htmlFor="facinum" className="text-white">Số nhà <FontAwesomeIcon className="star" icon={faStarOfLife} /></label>
+                                                                    <input type="text" id="facinum"
+                                                                        ref={userRef}
+                                                                        autoComplete="off"
+                                                                        onChange={(e) => loadFaciAddress(e.target.value)}
+                                                                        required
+                                                                        className="form-control " />
                                                                 </div>
                                                             </div>
                                                             <div className="mb-4 ">
@@ -488,8 +548,8 @@ const Register = () => {
                                                                     <input type="text" id="brn"
                                                                         ref={userRef}
                                                                         autoComplete="off"
-                                                                        onChange={(e) => setBusinessNumber(e.target.value)}
-                                                                        value={brn}
+                                                                        onChange={(e) => handleSignUpChange(e, "businessLicenseNumber")}
+                                                                        value={signUpDTO.businessLicenseNumber}
                                                                         required
                                                                         className="form-control " />
 

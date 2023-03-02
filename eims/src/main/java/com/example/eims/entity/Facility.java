@@ -30,5 +30,6 @@ public class Facility {
     private Date facilityFoundDate;
     private Date subscriptionExpirationDate;
     private String hotline;
+    private String businessLicenseNumber;
     private int status;
 }

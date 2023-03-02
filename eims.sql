@@ -25,7 +25,7 @@ CREATE TABLE facility(
 	facility_id						integer 	AUTO_INCREMENT PRIMARY KEY,
     user_id							integer		NOT NULL,
     facility_name					varchar(63) NOT NULL,
-    facility_address				varchar(63) NOT NULL,
+    facility_address				varchar(511) NOT NULL,
     facility_found_date				date 		NOT NULL,
     subscription_expiration_date	datetime,
     hotline							varchar(15)	NOT NULL,
@@ -42,7 +42,7 @@ CREATE TABLE user(
     email		varchar(127),
     salary		decimal(15,2),
     password	varchar(127)	NOT NULL,
-    address	varchar(127),
+    address	varchar(511),
 	status		boolean			NOT NULL
 );
 

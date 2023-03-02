@@ -17,8 +17,11 @@ import com.example.eims.dto.auth.ForgotPasswordDTO;
 import com.example.eims.dto.auth.LoginDTO;
 import com.example.eims.dto.auth.SignUpDTO;
 import com.example.eims.entity.User;
+import com.example.eims.repository.FacilityRepository;
 import com.example.eims.repository.UserRoleRepository;
 import com.example.eims.repository.UserRepository;
+import com.example.eims.service.impl.AuthServiceImpl;
+import com.example.eims.service.interfaces.IAuthService;
 import com.example.eims.utils.StringDealer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -43,6 +46,8 @@ public class AuthController {
     private AuthenticationManager authenticationManager;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private FacilityRepository facilityRepository;
     @Autowired
     private UserRoleRepository userRoleRepository;
     @Autowired
@@ -73,30 +78,16 @@ public class AuthController {
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@RequestBody SignUpDTO signUpDTO) {
         //Check if already Existed: username or email
-        if (userRepository.existsByPhone(signUpDTO.getPhone())) {
+        if (userRepository.existsByPhone(signUpDTO.getUserPhone())) {
             return new ResponseEntity<>("Phone already registered.", HttpStatus.BAD_REQUEST);
         }
-
-        //If not existed: Create new user, add into database and return.
-        User user = new User();
-        user.setUsername(signUpDTO.getUsername().trim());
-        user.setEmail(signUpDTO.getEmail().trim());
-
-        String sDate = signUpDTO.getDob().trim();
-        StringDealer stringDealer = new StringDealer();
-        Date date = stringDealer.convertToDateAndFormat(sDate);
-        user.setDob(date);
-
-        user.setPhone(signUpDTO.getPhone().trim());
-        user.setAddress(signUpDTO.getAddress().trim());
-        user.setRoleId(signUpDTO.getRoleId());
-        user.setStatus(1);
-        //Encode password
-        user.setPassword(passwordEncoder.encode(signUpDTO.getPassword().trim()));
-        System.out.println(user);
-        userRepository.save(user);
-
-        return new ResponseEntity<>("User registered successfully", HttpStatus.OK);
+        IAuthService iAuthService = new AuthServiceImpl(
+                userRepository, facilityRepository, passwordEncoder
+        );
+        System.out.println(signUpDTO);
+        ResponseEntity re = iAuthService.registerUser(signUpDTO);
+        if (re==null) return new ResponseEntity<>("User registered failed", HttpStatus.BAD_REQUEST);
+        else return re;
     }
 
     /**
