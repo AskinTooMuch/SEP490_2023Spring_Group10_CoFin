@@ -81,6 +81,20 @@ const Profile = () => {
         subscriptionExpirationDate: ""
     });
 
+    //address
+    const [userAddress, setUserAddress] = useState(
+        {street: "",
+        ward: "",
+        district: "",
+        city: ""}
+    );
+    const [faciAddress, setFaciAddress] = useState(
+        {street: "",
+        ward: "",
+        district: "",
+        city: ""}
+    );
+
     const [validPwd, setValidPwd] = useState(false);
     const [matchPwd, setMatchPwd] = useState('');
     const [validMatch, setValidMatch] = useState(false);
@@ -116,6 +130,8 @@ const Profile = () => {
             userAddress: responseJson.userAddress,
             userStatus: responseJson.userStatus
         })
+
+        setUserAddress(JSON.parse(responseJson.userAddress))
         //Set facility information
         setFacilityInformation({
             facilityId: responseJson.facilityId,
@@ -127,6 +143,8 @@ const Profile = () => {
             subscriptionId: responseJson.subscriptionId,
             subscriptionExpirationDate: responseJson.subscriptionExpirationDate
         })
+        setFaciAddress(JSON.parse(responseJson.facilityAddress))
+        console.log(facilityInformation.subscriptionId === '');
     }
 
 
@@ -267,14 +285,12 @@ const Profile = () => {
 
     return (
         <div className="profile-info">
-                <h2>Thông tin cá nhân</h2>
+            <h2>Thông tin cá nhân</h2>
             <div className="row outbox">
                 <div className="col-sm-6 col-xs-12">
                     <div className="card">
                         <div className="card-header">Thông tin tài khoản</div>
                         <div className="card-body">
-
-
                             <div className="tab-pane " >
                                 <div className="row">
                                     <div className="col-md-6">
@@ -308,6 +324,7 @@ const Profile = () => {
                                         <p id="email">{accountInformation.userEmail}</p>
                                     </div>
                                 </div>
+                                {/*Start: Chnage account details*/}
                                 <div className="row">
                                     <div className="col-md-6">
                                         <Button onClick={handleShow} className="btn btn-info">Đổi mật khẩu</Button >
@@ -408,19 +425,19 @@ const Profile = () => {
                                                 </div>
                                                 <div className="mb-3">
                                                     <label className="form-label">Ngày sinh</label>
-                                                    <input type="date" className="form-control"  name="dob"
+                                                    <input type="date" className="form-control" name="dob"
                                                         required ref={userRef} onChange={e => handleChangeUpdate(e, "dob")}
                                                         value={updateUserDTO.dob} />
                                                 </div>
                                                 <div className="mb-3">
                                                     <label className="form-label">Email</label>
-                                                    <input type="email" className="form-control"  name="email"
+                                                    <input type="email" className="form-control" name="email"
                                                         required ref={userRef} onChange={e => handleChangeUpdate(e, "email")}
                                                         value={updateUserDTO.email} />
                                                 </div>
                                                 <div className="mb-3">
                                                     <label className="form-label">Địa chỉ</label>
-                                                    <input type="text" style={{ minHeight: "50px" }} className="form-control"  name="address"
+                                                    <input type="text" style={{ minHeight: "50px" }} className="form-control" name="address"
                                                         required ref={userRef} onChange={e => handleChangeUpdate(e, "address")}
                                                         value={updateUserDTO.address} />
                                                 </div>
@@ -440,9 +457,8 @@ const Profile = () => {
                                         </form>
                                     </div>
                                 </div>
-
+                                {/*End: Chnage account details*/}
                             </div>
-
                         </div>
                     </div>
                 </div>
@@ -459,36 +475,36 @@ const Profile = () => {
                                 <div className="card-body">
                                     <form>
                                         <div className="tab-pane " >
-                                            {/* <div className="row">
-                                        <div className="col-md-6">
-                                            <p>Số nhà</p>
-                                        </div>
-                                        <div className="col-md-6">
-                                            <p id="houseNumber"></p>
-                                        </div>
-                                    </div>
-                                    <div className="row">
-                                        <div className="col-md-6">
-                                            <p>Đường</p>
-                                        </div>
-                                        <div className="col-md-6">
-                                            <p id="street">...</p>
-                                        </div>
-                                    </div>
-                                    <div className="row">
-                                        <div className="col-md-6">
-                                            <p>Quận/Huyện</p>
-                                        </div>
-                                        <div className="col-md-6">
-                                            <p id="state">Thạch Thất</p>
-                                        </div>
-                                    </div> */}
+                                            <div className="row">
+                                                <div className="col-md-6">
+                                                    <p>Số nhà</p>
+                                                </div>
+                                                <div className="col-md-6">
+                                                    <p id="street">{faciAddress.street}</p>
+                                                </div>
+                                            </div>
+                                            <div className="row">
+                                                <div className="col-md-6">
+                                                    <p>Xã</p>
+                                                </div>
+                                                <div className="col-md-6">
+                                                    <p id="ward">{faciAddress.ward}</p>
+                                                </div>
+                                            </div>
+                                            <div className="row">
+                                                <div className="col-md-6">
+                                                    <p>Quận/Huyện</p>
+                                                </div>
+                                                <div className="col-md-6">
+                                                    <p id="state">{faciAddress.district}</p>
+                                                </div>
+                                            </div>
                                             <div className="row">
                                                 <div className="col-md-6">
                                                     <p>Thành phố</p>
                                                 </div>
                                                 <div className="col-md-6">
-                                                    <p id="city">{facilityInformation.facilityAddress}</p>
+                                                    <p id="city">{faciAddress.city}</p>
                                                 </div>
                                             </div>
                                             <div className="row">
@@ -504,11 +520,13 @@ const Profile = () => {
                                                     <p>Gói đăng ký</p>
                                                 </div>
                                                 <div className="col-md-6">
-                                                    <p id="subscription">Gói {facilityInformation.subscriptionId}</p>
+                                                    {facilityInformation.subscriptionId === ''
+                                                        ? <p id="subscription">Chưa đăng ký gói</p>
+                                                        : <p id="subscription">Gói {facilityInformation.subscriptionId}</p>
+                                                    }
                                                 </div>
                                             </div>
                                             <div style={{ textAlign: "center" }}>
-
                                                 <button className="btn btn-info" style={{ width: "50%" }}>Cập nhật</button>
                                             </div>
 

@@ -46,6 +46,12 @@ CREATE TABLE user(
 	status		boolean			NOT NULL
 );
 
+CREATE TABLE work_in(
+	user_id		integer		NOT NULL,
+    facility_id	integer		NOT NULL,
+    status		boolean		NOT NULL
+);
+
 CREATE TABLE salary_history(
 	salary_history_id	integer	AUTO_INCREMENT PRIMARY KEY,
     user_id				integer,
@@ -237,6 +243,10 @@ ALTER TABLE user
 ADD FOREIGN KEY (role_id) 		REFERENCES user_role(role_id),
 ADD CHECK (salary >= 0);
 
+ALTER TABLE work_in
+ADD FOREIGN KEY (user_id)		REFERENCES user(user_id),
+ADD FOREIGN KEY (facility_id)	REFERENCES facility(facility_id);
+
 ALTER TABLE salary_history
 ADD FOREIGN KEY (user_id)		REFERENCES user(user_id),
 ADD CHECK (salary >= 0);
@@ -355,7 +365,7 @@ VALUES 	(1, 'ROLE_USER', 1),
 -- user
 INSERT INTO user(user_id, role_id, username, dob, phone, email, salary, password, address, status)
 VALUES 	(1, 5, 'Default Data pack', '2001-12-16', '0000000000','a@a.a', 0, 'a','nowhere', 0),
-		(2,	2,	'Nguyễn Chức', '2001-12-16', '0969044714',	'ownerchuc@gmail.com', 0, '$2a$10$Vp3h.q0WVd4LCt.jY4gbHe5bs2OKdQIa88oIFe7xR83m5UNRDaGPq',	'hải dương', 1),
+		(2,	2,	'Nguyễn Chức', '2001-12-16', '0969044713',	'ownerchuc@gmail.com', 0, '$2a$10$Vp3h.q0WVd4LCt.jY4gbHe5bs2OKdQIa88oIFe7xR83m5UNRDaGPq',	'hải dương', 1),
         (3,	2, 'Nguyễn Dương', '2001-01-01', '0852274855', 'ownerduong@gmail.com', 0, '$2a$10$UOEamoIHKWrb7BVNTOtZHebHBp6zPZ03STsKXDCZFD0BJusC9xFlO', 'hà nội', 1),
 		(4,	3, 'Dương Tùng', '2001-01-01', '0932321198', 'workertung@gmail.com', 0, '$2a$10$uRRgBmQCWBLgBsB4lImrguTBcHkx96MErC2fhvxmgUPDacoHPPr6W', 'hà nội', 1),
 		(5,	3, 'Vũ Dương', '2001-01-01', '0978815951', 'workerduong@gmail.com', 0, '$2a$10$NpyM9vyE2zQ7bTdEA7nYAeoirBlK5SqI/7v23kVQd7nCZq9nI.oUu', 'hải dương', 1),

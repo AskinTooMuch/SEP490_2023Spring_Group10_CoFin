@@ -25,6 +25,13 @@ const Register = () => {
     const [userCityIndex, setUserCityIndex] = useState(); //Save the index of selected dropdowns
     const [userDistrictIndex, setUserDistrictIndex] = useState(); 
     const [userWardIndex, setUserWardIndex] = useState();
+    const [userStreet, setUserStreet] = useState();
+    const [userAddressJson, setUserAddressJson] = useState({
+        city: "", 
+        district: "", 
+        ward: "", 
+        street: ""
+    });
     
     //Facility Address data
     const [faciDistrict, setFaciDistrict] = useState(''); //For populate dropdowns
@@ -32,7 +39,13 @@ const Register = () => {
     const [faciCityIndex, setFaciCityIndex] = useState(); //Save the index of selected dropdowns
     const [faciDistrictIndex, setFaciDistrictIndex] = useState(); 
     const [faciWardIndex, setFaciWardIndex] = useState();
-
+    const [faciStreet, setFaciStreet] = useState();
+    const [faciAddressJson, setFaciAddressJson] = useState({
+        city: "", 
+        district: "", 
+        ward: "", 
+        street: ""
+    });
 
     //Mật khẩu
     const [password, setPwd] = useState('');
@@ -71,7 +84,7 @@ const Register = () => {
           ...signUpDTO,
           [field]: actualValue
         })
-      }
+    }
 
     const [success, setSuccess] = useState(false);
 
@@ -87,7 +100,7 @@ const Register = () => {
             {});
         setFullAddresses(result.data);
         console.log("Full address");
-        console.log(result.data);
+        console.log(fullAddresses);
         // Set inf
 
         const cityList = fullAddresses.slice();
@@ -111,6 +124,7 @@ const Register = () => {
         setFaciDistrict(districtList);
     }
 
+    //Load user ward list
     function loadUserWard(index) {
         console.log("District "+index);
         setUserDistrictIndex(index);
@@ -136,15 +150,20 @@ const Register = () => {
         }
     }
 
+    //Load Address into the fields
     function loadUserAddress(street) {
+        setUserStreet(street);
+        setFaciStreet(street);
         console.log(fullAddresses[userCityIndex]);
-        signUpDTO.userAddress = "{city: " + fullAddresses[userCityIndex].Name + 
-                                ", district: " + fullAddresses[userCityIndex].Districts[userDistrictIndex].Name +
-                                ", ward: " + fullAddresses[userCityIndex].Districts[userDistrictIndex].Wards[userWardIndex].Name +
-                                ", street: " + street + "}"
-        console.log(signUpDTO.userAddress);
+        userAddressJson.city = fullAddresses[userCityIndex].Name;
+        userAddressJson.district = fullAddresses[userCityIndex].Districts[userDistrictIndex].Name;
+        userAddressJson.ward = fullAddresses[userCityIndex].Districts[userDistrictIndex].Wards[userWardIndex].Name;
+        userAddressJson.street = street;
+        signUpDTO.userAddress = JSON.stringify(userAddressJson);
+        signUpDTO.facilityAddress = JSON.stringify(userAddressJson );
     }
 
+    //Load facility districts
     function loadFaciDistrict(index) {
         console.log("FCity "+index);
         setFaciCityIndex(index);
@@ -156,6 +175,7 @@ const Register = () => {
         setFaciDistrict(districtList);
     }
 
+    //Load facility wards
     function loadFaciWard(index) {
         console.log("FDistrict "+index);
         setFaciDistrictIndex(index);
@@ -172,12 +192,14 @@ const Register = () => {
         setFaciWardIndex(index);
     }
 
+    //Load facility address into the field
     function loadFaciAddress(street) {
-        signUpDTO.facilityAddress = "{city: " + fullAddresses[faciCityIndex].Name + 
-                                ", district: " + fullAddresses[faciCityIndex].Districts[faciDistrictIndex].Name +
-                                ", ward: " + fullAddresses[faciCityIndex].Districts[faciDistrictIndex].Wards[faciWardIndex].Name +
-                                ", street: " + street + "}"
-        console.log(signUpDTO.facilityAddress);
+        setFaciStreet(street);
+        faciAddressJson.city = fullAddresses[faciCityIndex].Name;
+        faciAddressJson.district = fullAddresses[faciCityIndex].Districts[faciDistrictIndex].Name;
+        faciAddressJson.ward = fullAddresses[faciCityIndex].Districts[faciDistrictIndex].Wards[faciWardIndex].Name;
+        faciAddressJson.street = street;
+        signUpDTO.facilityAddress = JSON.stringify(faciAddressJson);
     }
 
     useEffect(() => {
@@ -217,7 +239,8 @@ const Register = () => {
                 }
             );
             console.log(response?.data);
-            console.log(JSON.stringify(response))
+            console.log(JSON.stringify(response));
+            toast.success('Đăng ký thành công');
             setSuccess(true);
             //clear state and controlled inputs
             //need value attrib on inputs for this
@@ -538,6 +561,7 @@ const Register = () => {
                                                                         ref={userRef}
                                                                         autoComplete="off"
                                                                         onChange={(e) => loadFaciAddress(e.target.value)}
+                                                                        defaultValue={faciStreet}
                                                                         required
                                                                         className="form-control " />
                                                                 </div>
