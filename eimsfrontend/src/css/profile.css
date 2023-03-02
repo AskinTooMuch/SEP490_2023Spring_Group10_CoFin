@@ -4,7 +4,6 @@
   text-align: center;
 }
 
-
 .modal-body {
   border: none;
 }
@@ -17,22 +16,25 @@ label {
   font-size: large;
   color: black;
 }
-
+.card{
+  font-weight: bold;
+}
 .card-header {
-  background-color: #52565B;
-  color: white;
+  background-color: #F46110;
+  color: black;
 }
 
 .outbox .card-body {
-  background-color: #333333;
-  color: white;
+  background-color: #FEF2EB;
+  color: black;
 }
 
 .btn {
-  width: 100%;
+  width: 80%;
+  border: none;
 }
 
-h3 {
+h2 {
   text-align: center;
   padding: 10px;
 }
@@ -55,7 +57,7 @@ i {
 }
 
 i:hover {
-  color: #00fcb6;
+  color: #F46110;
   cursor: pointer;
 }
 .pass-wrapper input{

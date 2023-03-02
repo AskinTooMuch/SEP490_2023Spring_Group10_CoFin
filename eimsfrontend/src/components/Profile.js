@@ -267,9 +267,7 @@ const Profile = () => {
 
     return (
         <div className="profile-info">
-            <div className="head">
-                <h3>Thông tin cá nhân</h3>
-            </div>
+                <h2>Thông tin cá nhân</h2>
             <div className="row outbox">
                 <div className="col-sm-6 col-xs-12">
                     <div className="card">

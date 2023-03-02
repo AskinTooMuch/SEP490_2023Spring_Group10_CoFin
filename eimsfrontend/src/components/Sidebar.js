@@ -54,7 +54,7 @@ function Sidebar(props, {defaultActive,}) {
 export default Sidebar;
 
 const SidebarParent = styled.div`
-  background: #262626;
+  background: #f59d6e;
   a {
     text-decoration: none;
     font-size: 20px;
@@ -73,7 +73,7 @@ const SidebarParent = styled.div`
 
 const SidebarItem = styled.div`
   transition: all 0.25s ease-in-out;
-  background: ${props => props.active ? "#009b4d" : ""};
+  background: ${props => props.active ? "#F46110" : ""};
   margin: 4px 12px;
   border-radius: 4px;
   p {
@@ -81,12 +81,9 @@ const SidebarItem = styled.div`
     font-weight: bold;
     text-decoration: none;
   }
-  p:hover{
-    color:black;
-  }
   &:hover {
     cursor:pointer;
-    background-color: #ffcc00;
+    background-color: #F46110;
   }
   
   &:hover:not(:first-child) {

@@ -16,11 +16,15 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import { Button } from '@mui/material';
 import HelpIcon from '@mui/icons-material/Help';
 import LogoutIcon from '@mui/icons-material/Logout';
+import DashboardIcon from '@mui/icons-material/Dashboard';
 import "../css/navbar.css"
 const Nav = () => {
     const auth = sessionStorage.getItem("curPhone");
     const navigate = useNavigate();
     
+    const dashboard = () => {
+        navigate("/dashboard")
+    }
     const [anchorEl, setAnchorEl] = React.useState(null);
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
 
@@ -89,13 +93,11 @@ const Nav = () => {
             open={isMobileMenuOpen}
             onClose={handleMobileMenuClose}
         >
-            <MenuItem>
+            <MenuItem onClick={dashboard}>
                 <IconButton size="large" aria-label="show 4 new mails" color="inherit">
-                    <Badge badgeContent={0} color="error">
-                        <MailIcon />
-                    </Badge>
+                        <DashboardIcon />
                 </IconButton>
-                <p>Messages</p>
+                <p>Dashboard</p>
             </MenuItem>
             <MenuItem>
                 <IconButton
@@ -145,9 +147,9 @@ const Nav = () => {
                                 <>
                                     <Box sx={{ flexGrow: 1 }} />
                                     <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-                                        <IconButton size="large" aria-label="show 4 new mails" color="inherit">
-                                            <Badge badgeContent={4} color="error">
-                                                <MailIcon />
+                                        <IconButton size="large"color="inherit" onClick={dashboard}>
+                                            <Badge  color="error">
+                                                <DashboardIcon />
                                             </Badge>
                                         </IconButton>
                                         <IconButton
@@ -186,8 +188,8 @@ const Nav = () => {
                                 </>
                                 :
                                 <Box sx={{ flexGrow: 1 }}>
-                                    <Button className="signupbutton" color="inherit"><Link style={{ textDecoration: "none",textTransform:"capitalize" }} to="/register">Đăng ký</Link></Button>
-                                    <Button className="loginbutton" color="inherit"><Link style={{ textDecoration: "none",textTransform:"capitalize" }} to="/login">Đăng nhập</Link></Button>
+                                    <Button className="signupbutton" color="inherit"><Link style={{ textDecoration: "none" }} to="/register">Đăng ký</Link></Button>
+                                    <Button className="loginbutton" color="inherit"><Link style={{ textDecoration: "none" }} to="/login">Đăng nhập</Link></Button>
                                 </Box>
 
 
