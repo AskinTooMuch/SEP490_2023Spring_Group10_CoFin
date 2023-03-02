@@ -13,10 +13,34 @@ package com.example.eims.service.impl;
 
 import com.example.eims.dto.supplier.CreateSupplierDTO;
 import com.example.eims.dto.supplier.UpdateSupplierDTO;
+import com.example.eims.entity.ImportReceipt;
+import com.example.eims.entity.Supplier;
+import com.example.eims.repository.ImportReceiptRepository;
+import com.example.eims.repository.SupplierRepository;
 import com.example.eims.service.interfaces.ISupplierService;
+import com.example.eims.utils.StringDealer;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 
+import java.util.List;
+
+@Service
 public class SupplierServiceImpl implements ISupplierService {
+    @Autowired
+    private final SupplierRepository supplierRepository;
+    @Autowired
+    private final ImportReceiptRepository importReceiptRepository;
+
+    public SupplierServiceImpl(SupplierRepository supplierRepository, ImportReceiptRepository importReceiptRepository) {
+        this.supplierRepository = supplierRepository;
+        this.importReceiptRepository = importReceiptRepository;
+    }
+
     /**
      * Get all of their suppliers.
      *
@@ -25,7 +49,13 @@ public class SupplierServiceImpl implements ISupplierService {
      */
     @Override
     public ResponseEntity<?> getAllSupplier(Long userId) {
-        return null;
+        // Get all suppliers of the current User
+        List<Supplier> supplierList = supplierRepository.findByUserId(userId);
+        if (supplierList.isEmpty()) {
+            return new ResponseEntity<>("No supplier found", HttpStatus.NO_CONTENT); // 204
+        } else {
+            return new ResponseEntity<>(supplierList, HttpStatus.OK);
+        }
     }
 
     /**
@@ -36,7 +66,13 @@ public class SupplierServiceImpl implements ISupplierService {
      */
     @Override
     public ResponseEntity<?> getSupplier(Long supplierId) {
-        return null;
+        // Get a supplier
+        Supplier supplier = supplierRepository.findBySupplierId(supplierId).orElse(null);
+        if (supplier != null) {
+            return new ResponseEntity<>(supplier, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("No supplier", HttpStatus.OK);
+        }
     }
 
     /**
@@ -47,7 +83,24 @@ public class SupplierServiceImpl implements ISupplierService {
      */
     @Override
     public ResponseEntity<?> createSupplier(CreateSupplierDTO createSupplierDTO) {
-        return null;
+        System.out.println(createSupplierDTO);
+        // Check phone number existed or not
+        boolean existed = supplierRepository.existsBySupplierPhone(createSupplierDTO.getSupplierPhone());
+        if (existed) { /* if phone number existed */
+            return new ResponseEntity<>("Supplier's phone existed!", HttpStatus.OK);
+        } else { /* if phone number not existed */
+            // Retrieve supplier information and create new supplier
+            Supplier supplier = new Supplier();
+            supplier.setUserId(createSupplierDTO.getUserId());
+            supplier.setSupplierName(createSupplierDTO.getSupplierName());
+            supplier.setSupplierPhone(createSupplierDTO.getSupplierPhone());
+            supplier.setSupplierAddress(createSupplierDTO.getSupplierAddress());
+            supplier.setSupplierMail(createSupplierDTO.getSupplierMail());
+            supplier.setStatus(1);
+            // Save
+            supplierRepository.save(supplier);
+            return new ResponseEntity<>("Supplier created!", HttpStatus.OK);
+        }
     }
 
     /**
@@ -58,7 +111,13 @@ public class SupplierServiceImpl implements ISupplierService {
      */
     @Override
     public ResponseEntity<?> showFormUpdate(Long supplierId) {
-        return null;
+        // Get a supplier
+        Supplier supplier = supplierRepository.findBySupplierId(supplierId).orElse(null);
+        if (supplier != null) {
+            return new ResponseEntity<>(supplier, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("No supplier", HttpStatus.OK);
+        }
     }
 
     /**
@@ -70,7 +129,16 @@ public class SupplierServiceImpl implements ISupplierService {
      */
     @Override
     public ResponseEntity<?> updateSupplier(Long supplierId, UpdateSupplierDTO updateSupplierDTO) {
-        return null;
+        // Retrieve supplier's new information
+        Supplier supplier = supplierRepository.findBySupplierId(supplierId).get();
+        supplier.setSupplierName(updateSupplierDTO.getSupplierName());
+        supplier.setSupplierPhone(updateSupplierDTO.getSupplierPhone());
+        supplier.setSupplierAddress(updateSupplierDTO.getSupplierAddress());
+        supplier.setSupplierMail(updateSupplierDTO.getSupplierMail());
+        supplier.setStatus(updateSupplierDTO.getStatus());
+        // Save
+        supplierRepository.save(supplier);
+        return new ResponseEntity<>("Supplier updated!", HttpStatus.OK);
     }
 
     /**
@@ -81,7 +149,9 @@ public class SupplierServiceImpl implements ISupplierService {
      */
     @Override
     public ResponseEntity<?> deleteSupplier(Long supplierId) {
-        return null;
+        // Delete
+        supplierRepository.deleteById(supplierId);
+        return new ResponseEntity<>("Supplier deleted!", HttpStatus.OK);
     }
 
     /**
@@ -93,7 +163,12 @@ public class SupplierServiceImpl implements ISupplierService {
      */
     @Override
     public ResponseEntity<?> searchSupplier(String key, Long userId) {
-        return null;
+        // Trim spaces
+        StringDealer stringDealer = new StringDealer();
+        key = stringDealer.trimMax(key);
+        // Search
+        List<Supplier> supplierList = supplierRepository.searchByUsernameOrPhone(userId, key);
+        return new ResponseEntity<>(supplierList, HttpStatus.OK);
     }
 
     /**
@@ -104,7 +179,8 @@ public class SupplierServiceImpl implements ISupplierService {
      */
     @Override
     public ResponseEntity<?> viewImports(Long supplierId) {
-        return null;
+        List<ImportReceipt> importReceiptList = importReceiptRepository.findBySupplierId(supplierId);
+        return new ResponseEntity<>(importReceiptList, HttpStatus.OK);
     }
 
     /**
@@ -118,6 +194,16 @@ public class SupplierServiceImpl implements ISupplierService {
      */
     @Override
     public ResponseEntity<?> getAllSupplierPaging(Long userId, Integer page, Integer size, String sort) {
-        return null;
+        // Get sorting type
+        Sort sortable = null;
+        if (sort.equals("ASC")) {
+            sortable = Sort.by("supplierId").ascending();
+        }
+        if (sort.equals("DESC")) {
+            sortable = Sort.by("supplierId").descending();
+        }
+        // Get all customers of the current User with Paging
+        Page<Supplier> supplierPage = supplierRepository.findAllByUserId(userId, PageRequest.of(page, size, sortable));
+        return new ResponseEntity<>(supplierPage, HttpStatus.OK);
     }
 }

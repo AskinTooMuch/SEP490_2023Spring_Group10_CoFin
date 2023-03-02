@@ -14,12 +14,36 @@ package com.example.eims.service.impl;
 import com.example.eims.dto.specie.EditSpecieDTO;
 import com.example.eims.dto.specie.NewSpecieDTO;
 import com.example.eims.entity.Specie;
+import com.example.eims.entity.User;
+import com.example.eims.repository.SpecieRepository;
+import com.example.eims.repository.UserRepository;
 import com.example.eims.service.interfaces.ISpecieService;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
+@Service
 public class SpecieServiceImpl implements ISpecieService {
+
+    @Autowired
+    private final SpecieRepository specieRepository;
+    @Autowired
+    private final UserRepository userRepository;
+    @PersistenceContext
+    private final EntityManager em;
+
+    public SpecieServiceImpl(SpecieRepository specieRepository, UserRepository userRepository, EntityManager em) {
+        this.specieRepository = specieRepository;
+        this.userRepository = userRepository;
+        this.em = em;
+    }
+
     /**
      * Create a new specie after checking the phone number (session) is valid
      *
@@ -28,7 +52,20 @@ public class SpecieServiceImpl implements ISpecieService {
      */
     @Override
     public ResponseEntity<String> newSpecie(NewSpecieDTO newSpecieDTO) {
-        return null;
+        System.out.println(newSpecieDTO);
+        Optional<User> userOpt = userRepository.findById(newSpecieDTO.getUserId());
+        if (userOpt.isPresent()) {
+            User user = userOpt.get();
+            Specie specie = new Specie();
+            specie.setSpecieId(100L);
+            specie.setUserId(user.getUserId());
+            specie.setSpecieName(newSpecieDTO.getSpecieName());
+            specie.setIncubationPeriod(newSpecieDTO.getIncubationPeriod());
+            specie.setStatus(true);
+            specieRepository.save(specie);
+            return new ResponseEntity<>("Specie added successfully", HttpStatus.OK);
+        }
+        return new ResponseEntity<>("Account not found with Id number "+newSpecieDTO.getUserId(), HttpStatus.BAD_REQUEST);
     }
 
     /**
@@ -39,7 +76,14 @@ public class SpecieServiceImpl implements ISpecieService {
      */
     @Override
     public ResponseEntity<List<Specie>> listSpecie(Long userId) {
-        return null;
+        System.out.println("Requesting user id: " + userId);
+        Optional<List<Specie>> speciesOpt = specieRepository.findByUserId(userId);
+        if (speciesOpt.isPresent()){
+            List<Specie> specieList = speciesOpt.get();
+            System.out.println(specieList);
+            return new ResponseEntity<>(specieList, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
     }
 
     /**
@@ -50,7 +94,13 @@ public class SpecieServiceImpl implements ISpecieService {
      */
     @Override
     public ResponseEntity<Specie> getSpecie(Long specieId) {
-        return null;
+        System.out.println("Requesting specie id: " + specieId);
+        Optional<Specie> specieOpt = specieRepository.findById(specieId);
+        if (specieOpt.isPresent()){
+            Specie specie = specieOpt.get();
+            return new ResponseEntity<>(specie, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
     }
 
     /**
@@ -61,7 +111,16 @@ public class SpecieServiceImpl implements ISpecieService {
      */
     @Override
     public ResponseEntity<Specie> saveSpecie(EditSpecieDTO editSpecieDTO) {
-        return null;
+        System.out.println("Requesting specie id: " + editSpecieDTO.getSpecieId());
+        Optional<Specie> specieOpt = specieRepository.findById(editSpecieDTO.getSpecieId());
+        if (specieOpt.isPresent()){
+            Specie specie = specieOpt.get();
+            specie.setSpecieName(editSpecieDTO.getSpecieName());
+            specie.setIncubationPeriod(editSpecieDTO.getIncubationPeriod());
+            specieRepository.save(specie);
+            return new ResponseEntity<>(specie, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
     }
 
     /**
@@ -72,6 +131,10 @@ public class SpecieServiceImpl implements ISpecieService {
      */
     @Override
     public ResponseEntity<String> deleteSpecie(Long specieId) {
-        return null;
+        if (specieRepository.findById(specieId).isPresent()){
+            specieRepository.deleteById(specieId);
+            return new ResponseEntity<>("Specie delete successfully", HttpStatus.OK);
+        }
+        return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
     }
 }

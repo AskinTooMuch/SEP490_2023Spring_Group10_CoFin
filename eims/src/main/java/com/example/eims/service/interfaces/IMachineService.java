@@ -63,7 +63,7 @@ public interface IMachineService {
      * @param machineId the id of the machine
      * @return
      */
-    public ResponseEntity<?> deleteCustomer(Long machineId);
+    public ResponseEntity<?> deleteMachine(Long machineId);
 
     /**
      * Get all of facility's machines with Paging.
@@ -75,5 +75,5 @@ public interface IMachineService {
      * @param sort sorting type
      * @return page of machines
      */
-    public ResponseEntity<?> getAllSupplierPaging(Long facilityId, Integer page, Integer size, String sort);
+    public ResponseEntity<?> getAllMachinePaging(Long facilityId, Integer page, Integer size, String sort);
 }

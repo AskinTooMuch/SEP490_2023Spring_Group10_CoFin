@@ -11,10 +11,35 @@
 
 package com.example.eims.service.impl;
 
+import com.example.eims.dto.importReceipt.ImportReceiptStatisticDTO;
+import com.example.eims.entity.ImportReceipt;
+import com.example.eims.repository.ImportReceiptRepository;
 import com.example.eims.service.interfaces.IImportReceiptService;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 
+import java.util.List;
+
+@Service
 public class ImportReceiptServiceImpl implements IImportReceiptService {
+
+    @Autowired
+    private ImportReceiptRepository importReceiptRepository;
+    @PersistenceContext
+    private EntityManager em;
+
+    public ImportReceiptServiceImpl(ImportReceiptRepository importReceiptRepository, EntityManager em) {
+        this.importReceiptRepository = importReceiptRepository;
+        this.em = em;
+    }
+
     /**
      * Get all import bill from suppliers of an Owner.
      *
@@ -23,7 +48,8 @@ public class ImportReceiptServiceImpl implements IImportReceiptService {
      */
     @Override
     public ResponseEntity<?> viewImportsByUser(Long userId) {
-        return null;
+        List<ImportReceipt> importReceiptList = importReceiptRepository.findByUserId(userId);
+        return new ResponseEntity<>(importReceiptList, HttpStatus.OK);
     }
 
     /**
@@ -37,7 +63,17 @@ public class ImportReceiptServiceImpl implements IImportReceiptService {
      */
     @Override
     public ResponseEntity<?> viewImportsByUserPaging(Long userId, Integer page, Integer size, String sort) {
-        return null;
+        // Get sorting type
+        Sort sortable = null;
+        if (sort.equals("ASC")) {
+            sortable = Sort.by("importId").ascending();
+        }
+        if (sort.equals("DESC")) {
+            sortable = Sort.by("importId").descending();
+        }
+        // Get all customers of the current User with Paging
+        Page<ImportReceipt> importReceiptPage = importReceiptRepository.findAllByUserId(userId, PageRequest.of(page, size, sortable));
+        return new ResponseEntity<>(importReceiptPage, HttpStatus.OK);
     }
 
     /**
@@ -48,7 +84,8 @@ public class ImportReceiptServiceImpl implements IImportReceiptService {
      */
     @Override
     public ResponseEntity<?> viewImportsBySupplier(Long supplierId) {
-        return null;
+        List<ImportReceipt> importReceiptList = importReceiptRepository.findBySupplierId(supplierId);
+        return new ResponseEntity<>(importReceiptList, HttpStatus.OK);
     }
 
     /**
@@ -62,7 +99,17 @@ public class ImportReceiptServiceImpl implements IImportReceiptService {
      */
     @Override
     public ResponseEntity<?> viewImportsBySupplierPaging(Long supplierId, Integer page, Integer size, String sort) {
-        return null;
+        // Get sorting type
+        Sort sortable = null;
+        if (sort.equals("ASC")) {
+            sortable = Sort.by("importId").ascending();
+        }
+        if (sort.equals("DESC")) {
+            sortable = Sort.by("importId").descending();
+        }
+        // Get all customers of the current User with Paging
+        Page<ImportReceipt> importReceiptPage = importReceiptRepository.findAllBySupplierId(supplierId, PageRequest.of(page, size, sortable));
+        return new ResponseEntity<>(importReceiptPage, HttpStatus.OK);
     }
 
     /**
@@ -73,6 +120,9 @@ public class ImportReceiptServiceImpl implements IImportReceiptService {
      */
     @Override
     public ResponseEntity<?> viewImportStatistic(Long userId) {
-        return null;
+        List<ImportReceiptStatisticDTO> statistics = em.createNamedQuery("getImportReceiptStatisticByUserId")
+                .setParameter(1, userId)
+                .getResultList();
+        return new ResponseEntity<>(statistics, HttpStatus.OK);
     }
 }
