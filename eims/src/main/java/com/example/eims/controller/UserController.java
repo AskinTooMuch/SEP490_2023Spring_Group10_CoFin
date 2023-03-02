@@ -93,7 +93,7 @@ public class UserController {
      */
     @GetMapping("/allPaging")
     @Secured({"ROLE_MANAGER","ROLE_ADMIN"})
-    public ResponseEntity<?> getAllUser(@RequestParam(name = "page", required = false, defaultValue = "0") Integer page,
+    public ResponseEntity<?> getAllUserPaging(@RequestParam(name = "page", required = false, defaultValue = "0") Integer page,
                                         @RequestParam(name = "size", required = false, defaultValue = "5") Integer size,
                                         @RequestParam(name = "sort", required = false, defaultValue = "ASC") String sort) {
 

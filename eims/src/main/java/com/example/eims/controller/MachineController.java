@@ -146,7 +146,7 @@ public class MachineController {
      * @return
      */
     @DeleteMapping("/delete")
-    public ResponseEntity<?> deleteCustomer(@RequestParam Long machineId) {
+    public ResponseEntity<?> deleteMachine(@RequestParam Long machineId) {
         // Delete
         machineRepository.deleteById(machineId);
         return new ResponseEntity<>("Machine deleted!", HttpStatus.OK);
