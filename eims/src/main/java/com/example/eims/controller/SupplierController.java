@@ -50,9 +50,9 @@ public class SupplierController {
      * @param supplierId the id of the supplier
      * @return
      */
-    @GetMapping("/{supplierId}")
+    @GetMapping("get")
     @Secured({"ROLE_OWNER"})
-    public ResponseEntity<?> getSupplier(@PathVariable Long supplierId) {
+    public ResponseEntity<?> getSupplier(@RequestParam Long supplierId) {
         return supplierService.getSupplier(supplierId);
     }
 
@@ -80,8 +80,8 @@ public class SupplierController {
      * @param supplierId the id of the supplier
      * @return
      */
-    @GetMapping("/update/showForm/{supplierId}")
-    public ResponseEntity<?> showFormUpdate(@PathVariable Long supplierId) {
+    @GetMapping("/update/showForm")
+    public ResponseEntity<?> showFormUpdate(@RequestParam Long supplierId) {
         return supplierService.showFormUpdate(supplierId);
     }
 
@@ -92,9 +92,9 @@ public class SupplierController {
      * @param updateSupplierDTO contains the user's id, new name, phone number and address of the supplier
      * @return
      */
-    @PutMapping("/update/{supplierId}")
+    @PutMapping("/update/save")
     @Secured({"ROLE_OWNER"})
-    public ResponseEntity<?> updateSupplier(@PathVariable Long supplierId, @RequestBody UpdateSupplierDTO updateSupplierDTO) {
+    public ResponseEntity<?> updateSupplier(@RequestParam Long supplierId, @RequestBody UpdateSupplierDTO updateSupplierDTO) {
         return supplierService.updateSupplier(supplierId, updateSupplierDTO);
     }
 
@@ -104,9 +104,9 @@ public class SupplierController {
      * @param supplierId the id of the supplier
      * @return
      */
-    @DeleteMapping("/delete/{supplierId}")
+    @DeleteMapping("/delete")
     @Secured({"ROLE_OWNER"})
-    public ResponseEntity<?> deleteSupplier(@PathVariable Long supplierId) {
+    public ResponseEntity<?> deleteSupplier(@RequestParam Long supplierId) {
         return supplierService.deleteSupplier(supplierId);
     }
 
@@ -129,8 +129,8 @@ public class SupplierController {
      * @param supplierId the id of supplier
      * @return list of import receipts
      */
-    @GetMapping("/imports/{supplierId}")
-    public ResponseEntity<?> viewImports(@PathVariable Long supplierId) {
+    @GetMapping("/imports")
+    public ResponseEntity<?> viewImports(@RequestParam Long supplierId) {
         return supplierService.viewImports(supplierId);
     }
 
