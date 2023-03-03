@@ -24,7 +24,7 @@ const Supplier = () => {
   const [city, setCity] = useState([
     { value: '', label: 'Chọn Tỉnh/Thành phố' }
   ]);
-  //User Address data
+  //Supplier Address data
   const [district, setDistrict] = useState(''); //For populate dropdowns
   const [ward, setWard] = useState('');
   const [cityIndex, setCityIndex] = useState(); //Save the index of selected dropdowns

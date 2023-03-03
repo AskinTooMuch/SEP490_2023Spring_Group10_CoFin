@@ -52,11 +52,10 @@ public interface ISupplierService {
     /**
      * Update a supplier of a user.
      *
-     * @param supplierId the id of the supplier
      * @param updateSupplierDTO contains the user's id, new name, phone number and address of the supplier
      * @return
      */
-    public ResponseEntity<?> updateSupplier(Long supplierId, UpdateSupplierDTO updateSupplierDTO);
+    public ResponseEntity<?> updateSupplier(UpdateSupplierDTO updateSupplierDTO);
 
     /**
      * Delete a supplier of a user.

@@ -88,14 +88,13 @@ public class SupplierController {
     /**
      * Update a supplier of a user.
      *
-     * @param supplierId the id of the supplier
      * @param updateSupplierDTO contains the user's id, new name, phone number and address of the supplier
      * @return
      */
     @PutMapping("/update/save")
     @Secured({"ROLE_OWNER"})
-    public ResponseEntity<?> updateSupplier(@RequestParam Long supplierId, @RequestBody UpdateSupplierDTO updateSupplierDTO) {
-        return supplierService.updateSupplier(supplierId, updateSupplierDTO);
+    public ResponseEntity<?> updateSupplier(@RequestBody UpdateSupplierDTO updateSupplierDTO) {
+        return supplierService.updateSupplier(updateSupplierDTO);
     }
 
     /**

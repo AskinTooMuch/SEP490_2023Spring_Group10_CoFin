@@ -124,14 +124,13 @@ public class SupplierServiceImpl implements ISupplierService {
     /**
      * Update a supplier of a user.
      *
-     * @param supplierId        the id of the supplier
      * @param updateSupplierDTO contains the user's id, new name, phone number and address of the supplier
      * @return
      */
     @Override
-    public ResponseEntity<?> updateSupplier(Long supplierId, UpdateSupplierDTO updateSupplierDTO) {
+    public ResponseEntity<?> updateSupplier(UpdateSupplierDTO updateSupplierDTO) {
         // Retrieve supplier's new information
-        Supplier supplier = supplierRepository.findBySupplierId(supplierId).get();
+        Supplier supplier = supplierRepository.findBySupplierId(updateSupplierDTO.getSupplierId()).get();
         supplier.setSupplierName(updateSupplierDTO.getSupplierName());
         supplier.setSupplierPhone(updateSupplierDTO.getSupplierPhone());
         supplier.setSupplierAddress(updateSupplierDTO.getSupplierAddress());
