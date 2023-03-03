@@ -9,6 +9,7 @@ package com.example.eims.entity;
  * DATE          Version    Author           DESCRIPTION<br>
  * 16/02/2023    1.0        DuongVV          First Deploy<br>
  * 19/02/2023    2.0        DuongVV          Fix notation, id filed
+ * 03/03/2023    2.1        ChucNV           Add suppliers facilityName
  */
 
 import jakarta.persistence.*;
@@ -23,6 +24,7 @@ public class Supplier {
     private Long supplierId;
     private Long userId;
     private String supplierName;
+    private String facilityName;
     private String supplierPhone;
     private String supplierAddress;
     private String supplierMail;

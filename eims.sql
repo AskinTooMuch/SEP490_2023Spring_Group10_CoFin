@@ -101,6 +101,7 @@ CREATE TABLE supplier(
 	supplier_id			integer 		AUTO_INCREMENT PRIMARY KEY,
     user_id				integer			NOT NULL,
     supplier_name		varchar(63)		NOT NULL,
+    facility_name	    varchar(63)		NOT NULL,
     supplier_phone		varchar(15)		NOT NULL,
     supplier_address	varchar(255)	NOT NULL,
     supplier_mail		varchar(127),

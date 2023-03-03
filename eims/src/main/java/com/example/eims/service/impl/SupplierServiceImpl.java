@@ -95,6 +95,7 @@ public class SupplierServiceImpl implements ISupplierService {
             supplier.setSupplierName(createSupplierDTO.getSupplierName());
             supplier.setSupplierPhone(createSupplierDTO.getSupplierPhone());
             supplier.setSupplierAddress(createSupplierDTO.getSupplierAddress());
+            supplier.setFacilityName(createSupplierDTO.getFacilityName());
             supplier.setSupplierMail(createSupplierDTO.getSupplierMail());
             supplier.setStatus(1);
             // Save

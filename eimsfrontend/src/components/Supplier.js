@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from "react-router-dom";
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import SearchIcon from '@mui/icons-material/Search';
@@ -10,12 +10,34 @@ import axios from 'axios';
 //Toast
 import { ToastContainer, toast } from 'react-toastify';
 const Supplier = () => {
+  const userRef = useRef();
+
   //Show-hide Popup
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
   //Data holding objects
   const [supplierList, setSupplierList] = useState([]);
+  //Address consts
+  //Full Json addresses
+  const [fullAddresses, setFullAddresses] = useState('');
+  const [city, setCity] = useState([
+    { value: '', label: 'Chọn Tỉnh/Thành phố' }
+  ]);
+  //User Address data
+  const [district, setDistrict] = useState(''); //For populate dropdowns
+  const [ward, setWard] = useState('');
+  const [cityIndex, setCityIndex] = useState(); //Save the index of selected dropdowns
+  const [districtIndex, setDistrictIndex] = useState();
+  const [wardIndex, setWardIndex] = useState();
+  const [street, setStreet] = useState();
+  const [addressJson, setAddressJson] = useState({
+    city: "",
+    district: "",
+    ward: "",
+    street: ""
+  });
+
 
   //API URLs
   const SUPPLIER_ALL = '/api/supplier/all';
@@ -32,6 +54,7 @@ const Supplier = () => {
     supplierName: "",
     supplierPhone: "",
     supplierAddress: "",
+    facilityName: "",
     supplierMail: ""
   })
 
@@ -46,12 +69,75 @@ const Supplier = () => {
     })
   }
 
+  // Set value for address fields
+  //User
+  useEffect(() => {
+    console.log("Load address");
+    loadAddress();
+  }, []);
+
+  const loadAddress = async () => {
+    const result = await axios.get("https://raw.githubusercontent.com/kenzouno1/DiaGioiHanhChinhVN/master/data.json",
+      {});
+    setFullAddresses(result.data);
+    console.log("Full address");
+    console.log(fullAddresses);
+    // Set inf
+
+    const cityList = fullAddresses.slice();
+    for (let i in cityList) {
+      cityList[i] = { value: cityList[i].Id, label: cityList[i].Name }
+    }
+    setCity(cityList);
+  }
+
+  function loadDistrict(index) {
+    console.log("City " + index);
+    setCityIndex(index);
+    const districtOnIndex = fullAddresses[index].Districts;
+    const districtList = districtOnIndex.slice();
+    for (let i in districtList) {
+      districtList[i] = { value: districtList[i].Id, label: districtList[i].Name }
+    }
+    setDistrict(districtList);
+  }
+
+  //Load user ward list
+  function loadWard(index) {
+    console.log("District " + index);
+    setDistrictIndex(index);
+    const wardOnIndex = fullAddresses[cityIndex].Districts[index].Wards;
+    const wardList = wardOnIndex.slice();
+    for (let i in wardList) {
+      wardList[i] = { value: wardList[i].Id, label: wardList[i].Name }
+    }
+    setWard(wardList);
+  }
+
+  function saveWard(index) {
+    console.log("Ward " + index);
+    setWardIndex(index);
+  }
+
+  function saveAddressJson(s) {
+    setStreet(s);
+    addressJson.city = fullAddresses[cityIndex].Name;
+    addressJson.district = fullAddresses[cityIndex].Districts[districtIndex].Name;
+    addressJson.ward = fullAddresses[cityIndex].Districts[districtIndex].Wards[wardIndex].Name;
+    addressJson.street = street;
+    newSupplierDTO.supplierAddress = JSON.stringify(addressJson);
+  }
+
+
+
   //Handle Submit functions
   //Handle submit new supplier
   const handleNewSupplierSubmit = async (event) => {
     event.preventDefault();
+    saveAddressJson(street);
+    let response;
     try {
-      const response = await axios.post(SUPPLIER_CREATE,
+      response = await axios.post(SUPPLIER_CREATE,
         newSupplierDTO,
         {
           headers: {
@@ -66,18 +152,18 @@ const Supplier = () => {
         supplierName: "",
         supplierPhone: "",
         supplierAddress: "",
+        facilityName: "",
         supplierMail: ""
       });
       console.log(response);
       loadSupplerList();
-      toast.success("Tạo loại mới thành công");
+      toast.success(response);
       setShow(false);
     } catch (err) {
       if (!err?.response) {
         toast.error('Server không phản hồi');
-      } else switch(err.response?.status) {
-        case 400: toast.error('Request không hợp lệ');
-        case 401: toast.error('Unauthorized');
+      } else {
+        toast.error(response);
       }
     }
   }
@@ -100,14 +186,14 @@ const Supplier = () => {
         withCredentials: false
       });
     setSupplierList(result.data);
-    console.log(supplierList);
+    console.log(supplierList );
   }
 
   //Navigate to detail Page
   let navigate = useNavigate();
-  const routeChange = () => {
+  const routeChange = (id) => {
     let path = '/supplierdetail';
-    navigate(path);
+    navigate(path, { itemId: id});
   }
 
   return (
@@ -127,13 +213,26 @@ const Supplier = () => {
                   <p>Họ và tên<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                 </div>
                 <div className="col-md-3">
-                  <input style={{ width: "100%" }} onChange={e => handleNewSupplierChange(e, "supplierName")}/>
+                  <input className="form-control mt-1" style={{ width: "100%" }} onChange={e => handleNewSupplierChange(e, "supplierName")} />
+                </div>
+                {/*City*/}
+                <div className="col-md-3">
+                  <label htmlFor="uprovince" >Tỉnh/Thành Phố <FontAwesomeIcon className="star" icon={faStarOfLife} /></label>
                 </div>
                 <div className="col-md-3">
-                  <p>Số nhà <FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
-                </div>
-                <div className="col-md-3">
-                  <input style={{ width: "100%" }} disabled/>
+                  <select className="form-control mt-1" id="uprovince"
+                    ref={userRef}
+                    autoComplete="off"
+                    onChange={(e) => loadDistrict(e.target.value)}
+                    value={cityIndex}
+                    required>
+                    <option value="" disabled>Chọn Tỉnh/Thành phố</option>
+                    {city &&
+                      city.map((item, index) => (
+                        <option value={index}>{item.label}</option>
+                      ))
+                    }
+                  </select>
                 </div>
               </div>
               <div className="row">
@@ -141,13 +240,26 @@ const Supplier = () => {
                   <p>Số điện thoại<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                 </div>
                 <div className="col-md-3">
-                  <input style={{ width: "100%" }} onChange={e => handleNewSupplierChange(e, "supplierPhone")}/>
+                  <input className="form-control mt-1" style={{ width: "100%" }} onChange={e => handleNewSupplierChange(e, "supplierPhone")} />
+                </div>
+                {/*District*/}
+                <div className="col-md-3">
+                  <label htmlFor="udistrict" >Quận/Huyện <FontAwesomeIcon className="star" icon={faStarOfLife} /></label>
                 </div>
                 <div className="col-md-3">
-                  <p>Đường <FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
-                </div>
-                <div className="col-md-3">
-                  <input style={{ width: "100%" }} disabled/>
+                  <select className="form-control mt-1" id="udistrict"
+                    ref={userRef}
+                    autoComplete="off"
+                    onChange={(e) => loadWard(e.target.value)}
+                    value={districtIndex}
+                    required>
+                    <option value="" disabled>Chọn Quận/Huyện</option>
+                    {district &&
+                      district.map((item, index) => (
+                        <option value={index}>{item.label}</option>
+                      ))
+                    }
+                  </select>
                 </div>
               </div>
               <div className="row">
@@ -155,27 +267,46 @@ const Supplier = () => {
                   <p>Email</p>
                 </div>
                 <div className="col-md-3">
-                  <input style={{ width: "100%" }} onChange={e => handleNewSupplierChange(e, "supplierMail")}/>
+                  <input className="form-control mt-1" style={{ width: "100%" }} onChange={e => handleNewSupplierChange(e, "supplierMail")} />
+                </div>
+                {/*User ward*/}
+                <div className="col-md-3">
+                  <label htmlFor="uward" >Phường/Xã <FontAwesomeIcon className="star" icon={faStarOfLife} /></label>
                 </div>
                 <div className="col-md-3">
-                  <p>Quận/Huyện <FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
-                </div>
-                <div className="col-md-3">
-                  <input style={{ width: "100%" }} disabled/>
+                  <select className="form-control mt-1" id="uward"
+                    ref={userRef}
+                    autoComplete="off"
+                    onChange={(e) => saveWard(e.target.value)}
+                    value={wardIndex}
+                    required>
+                    <option value="" disabled>Chọn Phường/Xã</option>
+                    {ward &&
+                      ward.map((item, index) => (
+                        <option value={index}>{item.label}</option>
+                      ))
+                    }
+                  </select>
                 </div>
               </div>
               <div className="row">
-                <div className="col-md-3">
+              <div className="col-md-3">
                   <p>Tên cơ sở<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                 </div>
                 <div className="col-md-3">
-                  <input style={{ width: "100%" }} disabled/>
+                  <input className="form-control mt-1" style={{ width: "100%" }} onChange={e => handleNewSupplierChange(e, "facilityName")} />
+                </div>
+                {/*User Street*/}
+                <div className="col-md-3">
+                  <label htmlFor="uhomenum">Số nhà <FontAwesomeIcon className="star" icon={faStarOfLife} /></label>
                 </div>
                 <div className="col-md-3">
-                  <p>Thành phố <FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
-                </div>
-                <div className="col-md-3">
-                  <input style={{ width: "100%" }} onChange={e => handleNewSupplierChange(e, "supplierAddress")}/>
+                  <input type="text" id="uhomenum"
+                    ref={userRef}
+                    autoComplete="off"
+                    onChange={(e) => saveAddressJson(e.target.value)}
+                    required
+                    className="form-control " />
                 </div>
               </div>
             </div>
@@ -213,7 +344,6 @@ const Supplier = () => {
             <tr>
               <th scope="col">STT</th>
               <th scope="col">Nhà cung cấp</th>
-              <th scope="col">Tên cơ sở</th>
               <th scope="col">Số điện thoại</th>
               <th scope="col">Doanh thu theo tháng</th>
               <th scope="col">Trạng thái</th>
@@ -222,18 +352,21 @@ const Supplier = () => {
           <tbody>
             {
               supplierList && supplierList.length > 0 ?
-                supplierList.map(supplier =>
-
-                  <tr className='trclick' onClick={routeChange} key={supplier.userId}>
-
-                    <th scope="row">{supplier.supplierId}</th>
-                    <td>{supplier.supplierName}</td>
-                    <td>{supplier.supplierName}</td>
-                    <td>{supplier.supplierPhone}</td>
+                supplierList.map((item, index) => 
+                  <tr className='trclick' onClick={() => routeChange(item.supplierId)} key={item.userId}>
+                    <th scope="row">{index+1}</th>
+                    <td>{item.supplierName}</td>
+                    <td>{item.supplierPhone}</td>
                     <td>100.000.000 VNĐ</td>
-                    <td className='text-green'>{supplier.status}</td>
+                    {item.status === 1
+                      ?<td className='text-green'>
+                        Đang hoạt động
+                      </td>
+                      :<td className='text-red'>
+                        Ngừng hoạt động
+                      </td>
+                    }
                   </tr>
-
                 ) : 'Loading'
             }
           </tbody>

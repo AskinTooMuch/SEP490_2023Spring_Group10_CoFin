@@ -20,6 +20,7 @@ import com.example.eims.dto.supplier.CreateSupplierDTO;
 import com.example.eims.dto.supplier.UpdateSupplierDTO;
 import com.example.eims.service.interfaces.ISupplierService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
@@ -64,6 +65,12 @@ public class SupplierController {
     @PostMapping("/create")
     @Secured({"ROLE_OWNER"})
     public ResponseEntity<?> createSupplier(@RequestBody CreateSupplierDTO createSupplierDTO) {
+        if (createSupplierDTO.getSupplierName().equals(""))
+            return new ResponseEntity<>("Tên nhà cung cấp không được để trống", HttpStatus.BAD_REQUEST);
+        if (createSupplierDTO.getSupplierPhone().equals(""))
+            return new ResponseEntity<>("Số điện thoại nhà cung cấp không được để trống", HttpStatus.BAD_REQUEST);
+        if (createSupplierDTO.getSupplierAddress().equals(""))
+            return new ResponseEntity<>("Địa chỉ nhà cung cấp không được để trống", HttpStatus.BAD_REQUEST);
         return supplierService.createSupplier(createSupplierDTO);
     }
 
