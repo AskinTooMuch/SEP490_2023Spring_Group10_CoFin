@@ -191,9 +191,10 @@ const Supplier = () => {
 
   //Navigate to detail Page
   let navigate = useNavigate();
-  const routeChange = (id) => {
-    let path = '/supplierdetail';
-    navigate(path, { itemId: id});
+  const routeChange = (sid) => {
+    // let path = '/supplierdetail';
+    // navigate(path, { state: { id: id, supplier: supplierList[sid]}});
+    navigate('/supplierdetail', { state: { id: sid, supplier: supplierList[sid] } });
   }
 
   return (
@@ -353,7 +354,7 @@ const Supplier = () => {
             {
               supplierList && supplierList.length > 0 ?
                 supplierList.map((item, index) => 
-                  <tr className='trclick' onClick={() => routeChange(item.supplierId)} key={item.userId}>
+                  <tr className='trclick' onClick={() => routeChange(index)} key={item.userId}>
                     <th scope="row">{index+1}</th>
                     <td>{item.supplierName}</td>
                     <td>{item.supplierPhone}</td>

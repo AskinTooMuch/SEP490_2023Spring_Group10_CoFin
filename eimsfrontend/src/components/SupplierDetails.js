@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useNavigate, useParams } from "react-router-dom";
+import React, { useEffect, useState } from 'react';
+import { useNavigate, useParams, useLocation } from "react-router-dom";
 import PropTypes from 'prop-types';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
@@ -51,8 +51,19 @@ export default function BasicTabs() {
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
-    let params = useParams();
-    console.log("Params" + params.itemId);
+    //Get sent params
+    const {state} = useLocation();
+    const { id, supplier } = state
+    const [addressJson, setAddressJson] = useState({
+        city: "",
+        district: "",
+        ward: "",
+        street: ""
+      });
+
+    useEffect(() => {
+        setAddressJson(JSON.parse(supplier.supplierAddress));
+    }, []);
 
     return (
 
@@ -65,13 +76,13 @@ export default function BasicTabs() {
             </Box>
             <SupplierDetails value={value} index={0}>
                     <div className='container'>
-                        <h3 style={{ textAlign: "center" }}>Thông tin chi tiết máy</h3>
+                        <h3 style={{ textAlign: "center" }}>Thông tin chi tiết nhà cung cấp</h3>
                         <form><Modal show={show} onHide={handleClose}
                             size="lg"
                             aria-labelledby="contained-modal-title-vcenter"
                             centered >
                             <Modal.Header closeButton onClick={handleClose}>
-                                <Modal.Title>Sửa thông tin máy</Modal.Title>
+                                <Modal.Title>Sửa thông tin nhà cung cấp</Modal.Title>
                             </Modal.Header>
                             <Modal.Body>
                                 <div className="">
@@ -185,7 +196,7 @@ export default function BasicTabs() {
                                     <p>Họ và tên</p>
                                 </div>
                                 <div className="col-md-4">
-                                    <p>Phạm Anh B</p>
+                                    <p>{supplier.supplierName}</p>
                                 </div>
                                 <div className="col-md-4 ">
                                     <div className='button'>
@@ -198,7 +209,7 @@ export default function BasicTabs() {
                                     <p>Số điện thoại</p>
                                 </div>
                                 <div className="col-md-4">
-                                    <p>012345678910</p>
+                                    <p>{supplier.supplierPhone}</p>
                                 </div>
                             </div>
                             <div className="row">
@@ -206,7 +217,7 @@ export default function BasicTabs() {
                                     <p>Email</p>
                                 </div>
                                 <div className="col-md-4">
-                                    <p>example@gmail.com</p>
+                                    <p>{supplier.supplierMail}</p>
                                 </div>
                             </div>
                             <div className="row">
@@ -214,7 +225,7 @@ export default function BasicTabs() {
                                     <p>Tên cơ sở</p>
                                 </div>
                                 <div className="col-md-4">
-                                    <p>Trnag Trại Gà Thuân Vải</p>
+                                    <p>{supplier.facilityName}</p>
                                 </div>
                             </div>
                             <div className="row">
@@ -222,7 +233,7 @@ export default function BasicTabs() {
                                     <p>Địa chỉ</p>
                                 </div>
                                 <div className="col-md-4">
-                                    <p>W69C+3CM, Vĩnh Lai, Cẩm Giàng, Hải Dương 03623</p>
+                                    <p>{addressJson.street + " " + addressJson.ward + " " + addressJson.district + " " + addressJson.city}</p>
                                 </div>
                             </div>
                             <div className="row">
@@ -246,7 +257,14 @@ export default function BasicTabs() {
                                     <p>Trạng thái</p>
                                 </div>
                                 <div className="col-md-4">
-                                    <p className="text-green">Hoạt động bình thường</p>
+                                {supplier.status === 1
+                                    ?<p className='text-green'>
+                                        Đang hoạt động
+                                    </p>
+                                    :<p className='text-red'>
+                                        Ngừng hoạt động
+                                    </p>
+                                    }
                                 </div>
                             </div>
 
