@@ -7,7 +7,6 @@ import 'react-toastify/dist/ReactToastify.css';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye } from "@fortawesome/free-solid-svg-icons";
 import "../css/login.css"
-import { letterSpacing } from '@mui/system';
 const eye = <FontAwesomeIcon icon={faEye} />;
 const LOGIN_URL = '/api/auth/signin';
 const Login = () => {

@@ -48,7 +48,10 @@ export default function BasicTabs() {
   return (
     <Box sx={{ width: '100%' }}>
       <Box sx={{ borderBottom: 1, borderColor: 'black' }}>
-        <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
+        <Tabs sx={{
+            '& .MuiTabs-indicator': { backgroundColor: "#d25d19" },
+            '& .Mui-selected': { color: "#d25d19" },
+          }}value={value} onChange={handleChange} aria-label="basic tabs example">
           <Tab style={{ textTransform: "capitalize" }} label="Hoá đơn nhập" {...a11yProps(0)} />
           <Tab style={{ textTransform: "capitalize" }} label="Hoá đơn xuất" {...a11yProps(1)} />
           <Tab style={{ textTransform: "capitalize" }} label="Nhà cung cấp" {...a11yProps(2)} />

@@ -4,10 +4,9 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
-import Species from './Species';
-import Breed from './Breed';
-import EggBatch from './EggBatch';
-function Egg(props) {
+import Supplier from './Supplier'
+import Cost from './Cost';
+function FinanManage(props) {
   const { children, value, index, ...other } = props;
 
   return (
@@ -27,7 +26,7 @@ function Egg(props) {
   );
 }
 
-Egg.propTypes = {
+FinanManage.propTypes = {
   children: PropTypes.node,
   index: PropTypes.number.isRequired,
   value: PropTypes.number.isRequired,
@@ -50,25 +49,33 @@ export default function BasicTabs() {
   return (
     <Box sx={{ width: '100%' }}>
       <Box sx={{ borderBottom: 1, borderColor: 'black' }}>
-        <Tabs sx={{
+        <Tabs  sx={{
             '& .MuiTabs-indicator': { backgroundColor: "#d25d19" },
             '& .Mui-selected': { color: "#d25d19" },
-          }}value={value} onChange={handleChange} aria-label="basic tabs example">
-          <Tab style={{ textTransform: "capitalize" }} label="Loài" {...a11yProps(0)} />
-          <Tab style={{ textTransform: "capitalize" }} label="Loại" {...a11yProps(1)} />
-          <Tab style={{ textTransform: "capitalize" }} label="Lô trứng" {...a11yProps(2)} />
+          }}
+        value={value} onChange={handleChange} aria-label="basic tabs example">
+          <Tab style={{ textTransform: "capitalize" }} label="Chi Phí" {...a11yProps(0)} />
+          <Tab style={{ textTransform: "capitalize" }} label="Tiền lương" {...a11yProps(1)} />
+          <Tab style={{ textTransform: "capitalize" }} label="Báo cáo nhập" {...a11yProps(2)} />
+          <Tab style={{ textTransform: "capitalize" }} label="Báo cáo xuất" {...a11yProps(3)} />
+          <Tab style={{ textTransform: "capitalize" }} label="Doanh thu" {...a11yProps(4)} />
         </Tabs>
       </Box>
-      <Egg value={value} index={0}>
-        <Species/>
-      </Egg>
-      <Egg value={value} index={1}>
-        <Breed/>
-      </Egg>
-      <Egg value={value} index={2}>
-        <EggBatch/>
-      </Egg>
-     
+      <FinanManage value={value} index={0}>
+       <Cost/>
+      </FinanManage>
+      <FinanManage value={value} index={1}>
+        Item Two
+      </FinanManage>
+      <FinanManage value={value} index={2}>
+        <Supplier/>
+      </FinanManage>
+      <FinanManage value={value} index={3}>
+        Item four
+      </FinanManage>
+      <FinanManage value={value} index={3}>
+        Item four
+      </FinanManage>
     </Box>
   );
 }

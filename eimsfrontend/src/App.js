@@ -18,6 +18,7 @@ import SupplierDetails from './components/SupplierDetails'
 import Subscription from './components/Subscription';
 import ForgotPassword from './components/ForgotPassword';
 import EggBatch from './components/EggBatch';
+import FinanManage from './components/FinanManage';
 function App() {
   return (
     <>
@@ -35,6 +36,7 @@ function App() {
           <Route path="/dashboard" element={<DashBoard />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/eggbatch" element={<EggBatch />} />
+          <Route path="/finance" element={<FinanManage />} />
         </Route>
 
         {/* public routes */}

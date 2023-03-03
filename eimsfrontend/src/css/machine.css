@@ -5,12 +5,17 @@
 .btn-light {
     width: 10%;
     border-radius: 50px;
-    border: 1px grey solid;
+    border: 3px #f89e6e solid;
+    color: #f46110;
+    height: 46px;
+    background-color: white;
+    font-weight: bold;
 }
 
 .btn-light:hover {
-    background-color: #ffcc00;
-    color: black;
+    background-color: #f46110;
+    color: white;
+    font-weight: bold;
 }
 
 .input-group-prepend button {

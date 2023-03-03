@@ -5,7 +5,7 @@ import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import '../css/machine.css'
-import { faStarOfLife} from "@fortawesome/free-solid-svg-icons";
+import { faStarOfLife } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Modal, Button } from 'react-bootstrap'
 function MachineDetails(props) {
@@ -55,13 +55,16 @@ export default function BasicTabs() {
 
         <Box sx={{ width: '100%' }}>
             <Box sx={{ borderBottom: 1, borderColor: 'black' }}>
-                <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
+                <Tabs sx={{
+                    '& .MuiTabs-indicator': { backgroundColor: "#d25d19" },
+                    '& .Mui-selected': { color: "#d25d19" },
+                }} value={value} onChange={handleChange} aria-label="basic tabs example">
                     <Tab style={{ textTransform: "capitalize" }} label="Máy ấp/nở" {...a11yProps(0)} />
                 </Tabs>
             </Box>
             <MachineDetails value={value} index={0}>
                 <div className='container'>
-                <h3 style={{textAlign:"center"}}>Thông tin chi tiết máy</h3>
+                    <h3 style={{ textAlign: "center" }}>Thông tin chi tiết máy</h3>
                     <form><Modal show={show} onHide={handleClose}
                         size="lg"
                         aria-labelledby="contained-modal-title-vcenter"

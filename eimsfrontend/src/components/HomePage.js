@@ -80,7 +80,7 @@ c12.354,12.354,12.354,32.388,0,44.748L173.525,225.92l171.903,171.909c12.354,12.3
 c-12.354,12.365-32.386,12.365-44.745,0l-194.29-194.281C100.226,242.115,97.141,234.018,97.141,225.92z"></path></svg>
                         </span>
                     </Link>
-                    <Link class="u-absolute-vcenter u-gallery-nav u-gallery-nav-next u-hidden u-icon-circle u-opacity u-opacity-70 u-spacing-10 u-white u-gallery-nav-2"  role="button">
+                    <Link class="u-absolute-vcenter u-gallery-nav u-gallery-nav-next u-hidden u-icon-circle u-opacity u-opacity-70 u-spacing-10 u-white u-gallery-nav-2" role="button">
                         <span aria-hidden="true">
                             <svg viewBox="0 0 451.846 451.847"><path d="M345.441,248.292L151.154,442.573c-12.359,12.365-32.397,12.365-44.75,0c-12.354-12.354-12.354-32.391,0-44.744
 L278.318,225.92L106.409,54.017c-12.354-12.359-12.354-32.394,0-44.748c12.354-12.359,32.391-12.359,44.75,0l194.287,194.284

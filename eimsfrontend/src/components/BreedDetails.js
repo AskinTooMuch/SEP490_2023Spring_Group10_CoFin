@@ -70,7 +70,10 @@ export default function BasicTabs() {
 
         <Box sx={{ width: '100%' }}>
             <Box sx={{ borderBottom: 1, borderColor: 'black' }}>
-                <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
+                <Tabs sx={{
+                    '& .MuiTabs-indicator': { backgroundColor: "#d25d19" },
+                    '& .Mui-selected': { color: "#d25d19" },
+                }} value={value} onChange={handleChange} aria-label="basic tabs example">
                     <Tab style={{ textTransform: "capitalize" }} label="Loại" {...a11yProps(0)} />
                     <Tab style={{ textTransform: "capitalize" }} label="Trở về trang Trứng" {...a11yProps(1)} onClick={() => navigate("/egg")} />
                 </Tabs>
@@ -163,8 +166,8 @@ export default function BasicTabs() {
                         <div className="row">
 
                             <div className="col-md-4">
-                                <p >Tên loài  
-                                <input style={{display:"block"}} placeholder='Gà ' disabled/>
+                                <p >Tên loài
+                                    <input style={{ display: "block" }} placeholder='Gà ' disabled />
                                 </p>
                             </div>
                             <div className="col-md-4">
@@ -184,8 +187,8 @@ export default function BasicTabs() {
                         </div>
                         <div className="row">
                             <div className="col-md-4">
-                                <p>Tên loại  
-                                <input style={{display:"block"}} placeholder='Gà ri' disabled />
+                                <p>Tên loại
+                                    <input style={{ display: "block" }} placeholder='Gà ri' disabled />
                                 </p>
                             </div>
                             <div className="col-md-4">
@@ -195,34 +198,34 @@ export default function BasicTabs() {
                         <div className="row">
                             <div className="col-md-4">
                                 <p>Cân nặng trung bình
-                                <input style={{display:"block"}} placeholder='0.8 kg' disabled/>
+                                    <input style={{ display: "block" }} placeholder='0.8 kg' disabled />
                                 </p>
                             </div>
                             <div className="col-md-4">
-                                
+
                             </div>
                         </div>
                         <div className="row">
                             <div className="col-md-4">
                                 <p>Thời gian lớn lên
-                                <input style={{display:"block"}} placeholder='20 ngày' disabled/>
+                                    <input style={{ display: "block" }} placeholder='20 ngày' disabled />
                                 </p>
                             </div>
                             <div className="col-md-4">
-                               
+
                             </div>
                         </div>
                         <div className="row">
                             <div className="col-md-4">
                                 <p>Các bệnh thường gặp
-                                <textarea style={{display:"block"}} placeholder='Cúm gia cầm, đậu gà' disabled/>
+                                    <textarea style={{ display: "block" }} placeholder='Cúm gia cầm, đậu gà' disabled />
                                 </p>
                             </div>
                             <div className="col-md-4">
-                                
+
                             </div>
                         </div>
-                       
+
 
                     </div>
 

@@ -10,7 +10,7 @@ import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import ImportExportIcon from '@mui/icons-material/ImportExport';
 import SearchIcon from '@mui/icons-material/Search';
 import { Modal, Button } from 'react-bootstrap'
-import { faStarOfLife} from "@fortawesome/free-solid-svg-icons";
+import { faStarOfLife } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 function Machine(props) {
     const { children, value, index, ...other } = props;
@@ -55,15 +55,18 @@ export default function BasicTabs() {
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
-    let navigate = useNavigate(); 
-    const routeChange = () =>{ 
-      let path = '/machinedetail'; 
-      navigate(path);
+    let navigate = useNavigate();
+    const routeChange = () => {
+        let path = '/machinedetail';
+        navigate(path);
     }
     return (
         <Box sx={{ width: '100%' }}>
             <Box sx={{ borderBottom: 1, borderColor: 'black' }}>
-                <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
+                <Tabs sx={{
+                    '& .MuiTabs-indicator': { backgroundColor: "#d25d19" },
+                    '& .Mui-selected': { color: "#d25d19" },
+                }} value={value} onChange={handleChange} aria-label="basic tabs example">
                     <Tab style={{ textTransform: "capitalize" }} label="Máy ấp/nở" {...a11yProps(0)} />
                 </Tabs>
             </Box>
@@ -92,7 +95,7 @@ export default function BasicTabs() {
                                         <p>Loại máy<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                     </div>
                                     <div className="col-md-6">
-                                    <select className="form-select" aria-label="Default select example">
+                                        <select className="form-select" aria-label="Default select example">
                                             <option defaultValue="0">Open this select menu</option>
                                             <option value="1" >Oneg</option>
                                             <option value="2">Two</option>
@@ -151,7 +154,7 @@ export default function BasicTabs() {
                         </thead>
                         <tbody>
                             <tr className='trclick' onClick={routeChange}>
-                            
+
                                 <th scope="row">1</th>
                                 <td>Máy 13</td>
                                 <td>Máy ấp</td>

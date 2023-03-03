@@ -57,7 +57,10 @@ export default function BasicTabs() {
 
         <Box sx={{ width: '100%' }}>
             <Box sx={{ borderBottom: 1, borderColor: 'black' }}>
-                <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
+                <Tabs sx={{
+                    '& .MuiTabs-indicator': { backgroundColor: "#d25d19" },
+                    '& .Mui-selected': { color: "#d25d19" },
+                }} value={value} onChange={handleChange} aria-label="basic tabs example">
                     <Tab style={{ textTransform: "capitalize" }} label="Lô Trứng" {...a11yProps(0)} />
                     <Tab style={{ textTransform: "capitalize" }} label="Trở về trang Trứng" {...a11yProps(1)} onClick={() => navigate("/egg")} />
                 </Tabs>
@@ -165,7 +168,7 @@ export default function BasicTabs() {
                                 <td>0</td>
                                 <td>0</td>
                                 <td>0</td>
-                                
+
                             </tr>
                             <tr>
                                 <th scope="row">Hiện tại</th>
@@ -177,7 +180,7 @@ export default function BasicTabs() {
                                 <td>0</td>
                                 <td>0</td>
                                 <td>0</td>
-                                
+
                             </tr>
                         </tbody>
                     </table>
@@ -191,21 +194,21 @@ export default function BasicTabs() {
                         <tbody>
                             <tr>
                                 <th scope="row">Máy 13</th>
-                                <td>1000</td>                                
+                                <td>1000</td>
                             </tr>
                             <tr>
                                 <th scope="row">Máy 17</th>
-                                <td>1000</td>                                
+                                <td>1000</td>
                             </tr>
                             <tr>
                                 <th scope="row">Máy 23</th>
-                                <td>500</td>                                
+                                <td>500</td>
                             </tr>
                         </tbody>
                     </table>
-                    
+
                 </div>
-                <button className='btn btn-success' style={{width:"20%",float:"right"}} >Cập nhật</button>
+                <button className='btn btn-success' style={{ width: "20%", float: "right" }} >Cập nhật</button>
             </EggBatchDetail>
 
 
