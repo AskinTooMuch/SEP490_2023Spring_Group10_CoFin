@@ -58,21 +58,13 @@ public interface ISupplierService {
     public ResponseEntity<?> updateSupplier(UpdateSupplierDTO updateSupplierDTO);
 
     /**
-     * Delete a supplier of a user.
-     *
-     * @param supplierId the id of the supplier
-     * @return
-     */
-    public ResponseEntity<?> deleteSupplier(Long supplierId);
-
-    /**
      * Search supplier of the user by their name or phone number.
      *
-     * @param key the search key (name or phone number)
      * @param userId the id of current logged-in user
+     * @param key the search key (name or phone number)
      * @return list of suppliers
      */
-    public ResponseEntity<?> searchSupplier(String key, Long userId);
+    public ResponseEntity<?> searchSupplier(Long userId, String key);
 
     /**
      * Get all import bill from supplier.

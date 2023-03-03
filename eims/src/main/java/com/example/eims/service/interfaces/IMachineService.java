@@ -51,11 +51,10 @@ public interface IMachineService {
     /**
      * Update a machine of a facility.
      *
-     * @param machineId the id of the machine
      * @param updateMachineDTO contains the facility id, machine type id, name, max and current capacity, status
      * @return
      */
-    public ResponseEntity<?> updateMachine(Long machineId, UpdateMachineDTO updateMachineDTO);
+    public ResponseEntity<?> updateMachine(UpdateMachineDTO updateMachineDTO);
 
     /**
      * Delete a machine of a facility.

@@ -14,6 +14,8 @@ package com.example.eims.service.impl;
 import com.example.eims.dto.machine.CreateMachineDTO;
 import com.example.eims.dto.machine.UpdateMachineDTO;
 import com.example.eims.entity.Machine;
+import com.example.eims.repository.EggLocationRepository;
+import com.example.eims.repository.FacilityRepository;
 import com.example.eims.repository.MachineRepository;
 import com.example.eims.service.interfaces.IMachineService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,14 +29,22 @@ import org.springframework.stereotype.Service;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
+
 @Service
 public class MachineServiceImpl implements IMachineService {
 
     @Autowired
     private final MachineRepository machineRepository;
+    @Autowired
+    private final FacilityRepository facilityRepository;
+    @Autowired
+    private final EggLocationRepository eggLocationRepository;
 
-    public MachineServiceImpl(MachineRepository machineRepository) {
+    public MachineServiceImpl(MachineRepository machineRepository, FacilityRepository facilityRepository, EggLocationRepository eggLocationRepository) {
         this.machineRepository = machineRepository;
+        this.facilityRepository = facilityRepository;
+        this.eggLocationRepository = eggLocationRepository;
     }
 
     /**
@@ -46,8 +56,13 @@ public class MachineServiceImpl implements IMachineService {
     @Override
     public ResponseEntity<?> getAllMachine(Long facilityId) {
         // Get all machines of the current facility
-        List<Machine> machineList = machineRepository.findByFacilityId(facilityId);
-        return new ResponseEntity<>(machineList, HttpStatus.OK);
+        Optional<List<Machine>> machineList = machineRepository.findByFacilityId(facilityId);
+        if (machineList.isPresent()) {
+            return new ResponseEntity<>(machineList, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+
     }
 
     /**
@@ -59,11 +74,11 @@ public class MachineServiceImpl implements IMachineService {
     @Override
     public ResponseEntity<?> getMachine(Long machineId) {
         // Get a machine of the current facility
-        Machine machine = machineRepository.findById(machineId).orElse(null);
-        if (machine != null) {
-            return new ResponseEntity<>(machine, HttpStatus.OK);
+        Optional<Machine> machine = machineRepository.findById(machineId);
+        if (machine.isPresent()) {
+            return new ResponseEntity<>(machine.get(), HttpStatus.OK);
         } else {
-            return new ResponseEntity<>("No machine", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -75,19 +90,23 @@ public class MachineServiceImpl implements IMachineService {
      */
     @Override
     public ResponseEntity<?> createMachine(CreateMachineDTO createMachineDTO) {
-        // Retrieve machine information and create new machine
-        Machine machine = new Machine();
-        machine.setMachineTypeId(createMachineDTO.getMachineTypeId());
-        machine.setFacilityId(createMachineDTO.getFacilityId());
-        machine.setMachineName(createMachineDTO.getName());
-        machine.setMaxCapacity(createMachineDTO.getMaxCapacity());
-        machine.setCurCapacity(0);
-        Date date = Date.valueOf(LocalDate.now());/* format yyyy-MM-dd*/
-        machine.setAddedDate(date);
-        machine.setActive(0);
-        // Save
-        machineRepository.save(machine);
-        return new ResponseEntity<>("Machine created!", HttpStatus.OK);
+        if (facilityRepository.getStatusById(createMachineDTO.getFacilityId()) == 0) { /*Facility stopped running*/
+            return new ResponseEntity<>("Facility stopped running", HttpStatus.BAD_REQUEST);
+        } else {
+            // Retrieve machine information and create new machine
+            Machine machine = new Machine();
+            machine.setMachineTypeId(createMachineDTO.getMachineTypeId());
+            machine.setFacilityId(createMachineDTO.getFacilityId());
+            machine.setMachineName(createMachineDTO.getName());
+            machine.setMaxCapacity(createMachineDTO.getMaxCapacity());
+            machine.setCurCapacity(0);
+            Date date = Date.valueOf(LocalDate.now());/* format yyyy-MM-dd*/
+            machine.setAddedDate(date);
+            machine.setActive(0);
+            // Save
+            machineRepository.save(machine);
+            return new ResponseEntity<>("Machine created!", HttpStatus.OK);
+        }
     }
 
     /**
@@ -99,32 +118,36 @@ public class MachineServiceImpl implements IMachineService {
     @Override
     public ResponseEntity<?> showFormUpdate(Long machineId) {
         // Get a machine of the current facility
-        Machine machine = machineRepository.findById(machineId).orElse(null);
-        if (machine != null) {
-            return new ResponseEntity<>(machine, HttpStatus.OK);
+        Optional<Machine> machine = machineRepository.findById(machineId);
+        if (machine.isPresent()) {
+            return new ResponseEntity<>(machine.get(), HttpStatus.OK);
         } else {
-            return new ResponseEntity<>("No machine", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
 
     /**
      * Update a machine of a facility.
      *
-     * @param machineId        the id of the machine
      * @param updateMachineDTO contains the facility id, machine type id, name, max and current capacity, status
      * @return
      */
     @Override
-    public ResponseEntity<?> updateMachine(Long machineId, UpdateMachineDTO updateMachineDTO) {
+    public ResponseEntity<?> updateMachine(UpdateMachineDTO updateMachineDTO) {
         // Retrieve machine's new information
-        Machine machine = machineRepository.findByMachineId(machineId);
-        machine.setMachineName(updateMachineDTO.getName());
-        machine.setMaxCapacity(updateMachineDTO.getMaxCapacity());
-        machine.setCurCapacity(updateMachineDTO.getCurCapacity());
-        machine.setActive(updateMachineDTO.getActive());
-        // Save
-        machineRepository.save(machine);
-        return new ResponseEntity<>("Machine updated!", HttpStatus.OK);
+        Optional<Machine> machineOptional = machineRepository.findByMachineId(updateMachineDTO.getMachineId());
+        if (machineOptional.isPresent()) {
+            Machine machine = machineOptional.get();
+            machine.setMachineName(updateMachineDTO.getName());
+            machine.setMaxCapacity(updateMachineDTO.getMaxCapacity());
+            machine.setCurCapacity(updateMachineDTO.getCurCapacity());
+            machine.setActive(updateMachineDTO.getActive());
+            // Save
+            machineRepository.save(machine);
+            return new ResponseEntity<>("Machine updated!", HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
     }
 
     /**
@@ -135,9 +158,18 @@ public class MachineServiceImpl implements IMachineService {
      */
     @Override
     public ResponseEntity<?> deleteMachine(Long machineId) {
-        // Delete
-        machineRepository.deleteById(machineId);
-        return new ResponseEntity<>("Machine deleted!", HttpStatus.OK);
+        if (machineRepository.existsByMachineId(machineId)) {
+            // Check if Machine is running
+            if (eggLocationRepository.existsByMachineId(machineId)) { /*Machine is running (have eggs in it)*/
+                return new ResponseEntity<>("Machine is still running, can not delete", HttpStatus.BAD_REQUEST);
+            } else {
+                // Delete
+                machineRepository.deleteById(machineId);
+                return new ResponseEntity<>("Machine deleted!", HttpStatus.OK);
+            }
+        } else {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
     }
 
     /**

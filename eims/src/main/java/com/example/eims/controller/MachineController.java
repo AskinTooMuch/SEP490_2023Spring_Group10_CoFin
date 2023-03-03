@@ -34,6 +34,7 @@ public class MachineController {
      * @param facilityId the id of current logged-in user's selected facility.
      * @return list of Machines
      */
+    @Secured({"ROLE_OWNER"})
     @GetMapping("/all")
     public ResponseEntity<?> getAllMachine(@RequestParam Long facilityId) {
         return machineService.getAllMachine(facilityId);
@@ -45,6 +46,7 @@ public class MachineController {
      * @param machineId the id of the machine
      * @return
      */
+    @Secured({"ROLE_OWNER"})
     @GetMapping("/get")
     public ResponseEntity<?> getMachine(@RequestParam Long machineId) {
         return machineService.getMachine(machineId);
@@ -56,6 +58,7 @@ public class MachineController {
      * @param createMachineDTO contains the facility id, machine type id, name, max and current capacity
      * @return
      */
+    @Secured({"ROLE_OWNER"})
     @PostMapping("/create")
     public ResponseEntity<?> createMachine(@RequestBody CreateMachineDTO createMachineDTO) {
         return machineService.createMachine(createMachineDTO);
@@ -67,6 +70,7 @@ public class MachineController {
      * @param machineId the id of the machine
      * @return
      */
+    @Secured({"ROLE_OWNER"})
     @GetMapping("/update/get")
     public ResponseEntity<?> showFormUpdate(@RequestParam Long machineId) {
         return machineService.showFormUpdate(machineId);
@@ -75,13 +79,13 @@ public class MachineController {
     /**
      * Update a machine of a facility.
      *
-     * @param machineId the id of the machine
      * @param updateMachineDTO contains the facility id, machine type id, name, max and current capacity, status
      * @return
      */
+    @Secured({"ROLE_OWNER"})
     @PutMapping("/update/save")
-    public ResponseEntity<?> updateMachine(@RequestParam Long machineId, @RequestBody UpdateMachineDTO updateMachineDTO) {
-        return machineService.updateMachine(machineId, updateMachineDTO);
+    public ResponseEntity<?> updateMachine(@RequestBody UpdateMachineDTO updateMachineDTO) {
+        return machineService.updateMachine(updateMachineDTO);
     }
 
     /**
@@ -90,6 +94,7 @@ public class MachineController {
      * @param machineId the id of the machine
      * @return
      */
+    @Secured({"ROLE_OWNER"})
     @DeleteMapping("/delete")
     public ResponseEntity<?> deleteMachine(@RequestParam Long machineId) {
         return machineService.deleteMachine(machineId);

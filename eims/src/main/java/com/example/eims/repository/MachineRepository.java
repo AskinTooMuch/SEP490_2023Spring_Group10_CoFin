@@ -18,9 +18,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface MachineRepository extends JpaRepository<Machine, Long> {
-    List<Machine> findByFacilityId(Long facilityId);
-    Machine findByMachineId(Long machineId);
+    Optional<List<Machine>> findByFacilityId(Long facilityId);
+    Optional<Machine> findByMachineId(Long machineId);
+    boolean existsByMachineId(Long machineId);
     Page<Machine> findAllByFacilityId(Long facilityId, Pageable pageable);
 }

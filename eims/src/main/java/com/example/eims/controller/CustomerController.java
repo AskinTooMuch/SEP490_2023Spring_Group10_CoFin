@@ -74,6 +74,7 @@ public class CustomerController {
      * @param customerId the id of the customer
      * @return a customer
      */
+    @Secured({"ROLE_OWNER"})
     @GetMapping("/update/get")
     public ResponseEntity<?> showFormUpdate(@RequestParam Long customerId) {
         return customerService.showFormUpdate(customerId);
@@ -82,56 +83,43 @@ public class CustomerController {
     /**
      * Update a customer of a user.
      *
-     * @param customerId the id of the customer
-     * @param updateCustomerDTO contains the new name, phone number and address, email and status of the customer
+     * @param updateCustomerDTO contains customer's id, new name, phone number and address, email and status of the customer
      * @return
      */
     @Secured({"ROLE_OWNER"})
     @PutMapping("/update/save")
-    public ResponseEntity<?> updateCustomer(@RequestParam Long customerId, @RequestBody UpdateCustomerDTO updateCustomerDTO) {
-        return customerService.updateCustomer(customerId, updateCustomerDTO);
-    }
-
-    /**
-     * Delete a customer of a user.
-     *
-     * @param customerId the id of the customer
-     * @return
-     */
-    @Secured({"ROLE_OWNER"})
-    @DeleteMapping("/delete")
-    public ResponseEntity<?> deleteCustomer(@RequestParam Long customerId) {
-        return customerService.deleteCustomer(customerId);
+    public ResponseEntity<?> updateCustomer(@RequestBody UpdateCustomerDTO updateCustomerDTO) {
+        return customerService.updateCustomer(updateCustomerDTO);
     }
 
     /**
      * Search customer of the user by their name or phone number.
      *
-     * @param key the search key (name or phone number)
      * @param userId the id of current logged-in user
+     * @param key    the search key (name or phone number)
      * @return list of customers match the key search item.
      */
     @GetMapping("/search")
     @Secured({"ROLE_OWNER"})
-    public ResponseEntity<?> searchCustomer(@RequestParam String key, @RequestBody Long userId) {
-        return customerService.searchCustomer(key,userId);
+    public ResponseEntity<?> searchCustomer(@RequestParam Long userId, @RequestParam String key) {
+        return customerService.searchCustomer(userId, key);
     }
 
     /**
      * Get all of user's customers with Paging.
      *
      * @param userId the id of current logged-in user.
-     * @param page the page number
-     * @param size the size of page
-     * @param sort sorting type
+     * @param page   the page number
+     * @param size   the size of page
+     * @param sort   sorting type
      * @return list of Customers
      */
     @GetMapping("/allPaging")
     @Secured({"ROLE_OWNER"})
     public ResponseEntity<?> getAllCustomerPaging(@RequestParam(name = "userId") Long userId,
-                                                    @RequestParam(name = "page", required = false, defaultValue = "0") Integer page,
-                                                    @RequestParam(name = "size", required = false, defaultValue = "5") Integer size,
-                                                    @RequestParam(name = "sort", required = false, defaultValue = "ASC") String sort) {
+                                                  @RequestParam(name = "page", required = false, defaultValue = "0") Integer page,
+                                                  @RequestParam(name = "size", required = false, defaultValue = "5") Integer size,
+                                                  @RequestParam(name = "sort", required = false, defaultValue = "ASC") String sort) {
         return customerService.getAllCustomerPaging(userId, page, size, sort);
     }
 

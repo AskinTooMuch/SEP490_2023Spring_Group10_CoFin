@@ -23,7 +23,7 @@ import java.util.Date;
 public class Cost {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long costId;
     private Long userId;
     private Long facilityId;
     private String costItem;

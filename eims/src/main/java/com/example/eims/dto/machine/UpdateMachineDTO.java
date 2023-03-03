@@ -15,6 +15,7 @@ import lombok.Data;
 
 @Data
 public class UpdateMachineDTO {
+    private Long machineId;
     private String name;
     private int maxCapacity;
     private int curCapacity;

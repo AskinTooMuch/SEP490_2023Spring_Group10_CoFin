@@ -24,7 +24,7 @@ public interface IAuthService {
      * @param loginDTO contains the login phone and password
      * @return
      */
-    public ResponseEntity<Long> authenticateUser(LoginDTO loginDTO);
+    public ResponseEntity<?> authenticateUser(LoginDTO loginDTO);
 
     /**
      * Sign up.
@@ -63,7 +63,7 @@ public interface IAuthService {
      *
      * @return
      */
-    public ResponseEntity<?> resendOTP();
+    public ResponseEntity<?> resendOTP(String phone);
 
     /**
      * Change password after verify OTP.

@@ -16,6 +16,7 @@ import lombok.Data;
 @Data
 public class UpdateFacilityDTO {
     private Long userId;
+    private Long facilityId;
     private String facilityName;
     private String facilityAddress;
     private String foundDate;

@@ -14,6 +14,7 @@ import lombok.Data;
 
 @Data
 public class UpdateCustomerDTO {
+    private Long customerId;
     private String name;
     private String phone;
     private String address;

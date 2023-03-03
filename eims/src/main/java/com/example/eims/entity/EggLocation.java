@@ -20,7 +20,8 @@ import lombok.Data;
 @Table(name = "eggLocation")
 public class EggLocation {
     @Id
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long eggLocationId;
     private Long productId;
     private Long machineId;
     private int amount;

@@ -32,6 +32,7 @@ public class ImportReceiptController {
      * @param userId the id of supplier
      * @return list of import receipts
      */
+    @Secured({"ROLE_OWNER"})
     @GetMapping("/allByUser")
     public ResponseEntity<?> viewImportsByUser(@RequestParam Long userId) {
         return importReceiptService.viewImportsByUser(userId);
@@ -61,6 +62,7 @@ public class ImportReceiptController {
      * @param supplierId the id of the supplier
      * @return list of import receipts
      */
+    @Secured({"ROLE_OWNER"})
     @GetMapping("/allBySupplier")
     public ResponseEntity<?> viewImportsBySupplier(@RequestParam Long supplierId) {
         return importReceiptService.viewImportsBySupplier(supplierId);
@@ -90,6 +92,7 @@ public class ImportReceiptController {
      * @param userId the id of the owner
      * @return list of import receipts
      */
+    @Secured({"ROLE_OWNER"})
     @GetMapping("/statistic")
     public ResponseEntity<?> viewImportStatistic(@RequestParam Long userId) {
         return importReceiptService.viewImportStatistic(userId);

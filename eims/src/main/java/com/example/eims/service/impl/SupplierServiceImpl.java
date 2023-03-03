@@ -28,6 +28,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class SupplierServiceImpl implements ISupplierService {
@@ -50,7 +51,7 @@ public class SupplierServiceImpl implements ISupplierService {
     @Override
     public ResponseEntity<?> getAllSupplier(Long userId) {
         // Get all suppliers of the current User
-        List<Supplier> supplierList = supplierRepository.findByUserId(userId);
+        Optional<List<Supplier>> supplierList = supplierRepository.findByUserId(userId);
         if (supplierList.isEmpty()) {
             return new ResponseEntity<>("No supplier found", HttpStatus.NO_CONTENT); // 204
         } else {
@@ -67,11 +68,11 @@ public class SupplierServiceImpl implements ISupplierService {
     @Override
     public ResponseEntity<?> getSupplier(Long supplierId) {
         // Get a supplier
-        Supplier supplier = supplierRepository.findBySupplierId(supplierId).orElse(null);
-        if (supplier != null) {
-            return new ResponseEntity<>(supplier, HttpStatus.OK);
+        Optional<Supplier> supplier = supplierRepository.findBySupplierId(supplierId);
+        if (supplier.isPresent()) {
+            return new ResponseEntity<>(supplier.get(), HttpStatus.OK);
         } else {
-            return new ResponseEntity<>("No supplier", HttpStatus.OK);
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -113,11 +114,11 @@ public class SupplierServiceImpl implements ISupplierService {
     @Override
     public ResponseEntity<?> showFormUpdate(Long supplierId) {
         // Get a supplier
-        Supplier supplier = supplierRepository.findBySupplierId(supplierId).orElse(null);
-        if (supplier != null) {
-            return new ResponseEntity<>(supplier, HttpStatus.OK);
+        Optional<Supplier> supplier = supplierRepository.findBySupplierId(supplierId);
+        if (supplier.isPresent()) {
+            return new ResponseEntity<>(supplier.get(), HttpStatus.OK);
         } else {
-            return new ResponseEntity<>("No supplier", HttpStatus.OK);
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -142,19 +143,6 @@ public class SupplierServiceImpl implements ISupplierService {
     }
 
     /**
-     * Delete a supplier of a user.
-     *
-     * @param supplierId the id of the supplier
-     * @return
-     */
-    @Override
-    public ResponseEntity<?> deleteSupplier(Long supplierId) {
-        // Delete
-        supplierRepository.deleteById(supplierId);
-        return new ResponseEntity<>("Supplier deleted!", HttpStatus.OK);
-    }
-
-    /**
      * Search supplier of the user by their name or phone number.
      *
      * @param key    the search key (name or phone number)
@@ -162,13 +150,17 @@ public class SupplierServiceImpl implements ISupplierService {
      * @return list of suppliers
      */
     @Override
-    public ResponseEntity<?> searchSupplier(String key, Long userId) {
+    public ResponseEntity<?> searchSupplier(Long userId, String key) {
         // Trim spaces
         StringDealer stringDealer = new StringDealer();
         key = stringDealer.trimMax(key);
         // Search
-        List<Supplier> supplierList = supplierRepository.searchByUsernameOrPhone(userId, key);
-        return new ResponseEntity<>(supplierList, HttpStatus.OK);
+        Optional<List<Supplier>> supplierList = supplierRepository.searchByUsernameOrPhone(userId, key);
+        if (supplierList.isPresent()) {
+            return new ResponseEntity<>(supplierList.get(), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
     }
 
     /**
@@ -179,8 +171,12 @@ public class SupplierServiceImpl implements ISupplierService {
      */
     @Override
     public ResponseEntity<?> viewImports(Long supplierId) {
-        List<ImportReceipt> importReceiptList = importReceiptRepository.findBySupplierId(supplierId);
-        return new ResponseEntity<>(importReceiptList, HttpStatus.OK);
+        Optional<List<ImportReceipt>> importReceiptList = importReceiptRepository.findBySupplierId(supplierId);
+        if (importReceiptList.isPresent()) {
+            return new ResponseEntity<>(importReceiptList.get(), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
     }
 
     /**

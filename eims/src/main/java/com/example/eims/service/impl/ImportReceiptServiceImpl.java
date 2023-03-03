@@ -26,6 +26,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ImportReceiptServiceImpl implements IImportReceiptService {
@@ -48,8 +49,12 @@ public class ImportReceiptServiceImpl implements IImportReceiptService {
      */
     @Override
     public ResponseEntity<?> viewImportsByUser(Long userId) {
-        List<ImportReceipt> importReceiptList = importReceiptRepository.findByUserId(userId);
-        return new ResponseEntity<>(importReceiptList, HttpStatus.OK);
+        Optional<List<ImportReceipt>> importReceiptList = importReceiptRepository.findByUserId(userId);
+        if (importReceiptList.isPresent()){
+            return new ResponseEntity<>(importReceiptList.get(), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
     }
 
     /**
@@ -84,8 +89,12 @@ public class ImportReceiptServiceImpl implements IImportReceiptService {
      */
     @Override
     public ResponseEntity<?> viewImportsBySupplier(Long supplierId) {
-        List<ImportReceipt> importReceiptList = importReceiptRepository.findBySupplierId(supplierId);
-        return new ResponseEntity<>(importReceiptList, HttpStatus.OK);
+        Optional<List<ImportReceipt>> importReceiptList = importReceiptRepository.findBySupplierId(supplierId);
+        if (importReceiptList.isPresent()){
+            return new ResponseEntity<>(importReceiptList.get(), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
     }
 
     /**

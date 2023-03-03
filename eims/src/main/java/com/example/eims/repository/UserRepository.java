@@ -18,14 +18,22 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByPhone(String phone);
     Optional<User> findByPhoneAndPassword(String phone, String password);
-    Boolean existsByPhone(String phone);
+    boolean existsByPhone(String phone);
     Optional<User> findByUserId(Long userId);
     @Query(value = "SELECT user_id FROM eims.user where phone = ?1", nativeQuery = true)
-    String findIdByPhone(String phone);
+    Long getUserIdByPhone(String phone);
     Page<User> findAll(Pageable pageable);
+    Optional<List<User>> findAllByRoleId(int roleId);
+    Optional<List<User>> findAllByRoleIdAndStatus(int roleId, int status);
+    @Query(value = "UPDATE eims.user SET status = ?2 WHERE user_id = ?1", nativeQuery = true)
+    void changeStatus(Long userId, int status);
+    @Query(value = "SELECT status FROM eims.user WHERE user_id = ?1", nativeQuery = true)
+    int getStatusByUserId(Long userId);
+
 }

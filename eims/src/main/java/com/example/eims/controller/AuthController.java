@@ -37,7 +37,7 @@ public class AuthController {
      * @return
      */
     @PostMapping("/signin")
-    public ResponseEntity<Long> authenticateUser(@RequestBody LoginDTO loginDTO) {
+    public ResponseEntity<?> authenticateUser(@RequestBody LoginDTO loginDTO) {
         return authService.authenticateUser(loginDTO);
     }
 
@@ -92,8 +92,8 @@ public class AuthController {
      * @return
      */
     @GetMapping("/forgotPassword/resendOTP")
-    public ResponseEntity<?> resendOTP() {
-        return authService.resendOTP();
+    public ResponseEntity<?> resendOTP(@RequestBody String phone) {
+        return authService.resendOTP(phone);
     }
 
     /**

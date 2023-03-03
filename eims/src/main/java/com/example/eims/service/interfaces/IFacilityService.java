@@ -51,17 +51,8 @@ public interface IFacilityService {
     /**
      * Update a facility of a user.
      *
-     * @param facilityId the id of facility
      * @param updateFacilityDTO contains the new name, address, found date, subscription's expiration date,
      * @return
      */
-    public ResponseEntity<?> updateFacility(Long facilityId, UpdateFacilityDTO updateFacilityDTO);
-
-    /**
-     * Delete a facility of a user.
-     *
-     * @param facilityId the id of the facility
-     * @return
-     */
-    public ResponseEntity<?> deleteFacility(Long facilityId);
+    public ResponseEntity<?> updateFacility(UpdateFacilityDTO updateFacilityDTO);
 }

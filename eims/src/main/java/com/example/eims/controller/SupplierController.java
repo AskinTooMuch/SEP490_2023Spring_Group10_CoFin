@@ -98,28 +98,16 @@ public class SupplierController {
     }
 
     /**
-     * Delete a supplier of a user.
-     *
-     * @param supplierId the id of the supplier
-     * @return
-     */
-    @DeleteMapping("/delete")
-    @Secured({"ROLE_OWNER"})
-    public ResponseEntity<?> deleteSupplier(@RequestParam Long supplierId) {
-        return supplierService.deleteSupplier(supplierId);
-    }
-
-    /**
      * Search supplier of the user by their name or phone number.
      *
-     * @param key the search key (name or phone number)
      * @param userId the id of current logged-in user
+     * @param key the search key (name or phone number
      * @return list of suppliers
      */
     @GetMapping("/search")
     @Secured({"ROLE_OWNER"})
-    public ResponseEntity<?> searchSupplier(@RequestParam String key, @RequestBody Long userId) {
-        return supplierService.searchSupplier(key, userId);
+    public ResponseEntity<?> searchSupplier(@RequestParam Long userId, @RequestParam String key) {
+        return supplierService.searchSupplier(userId, key);
     }
 
     /**

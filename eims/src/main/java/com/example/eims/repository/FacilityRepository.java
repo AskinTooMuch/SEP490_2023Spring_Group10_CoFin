@@ -13,10 +13,16 @@ package com.example.eims.repository;
 
 import com.example.eims.entity.Facility;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 import java.util.Optional;
 
 public interface FacilityRepository extends JpaRepository<Facility, Long> {
     Optional<Facility> findByUserId(Long userId);
     Optional<Facility> findByFacilityId(Long facilityId);
+    boolean existsByFacilityId(Long facilityId);
+    @Query(value = "SELECT status FROM eims.facility where facility_id = ?1", nativeQuery = true)
+    int getStatusById(Long facilityId);
+    @Query(value = "SELECT facility_id FROM eims.facility where user_id = ?1", nativeQuery = true)
+    Long getFacilityIdByUserId(Long userId);
 }

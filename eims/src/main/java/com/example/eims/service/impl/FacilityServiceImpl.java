@@ -7,6 +7,7 @@
  * Record of change:<br>
  * DATE         Version     Author      DESCRIPTION<br>
  * 02/03/2023   1.0         DuongVV     First Deploy<br>
+ *
  */
 
 package com.example.eims.service.impl;
@@ -15,6 +16,7 @@ import com.example.eims.dto.facility.CreateFacilityDTO;
 import com.example.eims.dto.facility.UpdateFacilityDTO;
 import com.example.eims.entity.Facility;
 import com.example.eims.repository.FacilityRepository;
+import com.example.eims.repository.UserRepository;
 import com.example.eims.service.interfaces.IFacilityService;
 import com.example.eims.utils.StringDealer;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,15 +26,19 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class FacilityServiceImpl implements IFacilityService {
 
     @Autowired
     private final FacilityRepository facilityRepository;
+    @Autowired
+    private final UserRepository userRepository;
 
-    public FacilityServiceImpl(FacilityRepository facilityRepository) {
+    public FacilityServiceImpl(FacilityRepository facilityRepository, UserRepository userRepository) {
         this.facilityRepository = facilityRepository;
+        this.userRepository = userRepository;
     }
 
     /**
@@ -56,11 +62,11 @@ public class FacilityServiceImpl implements IFacilityService {
     @Override
     public ResponseEntity<?> getFacilityOfOwner(Long userId) {
         // Get a facility of the current User
-        Facility facility = facilityRepository.findByUserId(userId).orElse(null);
-        if (facility != null) {
-            return new ResponseEntity<>(facility, HttpStatus.OK);
+        Optional<Facility> facility = facilityRepository.findByUserId(userId);
+        if (facility.isPresent()) {
+            return new ResponseEntity<>(facility.get(), HttpStatus.OK);
         } else {
-            return new ResponseEntity<>("No facility", HttpStatus.OK);
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -73,25 +79,30 @@ public class FacilityServiceImpl implements IFacilityService {
      */
     @Override
     public ResponseEntity<?> createFacility(CreateFacilityDTO createFacilityDTO) {
-        // Retrieve facility information and create new one
-        Facility facility = new Facility();
-        facility.setUserId(createFacilityDTO.getUserId());
-        facility.setFacilityName(createFacilityDTO.getFacilityName());
-        facility.setFacilityAddress(createFacilityDTO.getFacilityAddress());
+        // Check if Owner's account is active?
+        if (userRepository.getStatusByUserId(createFacilityDTO.getUserId()) == 0){
+            return new ResponseEntity<>("Activate your account first!", HttpStatus.BAD_REQUEST);
+        } else {
+            // Retrieve facility information and create new one
+            Facility facility = new Facility();
+            facility.setUserId(createFacilityDTO.getUserId());
+            facility.setFacilityName(createFacilityDTO.getFacilityName());
+            facility.setFacilityAddress(createFacilityDTO.getFacilityAddress());
 
-        StringDealer stringDealer = new StringDealer();
-        String fDate = createFacilityDTO.getFoundDate();
-        String eDate = createFacilityDTO.getExpirationDate();
-        Date foundDate = stringDealer.convertToDateAndFormat(fDate);
-        Date expirationDate = stringDealer.convertToDateAndFormat(eDate);
-        facility.setFacilityFoundDate(foundDate);
-        facility.setSubscriptionExpirationDate(expirationDate);
+            StringDealer stringDealer = new StringDealer();
+            String fDate = createFacilityDTO.getFoundDate();
+            String eDate = createFacilityDTO.getExpirationDate();
+            Date foundDate = stringDealer.convertToDateAndFormat(fDate);
+            Date expirationDate = stringDealer.convertToDateAndFormat(eDate);
+            facility.setFacilityFoundDate(foundDate);
+            facility.setSubscriptionExpirationDate(expirationDate);
 
-        facility.setHotline(createFacilityDTO.getHotline());
-        facility.setStatus(createFacilityDTO.getStatus());
-        // Save
-        facilityRepository.save(facility);
-        return new ResponseEntity<>("Facility created!", HttpStatus.OK);
+            facility.setHotline(createFacilityDTO.getHotline());
+            facility.setStatus(createFacilityDTO.getStatus());
+            // Save
+            facilityRepository.save(facility);
+            return new ResponseEntity<>("Facility created!", HttpStatus.OK);
+        }
     }
 
     /**
@@ -103,55 +114,46 @@ public class FacilityServiceImpl implements IFacilityService {
     @Override
     public ResponseEntity<?> showFormUpdate(Long facilityId) {
         // Get a facility of the current User
-        Facility facility = facilityRepository.findByFacilityId(facilityId).orElse(null);
-        if (facility != null) {
-            return new ResponseEntity<>(facility, HttpStatus.OK);
+        Optional<Facility> facility = facilityRepository.findByFacilityId(facilityId);
+        if (facility.isPresent()) {
+            return new ResponseEntity<>(facility.get(), HttpStatus.OK);
         } else {
-            return new ResponseEntity<>("No facility", HttpStatus.OK);
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
 
     /**
      * Update a facility of a user.
      *
-     * @param facilityId        the id of facility
      * @param updateFacilityDTO contains the new name, address, found date, subscription's expiration date,
      * @return
      */
     @Override
-    public ResponseEntity<?> updateFacility(Long facilityId, UpdateFacilityDTO updateFacilityDTO) {
+    public ResponseEntity<?> updateFacility(UpdateFacilityDTO updateFacilityDTO) {
         // Retrieve facility's new information and create new one
-        Facility facility = facilityRepository.findById(facilityId).get();
-        facility.setFacilityName(updateFacilityDTO.getFacilityName());
-        facility.setFacilityAddress(updateFacilityDTO.getFacilityAddress());
+        Optional<Facility> facilityOptional = facilityRepository.findById(updateFacilityDTO.getFacilityId());
+        if (facilityOptional.isPresent()) {
+            Facility facility = facilityOptional.get();
+            facility.setFacilityName(updateFacilityDTO.getFacilityName());
+            facility.setFacilityAddress(updateFacilityDTO.getFacilityAddress());
 
-        StringDealer stringDealer = new StringDealer();
-        String fDate = updateFacilityDTO.getFoundDate();
-        String eDate = updateFacilityDTO.getExpirationDate();
-        Date foundDate = stringDealer.convertToDateAndFormat(fDate);
-        Date expirationDate = stringDealer.convertToDateAndFormat(eDate);
-        System.out.println(foundDate);
-        System.out.println(expirationDate);
-        facility.setFacilityFoundDate(foundDate);
-        facility.setSubscriptionExpirationDate(expirationDate);
-        facility.setSubscriptionExpirationDate(expirationDate);
-        facility.setHotline(updateFacilityDTO.getHotline());
-        facility.setStatus(updateFacilityDTO.getStatus());
-        // Save
-        facilityRepository.save(facility);
-        return new ResponseEntity<>("Facility updated!", HttpStatus.OK);
+            StringDealer stringDealer = new StringDealer();
+            String fDate = updateFacilityDTO.getFoundDate();
+            String eDate = updateFacilityDTO.getExpirationDate();
+            Date foundDate = stringDealer.convertToDateAndFormat(fDate);
+            Date expirationDate = stringDealer.convertToDateAndFormat(eDate);
+            facility.setFacilityFoundDate(foundDate);
+            facility.setSubscriptionExpirationDate(expirationDate);
+            facility.setSubscriptionExpirationDate(expirationDate);
+            facility.setHotline(updateFacilityDTO.getHotline());
+            facility.setStatus(updateFacilityDTO.getStatus());
+            // Save
+            facilityRepository.save(facility);
+            return new ResponseEntity<>("Facility updated!", HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+
     }
 
-    /**
-     * Delete a facility of a user.
-     *
-     * @param facilityId the id of the facility
-     * @return
-     */
-    @Override
-    public ResponseEntity<?> deleteFacility(Long facilityId) {
-        // Delete
-        facilityRepository.deleteById(facilityId);
-        return new ResponseEntity<>("Facility deleted!", HttpStatus.OK);
-    }
 }

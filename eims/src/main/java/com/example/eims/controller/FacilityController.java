@@ -17,6 +17,7 @@ import com.example.eims.dto.facility.UpdateFacilityDTO;
 import com.example.eims.service.interfaces.IFacilityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin(origins = "http://localhost:3000")
@@ -31,6 +32,7 @@ public class FacilityController {
      *
      * @return list of Facilities
      */
+    @Secured({"ROLE_MODERATOR","ROLE_ADMIN"})
     @GetMapping("/all")
     public ResponseEntity<?> getAllFacility() {
         return facilityService.getAllFacility();
@@ -42,6 +44,7 @@ public class FacilityController {
      * @param userId the id of the user
      * @return a facility
      */
+    @Secured({"ROLE_OWNER"})
     @GetMapping("/get")
     public ResponseEntity<?> getFacilityOfOwner(@RequestParam Long userId) {
         return facilityService.getFacilityOfOwner(userId);
@@ -54,6 +57,7 @@ public class FacilityController {
      * status of the facility
      * @return
      */
+    @Secured({"ROLE_OWNER"})
     @PostMapping("/create")
     public ResponseEntity<?> createFacility(@RequestBody CreateFacilityDTO createFacilityDTO) {
         return facilityService.createFacility(createFacilityDTO);
@@ -65,6 +69,7 @@ public class FacilityController {
      * @param facilityId the id of the user
      * @return
      */
+    @Secured({"ROLE_OWNER"})
     @GetMapping("/update/get")
     public ResponseEntity<?> showFormUpdate(@RequestParam Long facilityId) {
         return facilityService.showFormUpdate(facilityId);
@@ -73,23 +78,12 @@ public class FacilityController {
     /**
      * Update a facility of a user.
      *
-     * @param facilityId the id of facility
      * @param updateFacilityDTO contains the new name, address, found date, subscription's expiration date,
      * @return
      */
+    @Secured({"ROLE_OWNER"})
     @PutMapping("/update/save")
-    public ResponseEntity<?> updateFacility(@RequestParam Long facilityId, @RequestBody UpdateFacilityDTO updateFacilityDTO) {
-        return facilityService.updateFacility(facilityId, updateFacilityDTO);
-    }
-
-    /**
-     * Delete a facility of a user.
-     *
-     * @param facilityId the id of the facility
-     * @return
-     */
-    @DeleteMapping("/delete")
-    public ResponseEntity<?> deleteFacility(@RequestParam Long facilityId) {
-        return facilityService.deleteFacility(facilityId);
+    public ResponseEntity<?> updateFacility(@RequestBody UpdateFacilityDTO updateFacilityDTO) {
+        return facilityService.updateFacility(updateFacilityDTO);
     }
 }

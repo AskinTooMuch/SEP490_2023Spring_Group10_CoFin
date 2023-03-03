@@ -7,6 +7,7 @@
  * Record of change:<br>
  * DATE         Version     Author      DESCRIPTION<br>
  * 02/03/2023   1.0         DuongVV     First Deploy<br>
+ * 03/03/2023   3.1         DuongVV     Add view/approve registration<br>
  */
 
 package com.example.eims.service.interfaces;
@@ -58,4 +59,38 @@ public interface IUserService {
      * @return
      */
     public ResponseEntity<?> updateUser(UpdateUserDTO updateUserDTO);
+
+    /**
+     * View list of users with same role.
+     *
+     * @param roleId the id of user's role
+     * @return
+     */
+    public ResponseEntity<?> getAllUserByRole(int roleId);
+
+    /**
+     * View list of users with same role and status.
+     *
+     * @param roleId the id of user's role
+     * @param status the status of user
+     * @return
+     */
+    public ResponseEntity<?> getAllUserByRoleAndStatus(int roleId, int status);
+
+    /**
+     * View list registration of owners.
+     *
+     * @param
+     * @return
+     */
+    public ResponseEntity<?> viewListRegistration();
+
+    /**
+     * Approve or Decline owner's registration.
+     *
+     * @param userId id of the user
+     * @param approval is the decision of approval (0-decline, 1-approve)
+     * @return
+     */
+    public ResponseEntity<?> registrationApproval(Long userId, boolean approval);
 }

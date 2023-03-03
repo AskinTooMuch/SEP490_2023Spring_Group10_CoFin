@@ -11,10 +11,7 @@
  */
 package com.example.eims.service.impl;
 
-import com.example.eims.dto.auth.ChangePasswordDTO;
-import com.example.eims.dto.auth.ForgotPasswordDTO;
-import com.example.eims.dto.auth.LoginDTO;
-import com.example.eims.dto.auth.SignUpDTO;
+import com.example.eims.dto.auth.*;
 import com.example.eims.entity.Facility;
 import com.example.eims.entity.User;
 import com.example.eims.repository.FacilityRepository;
@@ -36,7 +33,7 @@ import java.sql.Date;
 import java.util.Optional;
 
 @Service
-public class AuthServiceImpl implements IAuthService{
+public class AuthServiceImpl implements IAuthService {
     @Autowired
     private final AuthenticationManager authenticationManager;
     @Autowired
@@ -60,13 +57,22 @@ public class AuthServiceImpl implements IAuthService{
      * @return
      */
     @Override
-    public ResponseEntity<Long> authenticateUser(LoginDTO loginDTO) {
+    public ResponseEntity<?> authenticateUser(LoginDTO loginDTO) {
         Authentication auth = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                 loginDTO.getPhone().trim(), loginDTO.getPassword().trim()));
         SecurityContextHolder.getContext().setAuthentication(auth);
         System.out.println(SecurityContextHolder.getContext().getAuthentication().getAuthorities());
         User user = userRepository.findByPhone(loginDTO.getPhone()).get();
-        return new ResponseEntity<>(user.getUserId(), HttpStatus.OK);
+        SessionDTO sessionDTO = new SessionDTO();
+        sessionDTO.setUserId(user.getUserId());
+        if (user.getRoleId() == 2 || user.getRoleId() == 3) { /*role is OWNER or EMPLOYEE (have Facility)*/
+            Facility facility = facilityRepository.findByUserId(user.getUserId()).get();
+            sessionDTO.setFacilityId(facility.getFacilityId());
+            return new ResponseEntity<>(sessionDTO, HttpStatus.OK);
+        } else { /*role USER, MODERATOR, ADMIN (no Facility)*/
+            sessionDTO.setFacilityId(null);
+            return new ResponseEntity<>(sessionDTO, HttpStatus.OK);
+        }
     }
 
     @Override
@@ -85,7 +91,7 @@ public class AuthServiceImpl implements IAuthService{
         user.setPhone(signUpDTO.getUserPhone().trim());
         user.setAddress(signUpDTO.getUserAddress().trim());
         user.setRoleId(2L);
-        user.setStatus(1);
+        user.setStatus(2);
         //Encode password
         user.setPassword(passwordEncoder.encode(signUpDTO.getUserPassword().trim()));
         try {
@@ -141,8 +147,8 @@ public class AuthServiceImpl implements IAuthService{
     @Override
     public ResponseEntity<?> sendOTP(String phone) {
         //Check credentials, if not valid then return Bad request (403)
-        User user = userRepository.findByPhone(phone).orElse(null);
-        if (user == null) {
+        Boolean existed = userRepository.existsByPhone(phone);
+        if (!existed) {
             return new ResponseEntity<>("No phone number found!", HttpStatus.BAD_REQUEST);
         } else {
             // create OTP
@@ -163,11 +169,11 @@ public class AuthServiceImpl implements IAuthService{
     public ResponseEntity<?> verifyOTP(String OTP) {
         //Check if the OTP match
         String OTP_REAL = "111";
-        if (OTP.equals(OTP_REAL)){      /* OTP match*/
+        if (OTP.equals(OTP_REAL)) {      /* OTP match*/
             return new ResponseEntity<>("OTP confirmed! Please enter your new password.", HttpStatus.OK);
         } else {                        /* OTP not match*/
 
-            return new ResponseEntity<>("OTP wrong!", HttpStatus.OK);
+            return new ResponseEntity<>("OTP wrong!", HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -177,7 +183,7 @@ public class AuthServiceImpl implements IAuthService{
      * @return
      */
     @Override
-    public ResponseEntity<?> resendOTP() {
+    public ResponseEntity<?> resendOTP(String phone) {
         // create OTP
 
         // send OTP
@@ -203,10 +209,9 @@ public class AuthServiceImpl implements IAuthService{
             userRepository.save(user);
             return new ResponseEntity<>("Password changed successfully", HttpStatus.OK);
         } else {
-            return new ResponseEntity<>("Password not match!", HttpStatus.OK);
+            return new ResponseEntity<>("Password not match!", HttpStatus.BAD_REQUEST);
         }
     }
-
 
 
 }

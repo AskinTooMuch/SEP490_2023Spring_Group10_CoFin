@@ -21,7 +21,7 @@ import lombok.Data;
 public class EggBatch {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long eggBatchId;
     private Long importId;
     private Long breedId;
     private int amount;

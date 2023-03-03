@@ -51,36 +51,27 @@ public interface ICustomerService {
     /**
      * Update a customer of a user.
      *
-     * @param customerId the id of the customer
      * @param updateCustomerDTO contains the new name, phone number and address, email and status of the customer
      * @return
      */
-    public ResponseEntity<?> updateCustomer(Long customerId, UpdateCustomerDTO updateCustomerDTO);
-
-    /**
-     * Delete a customer of a user.
-     *
-     * @param customerId the id of the customer
-     * @return
-     */
-    public ResponseEntity<?> deleteCustomer(Long customerId);
+    public ResponseEntity<?> updateCustomer(UpdateCustomerDTO updateCustomerDTO);
 
     /**
      * Search customer of the user by their name or phone number.
      *
-     * @param key the search key (name or phone number)
+     * @param key    the search key (name or phone number)
      * @param userId the id of current logged-in user
      * @return list of customers match the key search item.
      */
-    public ResponseEntity<?> searchCustomer(String key, Long userId);
+    public ResponseEntity<?> searchCustomer(Long userId, String key);
 
     /**
      * Get all of user's customers with Paging.
      *
      * @param userId the id of current logged-in user.
-     * @param page the page number
-     * @param size the size of page
-     * @param sort sorting type
+     * @param page   the page number
+     * @param size   the size of page
+     * @param sort   sorting type
      * @return list of Customers
      */
     public ResponseEntity<?> getAllCustomerPaging(Long userId, Integer page, Integer size, String sort);

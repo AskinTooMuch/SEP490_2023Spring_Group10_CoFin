@@ -21,7 +21,7 @@ import lombok.Data;
 public class Breed {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long breedId;
     private Long specieId;
     private Long userId;
     private String name;

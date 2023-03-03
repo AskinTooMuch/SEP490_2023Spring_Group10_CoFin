@@ -7,6 +7,7 @@
  * Record of change:<br>
  * DATE         Version     Author      DESCRIPTION<br>
  * 02/03/2023   1.0         DuongVV     First Deploy<br>
+ * 03/03/2023   3.1         DuongVV     Add view/approve registration<br>
  */
 
 package com.example.eims.service.impl;
@@ -30,6 +31,7 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements IUserService {
@@ -103,11 +105,15 @@ public class UserServiceImpl implements IUserService {
     @Override
     public ResponseEntity<?> showFormUpdate(Long userId) {
         // Retrieve user
-        User user = userRepository.findById(userId).get();
-        UpdateUserDTO updateUserDTO = new UpdateUserDTO();
-        updateUserDTO.getFromEntity(user);
-        // Return
-        return new ResponseEntity<>(updateUserDTO, HttpStatus.OK);
+        Optional<User> user = userRepository.findById(userId);
+        if (user.isPresent()){
+            UpdateUserDTO updateUserDTO = new UpdateUserDTO();
+            updateUserDTO.getFromEntity(user.get());
+            // Return
+            return new ResponseEntity<>(updateUserDTO, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
     }
 
     /**
@@ -119,20 +125,95 @@ public class UserServiceImpl implements IUserService {
     @Override
     public ResponseEntity<?> updateUser(UpdateUserDTO updateUserDTO) {
         // Retrieve user's new information
-        User user = userRepository.findById(updateUserDTO.getUserId()).get();
-        user.setUsername(updateUserDTO.getUsername());
+        Optional<User> userOptional = userRepository.findById(updateUserDTO.getUserId());
+        if (userOptional.isPresent()){
+            User user = userOptional.get();
+            user.setUsername(updateUserDTO.getUsername());
+            StringDealer stringDealer = new StringDealer();
+            String sDate = updateUserDTO.getDob();
+            Date date = stringDealer.convertToDateAndFormat(sDate);
+            user.setDob(date);
+            user.setAddress(updateUserDTO.getAddress());
+            user.setEmail(updateUserDTO.getEmail());
+            //user.setStatus(updateUserDTO.getStatus());
+            // Save
+            userRepository.save(user);
+            return new ResponseEntity<>("User information updated!", HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+    }
 
-        StringDealer stringDealer = new StringDealer();
-        String sDate = updateUserDTO.getDob();
-        Date date = stringDealer.convertToDateAndFormat(sDate);
-        user.setDob(date);
+    /**
+     * View list of users with same role.
+     *
+     * @param roleId the id of user's role
+     * @return
+     */
+    @Override
+    public ResponseEntity<?> getAllUserByRole(int roleId) {
+        Optional<List<User>> userList = userRepository.findAllByRoleId(roleId);
+        if (userList.isPresent()) {
+            return new ResponseEntity<>(userList.get(), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+    }
 
-        //user.setPhone(updateUserDTO.getPhone());
-        user.setAddress(updateUserDTO.getAddress());
-        user.setEmail(updateUserDTO.getEmail());
-        //user.setStatus(updateUserDTO.getStatus());
-        // Save
-        userRepository.save(user);
-        return new ResponseEntity<>("User information updated!", HttpStatus.OK);
+    /**
+     * View list of users with same role and status.
+     *
+     * @param roleId the id of user's role
+     * @param status the status of user
+     * @return
+     */
+    @Override
+    public ResponseEntity<?> getAllUserByRoleAndStatus(int roleId, int status) {
+        Optional<List<User>> userList = userRepository.findAllByRoleIdAndStatus(roleId, status);
+        if (userList.isPresent()) {
+            return new ResponseEntity<>(userList.get(), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    /**
+     * View list registration of owners.
+     *
+     * @return
+     */
+    @Override
+    public ResponseEntity<?> viewListRegistration() {
+        // roleId = 2 (OWNER),
+        // status = 0 (Không hoạt động)
+        // status = 1 (Đang hoạt động)
+        // status = 2 (Chưa duyệt)
+        // status = 3 (Không duyệt)
+        Optional<List<User>> ownerList = userRepository.findAllByRoleIdAndStatus(2, 2);
+        if (ownerList.isPresent()) {
+            return new ResponseEntity<>(ownerList.get(), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    /**
+     * Approve or Decline owner's registration.
+     *
+     * @param userId id of the user
+     * @param approval is the decision of approval (3-decline, 1-approve)
+     * @return
+     */
+    @Override
+    public ResponseEntity<?> registrationApproval(Long userId, boolean approval) {
+        // Approve: change status to 1 (Đang hoạt động)
+        // Decline: change status to 3 (Không duyệt)
+        int status = (approval ? 1:3);
+        userRepository.changeStatus(userId, status);
+        if (status == 1) {
+            return new ResponseEntity<>("Owner's registration approved!", HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("Owner's registration declined!", HttpStatus.OK);
+        }
     }
 }

@@ -26,6 +26,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CustomerServiceImpl implements ICustomerService {
@@ -46,12 +47,11 @@ public class CustomerServiceImpl implements ICustomerService {
     @Override
     public ResponseEntity<?> getAllCustomer(Long userId) {
         // Get all customers of the current User
-        List<Customer> customerList = customerRepository.findByUserId(userId);
-        if (customerList.isEmpty()) {
-            return new ResponseEntity<>("No customer found", HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(customerList, HttpStatus.OK);
+        Optional<List<Customer>> customers = customerRepository.findByUserId(userId);
+        if (customers.isPresent()) {
+            return new ResponseEntity<>(customers.get(), HttpStatus.OK);
         }
+        return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
     }
 
     /**
@@ -63,11 +63,11 @@ public class CustomerServiceImpl implements ICustomerService {
     @Override
     public ResponseEntity<?> getCustomer(Long customerId) {
         // Get a customer of the current User
-        Customer customer = customerRepository.findByCustomerId(customerId).orElse(null);
-        if (customer != null) {
-            return new ResponseEntity<>(customer, HttpStatus.OK);
+        Optional<Customer> customer = customerRepository.findByCustomerId(customerId);
+        if (customer.isPresent()) {
+            return new ResponseEntity<>(customer.get(), HttpStatus.OK);
         } else {
-            return new ResponseEntity<>("No customer", HttpStatus.OK);
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -79,6 +79,16 @@ public class CustomerServiceImpl implements ICustomerService {
      */
     @Override
     public ResponseEntity<?> createCustomer(CreateCustomerDTO createCustomerDTO) {
+        // Check blank input
+        if (createCustomerDTO.getName().equals("")) {
+            return new ResponseEntity<>("Tên khách hàng không được để trống", HttpStatus.BAD_REQUEST);
+        }
+        if (createCustomerDTO.getPhone().equals("")) {
+            return new ResponseEntity<>("Số điện thoại khách hàng không được để trống", HttpStatus.BAD_REQUEST);
+        }
+        if (createCustomerDTO.getAddress().equals("")) {
+            return new ResponseEntity<>("Địa chỉ khách hàng không được để trống", HttpStatus.BAD_REQUEST);
+        }
         // Check phone number existed or not
         boolean existed = customerRepository.existsByCustomerPhone(createCustomerDTO.getPhone());
         if (existed) { /* if phone number existed */
@@ -107,63 +117,69 @@ public class CustomerServiceImpl implements ICustomerService {
     @Override
     public ResponseEntity<?> showFormUpdate(Long customerId) {
         // Get a customer of the current User
-        Customer customer = customerRepository.findByCustomerId(customerId).orElse(null);
-        if (customer != null) {
-            return new ResponseEntity<>(customer, HttpStatus.OK);
+        Optional<Customer> customer = customerRepository.findByCustomerId(customerId);
+        if (customer.isPresent()) {
+            return new ResponseEntity<>(customer.get(), HttpStatus.OK);
         } else {
-            return new ResponseEntity<>("No customer", HttpStatus.OK);
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
 
     /**
      * Update a customer of a user.
      *
-     * @param customerId        the id of the customer
      * @param updateCustomerDTO contains the new name, phone number and address, email and status of the customer
      * @return
      */
     @Override
-    public ResponseEntity<?> updateCustomer(Long customerId, UpdateCustomerDTO updateCustomerDTO) {
-        // Retrieve customer's new information
-        Customer customer = customerRepository.findByCustomerId(customerId).get();
-        customer.setCustomerName(updateCustomerDTO.getName());
-        customer.setCustomerPhone(updateCustomerDTO.getPhone());
-        customer.setCustomerAddress(updateCustomerDTO.getAddress());
-        customer.setCustomerMail(updateCustomerDTO.getMail());
-        customer.setStatus(updateCustomerDTO.getStatus());
-        // Save
-        customerRepository.save(customer);
-        return new ResponseEntity<>("Customer updated!", HttpStatus.OK);
-    }
+    public ResponseEntity<?> updateCustomer(UpdateCustomerDTO updateCustomerDTO) {
+        // Check blank input
+        if (updateCustomerDTO.getName().equals("")) {
+            return new ResponseEntity<>("Tên khách hàng không được để trống", HttpStatus.BAD_REQUEST);
+        }
+        if (updateCustomerDTO.getPhone().equals("")) {
+            return new ResponseEntity<>("Số điện thoại khách hàng không được để trống", HttpStatus.BAD_REQUEST);
+        }
+        if (updateCustomerDTO.getAddress().equals("")) {
+            return new ResponseEntity<>("Địa chỉ khách hàng không được để trống", HttpStatus.BAD_REQUEST);
+        }
 
-    /**
-     * Delete a customer of a user.
-     *
-     * @param customerId the id of the customer
-     * @return
-     */
-    @Override
-    public ResponseEntity<?> deleteCustomer(Long customerId) {
-        // Delete
-        customerRepository.deleteById(customerId);
-        return new ResponseEntity<>("Customer deleted!", HttpStatus.OK);
+        Optional<Customer> customerOptional = customerRepository.findByCustomerId(updateCustomerDTO.getCustomerId());
+        if (customerOptional.isPresent()) {
+            // Retrieve customer's new information
+            Customer customer = customerOptional.get();
+            customer.setCustomerName(updateCustomerDTO.getName());
+            customer.setCustomerPhone(updateCustomerDTO.getPhone());
+            customer.setCustomerAddress(updateCustomerDTO.getAddress());
+            customer.setCustomerMail(updateCustomerDTO.getMail());
+            customer.setStatus(updateCustomerDTO.getStatus());
+            // Save
+            customerRepository.save(customer);
+            return new ResponseEntity<>("Customer updated!", HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
     }
 
     /**
      * Search customer of the user by their name or phone number.
      *
-     * @param key    the search key (name or phone number)
      * @param userId the id of current logged-in user
+     * @param key    the search key (name or phone number)
      * @return list of customers match the key search item.
      */
     @Override
-    public ResponseEntity<?> searchCustomer(String key, Long userId) {
+    public ResponseEntity<?> searchCustomer(Long userId, String key) {
         // Trim spaces
         StringDealer stringDealer = new StringDealer();
         key = stringDealer.trimMax(key);
         // Search
-        List<Customer> customerList = customerRepository.searchByUsernameOrPhone(userId, key);
-        return new ResponseEntity<>(customerList, HttpStatus.OK);
+        Optional<List<Customer>> customerList = customerRepository.searchByUsernameOrPhone(userId, key);
+        if (customerList.isPresent()) {
+            return new ResponseEntity<>(customerList.get(), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
     }
 
     /**
