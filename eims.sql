@@ -1,3 +1,4 @@
+-- V0.6.3: Minor audijustment at customer table (NOT NULL field and size)
 -- V0.6.2: Minor audijustment at facility table and add data into machine table
 -- V0.6.1: Fix stored procedure to work with user_id
 -- V0.6.0: Add stored procedure user_and_facility
@@ -110,8 +111,8 @@ CREATE TABLE customer(
 	customer_id			integer 	AUTO_INCREMENT PRIMARY KEY,
     user_id				integer		NOT NULL,
     customer_name		varchar(63)	NOT NULL,
-    customer_phone		varchar(15),
-    customer_address	varchar(127),
+    customer_phone		varchar(15) NOT NULL,
+    customer_address	varchar(255) NOT NULL,
     customer_mail		varchar(127),
     status				boolean		NOT NULL
 );
