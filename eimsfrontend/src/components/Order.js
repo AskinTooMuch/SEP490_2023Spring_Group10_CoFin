@@ -5,6 +5,7 @@ import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Supplier from './Supplier'
+import Customer from './Customer'
 function Order(props) {
   const { children, value, index, ...other } = props;
 
@@ -68,7 +69,7 @@ export default function BasicTabs() {
         <Supplier/>
       </Order>
       <Order value={value} index={3}>
-        Item four
+        <Customer/>
       </Order>
     </Box>
   );

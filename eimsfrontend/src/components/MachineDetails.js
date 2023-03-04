@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from "react-router-dom";
 import PropTypes from 'prop-types';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
@@ -7,7 +8,7 @@ import Box from '@mui/material/Box';
 import '../css/machine.css'
 import { faStarOfLife } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Modal, Button } from 'react-bootstrap'
+import { Modal } from 'react-bootstrap'
 function MachineDetails(props) {
     const { children, value, index, ...other } = props;
 
@@ -51,6 +52,7 @@ export default function BasicTabs() {
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
+    const navigate = useNavigate();
     return (
 
         <Box sx={{ width: '100%' }}>
@@ -60,59 +62,57 @@ export default function BasicTabs() {
                     '& .Mui-selected': { color: "#d25d19" },
                 }} value={value} onChange={handleChange} aria-label="basic tabs example">
                     <Tab style={{ textTransform: "capitalize" }} label="Máy ấp/nở" {...a11yProps(0)} />
+                    <Tab style={{ textTransform: "capitalize" }} label="Trở về trang Máy" {...a11yProps(1)} onClick={() => navigate("/machine")} />
                 </Tabs>
             </Box>
             <MachineDetails value={value} index={0}>
                 <div className='container'>
                     <h3 style={{ textAlign: "center" }}>Thông tin chi tiết máy</h3>
-                    <form><Modal show={show} onHide={handleClose}
+                    <Modal show={show} onHide={handleClose}
                         size="lg"
                         aria-labelledby="contained-modal-title-vcenter"
                         centered >
-                        <Modal.Header closeButton onClick={handleClose}>
-                            <Modal.Title>Sửa thông tin máy</Modal.Title>
-                        </Modal.Header>
-                        <Modal.Body>
-                            <div className="">
-                                <div className="row">
-                                    <div className="col-md-6 ">
-                                        <p>Tên máy<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
+                        <form>
+                            <Modal.Header closeButton onClick={handleClose}>
+                                <Modal.Title>Sửa thông tin máy</Modal.Title>
+                            </Modal.Header>
+                            <Modal.Body>
+                                <div className="">
+                                    <div className="row">
+                                        <div className="col-md-6 ">
+                                            <p>Tên máy<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
+                                        </div>
+                                        <div className="col-md-6">
+                                            <input style={{ width: "100%" }}/>
+                                        </div>
                                     </div>
-                                    <div className="col-md-6">
-                                        <input />
+                                    <div className="row">
+                                        <div className="col-md-6">
+                                            <p>Trạng thái<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
+                                        </div>
+                                        <div className="col-md-6">
+                                            <select class="form-select" aria-label="Default select example">
+                                                <option selected>Open this select menu</option>
+                                                <option value="1" className='text-green'>Hoạt động bình thường</option>
+                                                <option value="2">Two</option>
+                                                <option value="3">Three</option>
+                                            </select>
+                                        </div>
                                     </div>
-                                </div>
-                                <div className="row">
-                                    <div className="col-md-6">
-                                        <p>Trạng thái<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
-                                    </div>
-                                    <div className="col-md-6">
-                                        <select class="form-select" aria-label="Default select example">
-                                            <option selected>Open this select menu</option>
-                                            <option value="1" className='text-green'>Hoạt động bình thường</option>
-                                            <option value="2">Two</option>
-                                            <option value="3">Three</option>
-                                        </select>
-                                    </div>
+
                                 </div>
 
+                            </Modal.Body>
+                            <div className='model-footer'>
+                                <button style={{ width: "30%" }} className="col-md-6 btn-light" onClick={handleClose}>
+                                    Cập nhật
+                                </button>
+                                <button style={{ width: "20%" }} onClick={handleClose} className="btn btn-light">
+                                    Huỷ
+                                </button>
                             </div>
-
-                        </Modal.Body>
-
-                        <Modal.Footer>
-                            <Button variant="danger" style={{ width: "20%" }} onClick={handleClose}>
-                                Huỷ
-                            </Button>
-
-                            <Button variant="success" style={{ width: "30%" }} className="col-md-6" onClick={handleClose}>
-                                Cập nhật
-                            </Button>
-
-                        </Modal.Footer>
+                        </form>
                     </Modal>
-                    </form>
-
                     <div className='detailbody'>
 
                         <div className="row">
@@ -124,8 +124,8 @@ export default function BasicTabs() {
                             </div>
                             <div className="col-md-4 ">
                                 <div className='button'>
-                                    <button className='btn btn-success ' onClick={handleShow}>Sửa</button>
-                                    <button className='btn btn-danger '>Xoá</button>
+                                    <button className='btn btn-light ' onClick={handleShow}>Sửa</button>
+                                    <button className='btn btn-light '>Xoá</button>
                                 </div>
                             </div>
                         </div>

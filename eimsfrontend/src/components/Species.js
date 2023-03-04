@@ -5,7 +5,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import SearchIcon from '@mui/icons-material/Search';
 import ImportExportIcon from '@mui/icons-material/ImportExport';
-import { Modal, Button } from 'react-bootstrap'
+import { Modal } from 'react-bootstrap'
 import { faStarOfLife } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 const Species = () => {
@@ -302,12 +302,14 @@ const Species = () => {
                 </div>
               </div>
             </Modal.Body>
-            <button variant="danger" style={{ width: "20%" }} onClick={handleClose}>
-              Huỷ
-            </button>
-            <button type="submit" style={{ width: "20%" }} className="col-md-6 btn btn-success">
-              Tạo
-            </button>
+            <div className='model-footer'>
+              <button style={{ width: "20%" }} type="submit" className="col-md-6 btn-light" >
+                Tạo
+              </button>
+              <button className='btn btn-light' style={{ width: "20%" }} onClick={handleClose}>
+                Huỷ
+              </button>
+            </div>
           </form>
         </Modal>
 
@@ -341,54 +343,52 @@ const Species = () => {
                   <th scope="row" onClick={() => LoadData(index)}>{index + 1} </th>
                   <td onClick={() => LoadData(index)}>{item.specieName}</td>
                   <td onClick={() => LoadData(index)}>{item.incubationPeriod} (ngày)</td>
-                  <td><button className='btn btn-danger' style={{ width: "50%" }} onClick={() => handleDelete(index)}>Xoá</button></td>
+                  <td><button className='btn btn-light' style={{ width: "50%" }} onClick={() => handleDelete(index)}>Xoá</button></td>
                 </tr>
               ))
             }
 
-            <form><Modal show={show2} onHide={() => handleClose2}
+            <Modal show={show2} onHide={() => handleClose2}
               size="lg"
               aria-labelledby="contained-modal-title-vcenter"
               centered >
-              <Modal.Header closeButton onClick={handleClose2}>
-                <Modal.Title>Sửa thông tin loài</Modal.Title>
-              </Modal.Header>
-              <Modal.Body>
-                <div className="speiciesfix">
-                  <div className="row">
-                    <div className="col-md-6 ">
-                      <p>Tên loài<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
+              <form>
+                <Modal.Header closeButton onClick={handleClose2}>
+                  <Modal.Title>Sửa thông tin loài</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                  <div className="speiciesfix">
+                    <div className="row">
+                      <div className="col-md-6 ">
+                        <p>Tên loài<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
+                      </div>
+                      <div className="col-md-6">
+                        <input placeholder='Gà, Ngan, Vịt, v.v' id="editSpecieName"
+                          value={editSpecieDTO.specieName} onChange={e => handleEditSpecieChange(e, "specieName")} />
+                      </div>
                     </div>
-                    <div className="col-md-6">
-                      <input placeholder='Gà, Ngan, Vịt, v.v' id="editSpecieName"
-                        value={editSpecieDTO.specieName} onChange={e => handleEditSpecieChange(e, "specieName")} />
+                    <div className="row">
+                      <div className="col-md-6 ">
+                        <p>Thời gian ấp<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
+                      </div>
+                      <div className="col-md-6">
+                        <input placeholder='Số ngày ấp' id="editIncubationPeriod" type="number"
+                          value={editSpecieDTO.incubationPeriod} onChange={e => handleEditSpecieChange(e, "incubationPeriod")} />
+                      </div>
                     </div>
                   </div>
-                  <div className="row">
-                    <div className="col-md-6 ">
-                      <p>Thời gian ấp<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
-                    </div>
-                    <div className="col-md-6">
-                      <input placeholder='Số ngày ấp' id="editIncubationPeriod" type="number"
-                        value={editSpecieDTO.incubationPeriod} onChange={e => handleEditSpecieChange(e, "incubationPeriod")} />
-                    </div>
-                  </div>
+                </Modal.Body>
+                <div className='model-footer'>
+                  <button style={{ width: "30%" }} className="col-md-6 btn-light" onClick={handleEditSpecieSubmit}>
+                    Cập nhật
+                  </button>
+                  <button style={{ width: "20%" }} onClick={handleClose2} className="btn btn-light">
+                    Huỷ
+                  </button>
                 </div>
-
-              </Modal.Body>
-
-              <Modal.Footer>
-                <Button variant="danger" style={{ width: "20%" }} onClick={handleClose2}>
-                  Huỷ
-                </Button>
-
-                <Button variant="success" style={{ width: "20%" }} className="col-md-6" onClick={handleEditSpecieSubmit}>
-                  Cập nhật
-                </Button>
-
-              </Modal.Footer>
+              </form>
             </Modal>
-            </form>
+
           </tbody>
         </table>
         <ToastContainer position="top-left"

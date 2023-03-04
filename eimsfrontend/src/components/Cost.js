@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import SearchIcon from '@mui/icons-material/Search';
 import ImportExportIcon from '@mui/icons-material/ImportExport';
-import { Modal, Button } from 'react-bootstrap'
+import { Modal, button } from 'react-bootstrap'
 import { faStarOfLife } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from 'axios';
@@ -25,81 +25,54 @@ const Cost = () => {
             <nav className="navbar justify-content-between">
                 <button className='btn btn-light' onClick={handleShow}>+ Thêm</button>
                 {/* Start: form to add new supplier */}
-                <form><Modal show={show} onHide={handleClose}
+                <Modal show={show} onHide={handleClose}
                     size="lg" aria-labelledby="contained-modal-title-vcenter" centered >
-                    <Modal.Header closeButton onClick={handleClose}>
-                        <Modal.Title>Thêm </Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>
-                        <div className="changepass">
-                            <div className="row">
-                                <div className="col-md-3">
-                                    <p>Họ và tên<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
+                    <form>
+                        <Modal.Header closeButton onClick={handleClose}>
+                            <Modal.Title>Thêm </Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>
+                            <div className="changepass">
+                                <div className="row">
+                                    <div className="col-md-6">
+                                        <p>Tên chi phí<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
+                                    </div>
+                                    <div className="col-md-6">
+                                        <input required style={{ width: "100%" }} placeholder="Tiền sửa máy tháng 1/2023" />
+                                    </div>
+                                    <div className="col-md-6">
+                                        <p>Tổng chi phí <FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
+                                    </div>
+                                    <div className="col-md-6">
+                                        <input required style={{ width: "100%" }} placeholder="0" />
+                                    </div>
                                 </div>
-                                <div className="col-md-3">
-                                    <input style={{ width: "100%" }} />
-                                </div>
-                                <div className="col-md-3">
-                                    <p>Số nhà <FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
-                                </div>
-                                <div className="col-md-3">
-                                    <input style={{ width: "100%" }} disabled />
-                                </div>
-                            </div>
-                            <div className="row">
-                                <div className="col-md-3">
-                                    <p>Số điện thoại<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
-                                </div>
-                                <div className="col-md-3">
-                                    <input style={{ width: "100%" }} />
-                                </div>
-                                <div className="col-md-3">
-                                    <p>Đường <FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
-                                </div>
-                                <div className="col-md-3">
-                                    <input style={{ width: "100%" }} disabled />
-                                </div>
-                            </div>
-                            <div className="row">
-                                <div className="col-md-3">
-                                    <p>Email</p>
-                                </div>
-                                <div className="col-md-3">
-                                    <input style={{ width: "100%" }} />
-                                </div>
-                                <div className="col-md-3">
-                                    <p>Quận/Huyện <FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
-                                </div>
-                                <div className="col-md-3">
-                                    <input style={{ width: "100%" }} disabled />
+                                <div className="row">
+                                    <div className="col-md-6">
+                                        <p>Đã thanh toán</p>
+                                    </div>
+                                    <div className="col-md-6">
+                                        <input style={{ width: "100%" }} placeholder="0" />
+                                    </div>
+                                    <div className="col-md-6">
+                                        <p>Ghi chú </p>
+                                    </div>
+                                    <div className="col-md-6">
+                                        <textarea style={{ width: "100%" }} />
+                                    </div>
                                 </div>
                             </div>
-                            <div className="row">
-                                <div className="col-md-3">
-                                    <p>Tên cơ sở<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
-                                </div>
-                                <div className="col-md-3">
-                                    <input style={{ width: "100%" }} disabled />
-                                </div>
-                                <div className="col-md-3">
-                                    <p>Thành phố <FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
-                                </div>
-                                <div className="col-md-3">
-                                    <input style={{ width: "100%" }} />
-                                </div>
-                            </div>
+                        </Modal.Body>
+                        <div className='model-footer'>
+                            <button style={{ width: "20%" }} type="submit" className="col-md-6 btn-light" >
+                                Tạo
+                            </button>
+                            <button className='btn btn-light' style={{ width: "20%" }} onClick={handleClose}>
+                                Huỷ
+                            </button>
                         </div>
-                    </Modal.Body>
-                    <Modal.Footer>
-                        <Button variant="danger" style={{ width: "20%" }} onClick={handleClose}>
-                            Huỷ
-                        </Button>
-                        <Button variant="success" style={{ width: "20%" }} className="col-md-6" >
-                            Tạo
-                        </Button>
-                    </Modal.Footer>
+                    </form>
                 </Modal>
-                </form>
                 {/* End: form to add new supplier */}
                 {/* Start: Filter and sort table */}
                 <div className='filter my-2 my-lg-0'>
@@ -162,53 +135,55 @@ const Cost = () => {
 
             </div>
 
-            <form><Modal show={show2} onHide={handleClose2}
+            <Modal show={show2} onHide={handleClose2}
                 size="lg" aria-labelledby="contained-modal-title-vcenter" centered >
-                <Modal.Header closeButton onClick={handleClose2}>
-                    <Modal.Title>Cập nhật thông tin chi phí</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <div className="changepass">
-                        <div className="row">
-                            <div className="col-md-6">
-                                <p>Tên chi phí<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
+                <form>
+                    <Modal.Header closeButton onClick={handleClose2}>
+                        <Modal.Title>Cập nhật thông tin chi phí</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <div className="changepass">
+                            <div className="row">
+                                <div className="col-md-6">
+                                    <p>Tên chi phí<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
+                                </div>
+                                <div className="col-md-6">
+                                    <input required style={{ width: "100%" }} placeholder="Tiền mua máy nở" />
+                                </div>
+                                <div className="col-md-6">
+                                    <p>Tổng chi phí <FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
+                                </div>
+                                <div className="col-md-6">
+                                    <input required style={{ width: "100%" }} placeholder="120.000.000" />
+                                </div>
                             </div>
-                            <div className="col-md-6">
-                                <input style={{ width: "100%" }} placeholder="Tiền mua máy nở" />
-                            </div>
-                            <div className="col-md-6">
-                                <p>Tổng chi phí <FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
-                            </div>
-                            <div className="col-md-6">
-                                <input style={{ width: "100%" }} placeholder="120.000.000" />
+                            <div className="row">
+                                <div className="col-md-6">
+                                    <p>Đã thanh toán</p>
+                                </div>
+                                <div className="col-md-6">
+                                    <input style={{ width: "100%" }} placeholder="100.000.000" />
+                                </div>
+                                <div className="col-md-6">
+                                    <p>Ghi chú</p>
+                                </div>
+                                <div className="col-md-6">
+                                    <textarea style={{ width: "100%" }} />
+                                </div>
                             </div>
                         </div>
-                        <div className="row">
-                            <div className="col-md-6">
-                                <p>Đã thanh toán</p>
-                            </div>
-                            <div className="col-md-6">
-                                <input style={{ width: "100%" }} placeholder="100.000.000" />
-                            </div>
-                            <div className="col-md-6">
-                                <p>Ghi chú <FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
-                            </div>
-                            <div className="col-md-6">
-                                <textarea style={{ width: "100%" }} />
-                            </div>
-                        </div>
+                    </Modal.Body>
+                    <div className='model-footer'>
+                        <button style={{ width: "30%" }} className="col-md-6 btn-light" type='submit'>
+                            Cập nhật
+                        </button>
+                        <button style={{ width: "20%" }} onClick={handleClose2} className="btn btn-light">
+                            Huỷ
+                        </button>
                     </div>
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button variant="danger" style={{ width: "20%" }} onClick={handleClose2}>
-                        Huỷ
-                    </Button>
-                    <Button variant="success" style={{ width: "20%" }} className="col-md-6" >
-                        Cập nhật
-                    </Button>
-                </Modal.Footer>
+                </form>
             </Modal>
-            </form>
+
             {/* End: Table for supplier list */}
 
         </div>

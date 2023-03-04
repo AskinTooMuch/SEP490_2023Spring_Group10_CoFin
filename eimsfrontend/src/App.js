@@ -19,6 +19,9 @@ import Subscription from './components/Subscription';
 import ForgotPassword from './components/ForgotPassword';
 import EggBatch from './components/EggBatch';
 import FinanManage from './components/FinanManage';
+import Employee from './components/Employee';
+import EmployeeDetails from './components/EmployeeDetails';
+import CustomerDetails from './components/CustomerDetails';
 function App() {
   return (
     <>
@@ -28,15 +31,19 @@ function App() {
           <Route path="/subcribe" element={<Subscription />} />
           <Route path="/egg" element={<Egg />} />
           <Route path="/machine" element={<Machine />} />
-          <Route path="/eggbatchdetail" element={<EggBatchDetail />} />
-          <Route path="/breeddetail" element={<BreedDetails />} />
-          <Route path="/machinedetail" element={<MachineDetails />} />
-          <Route path="/supplierdetail" element={<SupplierDetails />} />
           <Route path="/order" element={<Order />} />
           <Route path="/dashboard" element={<DashBoard />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/eggbatch" element={<EggBatch />} />
           <Route path="/finance" element={<FinanManage />} />
+          <Route path="/employee" element={<Employee />} />
+          {/*Details pages */}
+          <Route path="/employeedetail" element={<EmployeeDetails />} />
+          <Route path="/eggbatchdetail" element={<EggBatchDetail />} />
+          <Route path="/breeddetail" element={<BreedDetails />} />
+          <Route path="/machinedetail" element={<MachineDetails />} />
+          <Route path="/supplierdetail" element={<SupplierDetails />} />
+          <Route path="/customerdetail" element={<CustomerDetails />} />
         </Route>
 
         {/* public routes */}

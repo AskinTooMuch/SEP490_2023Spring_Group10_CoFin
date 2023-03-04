@@ -57,6 +57,8 @@ export default function BasicTabs() {
           <Tab style={{ textTransform: "capitalize" }} label="Loài" {...a11yProps(0)} />
           <Tab style={{ textTransform: "capitalize" }} label="Loại" {...a11yProps(1)} />
           <Tab style={{ textTransform: "capitalize" }} label="Lô trứng" {...a11yProps(2)} />
+          <Tab style={{ textTransform: "capitalize" }} label="Kho trứng" {...a11yProps(3)} />
+          <Tab style={{ textTransform: "capitalize" }} label="Theo dõi giá" {...a11yProps(4)} />
         </Tabs>
       </Box>
       <Egg value={value} index={0}>
@@ -68,7 +70,10 @@ export default function BasicTabs() {
       <Egg value={value} index={2}>
         <EggBatch/>
       </Egg>
-     
+      <Egg value={value} index={3}>
+      </Egg>
+      <Egg value={value} index={4}>
+      </Egg>
     </Box>
   );
 }

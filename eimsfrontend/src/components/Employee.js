@@ -9,13 +9,11 @@ import { useNavigate } from "react-router-dom";
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import ImportExportIcon from '@mui/icons-material/ImportExport';
 import SearchIcon from '@mui/icons-material/Search';
-import { Modal} from 'react-bootstrap'
+import { Modal } from 'react-bootstrap'
 import { faStarOfLife } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-function Machine(props) {
+function Employee(props) {
     const { children, value, index, ...other } = props;
-
-
     return (
         <div
             role="tabpanel"
@@ -33,7 +31,7 @@ function Machine(props) {
     );
 }
 
-Machine.propTypes = {
+Employee.propTypes = {
     children: PropTypes.node,
     index: PropTypes.number.isRequired,
     value: PropTypes.number.isRequired,
@@ -57,7 +55,7 @@ export default function BasicTabs() {
     const handleShow = () => setShow(true);
     let navigate = useNavigate();
     const routeChange = () => {
-        let path = '/machinedetail';
+        let path = '/employeedetail';
         navigate(path);
     }
     return (
@@ -67,10 +65,10 @@ export default function BasicTabs() {
                     '& .MuiTabs-indicator': { backgroundColor: "#d25d19" },
                     '& .Mui-selected': { color: "#d25d19" },
                 }} value={value} onChange={handleChange} aria-label="basic tabs example">
-                    <Tab style={{ textTransform: "capitalize" }} label="Máy ấp/nở" {...a11yProps(0)} />
+                    <Tab style={{ textTransform: "capitalize" }} label="Nhân viên" {...a11yProps(0)} />
                 </Tabs>
             </Box>
-            <Machine value={value} index={0}>
+            <Employee value={value} index={0}>
                 <nav className="navbar justify-content-between">
                     <button className='btn btn-light' onClick={handleShow}>+ Thêm</button>
                     <Modal show={show} onHide={handleClose}
@@ -79,52 +77,62 @@ export default function BasicTabs() {
                         centered >
                         <form>
                             <Modal.Header closeButton onClick={handleClose}>
-                                <Modal.Title>Thêm máy</Modal.Title>
+                                <Modal.Title>Sửa thông tin máy</Modal.Title>
                             </Modal.Header>
                             <Modal.Body>
-                                <div className="changepass">
-                                    <div className="row">
-                                        <div className="col-md-6 ">
-                                            <p>Tên máy<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
-                                        </div>
-                                        <div className="col-md-6">
-                                            <input required style={{ width: "100%" }}/>
-                                        </div>
+                                <div className="row">
+                                    <div className="col-md-6">
+                                        <p>Tên nhân viên<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                     </div>
-                                    <div className="row">
-                                        <div className="col-md-6">
-                                            <p>Loại máy<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
-                                        </div>
-                                        <div className="col-md-6">
-                                            <select className="form-select" aria-label="Default select example">
-                                                <option defaultValue="0">Open this select menu</option>
-                                                <option value="1" >Oneg</option>
-                                                <option value="2">Two</option>
-                                                <option value="3">Three</option>
-                                            </select>
-                                        </div>
+                                    <div className="col-md-6">
+                                        <input required style={{ width: "100%" }}  />
                                     </div>
-                                    <div className="row">
-                                        <div className="col-md-6">
-                                            <p>Sức chứa<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
-                                        </div>
-                                        <div className="col-md-6">
-                                            <input required style={{ width: "100%" }}/>
-                                        </div>
+                                    <div className="col-md-6">
+                                        <p>Số điện thoại<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
+                                    </div>
+                                    <div className="col-md-6">
+                                        <input required style={{ width: "100%" }} placeholder="0" />
+                                    </div>
+                                </div>
+                                <div className="row">
+                                    <div className="col-md-6">
+                                        <p>Mật khẩu<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
+                                    </div>
+                                    <div className="col-md-6">
+                                        <input required style={{ width: "100%" }} placeholder="0" />
+                                    </div>
+                                    <div className="col-md-6">
+                                        <p>Địa chỉ</p>
+                                    </div>
+                                    <div className="col-md-6">
+                                        <textarea style={{ width: "100%" }} />
+                                    </div>
+                                </div>
+                                <div className="row">
+                                    <div className="col-md-6">
+                                        <p>Email</p>
+                                    </div>
+                                    <div className="col-md-6">
+                                        <input style={{ width: "100%" }} />
+                                    </div>
+                                    <div className="col-md-6">
+                                        <p>Lương<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
+                                    </div>
+                                    <div className="col-md-6">
+                                        <input required style={{ width: "100%" }} placeholder="0" />
                                     </div>
                                 </div>
                             </Modal.Body>
                             <div className='model-footer'>
-                                <button style={{ width: "20%" }} type="submit" className="col-md-6 btn-light" >
+                                <button style={{ width: "30%" }} className="col-md-6 btn-light" onClick={handleClose}>
                                     Tạo
                                 </button>
-                                <button className='btn btn-light' style={{ width: "20%" }} onClick={handleClose}>
+                                <button style={{ width: "20%" }} onClick={handleClose} className="btn btn-light">
                                     Huỷ
                                 </button>
                             </div>
                         </form>
                     </Modal>
-
                     <div className='filter my-2 my-lg-0'>
                         <p><FilterAltIcon />Lọc</p>
                         <p><ImportExportIcon />Sắp xếp</p>
@@ -139,54 +147,45 @@ export default function BasicTabs() {
                     </div>
                 </nav>
                 <div>
-                <section className="u-align-center u-clearfix u-section-1" id="sec-b42b">
+                    <section className="u-align-center u-clearfix u-section-1" id="sec-b42b">
                         <div className="u-clearfix u-sheet u-sheet-1">
 
                             <div className="u-expanded-width u-table u-table-responsive u-table-1">
                                 <table className="u-table-entity u-table-entity-1">
                                     <colgroup>
-                                        <col width="10%" />
-                                        <col width="20%" />
-                                        <col width="20%" />
-                                        <col width="20%" />
-                                        <col width="20%" />
-                                        <col width="20%" />
+                                        <col width="5%" />
+                                        <col width="35%" />
+                                        <col width="30%" />
+                                        <col width="30%" />
                                     </colgroup>
                                     <thead className="u-palette-4-base u-table-header u-table-header-1">
                                         <tr style={{ height: "21px" }}>
                                             <th className="u-border-1 u-border-custom-color-1 u-palette-2-base u-table-cell u-table-cell-1">STT</th>
-                                            <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-2">Tên máy</th>
-                                            <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-3">Loại máy</th>
-                                            <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-4">Sức chứa</th>
-                                            <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-5">Tiến trình</th>
-                                            <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-6">Trạng thái</th>
+                                            <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-2">Tên nhân viên</th>
+                                            <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-3">Số điện thoại</th>
+                                            <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-5">Trạng thái</th>
                                         </tr>
                                     </thead>
                                     <tbody className="u-table-body">
                                         <tr style={{ height: "76px" }} onClick={routeChange}>
                                             <td className="u-border-1 u-border-grey-30 u-first-column u-grey-5 u-table-cell u-table-cell-5">1</td>
-                                            <td className="u-border-1 u-border-grey-30 u-table-cell">Máy 13</td>
-                                            <td className="u-border-1 u-border-grey-30 u-table-cell">Máy ấp</td>
-                                            <td className="u-border-1 u-border-grey-30 u-table-cell">1000/1000</td>
-                                            <td className="u-border-1 u-border-grey-30 u-table-cell">Đang ấp</td>
+                                            <td className="u-border-1 u-border-grey-30 u-table-cell">Nguyễn Hoàng Dương</td>
+                                            <td className="u-border-1 u-border-grey-30 u-table-cell">09124719471</td>
                                             <td className="u-border-1 u-border-grey-30 u-table-cell text-green">Đang hoạt động</td>
                                         </tr>
                                         <tr style={{ height: "76px" }}>
                                             <td className="u-border-1 u-border-grey-30 u-first-column u-grey-5 u-table-cell u-table-cell-9">2</td>
-                                            <td className="u-border-1 u-border-grey-30 u-table-cell">Máy 29</td>
-                                            <td className="u-border-1 u-border-grey-30 u-table-cell">Máy ấp</td>
-                                            <td className="u-border-1 u-border-grey-30 u-table-cell">0/1000</td>
-                                            <td className="u-border-1 u-border-grey-30 u-table-cell">Không có tiến trình</td>
-                                            <td className="u-border-1 u-border-grey-30 u-table-cell text-red">Ngừng hoạt động</td>
+                                            <td className="u-border-1 u-border-grey-30 u-table-cell">Nguyễn Văn Đức</td>
+                                            <td className="u-border-1 u-border-grey-30 u-table-cell">09124719471</td>
+                                            <td className="u-border-1 u-border-grey-30 u-table-cell text-red">Nghỉ việc</td>
                                         </tr>
                                     </tbody>
                                 </table>
                             </div>
                         </div>
                     </section>
-                    
                 </div>
-            </Machine>
+            </Employee>
 
 
         </Box>

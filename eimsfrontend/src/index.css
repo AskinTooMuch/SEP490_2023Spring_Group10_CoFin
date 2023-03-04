@@ -1,4 +1,7 @@
-
+.model-footer button{
+  float: right;
+  margin: 10px;
+}
 .u-section-1 {
   background-image: url("pics/Untitled-21.jpg");
   background-position: 50% 50%;

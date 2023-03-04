@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import SearchIcon from '@mui/icons-material/Search';
 import ImportExportIcon from '@mui/icons-material/ImportExport';
-import { Modal, Button } from 'react-bootstrap'
+import { Modal} from 'react-bootstrap'
 import { faStarOfLife } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 const Breed = () => {
@@ -15,102 +15,100 @@ const Breed = () => {
         let path = '/breeddetail';
         navigate(path);
     }
-    const [images,setImages] = useState([]);
+    const [images, setImages] = useState([]);
     const [imageURLs, setImageURLs] = useState([]);
 
-    useEffect(() =>{
-        if(images.length<1) return;
+    useEffect(() => {
+        if (images.length < 1) return;
         const newImageUrls = [];
         images.forEach(image => newImageUrls.push(URL.createObjectURL(image)));
         setImageURLs(newImageUrls);
     }, [images]);
 
-    const onImageChange= (e) => {
+    const onImageChange = (e) => {
         setImages([...e.target.files]);
     }
     return (
         <div>
             <nav className="navbar justify-content-between">
                 <button className='btn btn-light' onClick={handleShow}>+ Thêm</button>
-                <form><Modal show={show} onHide={handleClose}
+                <Modal show={show} onHide={handleClose}
                     size="lg"
                     aria-labelledby="contained-modal-title-vcenter"
                     centered >
-                    <Modal.Header closeButton onClick={handleClose}>
-                        <Modal.Title>Thêm loại trứng</Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>
-                        <div className="changepass">
-                            <div className="row">
-                                <div className="col-md-6 ">
-                                    <p>Loài<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
+                    <form>
+                        <Modal.Header closeButton onClick={handleClose}>
+                            <Modal.Title>Thêm loại trứng</Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>
+                            <div className="changepass">
+                                <div className="row">
+                                    <div className="col-md-6 ">
+                                        <p>Loài<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
+                                    </div>
+                                    <div className="col-md-6">
+                                        <select className="form-control mt-1" aria-label="Default select example">
+                                            <option selected>Open this select menu</option>
+                                            <option value="1" >One</option>
+                                            <option value="2">Two</option>
+                                            <option value="3">Three</option>
+                                        </select>
+                                    </div>
                                 </div>
-                                <div className="col-md-6">
-                                    <select className="form-select" aria-label="Default select example">
-                                        <option selected>Open this select menu</option>
-                                        <option value="1" >One</option>
-                                        <option value="2">Two</option>
-                                        <option value="3">Three</option>
-                                    </select>
+                                <div className="row">
+                                    <div className="col-md-6 ">
+                                        <p>Tên loại<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
+                                    </div>
+                                    <div className="col-md-6">
+                                        <input required style={{ width: "100%" }} />
+                                    </div>
+                                </div>
+                                <div className="row">
+                                    <div className="col-md-6">
+                                        <p>Cân nặng trung bình<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
+                                    </div>
+                                    <div className="col-md-6">
+                                        <input required style={{ width: "100%" }} />
+                                    </div>
+                                </div>
+                                <div className="row">
+                                    <div className="col-md-6 ">
+                                        <p>Thời gian lớn lên<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
+                                    </div>
+                                    <div className="col-md-6">
+                                        <input required style={{ width: "100%" }} />
+                                    </div>
+                                </div>
+                                <div className="row">
+                                    <div className="col-md-6 ">
+                                        <p>Các bệnh thường gặp</p>
+                                    </div>
+                                    <div className="col-md-6">
+                                        <textarea style={{ width: "100%" }} />
+                                    </div>
+                                </div>
+                                <div className="row">
+                                    <div className="col-md-6 ">
+                                        <p>Hình ảnh</p>
+                                    </div>
+                                    <div className="col-md-6">
+                                        <input type="file" multiple accept="image/*" onChange={onImageChange} />
+                                        {imageURLs.map(imageSrc => <img style={{ width: "100%", minHeight: "100%" }} alt='' src={imageSrc} />)}
+                                    </div>
                                 </div>
                             </div>
-                            <div className="row">
-                                <div className="col-md-6 ">
-                                    <p>Tên loại<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
-                                </div>
-                                <div className="col-md-6">
-                                    <input />
-                                </div>
-                            </div>
-                            <div className="row">
-                                <div className="col-md-6">
-                                    <p>Cân nặng trung bình<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
-                                </div>
-                                <div className="col-md-6">
-                                    <input />
-                                </div>
-                            </div>
-                            <div className="row">
-                                <div className="col-md-6 ">
-                                    <p>Thời gian lớn lên<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
-                                </div>
-                                <div className="col-md-6">
-                                    <input />
-                                </div>
-                            </div>
-                            <div className="row">
-                                <div className="col-md-6 ">
-                                    <p>Các bệnh thường gặp</p>
-                                </div>
-                                <div className="col-md-6">
-                                    <input />
-                                </div>
-                            </div>
-                            <div className="row">
-                                <div className="col-md-6 ">
-                                    <p>Hình ảnh</p>
-                                </div>
-                                <div className="col-md-6">
-                                    <input type="file" multiple accept="image/*" onChange={onImageChange}/>
-                                    {imageURLs.map(imageSrc => <img style={{width:"100%",minHeight:"100%"}} alt='' src={imageSrc}/>)}
-                                </div>
-                            </div>
+                        </Modal.Body>
+                        <div className='model-footer'>
+                            <button style={{ width: "20%" }} type="submit" className="col-md-6 btn-light" >
+                                Tạo
+                            </button>
+                            <button className='btn btn-light' style={{ width: "20%" }} onClick={handleClose}>
+                                Huỷ
+                            </button>
                         </div>
-
-                    </Modal.Body>
-
-                    <Modal.Footer>
-                        <Button variant="danger" style={{ width: "20%" }} onClick={handleClose}>
-                            Huỷ
-                        </Button>
-
-                        <Button variant="success" style={{ width: "20%" }} className="col-md-6" onClick={handleClose}>
-                            Tạo
-                        </Button>
-
-                    </Modal.Footer>
+                    </form>
                 </Modal>
-                </form>
+
                 <div className='filter my-2 my-lg-0'>
                     <p><FilterAltIcon />Lọc</p>
                     <p><ImportExportIcon />Sắp xếp</p>
