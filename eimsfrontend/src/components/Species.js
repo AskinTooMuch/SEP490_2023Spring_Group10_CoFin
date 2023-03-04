@@ -14,14 +14,20 @@ const Species = () => {
   // Create new specie JSON
   const [newSpecieDTO, setNewSpecieDTO] = useState({
     userId: sessionStorage.getItem("curUserId"),
-    specieName: "",
-    incubationPeriod: ""
+    specieName: '',
+    incubationPeriod: '',
+    embryolessDate: '',
+    diedEmbryoDate: '',
+    hatchingDate: ''
   })
   // Save specie JSON
   const [editSpecieDTO, setEditSpecieDTO] = useState({
     specieId: "",
     specieName: "",
-    incubationPeriod: ""
+    incubationPeriod: "",
+    embryolessDate: "",
+    diedEmbryoDate: "",
+    hatchingDate: ""
   })
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
@@ -29,7 +35,7 @@ const Species = () => {
 
   const [show2, setShow2] = useState(false);
   const handleClose2 = () => setShow2(false);
- 
+
   // Define urls
   const SPECIE_LIST = '/api/specie/list';
   const SPECIE_EDIT_SAVE = '/api/specie/edit/save';
@@ -69,9 +75,14 @@ const Species = () => {
           withCredentials: false
         }
       );
-      editSpecieDTO.specieId = "";
-      editSpecieDTO.specieName = "";
-      editSpecieDTO.incubationPeriod = "";
+      setEditSpecieDTO({
+        specieId: "",
+        specieName: "",
+        incubationPeriod: "",
+        embryolessDate: "",
+        diedEmbryoDate: "",
+        hatchingDate: ""
+      });
       console.log(response)
       loadSpecieList();
       toast.success("Sửa thông tin loài thành công");
@@ -80,17 +91,30 @@ const Species = () => {
       if (!err?.response) {
         toast.error('Server không phản hồi');
       } else if (err.response?.status === 400) {
-        toast.error('Mật khẩu cũ không đúng');
+        toast.error('Yêu cầu không đúng định dạng');
       } else if (err.response?.status === 401) {
-        toast.error('Unauthorized');
+        toast.error('Không có quyền thực hiện hành động này');
       } else {
-        toast.error('Sai mật khẩu');
+        toast.error('Yêu cầu không đúng định dạng');
       }
     }
+  }
+
+  //Validate inputs
+  function validate() {
+    if (newSpecieDTO.specieName.trim() === "") {
+      toast.error("Tên loài không để trống");
+      return false;
+    }
+    return true;
   }
   // Handle submit to send request to API (Create new specie)
   const handleNewSpecieSubmit = async (event) => {
     event.preventDefault();
+    console.log(newSpecieDTO);
+    //Validate and toasts
+    if (!validate()) return;
+
     try {
       const response = await axios.post(SPECIE_NEW,
         newSpecieDTO,
@@ -105,7 +129,10 @@ const Species = () => {
       setNewSpecieDTO({
         userId: sessionStorage.getItem("curUserId"),
         specieName: "",
-        incubationPeriod: ""
+        incubationPeriod: "",
+        embryolessDate: "",
+        diedEmbryoDate: "",
+        hatchingDate: ""
       });
       console.log(response)
       loadSpecieList();
@@ -115,11 +142,11 @@ const Species = () => {
       if (!err?.response) {
         toast.error('Server không phản hồi');
       } else if (err.response?.status === 400) {
-        toast.error('Mật khẩu cũ không đúng');
+        toast.error('Yêu cầu không đúng định dạng');
       } else if (err.response?.status === 401) {
-        toast.error('Unauthorized');
+        toast.error('Không có quyền thực hiện hành động này');
       } else {
-        toast.error('Sai mật khẩu');
+        toast.error('Yêu cầu không đúng định dạng');
       }
     }
   }
@@ -137,18 +164,18 @@ const Species = () => {
           },
           withCredentials: false
         });
-        console.clear(response)
+      console.clear(response)
       loadSpecieList();
       toast.success("Xóa loài thành công");
     } catch (err) {
       if (!err?.response) {
         toast.error('Server không phản hồi');
       } else if (err.response?.status === 400) {
-        toast.error('Mật khẩu cũ không đúng');
+        toast.error('Yêu cầu không đúng định dạng');
       } else if (err.response?.status === 401) {
-        toast.error('Unauthorized');
+        toast.error('Không có quyền thực hiện hành động này');
       } else {
-        toast.error('Sai mật khẩu');
+        toast.error('Yêu cầu không đúng định dạng');
       }
     }
   }
@@ -187,49 +214,103 @@ const Species = () => {
     <div>
       <nav className="navbar justify-content-between">
         <button className='btn btn-light' onClick={handleShow}>+ Thêm</button>
-        <form><Modal show={show} onHide={handleClose}
+        <Modal show={show} onHide={handleClose}
           size="lg"
           aria-labelledby="contained-modal-title-vcenter"
           centered >
-          <Modal.Header closeButton onClick={handleClose}>
-            <Modal.Title>Thêm loài mới</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <div className="changepass">
-              <div className="row">
-                <div className="col-md-6 ">
-                  <p>Tên loài<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
+          <form onSubmit={handleNewSpecieSubmit}>
+            <Modal.Header closeButton onClick={handleClose}>
+              <Modal.Title>Thêm loài mới</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <div className="changepass">
+                <div className="row">
+                  <div className="col-md-6 ">
+                    <p>Tên loài<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
+                  </div>
+                  <div className="col-md-6">
+                    <input placeholder='Gà, Ngan, Vịt, v.v'
+                      onChange={e => handleNewSpecieChange(e, "specieName")}
+                      value={newSpecieDTO.specieName}
+                      required
+                      className="form-control" />
+                  </div>
                 </div>
-                <div className="col-md-6">
-                  <input placeholder='Gà, Ngan, Vịt, v.v' onChange={e => handleNewSpecieChange(e, "specieName")}
-                    value={newSpecieDTO.specieName} />
+                <div className="row">
+                  <div className="col-md-6 ">
+                    <p>Thời gian ấp<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
+                  </div>
+                  <div className="col-md-6">
+                    <input placeholder='Số ngày ấp'
+                      onChange={e => handleNewSpecieChange(e, "incubationPeriod")}
+                      value={newSpecieDTO.incubationPeriod}
+                      type="number"
+                      min="0"
+                      required
+                      className="form-control" />
+                  </div>
+                </div>
+                <div className="row">
+                  <div className="col-md-6 ">
+                    <p>Ngày xác định các giai đoạn ấp của trứng</p>
+                  </div>
+                  <div className="col-md-6">
+                  </div>
+                </div>
+                <div className="row">
+                  <div className="col-md-6 ">
+                    <p>Trứng trắng/tròn (trứng không có phôi)&nbsp;<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
+                  </div>
+                  <div className="col-md-6">
+                    <input placeholder='Ngày thứ ...'
+                      onChange={e => handleNewSpecieChange(e, "embryolessDate")}
+                      value={newSpecieDTO.embryolessDate}
+                      type="number"
+                      min="0"
+                      max={newSpecieDTO.incubationPeriod}
+                      required
+                      className="form-control" />
+                  </div>
+                </div>
+                <div className="row">
+                  <div className="col-md-6 ">
+                    <p>Trứng loãng/tàu (phôi chết non)&nbsp;<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
+                  </div>
+                  <div className="col-md-6">
+                    <input placeholder='Ngày thứ ...'
+                      onChange={e => handleNewSpecieChange(e, "diedEmbryoDate")}
+                      value={newSpecieDTO.diedEmbryoDate}
+                      type="number"
+                      min={newSpecieDTO.embryolessDate}
+                      max={newSpecieDTO.incubationPeriod}
+                      required
+                      className="form-control" />
+                  </div>
+                  <div className="col-md-6 ">
+                    <p>Trứng đang nở&nbsp;<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
+                  </div>
+                  <div className="col-md-6">
+                    <input placeholder='Ngày thứ ...'
+                      onChange={e => handleNewSpecieChange(e, "hatchingDate")}
+                      type="number"
+                      min={newSpecieDTO.diedEmbryoDate}
+                      max={newSpecieDTO.incubationPeriod}
+                      value={newSpecieDTO.hatchingDate}
+                      required
+                      className="form-control" />
+                  </div>
                 </div>
               </div>
-              <div className="row">
-                <div className="col-md-6 ">
-                  <p>Thời gian ấp<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
-                </div>
-                <div className="col-md-6">
-                  <input placeholder='Số ngày ấp' onChange={e => handleNewSpecieChange(e, "incubationPeriod")}
-                    value={newSpecieDTO.incubationPeriod} />
-                </div>
-              </div>
-            </div>
-
-          </Modal.Body>
-
-          <Modal.Footer>
-            <Button variant="danger" style={{ width: "20%" }} onClick={handleClose}>
+            </Modal.Body>
+            <button variant="danger" style={{ width: "20%" }} onClick={handleClose}>
               Huỷ
-            </Button>
-
-            <Button variant="success" style={{ width: "20%" }} className="col-md-6" onClick={handleNewSpecieSubmit}>
+            </button>
+            <button type="submit" style={{ width: "20%" }} className="col-md-6 btn btn-success">
               Tạo
-            </Button>
-
-          </Modal.Footer>
+            </button>
+          </form>
         </Modal>
-        </form>
+
         <div className='filter my-2 my-lg-0'>
           <p><FilterAltIcon />Lọc</p>
           <p><ImportExportIcon />Sắp xếp</p>

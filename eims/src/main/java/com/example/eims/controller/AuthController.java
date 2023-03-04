@@ -49,6 +49,7 @@ public class AuthController {
      */
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@RequestBody SignUpDTO signUpDTO) {
+        System.out.println(signUpDTO);
         return authService.registerUser(signUpDTO);
     }
 
