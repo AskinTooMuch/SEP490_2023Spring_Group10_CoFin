@@ -46,6 +46,7 @@ function a11yProps(index) {
 }
 
 export default function BasicTabs() {
+    const [dataLoaded, setDataLoaded] = useState(false);
     //URL
     const SUPPLIER_UPDATE = "/api/supplier/update/save";
     const userRef = useRef();
@@ -107,7 +108,7 @@ export default function BasicTabs() {
     useEffect(() => {
         console.log("Load address ");
         loadAddress();
-    }, []);
+    }, [dataLoaded]);
 
     const loadAddress = async () => {
         const result = await axios.get("https://raw.githubusercontent.com/kenzouno1/DiaGioiHanhChinhVN/master/data.json",
@@ -122,6 +123,7 @@ export default function BasicTabs() {
             cityList[i] = { value: cityList[i].Id, label: cityList[i].Name }
         }
         setCity(cityList);
+        setDataLoaded(true);
     }
 
     function loadDistrict(index) {

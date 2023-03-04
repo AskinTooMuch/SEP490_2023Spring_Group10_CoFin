@@ -50,7 +50,7 @@ const Login = () => {
       localStorage.setItem("user", loginDetail)
       setLoginDetail('');
       //Set user's phone number in session
-      sessionStorage.setItem("curUserId", response.data);
+      sessionStorage.setItem("curUserId", response.data.userId);
       sessionStorage.setItem("curPhone", loginDetail.phone);
       toast.success("Đăng nhập thành công")
       navigate("/dashboard");

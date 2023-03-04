@@ -39,7 +39,7 @@ public class UserController {
      * @return the details of a user and it's facility in the form of a UserDetailDTO
      */
     @GetMapping("/details")
-    @Secured({"ROLE_OWNER", "ROLE_EMPLOYEE"})
+    //@Secured({"ROLE_OWNER", "ROLE_EMPLOYEE"})
     public ResponseEntity<UserDetailDTO> sendUserDetail(@RequestParam Long userId){
         return userService.sendUserDetail(userId);
     }

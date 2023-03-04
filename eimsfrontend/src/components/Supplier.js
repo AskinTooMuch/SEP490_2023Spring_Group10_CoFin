@@ -11,7 +11,7 @@ import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 const Supplier = () => {
   const userRef = useRef();
-
+  const [dataLoaded, setDataLoaded] = useState(false);
   //Show-hide Popup
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
@@ -74,7 +74,7 @@ const Supplier = () => {
   useEffect(() => {
     console.log("Load address");
     loadAddress();
-  }, []);
+  }, [dataLoaded]);
 
   const loadAddress = async () => {
     const result = await axios.get("https://raw.githubusercontent.com/kenzouno1/DiaGioiHanhChinhVN/master/data.json",
@@ -89,6 +89,7 @@ const Supplier = () => {
       cityList[i] = { value: cityList[i].Id, label: cityList[i].Name }
     }
     setCity(cityList);
+    setDataLoaded(true);
   }
 
   function loadDistrict(index) {

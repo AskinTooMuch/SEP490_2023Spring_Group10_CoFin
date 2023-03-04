@@ -14,6 +14,7 @@ const REGISTER_URL = '/api/auth/signup';
 const Register = () => {
 
     const userRef = useRef();
+    const [dataLoaded, setDataLoaded] = useState(false);
     //Full Json addresses
     const [fullAddresses, setFullAddresses] = useState('');
     const [city, setCity] = useState([
@@ -92,15 +93,14 @@ const Register = () => {
     //User
     useEffect(() => {
         console.log("Load address");
-        loadAddress();
-    }, []);
+        loadAddress( );
+        console.log(fullAddresses);
+    }, [dataLoaded]);
 
     const loadAddress = async () => {
         const result = await axios.get("https://raw.githubusercontent.com/kenzouno1/DiaGioiHanhChinhVN/master/data.json",
             {});
         setFullAddresses(result.data);
-        console.log("Full address");
-        console.log(fullAddresses);
         // Set inf
 
         const cityList = fullAddresses.slice();
@@ -108,6 +108,7 @@ const Register = () => {
             cityList[i] = { value: cityList[i].Id, label: cityList[i].Name }
         }
         setCity(cityList);
+        setDataLoaded(true);
     }
 
     function loadUserDistrict(index) {
