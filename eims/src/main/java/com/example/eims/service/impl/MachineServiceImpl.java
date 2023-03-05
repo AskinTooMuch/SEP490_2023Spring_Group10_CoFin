@@ -11,12 +11,16 @@
 
 package com.example.eims.service.impl;
 
+import com.example.eims.dto.eggLocation.EggLocationMachineDetailDTO;
 import com.example.eims.dto.machine.CreateMachineDTO;
+import com.example.eims.dto.machine.MachineDetailDTO;
+import com.example.eims.dto.machine.MachineListItemDTO;
 import com.example.eims.dto.machine.UpdateMachineDTO;
+import com.example.eims.entity.EggLocation;
+import com.example.eims.entity.EggProduct;
 import com.example.eims.entity.Machine;
-import com.example.eims.repository.EggLocationRepository;
-import com.example.eims.repository.FacilityRepository;
-import com.example.eims.repository.MachineRepository;
+import com.example.eims.entity.MachineType;
+import com.example.eims.repository.*;
 import com.example.eims.service.interfaces.IMachineService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -28,6 +32,7 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Date;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -40,11 +45,17 @@ public class MachineServiceImpl implements IMachineService {
     private final FacilityRepository facilityRepository;
     @Autowired
     private final EggLocationRepository eggLocationRepository;
+    @Autowired
+    private final MachineTypeRepository machineTypeRepository;
+    @Autowired
+    private final EggProductRepository eggProductRepository;
 
-    public MachineServiceImpl(MachineRepository machineRepository, FacilityRepository facilityRepository, EggLocationRepository eggLocationRepository) {
+    public MachineServiceImpl(MachineRepository machineRepository, FacilityRepository facilityRepository, EggLocationRepository eggLocationRepository, MachineTypeRepository machineTypeRepository, EggProductRepository eggProductRepository) {
         this.machineRepository = machineRepository;
         this.facilityRepository = facilityRepository;
         this.eggLocationRepository = eggLocationRepository;
+        this.machineTypeRepository = machineTypeRepository;
+        this.eggProductRepository = eggProductRepository;
     }
 
     /**
@@ -56,13 +67,22 @@ public class MachineServiceImpl implements IMachineService {
     @Override
     public ResponseEntity<?> getAllMachine(Long facilityId) {
         // Get all machines of the current facility
-        Optional<List<Machine>> machineList = machineRepository.findByFacilityId(facilityId);
-        if (machineList.isPresent()) {
+        Optional<List<Machine>> machineListOptional = machineRepository.findByFacilityId(facilityId);
+        List<MachineListItemDTO> machineList = new ArrayList<>();
+        if (machineListOptional.isPresent()) {
+            for (Machine machine: machineListOptional.get()){
+                // Get and set attribute to DTO
+                MachineType machineType = machineTypeRepository.findByMachineTypeId(machine.getMachineTypeId());
+                String machineTypeName = machineType.getMachineTypeName();
+                MachineListItemDTO machineListItemDTO = new MachineListItemDTO();
+                machineListItemDTO.setMachineTypeName(machineTypeName);
+                machineListItemDTO.getFromEntity(machine);
+                machineList.add(machineListItemDTO);
+            }
             return new ResponseEntity<>(machineList, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
-
     }
 
     /**
@@ -74,9 +94,25 @@ public class MachineServiceImpl implements IMachineService {
     @Override
     public ResponseEntity<?> getMachine(Long machineId) {
         // Get a machine of the current facility
-        Optional<Machine> machine = machineRepository.findById(machineId);
-        if (machine.isPresent()) {
-            return new ResponseEntity<>(machine.get(), HttpStatus.OK);
+        Optional<Machine> machineOptional = machineRepository.findById(machineId);
+        if (machineOptional.isPresent()) {
+            Machine machine = machineOptional.get();
+            // Get and add attribute to DTO
+            MachineDetailDTO machineDetailDTO = new MachineDetailDTO();
+            machineDetailDTO.getFromEntity(machine);
+            MachineType machineType = machineTypeRepository.findByMachineTypeId(machine.getMachineTypeId());
+            machineDetailDTO.setMachineTypeName(machineType.getMachineTypeName());
+            List<EggLocation> eggs = eggLocationRepository.getAllByMachineId(machineId).get();
+            List<EggLocationMachineDetailDTO> eggLocations = new ArrayList<>();
+            for (EggLocation eggLocation: eggs){
+                EggLocationMachineDetailDTO eggLocationMachineDetailDTO = new EggLocationMachineDetailDTO();
+                eggLocationMachineDetailDTO.getFromEntity(eggLocation);
+                EggProduct eggProduct = eggProductRepository.getByProductId(eggLocation.getProductId()).get();
+                eggLocationMachineDetailDTO.setEggBatchId(eggProduct.getEggBatchId());
+                eggLocations.add(eggLocationMachineDetailDTO);
+            }
+            machineDetailDTO.setEggs(eggLocations);
+            return new ResponseEntity<>(machineDetailDTO, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
@@ -141,7 +177,7 @@ public class MachineServiceImpl implements IMachineService {
             machine.setMachineName(updateMachineDTO.getName());
             machine.setMaxCapacity(updateMachineDTO.getMaxCapacity());
             machine.setCurCapacity(updateMachineDTO.getCurCapacity());
-            machine.setActive(updateMachineDTO.getActive());
+            machine.setActive(updateMachineDTO.getStatus());
             // Save
             machineRepository.save(machine);
             return new ResponseEntity<>("Machine updated!", HttpStatus.OK);

@@ -19,5 +19,5 @@ public class UpdateMachineDTO {
     private String name;
     private int maxCapacity;
     private int curCapacity;
-    private int active;
+    private int status;
 }

@@ -15,10 +15,9 @@ public interface ImportReceiptRepository extends JpaRepository<ImportReceipt, Lo
     Optional<List<ImportReceipt>> findByUserId(Long userId);
     Optional<List<ImportReceipt>> findBySupplierId(Long supplierId);
     Optional<ImportReceipt> findByImportId(Long importId);
-
     @Query(value = "SELECT supplier_id, SUM(total) as total, SUM(paid) as paid from eims.import_receipt " +
             "WHERE user_id = ?1 GROUP BY supplier_id", nativeQuery = true)
     Optional<List<Objects>> importStatistic(Long userId);
     Page<ImportReceipt> findAllByUserId(Long userId, Pageable pageable);
-    Page<ImportReceipt> findAllBySupplierId(Long suppplierId, Pageable pageable);
+    Page<ImportReceipt> findAllBySupplierId(Long supplierId, Pageable pageable);
 }

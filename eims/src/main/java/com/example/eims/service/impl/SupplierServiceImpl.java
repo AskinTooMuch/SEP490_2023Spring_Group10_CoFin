@@ -12,6 +12,7 @@
 package com.example.eims.service.impl;
 
 import com.example.eims.dto.supplier.CreateSupplierDTO;
+import com.example.eims.dto.supplier.SupplierDetailDTO;
 import com.example.eims.dto.supplier.UpdateSupplierDTO;
 import com.example.eims.entity.ImportReceipt;
 import com.example.eims.entity.Supplier;
@@ -51,11 +52,11 @@ public class SupplierServiceImpl implements ISupplierService {
     @Override
     public ResponseEntity<?> getAllSupplier(Long userId) {
         // Get all suppliers of the current User
-        Optional<List<Supplier>> supplierList = supplierRepository.findByUserId(userId);
-        if (supplierList.isEmpty()) {
+        Optional<List<Supplier>> supplierListOptional = supplierRepository.findByUserId(userId);
+        if (supplierListOptional.isEmpty()) {
             return new ResponseEntity<>("No supplier found", HttpStatus.NO_CONTENT); // 204
         } else {
-            return new ResponseEntity<>(supplierList, HttpStatus.OK);
+            return new ResponseEntity<>(supplierListOptional.get(), HttpStatus.OK);
         }
     }
 
@@ -68,9 +69,19 @@ public class SupplierServiceImpl implements ISupplierService {
     @Override
     public ResponseEntity<?> getSupplier(Long supplierId) {
         // Get a supplier
-        Optional<Supplier> supplier = supplierRepository.findBySupplierId(supplierId);
-        if (supplier.isPresent()) {
-            return new ResponseEntity<>(supplier.get(), HttpStatus.OK);
+        Optional<Supplier> supplierOptional = supplierRepository.findBySupplierId(supplierId);
+        if (supplierOptional.isPresent()) {
+            Supplier supplier = supplierOptional.get();
+            // Get and add attribute to DTO
+            // Get fertilized rate
+            Float fertilizedRate = 9.0F;
+            // Get male rate
+            Float maleRate = 6.0F;
+            SupplierDetailDTO supplierDetailDTO = new SupplierDetailDTO();
+            supplierDetailDTO.getFromEntity(supplier);
+            supplierDetailDTO.setFertilizedRate(fertilizedRate);
+            supplierDetailDTO.setMaleRate(maleRate);
+            return new ResponseEntity<>(supplierDetailDTO, HttpStatus.BAD_REQUEST);
         } else {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
