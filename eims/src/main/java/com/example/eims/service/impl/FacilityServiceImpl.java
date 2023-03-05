@@ -116,7 +116,9 @@ public class FacilityServiceImpl implements IFacilityService {
         // Get a facility of the current User
         Optional<Facility> facility = facilityRepository.findByFacilityId(facilityId);
         if (facility.isPresent()) {
-            return new ResponseEntity<>(facility.get(), HttpStatus.OK);
+            UpdateFacilityDTO updateFacilityDTO = new UpdateFacilityDTO();
+            updateFacilityDTO.getFromEntity(facility.get());
+            return new ResponseEntity<>(updateFacilityDTO, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
@@ -139,12 +141,8 @@ public class FacilityServiceImpl implements IFacilityService {
 
             StringDealer stringDealer = new StringDealer();
             String fDate = updateFacilityDTO.getFoundDate();
-            String eDate = updateFacilityDTO.getExpirationDate();
             Date foundDate = stringDealer.convertToDateAndFormat(fDate);
-            Date expirationDate = stringDealer.convertToDateAndFormat(eDate);
             facility.setFacilityFoundDate(foundDate);
-            facility.setSubscriptionExpirationDate(expirationDate);
-            facility.setSubscriptionExpirationDate(expirationDate);
             facility.setHotline(updateFacilityDTO.getHotline());
             facility.setStatus(updateFacilityDTO.getStatus());
             // Save

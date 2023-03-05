@@ -156,7 +156,9 @@ public class MachineServiceImpl implements IMachineService {
         // Get a machine of the current facility
         Optional<Machine> machine = machineRepository.findById(machineId);
         if (machine.isPresent()) {
-            return new ResponseEntity<>(machine.get(), HttpStatus.OK);
+            UpdateMachineDTO updateMachineDTO = new UpdateMachineDTO();
+            updateMachineDTO.getFromEntity(machine.get());
+            return new ResponseEntity<>(updateMachineDTO, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
@@ -175,8 +177,6 @@ public class MachineServiceImpl implements IMachineService {
         if (machineOptional.isPresent()) {
             Machine machine = machineOptional.get();
             machine.setMachineName(updateMachineDTO.getName());
-            machine.setMaxCapacity(updateMachineDTO.getMaxCapacity());
-            machine.setCurCapacity(updateMachineDTO.getCurCapacity());
             machine.setActive(updateMachineDTO.getStatus());
             // Save
             machineRepository.save(machine);
