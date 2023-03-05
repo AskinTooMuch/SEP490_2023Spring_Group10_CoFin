@@ -41863,14 +41863,45 @@ a:visited {
 
 .instructions {
   font-size: 0.75rem;
-  border-radius: 0.5rem;
-  background: #d7fcfd;
   color: #ff0000;
-  padding: 0.25rem;
-  position: relative;
-  bottom: -10px;
+}
+.tip {
+  position:relative; /* making the .tooltip span a container for the tooltip text */
+  color: orange;
+  float: right;
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.85rem;
 }
 
+.tip:before {
+  content: attr(data-text); /* here's the magic */
+  position:absolute;
+  
+  /* vertically center */
+  top:50%;
+  transform:translateY(-50%);
+  
+  /* move to right */
+  right:100%;
+  margin-left:15px; /* and add a small left margin */
+  
+  /* basic styles */
+  width:300px;
+  padding:10px;
+  border-radius:10px;
+  background: orangered;
+  color: #fff;
+
+  display:none; /* hide by default */
+}
+
+.modal .tip:before {
+  left:100%;
+}
+
+.tip:hover:before {
+  display:block;
+}
 .instructions>svg {
   margin-right: 0.25rem;
 }
@@ -41885,12 +41916,12 @@ a:visited {
 }
 
 .valid  { 
-  outline: none !important;
-  border-bottom: #198754 3px solid;
+  color: #198754 ;
+  margin-left: 10px;
 }
 .invalid  { 
-  outline: none !important;
-  border-bottom: #DC3545 3px solid;
+  color: #DC3545;
+  margin-left: 10px;
 }
 .errmsg {
   color: red;

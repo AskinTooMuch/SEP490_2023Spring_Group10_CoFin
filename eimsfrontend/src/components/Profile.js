@@ -19,10 +19,17 @@ const Profile = () => {
 
     //show-hide password 
     const [passwordShown, setPasswordShown] = useState(false);
+    const [passwordShown2, setPasswordShown2] = useState(false);
+    const [passwordShown3, setPasswordShown3] = useState(false);
     const togglePasswordVisiblity = () => {
         setPasswordShown(passwordShown ? false : true);
     };
-
+    const togglePasswordVisiblity2 = () => {
+        setPasswordShown2(passwordShown2 ? false : true);
+    };
+    const togglePasswordVisiblity3 = () => {
+        setPasswordShown3(passwordShown3 ? false : true);
+    };
 
 
     //show-hide popup
@@ -83,16 +90,20 @@ const Profile = () => {
 
     //address
     const [userAddress, setUserAddress] = useState(
-        {street: "",
-        ward: "",
-        district: "",
-        city: ""}
+        {
+            street: "",
+            ward: "",
+            district: "",
+            city: ""
+        }
     );
     const [faciAddress, setFaciAddress] = useState(
-        {street: "",
-        ward: "",
-        district: "",
-        city: ""}
+        {
+            street: "",
+            ward: "",
+            district: "",
+            city: ""
+        }
     );
 
     const [validPwd, setValidPwd] = useState(false);
@@ -327,14 +338,15 @@ const Profile = () => {
                                 {/*Start: Chnage account details*/}
                                 <div className="row">
                                     <div className="col-md-6">
-                                        <Button onClick={handleShow} className="btn btn-info">Đổi mật khẩu</Button >
+                                        <Button onClick={handleShow} style={{ width: "100%" }} className="btn btn-light">Đổi mật khẩu</Button >
 
                                         <Modal show={show} onHide={handleClose}
                                             size="lg"
                                             aria-labelledby="contained-modal-title-vcenter"
                                             centered >
                                             <Modal.Header closeButton onClick={handleClose}>
-                                                <Modal.Title>Thay đổi mật khẩu</Modal.Title>
+                                                <Modal.Title>Thay đổi mật khẩu <p style={{color:"grey", fontSize:"20px"}} id="pwdnote" data-text=" 8 - 20 kí tự. Bao gồm 1 chữ cái viết hoa, 1 số và 1 kí tự đặc biệt (!,@,#,$,%)"
+                                                                className="tip invalid" ><FontAwesomeIcon icon={faInfoCircle} /></p></Modal.Title>
                                             </Modal.Header>
                                             <form onSubmit={handleSubmit} style={{ margin: "10px" }}>
                                                 <div className="changepass">
@@ -346,33 +358,39 @@ const Profile = () => {
                                                             <input ref={userRef} onChange={e => handleChange(e, "password")}
                                                                 value={changePasswordDTO.password} required
                                                                 type={passwordShown ? "text" : "password"}
-                                                                minLength="8" maxLength="20" />
+                                                                minLength="8" maxLength="20" 
+                                                                className="form-control "/>
                                                             <i onClick={togglePasswordVisiblity}>{eye}</i>
                                                         </div>
                                                     </div>
                                                     <div className="row">
                                                         <div className="col-md-6">
                                                             <p>Mật khẩu mới <FontAwesomeIcon className="star" icon={faStarOfLife} />
+                                                                <FontAwesomeIcon icon={faCheck} className={validPwd ? "valid" : "hide"} />
+                                                                <FontAwesomeIcon icon={faTimes} className={validPwd || !changePasswordDTO.newPassword ? "hide" : "invalid"} />
                                                             </p>
                                                         </div>
                                                         <div className="col-md-6 pass-wrapper">
+                                                       
                                                             <input ref={userRef} onChange={e => handleChange(e, "newPassword")}
                                                                 value={changePasswordDTO.newPassword} required
                                                                 id="newPassword"
                                                                 aria-invalid={validPwd ? "false" : "true"}
                                                                 aria-describedby="pwdnote"
-                                                                type={passwordShown ? "text" : "password"}
-                                                                className={changePasswordDTO.password !== changePasswordDTO.newPassword && validPwd ? "valid" : "invalid"}
+                                                                type={passwordShown2 ? "text" : "password"}
+                                                                className="form-control "
                                                                 minLength="8" maxLength="20" onFocus={() => setPassFocus(true)}
                                                                 onBlur={() => setPassFocus(false)}
                                                             />
-                                                            <i onClick={togglePasswordVisiblity}>{eye}</i>
+                                                            <i onClick={togglePasswordVisiblity2}>{eye}</i>
                                                         </div>
                                                     </div>
                                                     <div className="row">
                                                         <div className="col-md-6">
                                                             <p>Xác nhận lại
-                                                                <FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
+                                                                <FontAwesomeIcon className="star" icon={faStarOfLife} />
+                                                                <FontAwesomeIcon icon={faCheck} className={validMatch ? "valid" : "hide"} />
+                                                                <FontAwesomeIcon icon={faTimes} className={validMatch || changePasswordDTO.newPassword ? "hide" : "invalid"} /></p>
                                                         </div>
                                                         <div className="col-md-6 pass-wrapper">
                                                             <input ref={userRef}
@@ -382,10 +400,10 @@ const Profile = () => {
                                                                 required
                                                                 aria-invalid={validMatch ? "false" : "true"}
                                                                 aria-describedby="confirmnote"
-                                                                type={passwordShown ? "text" : "password"}
-                                                                className={validMatch && matchPwd ? "valid" : "invalid"}
+                                                                type={passwordShown3 ? "text" : "password"}
+                                                                className="form-control "
                                                                 minLength="8" maxLength="20" />
-                                                            <i onClick={togglePasswordVisiblity}>{eye}</i>
+                                                            <i onClick={togglePasswordVisiblity3}>{eye}</i>
                                                         </div>
 
                                                     </div>
@@ -399,23 +417,24 @@ const Profile = () => {
                                                     <br />Mật khẩu xác nhận lại phải trùng với mẩt khẩu đã nhập ở trên
 
                                                 </h6> */}
-                                                <button className="btn btn-danger" style={{ width: "20%" }} onClick={handleClose}>
-                                                    Huỷ
-                                                </button>
-
-                                                <button className="btn btn-success" style={{ width: "30%" }} >
-                                                    Đổi mật khẩu
-                                                </button>
+                                                <div className='model-footer'>
+                                                    <button className="btn btn-light" style={{ width: "30%" }} >
+                                                        Đổi mật khẩu
+                                                    </button>
+                                                    <button className="btn btn-light" style={{ width: "20%" }} onClick={handleClose}>
+                                                        Huỷ
+                                                    </button>
+                                                </div>
                                             </form>
                                         </Modal>
                                     </div>
                                     <div className="col-md-6">
-                                        <Button onClick={handleUpdateGet} className="btn btn-info">Cập nhật</Button >
+                                        <Button onClick={handleUpdateGet} style={{ width: "100%" }} className="btn btn-light">Cập nhật</Button >
                                         <form><Modal show={show2} onHide={handleClose2}
                                             size="lg"
                                             aria-labelledby="contained-modal-title-vcenter"
                                             centered >
-                                            <h3>Chỉnh sửa thông tin cá nhân</h3>
+                                            <Modal.Header><h4>Chỉnh sửa thông tin cá nhân</h4></Modal.Header>
                                             <Modal.Body>
                                                 <div className="mb-3">
                                                     <label className="form-label">Họ và Tên</label>
@@ -444,14 +463,12 @@ const Profile = () => {
                                             </Modal.Body>
 
                                             <Modal.Footer>
-                                                <Button variant="danger" style={{ width: "20%" }} onClick={handleClose2}>
+                                                <Button variant="light" style={{ width: "20%" }} onClick={handleClose2}>
                                                     Huỷ
                                                 </Button>
-
-                                                <Button variant="dark" style={{ width: "30%" }} className="col-md-6" onClick={handleUpdateSave}>
+                                                <Button variant="light" style={{ width: "30%" }} className="col-md-6" onClick={handleUpdateSave}>
                                                     Xác nhận
                                                 </Button>
-
                                             </Modal.Footer>
                                         </Modal>
                                         </form>
@@ -527,7 +544,7 @@ const Profile = () => {
                                                 </div>
                                             </div>
                                             <div style={{ textAlign: "center" }}>
-                                                <button className="btn btn-info" style={{ width: "50%" }}>Cập nhật</button>
+                                                <button className="btn btn-light" style={{ width: "50%" }}>Cập nhật</button>
                                             </div>
 
                                         </div>
@@ -535,8 +552,6 @@ const Profile = () => {
                                 </div>
                             </div>
                         }
-
-
                     </div>
                 </div>
             </div>

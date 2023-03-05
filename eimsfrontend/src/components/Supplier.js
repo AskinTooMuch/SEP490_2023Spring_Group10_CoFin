@@ -158,7 +158,7 @@ const Supplier = () => {
       });
       console.log(response);
       loadSupplerList();
-      toast.success(response);
+      toast.success("Tạo thành công");
       setShow(false);
     } catch (err) {
       if (!err?.response) {
@@ -203,8 +203,9 @@ const Supplier = () => {
       <nav className="navbar justify-content-between">
         <button className='btn btn-light' onClick={handleShow}>+ Thêm</button>
         {/* Start: form to add new supplier */}
-        <form><Modal show={show} onHide={handleClose}
+        <Modal show={show} onHide={handleClose}
           size="lg" aria-labelledby="contained-modal-title-vcenter" centered >
+            <form onSubmit={handleNewSupplierSubmit}>
           <Modal.Header closeButton onClick={handleClose}>
             <Modal.Title>Thêm thông tin nhà cung cấp</Modal.Title>
           </Modal.Header>
@@ -313,16 +314,17 @@ const Supplier = () => {
               </div>
             </div>
           </Modal.Body>
-          <Modal.Footer>
-            <Button variant="danger" style={{ width: "20%" }} onClick={handleClose}>
-              Huỷ
-            </Button>
-            <Button variant="success" style={{ width: "20%" }} className="col-md-6" onClick={handleNewSupplierSubmit}>
-              Tạo
-            </Button>
-          </Modal.Footer>
+          <div className='model-footer'>
+              <button style={{ width: "20%" }} type="submit" className="col-md-6 btn-light" >
+                Tạo
+              </button>
+              <button className='btn btn-light' style={{ width: "20%" }} onClick={handleClose}>
+                Huỷ
+              </button>
+            </div>
+          </form>
         </Modal>
-        </form>
+        
         {/* End: form to add new supplier */}
         {/* Start: Filter and sort table */}
         <div className='filter my-2 my-lg-0'>
@@ -375,6 +377,16 @@ const Supplier = () => {
         </table>
       </div>
       {/* End: Table for supplier list */}
+      <ToastContainer position="top-left"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="colored" />
     </div>
   );
 }

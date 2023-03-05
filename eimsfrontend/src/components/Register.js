@@ -7,8 +7,8 @@ import 'react-toastify/dist/ReactToastify.css';
 import "../css/register.css";
 //import  '../api/provinces.js';
 const EMAIL_REGEX = /^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/;
-const PHONE_REGEX = /(84|0[3|5|7|8|9])+([0-9]{8})\b/;
-const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
+const PHONE_REGEX = /(((\+|)84)|0)(3|5|7|8|9)+([0-9]{8})\b/;
+const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,20}$/;
 const REGISTER_URL = '/api/auth/signup';
 
 const Register = () => {
@@ -24,27 +24,27 @@ const Register = () => {
     const [userDistrict, setUserDistrict] = useState(''); //For populate dropdowns
     const [userWard, setUserWard] = useState('');
     const [userCityIndex, setUserCityIndex] = useState(); //Save the index of selected dropdowns
-    const [userDistrictIndex, setUserDistrictIndex] = useState(); 
+    const [userDistrictIndex, setUserDistrictIndex] = useState();
     const [userWardIndex, setUserWardIndex] = useState();
     const [userStreet, setUserStreet] = useState();
     const [userAddressJson, setUserAddressJson] = useState({
-        city: "", 
-        district: "", 
-        ward: "", 
+        city: "",
+        district: "",
+        ward: "",
         street: ""
     });
-    
+
     //Facility Address data
     const [faciDistrict, setFaciDistrict] = useState(''); //For populate dropdowns
     const [faciWard, setFaciWard] = useState('');
     const [faciCityIndex, setFaciCityIndex] = useState(); //Save the index of selected dropdowns
-    const [faciDistrictIndex, setFaciDistrictIndex] = useState(); 
+    const [faciDistrictIndex, setFaciDistrictIndex] = useState();
     const [faciWardIndex, setFaciWardIndex] = useState();
     const [faciStreet, setFaciStreet] = useState();
     const [faciAddressJson, setFaciAddressJson] = useState({
-        city: "", 
-        district: "", 
-        ward: "", 
+        city: "",
+        district: "",
+        ward: "",
         street: ""
     });
 
@@ -63,6 +63,7 @@ const Register = () => {
     const [validEmail, setValidEmail] = useState(false);
     const [emailFocus, setEmailFocus] = useState(false);
 
+    const [validHotline, setValidHotline] = useState(false);
     //Register DTO
     const [signUpDTO, setSignUpDTO] = useState({
         username: "",
@@ -82,8 +83,8 @@ const Register = () => {
     const handleSignUpChange = (event, field) => {
         let actualValue = event.target.value
         setSignUpDTO({
-          ...signUpDTO,
-          [field]: actualValue
+            ...signUpDTO,
+            [field]: actualValue
         })
     }
 
@@ -93,7 +94,7 @@ const Register = () => {
     //User
     useEffect(() => {
         console.log("Load address");
-        loadAddress( );
+        loadAddress();
         console.log(fullAddresses);
     }, [dataLoaded]);
 
@@ -112,7 +113,7 @@ const Register = () => {
     }
 
     function loadUserDistrict(index) {
-        console.log("City "+index);
+        console.log("City " + index);
         setUserCityIndex(index);
         const districtOnIndex = fullAddresses[index].Districts;
         const districtList = districtOnIndex.slice();
@@ -127,7 +128,7 @@ const Register = () => {
 
     //Load user ward list
     function loadUserWard(index) {
-        console.log("District "+index);
+        console.log("District " + index);
         setUserDistrictIndex(index);
         const wardOnIndex = fullAddresses[userCityIndex].Districts[index].Wards;
         const wardList = wardOnIndex.slice();
@@ -143,7 +144,7 @@ const Register = () => {
     }
 
     function saveUserWard(index) {
-        console.log("Ward "+index);
+        console.log("Ward " + index);
         setUserWardIndex(index);
         //ALso set facility addresses
         if (faciDistrictIndex === userDistrictIndex) {
@@ -161,12 +162,12 @@ const Register = () => {
         userAddressJson.ward = fullAddresses[userCityIndex].Districts[userDistrictIndex].Wards[userWardIndex].Name;
         userAddressJson.street = street;
         signUpDTO.userAddress = JSON.stringify(userAddressJson);
-        signUpDTO.facilityAddress = JSON.stringify(userAddressJson );
+        signUpDTO.facilityAddress = JSON.stringify(userAddressJson);
     }
 
     //Load facility districts
     function loadFaciDistrict(index) {
-        console.log("FCity "+index);
+        console.log("FCity " + index);
         setFaciCityIndex(index);
         const districtOnIndex = fullAddresses[index].Districts;
         const districtList = districtOnIndex.slice();
@@ -178,7 +179,7 @@ const Register = () => {
 
     //Load facility wards
     function loadFaciWard(index) {
-        console.log("FDistrict "+index);
+        console.log("FDistrict " + index);
         setFaciDistrictIndex(index);
         const wardOnIndex = fullAddresses[faciCityIndex].Districts[index].Wards;
         const wardList = wardOnIndex.slice();
@@ -189,7 +190,7 @@ const Register = () => {
     }
 
     function saveFaciWard(index) {
-        console.log("FWard "+index);
+        console.log("FWard " + index);
         setFaciWardIndex(index);
     }
 
@@ -215,6 +216,10 @@ const Register = () => {
     useEffect(() => {
         setValidPhone(PHONE_REGEX.test(signUpDTO.userPhone));
     }, [signUpDTO.userPhone])
+
+    useEffect(() => {
+        setValidHotline(PHONE_REGEX.test(signUpDTO.facilityHotline));
+    }, [signUpDTO.facilityHotline])
 
     useEffect(() => {
         setValidPwd(PWD_REGEX.test(password));
@@ -308,6 +313,8 @@ const Register = () => {
                                                                         <FontAwesomeIcon icon={faCheck} className={validPhone ? "valid" : "hide"} />
                                                                         <FontAwesomeIcon icon={faTimes} className={validPhone || !signUpDTO.userPhone ? "hide" : "invalid"} />
                                                                     </label>
+                                                                    <span id="phonenote" data-text="Số điện thoại Việt Nam, bắt đầu bằng +84 hoặc 03|5|7|8|9"
+                                                                        className="tip invalid" ><FontAwesomeIcon icon={faInfoCircle} /></span>
                                                                     <input type="text" id="userPhone"
                                                                         ref={userRef}
                                                                         autoComplete="off"
@@ -319,18 +326,16 @@ const Register = () => {
                                                                         onFocus={() => setPhoneFocus(true)}
                                                                         onBlur={() => setPhoneFocus(false)}
                                                                         className="form-control " />
-                                                                    <p id="phonenote" className={phoneFocus && signUpDTO.userPhone && !validPhone ? "instructions" : "offscreen"}>
-                                                                        <FontAwesomeIcon icon={faInfoCircle} />
-                                                                        Hãy điền đúng số điện thoại<br />
-                                                                    </p>
                                                                 </div>
                                                             </div>
                                                             {/*userEmail*/}
                                                             <div className="mb-4 ">
                                                                 <div className="form-outline">
-                                                                    <label htmlFor="userEmail">Email <FontAwesomeIcon className="star" icon={faStarOfLife} />
-                                                                        <FontAwesomeIcon icon={faCheck} className={validEmail ? "valid" : "hide"} />
-                                                                        <FontAwesomeIcon icon={faTimes} className={validEmail || !signUpDTO.userEmail ? "hide" : "invalid"} /></label>
+                                                                    <label htmlFor="userEmail">Email <FontAwesomeIcon className="star" icon={faStarOfLife} /></label>
+                                                                    <FontAwesomeIcon icon={faCheck} className={validEmail ? "valid" : "hide"} />
+                                                                    <FontAwesomeIcon icon={faTimes} className={validEmail || !signUpDTO.userEmail ? "hide" : "invalid"} />
+                                                                    <span id="emailnote" data-text="Bắt đầu bằng 1 chữ cái + @example.com"
+                                                                        className="tip invalid" ><FontAwesomeIcon icon={faInfoCircle} /></span>
                                                                     <input type="text" id="userEmail"
                                                                         ref={userRef}
                                                                         autoComplete="off"
@@ -341,12 +346,6 @@ const Register = () => {
                                                                         aria-describedby="emailnote"
                                                                         onFocus={() => setEmailFocus(true)}
                                                                         onBlur={() => setEmailFocus(false)} className="form-control " />
-                                                                    <p id="emailnote" className={emailFocus && signUpDTO.userEmail && !validEmail ? "instructions" : "offscreen"}>
-                                                                        <FontAwesomeIcon icon={faInfoCircle} />
-                                                                        Bắt đầu bằng 1 chữ cái + @example.com<br />
-                                                                        Số và các kí tự đặc biệt được sử dụng.
-                                                                    </p>
-
                                                                 </div>
                                                             </div>
                                                             {/*User city*/}
@@ -360,7 +359,7 @@ const Register = () => {
                                                                         value={userCityIndex}
                                                                         required>
                                                                         <option value="" disabled>Chọn Tỉnh/Thành phố của bạn</option>
-                                                                        {   city &&
+                                                                        {city &&
                                                                             city.map((item, index) => (
                                                                                 <option value={index}>{item.label}</option>
                                                                             ))
@@ -379,7 +378,7 @@ const Register = () => {
                                                                         value={userDistrictIndex}
                                                                         required>
                                                                         <option value="" disabled>Chọn Quận/Huyện của bạn</option>
-                                                                        { userDistrict &&
+                                                                        {userDistrict &&
                                                                             userDistrict.map((item, index) => (
                                                                                 <option value={index}>{item.label}</option>
                                                                             ))
@@ -398,7 +397,7 @@ const Register = () => {
                                                                         value={userWardIndex}
                                                                         required>
                                                                         <option value="" disabled>Chọn Phường của bạn</option>
-                                                                        { userWard &&
+                                                                        {userWard &&
                                                                             userWard.map((item, index) => (
                                                                                 <option value={index}>{item.label}</option>
                                                                             ))
@@ -421,6 +420,10 @@ const Register = () => {
                                                             <div className="mb-4">
                                                                 <div className="form-outline">
                                                                     <label htmlFor="password">Mật khẩu <FontAwesomeIcon className="star" icon={faStarOfLife} /></label>
+                                                                    <FontAwesomeIcon icon={faCheck} className={validPwd ? "valid" : "hide"} />
+                                                                    <FontAwesomeIcon icon={faTimes} className={validPwd || !signUpDTO.userPassword ? "hide" : "invalid"} />
+                                                                    <span id="pwdnote" data-text=" 8 - 20 kí tự. Bao gồm 1 chữ cái viết hoa, 1 số và 1 kí tự đặc biệt (!,@,#,$,%)"
+                                                                        className="tip invalid" ><FontAwesomeIcon icon={faInfoCircle} /></span>
                                                                     <input type="password" id="password"
                                                                         onChange={(e) => setPwd(e.target.value)}
                                                                         value={password}
@@ -430,18 +433,15 @@ const Register = () => {
                                                                         onFocus={() => setPwdFocus(true)}
                                                                         onBlur={() => setPwdFocus(false)}
                                                                         className="form-control " />
-
-                                                                    <p id="pwdnote" className={pwdFocus && !validPwd ? "instructions" : "offscreen"}>
-                                                                        <FontAwesomeIcon icon={faInfoCircle} />
-                                                                        8 - 24 kí tự.<br />
-                                                                        Bao gồm 1 chữ cái viết hoa, 1 số và 1 kí tự đặc biệt.<br />
-                                                                        Các kí tự đặc biệt cho phép: <span aria-label="exclamation mark">!</span> <span aria-label="at symbol">@</span> <span aria-label="hashtag">#</span> <span aria-label="dollar sign">$</span> <span aria-label="percent">%</span>
-                                                                    </p>
                                                                 </div>
                                                             </div>
                                                             <div className="mb-4 ">
                                                                 <div className="form-outline">
                                                                     <label htmlFor="confirm_pwd">Xác nhận lại mật khẩu <FontAwesomeIcon className="star" icon={faStarOfLife} /></label>
+                                                                    <FontAwesomeIcon icon={faCheck} className={validMatch ? "valid" : "hide"} />
+                                                                    <FontAwesomeIcon icon={faTimes} className={validMatch || signUpDTO.userPassword ? "hide" : "invalid"} />
+                                                                    <span id="confirmnote" data-text="Mật khẩu phải trùng với mẩt khẩu đã nhập ở trên"
+                                                                        className="tip invalid" ><FontAwesomeIcon icon={faInfoCircle} /></span>
                                                                     <input type="password" id="confirm_pwd"
                                                                         onChange={(e) => setMatchPwd(e.target.value)}
                                                                         required
@@ -449,10 +449,6 @@ const Register = () => {
                                                                         aria-describedby="confirmnote"
                                                                         onFocus={() => setMatchFocus(true)}
                                                                         onBlur={() => setMatchFocus(false)} className="form-control " />
-                                                                    <p id="confirmnote" className={matchFocus && !validMatch ? "instructions" : "offscreen"}>
-                                                                        <FontAwesomeIcon icon={faInfoCircle} />
-                                                                        Mật khẩu phải trùng với mẩt khẩu đã nhập ở trên
-                                                                    </p>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -489,6 +485,10 @@ const Register = () => {
                                                             <div className="mb-4 ">
                                                                 <div className="form-outline form-white">
                                                                     <label htmlFor="hotline" className="text-white">Hotline <FontAwesomeIcon className="star" icon={faStarOfLife} /></label>
+                                                                    <FontAwesomeIcon icon={faCheck} className={validHotline ? "valid" : "hide"} />
+                                                                    <FontAwesomeIcon icon={faTimes} className={validHotline || !signUpDTO.facilityHotline ? "hide" : "invalid"} />
+                                                                    <span id="phonenote" data-text="Số điện thoại Việt Nam, bắt đầu bằng +84 hoặc 03|5|7|8|9"
+                                                                        className="tip invalid" ><FontAwesomeIcon icon={faInfoCircle} /></span>
                                                                     <input type="text" id="hotline" ref={userRef}
                                                                         autoComplete="off"
                                                                         onChange={(e) => handleSignUpChange(e, "facilityHotline")}
@@ -508,7 +508,7 @@ const Register = () => {
                                                                         value={faciCityIndex}
                                                                         required>
                                                                         <option value="" disabled>Chọn Tỉnh/Thành phố của bạn</option>
-                                                                        {   city &&
+                                                                        {city &&
                                                                             city.map((item, index) => (
                                                                                 <option value={index}>{item.label}</option>
                                                                             ))
@@ -527,7 +527,7 @@ const Register = () => {
                                                                         value={faciDistrictIndex}
                                                                         required>
                                                                         <option value="" disabled>Chọn Quận/Huyện của bạn</option>
-                                                                        { faciDistrict &&
+                                                                        {faciDistrict &&
                                                                             faciDistrict.map((item, index) => (
                                                                                 <option value={index}>{item.label}</option>
                                                                             ))
@@ -546,7 +546,7 @@ const Register = () => {
                                                                         value={faciWardIndex}
                                                                         required>
                                                                         <option value="" disabled>Chọn Phường của bạn</option>
-                                                                        { faciWard &&
+                                                                        {faciWard &&
                                                                             faciWard.map((item, index) => (
                                                                                 <option value={index}>{item.label}</option>
                                                                             ))
@@ -580,7 +580,7 @@ const Register = () => {
 
                                                                 </div>
                                                             </div>
-                                                            <button type="submit" className="btn btn-success" data-mdb-ripple-color="dark"
+                                                            <button type="submit" className="btn btn-light" style={{ width: "100%", textAlign: "center" }}
                                                             >Đăng ký</button>
                                                             <ToastContainer position="top-left"
                                                                 autoClose={5000}

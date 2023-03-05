@@ -59,9 +59,9 @@ h6 {
   display: flex;
 }
 
-i {
+.pass-wrapper i {
   position: absolute;
-  top: 5%;
+  top: 6%;
   right: 6%;
 }
 

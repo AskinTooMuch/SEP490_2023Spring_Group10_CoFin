@@ -200,7 +200,7 @@ export default function BasicTabs() {
         status: ""
       });
       console.log(response);
-      toast.success(response);
+      toast.success("Cập nhật thành công");
       setShow(false);
     } catch (err) {
       if (!err?.response) {
@@ -485,6 +485,16 @@ export default function BasicTabs() {
                         </div>
                     </div>
                 </div>
+                <ToastContainer position="top-left"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="colored" />
             </SupplierDetails>
         </Box>
     );
