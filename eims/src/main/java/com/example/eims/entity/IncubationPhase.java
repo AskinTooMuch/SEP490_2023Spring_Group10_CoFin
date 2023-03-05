@@ -27,4 +27,5 @@ public class IncubationPhase {
     private int phasePeriod;
     private String phaseDescription;
     private boolean status;
+
 }

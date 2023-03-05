@@ -51,7 +51,7 @@ public class SpecieController {
      * @return
      */
     @GetMapping("/list")
-    public ResponseEntity<List<Specie>> listSpecie(@RequestParam Long userId){
+    public ResponseEntity<List<EditSpecieDTO>> listSpecie(@RequestParam Long userId){
         return specieService.listSpecie(userId);
     }
 
@@ -73,7 +73,7 @@ public class SpecieController {
      * @return
      */
     @PostMapping("/edit/save")
-    public ResponseEntity<Specie> saveSpecie(@RequestBody EditSpecieDTO editSpecieDTO){
+    public ResponseEntity<?> saveSpecie(@RequestBody EditSpecieDTO editSpecieDTO){
         return specieService.saveSpecie(editSpecieDTO);
     }
 

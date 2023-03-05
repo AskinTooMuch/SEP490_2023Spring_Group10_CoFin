@@ -33,7 +33,7 @@ public interface ISpecieService {
      * @param userId the id of current logged-in user
      * @return
      */
-    public ResponseEntity<List<Specie>> listSpecie(Long userId);
+    public ResponseEntity<List<EditSpecieDTO>> listSpecie(Long userId);
 
     /**
      * Edit specie's information : Getting the original values
@@ -49,7 +49,7 @@ public interface ISpecieService {
      * @param editSpecieDTO contains user's id, specie's name and incubation period
      * @return
      */
-    public ResponseEntity<Specie> saveSpecie(EditSpecieDTO editSpecieDTO);
+    public ResponseEntity<?> saveSpecie(EditSpecieDTO editSpecieDTO);
 
     /**
      * Delete one user's specie

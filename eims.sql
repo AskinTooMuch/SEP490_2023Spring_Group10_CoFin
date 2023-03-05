@@ -356,6 +356,50 @@ WHERE U.user_id = uid;
 END //
 DELIMITER ;
 
+-- Add new specie and it's incubation phase
+DELIMITER //
+CREATE PROCEDURE create_new_specie(u_id integer, s_name varchar(63), i_period integer, embryoless integer, died_embryo integer, hatching integer) 
+BEGIN
+	DECLARE s_id integer DEFAULT 0;
+	INSERT INTO specie(user_id, specie_name, incubation_period, status) VALUE (u_id, s_name, i_period, 1);
+    SET s_id = (SELECT specie_id 
+				FROM specie 
+                WHERE ((user_id = u_id) AND (specie_name = s_name) AND (incubation_period = i_period)) 
+                ORDER BY specie_id DESC
+                LIMIT 1);
+    INSERT INTO incubation_phase(specie_id, phase_number, phase_period, phase_description, status)
+	VALUES 	(s_id, 0, 0,'Trứng vỡ/dập', 1),
+			(s_id, 1, 0,'Trứng đang ấp', 1),
+			(s_id, 2, embryoless,'Trứng trắng/tròn, trứng không có phôi', 1),
+			(s_id, 3, died_embryo,'Trứng loãng/tàu, phôi chết non', 1),
+			(s_id, 4, (died_embryo+1),'Trứng lộn', 1),
+			(s_id, 5, hatching,'Trứng đang nở', 1),
+			(s_id, 6, (i_period-1),'Trứng tắc', 1),
+			(s_id, 7, (i_period-1),'Con nở', 1),
+			(s_id, 8, (i_period-1),'Con đực', 1),
+			(s_id, 9, (i_period-1),'Con cái', 1);
+	SELECT * FROM specie WHERE specie_id = s_id;
+END //
+DELIMITER ;
+
+-- Update specie and its phases
+
+DELIMITER //
+CREATE PROCEDURE update_existing_specie(s_id integer, s_name varchar(63), i_period integer, embryoless integer, died_embryo integer, hatching integer) 
+BEGIN
+    UPDATE specie
+	SET specie_name = s_name, incubation_period = i_period
+	WHERE specie_id = s_id;
+    
+    UPDATE incubation_phase SET phase_period = embryoless WHERE specie_id = s_id AND phase_number = 2;
+    UPDATE incubation_phase SET phase_period = died_embryo WHERE specie_id = s_id AND phase_number = 3;
+    UPDATE incubation_phase SET phase_period = died_embryo+1 WHERE specie_id = s_id AND phase_number = 4;
+    UPDATE incubation_phase SET phase_period = hatching WHERE specie_id = s_id AND phase_number = 5;
+    UPDATE incubation_phase SET phase_period = i_period-1 WHERE specie_id = s_id AND phase_number >= 6;
+	SELECT * FROM specie WHERE specie_id = s_id;
+END //
+DELIMITER ;
+
 -- Insert Data into tables
 -- user_role
 INSERT INTO user_role (role_id, role_name, status)
@@ -367,16 +411,16 @@ VALUES 	(1, 'ROLE_USER', 1),
 -- user
 INSERT INTO user(user_id, role_id, username, dob, phone, email, salary, password, address, status)
 VALUES 	(1, 5, 'Default Data pack', '2001-12-16', '0000000000','a@a.a', 0, 'a','nowhere', 0),
-		(2,	2,	'Nguyễn Chức', '2001-12-16', '0969044713',	'ownerchuc@gmail.com', 0, '$2a$10$Vp3h.q0WVd4LCt.jY4gbHe5bs2OKdQIa88oIFe7xR83m5UNRDaGPq',	'hải dương', 1),
-        (3,	2, 'Nguyễn Dương', '2001-01-01', '0852274855', 'ownerduong@gmail.com', 0, '$2a$10$UOEamoIHKWrb7BVNTOtZHebHBp6zPZ03STsKXDCZFD0BJusC9xFlO', 'hà nội', 1),
-		(4,	3, 'Dương Tùng', '2001-01-01', '0932321198', 'workertung@gmail.com', 0, '$2a$10$uRRgBmQCWBLgBsB4lImrguTBcHkx96MErC2fhvxmgUPDacoHPPr6W', 'hà nội', 1),
-		(5,	3, 'Vũ Dương', '2001-01-01', '0978815951', 'workerduong@gmail.com', 0, '$2a$10$NpyM9vyE2zQ7bTdEA7nYAeoirBlK5SqI/7v23kVQd7nCZq9nI.oUu', 'hải dương', 1),
-		(6, 4, 'Phạm Tuấn', '2001-01-01', '0985817104', 'moderatortuan@gmail.com', 0, '$2a$10$FNOLtGaY4coy0.CAHUxLpuBj9PIEO5J3/nqbORI8UmZuZd4eqARw2', 'hà nội', 1);
+		(2,	2,	'Nguyễn Chức', '2001-12-16', '0969044714',	'ownerchuc@gmail.com', 0, '$2a$10$Vp3h.q0WVd4LCt.jY4gbHe5bs2OKdQIa88oIFe7xR83m5UNRDaGPq',	'{"city":"Tỉnh Hải Dương","district":"Huyện Gia Lộc","ward":"Xã Hoàng Diệu","street":"Thôn Nghĩa Hy"}', 1),
+        (3,	2, 'Nguyễn Dương', '2001-01-01', '0852274855', 'ownerduong@gmail.com', 0, '$2a$10$UOEamoIHKWrb7BVNTOtZHebHBp6zPZ03STsKXDCZFD0BJusC9xFlO', '{"city":"Tỉnh Hải Dương","district":"Huyện Gia Lộc","ward":"Xã Hoàng Diệu","street":"Thôn Nghĩa Hy"}', 1),
+		(4,	3, 'Dương Tùng', '2001-01-01', '0932321198', 'workertung@gmail.com', 0, '$2a$10$uRRgBmQCWBLgBsB4lImrguTBcHkx96MErC2fhvxmgUPDacoHPPr6W', '{"city":"Tỉnh Hải Dương","district":"Huyện Gia Lộc","ward":"Xã Hoàng Diệu","street":"Thôn Nghĩa Hy"}', 1),
+		(5,	3, 'Vũ Dương', '2001-01-01', '0978815951', 'workerduong@gmail.com', 0, '$2a$10$NpyM9vyE2zQ7bTdEA7nYAeoirBlK5SqI/7v23kVQd7nCZq9nI.oUu', '{"city":"Tỉnh Hải Dương","district":"Huyện Gia Lộc","ward":"Xã Hoàng Diệu","street":"Thôn Nghĩa Hy"}', 1),
+		(6, 4, 'Phạm Tuấn', '2001-01-01', '0985817104', 'moderatortuan@gmail.com', 0, '$2a$10$FNOLtGaY4coy0.CAHUxLpuBj9PIEO5J3/nqbORI8UmZuZd4eqARw2', '{"city":"Tỉnh Hải Dương","district":"Huyện Gia Lộc","ward":"Xã Hoàng Diệu","street":"Thôn Nghĩa Hy"}', 1);
 
 -- facility
 INSERT INTO facility(facility_id, user_id, facility_name, facility_address, facility_found_date, subscription_expiration_date, hotline, business_license_number, status)
-VALUES 	(1, 2, 'Chu Xuong Trung', 'Gia Loc, Hai Duong', '2019-02-17', '2023-5-31', '0969044714', '4103012754', 1),
-		(2, 3, 'ZTrung09', 'Dau do Ha Noi', '2011-05-09', '2021-10-22', '0852274855', '7243012533', 0);
+VALUES 	(1, 2, 'Chu Xuong Trung', '{"city":"Tỉnh Hải Dương","district":"Huyện Gia Lộc","ward":"Xã Hoàng Diệu","street":"Thôn Nghĩa Hy"}', '2019-02-17', '2023-5-31', '0969044714', '4103012754', 1),
+		(2, 3, 'ZTrung09', '{"city":"Tỉnh Hải Dương","district":"Huyện Gia Lộc","ward":"Xã Hoàng Diệu","street":"Thôn Nghĩa Hy"}', '2011-05-09', '2021-10-22', '0852274855', '7243012533', 0);
         
 -- specie
 INSERT INTO specie(specie_id, user_id, specie_name, incubation_period, status)

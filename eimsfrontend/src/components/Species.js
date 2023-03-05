@@ -64,6 +64,7 @@ const Species = () => {
   const handleEditSpecieSubmit = async (event) => {
     event.preventDefault();
     console.log(editSpecieDTO);
+    if (!validate("edit")) return;
     try {
       const response = await axios.post(SPECIE_EDIT_SAVE,
         editSpecieDTO,
@@ -101,8 +102,16 @@ const Species = () => {
   }
 
   //Validate inputs
-  function validate() {
-    if (newSpecieDTO.specieName.trim() === "") {
+  function validate(type) {
+    let dtos;
+    switch (type) {
+      case "new": dtos = newSpecieDTO;
+                  break;
+      case "edit": dtos = editSpecieDTO;
+                  break;
+      default: return;
+    }
+    if (dtos.specieName.trim() === "") {
       toast.error("Tên loài không để trống");
       return false;
     }
@@ -113,7 +122,7 @@ const Species = () => {
     event.preventDefault();
     console.log(newSpecieDTO);
     //Validate and toasts
-    if (!validate()) return;
+    if (!validate("new")) return;
 
     try {
       const response = await axios.post(SPECIE_NEW,
@@ -204,9 +213,13 @@ const Species = () => {
   // Load data into edit specie fields
   function LoadData(index) {
     console.log(index);
-    editSpecieDTO.specieId = specieList[index].specieId;
-    editSpecieDTO.specieName = specieList[index].specieName;
-    editSpecieDTO.incubationPeriod = specieList[index].incubationPeriod;
+    setEditSpecieDTO(specieList[index]);
+    // editSpecieDTO.specieId = specieList[index].specieId;
+    // editSpecieDTO.specieName = specieList[index].specieName;
+    // editSpecieDTO.incubationPeriod = specieList[index].incubationPeriod;
+    // editSpecieDTO.embryolessDate = specieList[index].embryolessDate;
+    // editSpecieDTO.diedEmbryoDate = specieList[index].diedEmbryoDate;
+    // editSpecieDTO.
     setShow2(true);
   }
 
@@ -223,7 +236,9 @@ const Species = () => {
               <Modal.Title>Thêm loài mới</Modal.Title>
             </Modal.Header>
             <Modal.Body>
+              {/* Add new specie form */}
               <div className="changepass">
+                {/**Basic inf */}
                 <div className="row">
                   <div className="col-md-6 ">
                     <p>Tên loài<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
@@ -250,6 +265,7 @@ const Species = () => {
                       className="form-control" />
                   </div>
                 </div>
+                {/**Incubation phase inf: only 3 params are needed; the rest could be auto-generated*/}
                 <div className="row">
                   <div className="col-md-6 ">
                     <p>Ngày xác định các giai đoạn ấp của trứng</p>
@@ -327,6 +343,7 @@ const Species = () => {
         </div>
       </nav>
       <div>
+        {/*Table for list of species */}
         <table className="table table-bordered" id="list_specie_table">
           <thead>
             <tr>
@@ -337,6 +354,7 @@ const Species = () => {
             </tr>
           </thead>
           <tbody id="specie_list_table_body">
+            { /**JSX to load rows */}
             {
               specieList.map((item, index) => (
                 <tr key={item.specieId} data-key={index} className='trclick2'>
@@ -351,20 +369,26 @@ const Species = () => {
             <Modal show={show2} onHide={() => handleClose2}
               size="lg"
               aria-labelledby="contained-modal-title-vcenter"
-              centered >
+              centered 
+              onSubmit={handleEditSpecieSubmit}>
+              {/**Edit species */}
               <form>
                 <Modal.Header closeButton onClick={handleClose2}>
                   <Modal.Title>Sửa thông tin loài</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                   <div className="speiciesfix">
+                    {/**Basic inf */}
                     <div className="row">
                       <div className="col-md-6 ">
                         <p>Tên loài<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                       </div>
                       <div className="col-md-6">
                         <input placeholder='Gà, Ngan, Vịt, v.v' id="editSpecieName"
-                          value={editSpecieDTO.specieName} onChange={e => handleEditSpecieChange(e, "specieName")} />
+                          value={editSpecieDTO.specieName}
+                          onChange={e => handleEditSpecieChange(e, "specieName")}
+                          required
+                          className='form-control' />
                       </div>
                     </div>
                     <div className="row">
@@ -372,14 +396,71 @@ const Species = () => {
                         <p>Thời gian ấp<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                       </div>
                       <div className="col-md-6">
-                        <input placeholder='Số ngày ấp' id="editIncubationPeriod" type="number"
-                          value={editSpecieDTO.incubationPeriod} onChange={e => handleEditSpecieChange(e, "incubationPeriod")} />
+                        <input placeholder='Số ngày ấp'
+                          id="editIncubationPeriod"
+                          value={editSpecieDTO.incubationPeriod}
+                          onChange={e => handleEditSpecieChange(e, "incubationPeriod")}
+                          required
+                          type="number"
+                          min="0"
+                          className='form-control' />
+                      </div>
+                    </div>
+                    {/**Incubation phase inf: only 3 params are needed; the rest could be auto-generated*/}
+                    <div className="row">
+                      <div className="col-md-6 ">
+                        <p>Ngày xác định các giai đoạn ấp của trứng</p>
+                      </div>
+                      <div className="col-md-6">
+                      </div>
+                    </div>
+                    <div className="row">
+                      <div className="col-md-6 ">
+                        <p>Trứng trắng/tròn (trứng không có phôi)&nbsp;<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
+                      </div>
+                      <div className="col-md-6">
+                        <input placeholder='Ngày thứ ...'
+                          onChange={e => handleEditSpecieChange(e, "embryolessDate")}
+                          value={editSpecieDTO.embryolessDate}
+                          type="number"
+                          min="0"
+                          max={editSpecieDTO.incubationPeriod}
+                          required
+                          className="form-control" />
+                      </div>
+                    </div>
+                    <div className="row">
+                      <div className="col-md-6 ">
+                        <p>Trứng loãng/tàu (phôi chết non)&nbsp;<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
+                      </div>
+                      <div className="col-md-6">
+                        <input placeholder='Ngày thứ ...'
+                          onChange={e => handleEditSpecieChange(e, "diedEmbryoDate")}
+                          value={editSpecieDTO.diedEmbryoDate}
+                          type="number"
+                          min={editSpecieDTO.embryolessDate}
+                          max={editSpecieDTO.incubationPeriod}
+                          required
+                          className="form-control" />
+                      </div>
+                      <div className="col-md-6 ">
+                        <p>Trứng đang nở&nbsp;<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
+                      </div>
+                      <div className="col-md-6">
+                        <input placeholder='Ngày thứ ...'
+                          onChange={e => handleEditSpecieChange(e, "hatchingDate")}
+                          type="number"
+                          min={editSpecieDTO.diedEmbryoDate}
+                          max={editSpecieDTO.incubationPeriod}
+                          value={editSpecieDTO.hatchingDate}
+                          required
+                          className="form-control" />
                       </div>
                     </div>
                   </div>
                 </Modal.Body>
                 <div className='model-footer'>
-                  <button style={{ width: "30%" }} className="col-md-6 btn-light" onClick={handleEditSpecieSubmit}>
+                  <button style={{ width: "30%" }} type='submit' className="col-md-6 btn-light">
                     Cập nhật
                   </button>
                   <button style={{ width: "20%" }} onClick={handleClose2} className="btn btn-light">

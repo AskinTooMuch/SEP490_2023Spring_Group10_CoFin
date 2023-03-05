@@ -7,4 +7,7 @@ public class NewSpecieDTO {
     private Long userId;
     private String specieName;
     private int incubationPeriod;
+    private int embryolessDate;
+    private int diedEmbryoDate;
+    private int hatchingDate;
 }

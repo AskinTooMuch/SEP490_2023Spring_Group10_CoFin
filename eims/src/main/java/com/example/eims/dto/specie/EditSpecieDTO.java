@@ -7,4 +7,7 @@ public class EditSpecieDTO {
     private Long specieId;
     private String specieName;
     private int incubationPeriod;
+    private int embryolessDate;
+    private int diedEmbryoDate;
+    private int hatchingDate;
 }

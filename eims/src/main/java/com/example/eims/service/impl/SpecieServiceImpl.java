@@ -13,8 +13,10 @@ package com.example.eims.service.impl;
 
 import com.example.eims.dto.specie.EditSpecieDTO;
 import com.example.eims.dto.specie.NewSpecieDTO;
+import com.example.eims.entity.IncubationPhase;
 import com.example.eims.entity.Specie;
 import com.example.eims.entity.User;
+import com.example.eims.repository.IncubationPhaseRepository;
 import com.example.eims.repository.SpecieRepository;
 import com.example.eims.repository.UserRepository;
 import com.example.eims.service.interfaces.ISpecieService;
@@ -25,22 +27,34 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
 public class SpecieServiceImpl implements ISpecieService {
+    public class servicePayload {
+        private Long specieId;
+        private String specieName;
+        private int incubationPeriod;
+        private int phaseNumber;
+        private int phasePeriod;
+    }
 
     @Autowired
     private final SpecieRepository specieRepository;
     @Autowired
     private final UserRepository userRepository;
+    @Autowired
+    private final IncubationPhaseRepository incubationPhaseRepository;
     @PersistenceContext
     private final EntityManager em;
 
-    public SpecieServiceImpl(SpecieRepository specieRepository, UserRepository userRepository, EntityManager em) {
+    public SpecieServiceImpl(SpecieRepository specieRepository, UserRepository userRepository, IncubationPhaseRepository incubationPhaseRepository, EntityManager em) {
         this.specieRepository = specieRepository;
         this.userRepository = userRepository;
+        this.incubationPhaseRepository = incubationPhaseRepository;
         this.em = em;
     }
 
@@ -57,12 +71,22 @@ public class SpecieServiceImpl implements ISpecieService {
         if (userOpt.isPresent()) {
             User user = userOpt.get();
             Specie specie = new Specie();
-            specie.setSpecieId(100L);
-            specie.setUserId(user.getUserId());
-            specie.setSpecieName(newSpecieDTO.getSpecieName());
-            specie.setIncubationPeriod(newSpecieDTO.getIncubationPeriod());
-            specie.setStatus(true);
-            specieRepository.save(specie);
+//            specie.setSpecieId(100L);
+//            specie.setUserId(user.getUserId());
+//            specie.setSpecieName(newSpecieDTO.getSpecieName());
+//            specie.setIncubationPeriod(newSpecieDTO.getIncubationPeriod());
+//            specie.setStatus(true);
+            try {
+                specieRepository.createNewSpecie(
+                        user.getUserId(),
+                        newSpecieDTO.getSpecieName(),
+                        newSpecieDTO.getIncubationPeriod(),
+                        newSpecieDTO.getEmbryolessDate(),
+                        newSpecieDTO.getDiedEmbryoDate(),
+                        newSpecieDTO.getHatchingDate());
+            } catch (IllegalArgumentException iae) {
+                return null;
+            }
             return new ResponseEntity<>("Specie added successfully", HttpStatus.OK);
         }
         return new ResponseEntity<>("Account not found with Id number "+newSpecieDTO.getUserId(), HttpStatus.BAD_REQUEST);
@@ -75,13 +99,33 @@ public class SpecieServiceImpl implements ISpecieService {
      * @return
      */
     @Override
-    public ResponseEntity<List<Specie>> listSpecie(Long userId) {
+    public ResponseEntity<List<EditSpecieDTO>> listSpecie(Long userId) {
         System.out.println("Requesting user id: " + userId);
         Optional<List<Specie>> speciesOpt = specieRepository.findByUserId(userId);
         if (speciesOpt.isPresent()){
             List<Specie> specieList = speciesOpt.get();
+            List<IncubationPhase> incubationPhases = incubationPhaseRepository.findAll();
+            List<EditSpecieDTO> editSpecieDTOList = new ArrayList<>();
+            for(Specie s : specieList) {
+                EditSpecieDTO editSpecieDTO = new EditSpecieDTO();
+                editSpecieDTO.setSpecieId(s.getSpecieId());
+                editSpecieDTO.setSpecieName(s.getSpecieName());
+                editSpecieDTO.setSpecieId(s.getSpecieId());
+                editSpecieDTO.setIncubationPeriod(s.getIncubationPeriod());
+                for(IncubationPhase phase : incubationPhases) {
+                    if (Objects.equals(phase.getSpecieId(), s.getSpecieId())) {
+                        switch (phase.getPhaseNumber()) {
+                            case 2 -> editSpecieDTO.setEmbryolessDate(phase.getPhasePeriod());
+                            case 3 -> editSpecieDTO.setDiedEmbryoDate(phase.getPhasePeriod());
+                            case 5 -> editSpecieDTO.setHatchingDate(phase.getPhasePeriod());
+                        }
+                    }
+                }
+                editSpecieDTOList.add(editSpecieDTO);
+            }
             System.out.println(specieList);
-            return new ResponseEntity<>(specieList, HttpStatus.OK);
+            System.out.println(editSpecieDTOList);
+            return new ResponseEntity<>(editSpecieDTOList, HttpStatus.OK);
         }
         return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
     }
@@ -110,15 +154,18 @@ public class SpecieServiceImpl implements ISpecieService {
      * @return
      */
     @Override
-    public ResponseEntity<Specie> saveSpecie(EditSpecieDTO editSpecieDTO) {
+    public ResponseEntity<?> saveSpecie(EditSpecieDTO editSpecieDTO) {
         System.out.println("Requesting specie id: " + editSpecieDTO.getSpecieId());
         Optional<Specie> specieOpt = specieRepository.findById(editSpecieDTO.getSpecieId());
         if (specieOpt.isPresent()){
-            Specie specie = specieOpt.get();
-            specie.setSpecieName(editSpecieDTO.getSpecieName());
-            specie.setIncubationPeriod(editSpecieDTO.getIncubationPeriod());
-            specieRepository.save(specie);
-            return new ResponseEntity<>(specie, HttpStatus.OK);
+            specieRepository.updateSpecie(
+                    editSpecieDTO.getSpecieId(),
+                    editSpecieDTO.getSpecieName(),
+                    editSpecieDTO.getIncubationPeriod(),
+                    editSpecieDTO.getEmbryolessDate(),
+                    editSpecieDTO.getDiedEmbryoDate(),
+                    editSpecieDTO.getHatchingDate());
+            return new ResponseEntity<>("Saved specie successfully", HttpStatus.OK);
         }
         return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
     }
