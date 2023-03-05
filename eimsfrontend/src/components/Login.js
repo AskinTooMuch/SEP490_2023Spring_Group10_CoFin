@@ -49,9 +49,13 @@ const Login = () => {
       console.log(JSON.stringify(response?.data));
       localStorage.setItem("user", loginDetail)
       setLoginDetail('');
-      //Set user's phone number in session
-      sessionStorage.setItem("curUserId", response.data.userId);
+      //Set user's phone number, userId, user's facility in session
+      const responseJson = response.data;
+      sessionStorage.setItem("curUserId", responseJson.userId);
       sessionStorage.setItem("curPhone", loginDetail.phone);
+      if (responseJson.facilityId != null) { /* role = USER/EMPLOYEE */
+        sessionStorage.setItem("facilityId", responseJson.facilityId);
+      }
       toast.success("Đăng nhập thành công")
       navigate("/dashboard");
 

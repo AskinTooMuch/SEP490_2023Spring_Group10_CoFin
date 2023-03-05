@@ -65,7 +65,7 @@ public class AuthServiceImpl implements IAuthService {
         User user = userRepository.findByPhone(loginDTO.getPhone()).get();
         SessionDTO sessionDTO = new SessionDTO();
         sessionDTO.setUserId(user.getUserId());
-        if (user.getRoleId() == 2 || user.getRoleId() == 3) { /*role is OWNER or EMPLOYEE (have Facility)*/
+        if (user.getRoleId() == 2L || user.getRoleId() == 3L) { /*role is OWNER or EMPLOYEE (have Facility)*/
             Facility facility = facilityRepository.findByUserId(user.getUserId()).get();
             sessionDTO.setFacilityId(facility.getFacilityId());
             return new ResponseEntity<>(sessionDTO, HttpStatus.OK);
@@ -91,7 +91,7 @@ public class AuthServiceImpl implements IAuthService {
         user.setPhone(signUpDTO.getUserPhone().trim());
         user.setAddress(signUpDTO.getUserAddress().trim());
         user.setRoleId(2L);
-        user.setStatus(2);
+        user.setStatus(0);
         //Encode password
         user.setPassword(passwordEncoder.encode(signUpDTO.getUserPassword().trim()));
         try {

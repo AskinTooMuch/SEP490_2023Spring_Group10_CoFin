@@ -35,7 +35,6 @@ import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements IUserService {
-
     @Autowired
     private final UserRepository userRepository;
     @PersistenceContext
@@ -174,46 +173,6 @@ public class UserServiceImpl implements IUserService {
             return new ResponseEntity<>(userList.get(), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
-        }
-    }
-
-    /**
-     * View list registration of owners.
-     *
-     * @return
-     */
-    @Override
-    public ResponseEntity<?> viewListRegistration() {
-        // roleId = 2 (OWNER),
-        // status = 0 (Không hoạt động)
-        // status = 1 (Đang hoạt động)
-        // status = 2 (Chưa duyệt)
-        // status = 3 (Không duyệt)
-        Optional<List<User>> ownerList = userRepository.findAllByRoleIdAndStatus(2, 2);
-        if (ownerList.isPresent()) {
-            return new ResponseEntity<>(ownerList.get(), HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
-        }
-    }
-
-    /**
-     * Approve or Decline owner's registration.
-     *
-     * @param userId id of the user
-     * @param approval is the decision of approval (3-decline, 1-approve)
-     * @return
-     */
-    @Override
-    public ResponseEntity<?> registrationApproval(Long userId, boolean approval) {
-        // Approve: change status to 1 (Đang hoạt động)
-        // Decline: change status to 3 (Không duyệt)
-        int status = (approval ? 1:3);
-        userRepository.changeStatus(userId, status);
-        if (status == 1) {
-            return new ResponseEntity<>("Owner's registration approved!", HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>("Owner's registration declined!", HttpStatus.OK);
         }
     }
 }

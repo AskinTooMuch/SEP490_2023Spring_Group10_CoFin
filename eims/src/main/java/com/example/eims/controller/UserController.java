@@ -95,27 +95,4 @@ public class UserController {
         return userService.updateUser(updateUserDTO);
     }
 
-    /**
-     * View list registration of owners.
-     *
-     * @return
-     */
-    @GetMapping("/registration")
-    @Secured({"ROLE_MANAGER"})
-    public ResponseEntity<?> viewListRegistration() {
-        return userService.viewListRegistration();
-    }
-
-    /**
-     * Approve or Decline owner's registration.
-     *
-     * @param userId id of the user
-     * @param approval is the decision of approval (3-decline, 1-approve)
-     * @return
-     */
-    @GetMapping("/registration/approve")
-    @Secured({"ROLE_MANAGER"})
-    public ResponseEntity<?> registrationApproval(@RequestParam Long userId,@RequestParam boolean approval) {
-        return userService.registrationApproval(userId, approval);
-    }
 }

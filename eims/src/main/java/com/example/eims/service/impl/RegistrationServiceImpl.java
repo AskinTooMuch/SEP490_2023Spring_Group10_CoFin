@@ -1,0 +1,129 @@
+/*
+ * Copyright (C) 2023, FPT University <br>
+ * SEP490 - SEP490_G10 <br>
+ * EIMS <br>
+ * Eggs Incubating Management System <br>
+ *
+ * Record of change:<br>
+ * DATE         Version     Author      DESCRIPTION<br>
+ * 04/03/2023   1.0         DuongVV     First Deploy<br>
+ */
+
+package com.example.eims.service.impl;
+
+import com.example.eims.dto.registration.RegistrationInforDTO;
+import com.example.eims.dto.registration.RegistrationListDTO;
+import com.example.eims.entity.Facility;
+import com.example.eims.entity.Registration;
+import com.example.eims.entity.User;
+import com.example.eims.repository.FacilityRepository;
+import com.example.eims.repository.RegistrationRepository;
+import com.example.eims.repository.UserRepository;
+import com.example.eims.service.interfaces.IRegistrationService;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
+
+@Service
+public class RegistrationServiceImpl implements IRegistrationService {
+
+    @Autowired
+    private final UserRepository userRepository;
+    @Autowired
+    private final RegistrationRepository registrationRepository;
+    @Autowired
+    private final FacilityRepository facilityRepository;
+    @PersistenceContext
+    private EntityManager em;
+
+    public RegistrationServiceImpl(UserRepository userRepository, RegistrationRepository registrationRepository, FacilityRepository facilityRepository, EntityManager em) {
+        this.userRepository = userRepository;
+        this.registrationRepository = registrationRepository;
+        this.facilityRepository = facilityRepository;
+        this.em = em;
+    }
+
+    /**
+     * View list registration of owners.
+     *
+     * @return
+     */
+    @Override
+    public ResponseEntity<?> viewListRegistration() {
+        List<RegistrationListDTO> registrationListDTOList = em.createNamedQuery("getRegistrationListByStatus")
+                .setParameter(1,0) /* status = 0 (considering list)*/
+                .getResultList();
+        return new ResponseEntity<>(registrationListDTOList, HttpStatus.OK);
+    }
+
+    /**
+     * View a registration of owner.
+     *
+     * @param userId the id of the owner
+     * @return
+     */
+    @Override
+    public ResponseEntity<?> viewRegistration(Long userId) {
+        RegistrationInforDTO registrationInforDTO = (RegistrationInforDTO) em.createNamedQuery("getRegistrationInforForUser")
+                .setParameter(1,userId).getSingleResult();
+        return new ResponseEntity<>(registrationInforDTO, HttpStatus.OK);
+    }
+
+    /**
+     * Approve or Decline owner's registration.
+     *
+     * @param userId   id of the user
+     * @param approval is the decision of approval
+     * @return
+     */
+    @Override
+    public ResponseEntity<?> registrationApproval(Long userId, Long facilityId, boolean approval) {
+        int status = (approval ? 2:1); /*1-rejected 2-approved */
+        Optional<Registration> registrationOptional = registrationRepository.findByUserId(userId);
+        if (approval) {
+            // Change status of registration
+            if (registrationOptional.isPresent()){
+                Registration registration = registrationOptional.get();
+                registration.setStatus(status);
+                registrationRepository.save(registration);
+            } else {
+                return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            }
+            // Change status of Owner's account
+            Optional<User> userOptional = userRepository.findByUserId(userId);
+            if (registrationOptional.isPresent()){
+                User user = userOptional.get();
+                user.setStatus(1);
+                userRepository.save(user);
+            } else {
+                return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            }
+            // Change status of Facility
+            Optional<Facility> facilityOptional = facilityRepository.findByUserId(userId);
+            if (facilityOptional.isPresent()){
+                Facility facility = facilityOptional.get();
+                facility.setStatus(1);
+                facilityRepository.save(facility);
+            } else {
+                return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            }
+            return new ResponseEntity<>("Owner's registration approved!", HttpStatus.OK);
+        } else {
+            // Change status of registration
+            if (registrationOptional.isPresent()){
+                Registration registration = registrationOptional.get();
+                registration.setStatus(status);
+                registrationRepository.save(registration);
+            } else {
+                return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            }
+            return new ResponseEntity<>("Owner's registration declined!", HttpStatus.OK);
+        }
+    }
+}

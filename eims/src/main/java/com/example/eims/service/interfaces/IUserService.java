@@ -76,21 +76,4 @@ public interface IUserService {
      * @return
      */
     public ResponseEntity<?> getAllUserByRoleAndStatus(int roleId, int status);
-
-    /**
-     * View list registration of owners.
-     *
-     * @param
-     * @return
-     */
-    public ResponseEntity<?> viewListRegistration();
-
-    /**
-     * Approve or Decline owner's registration.
-     *
-     * @param userId id of the user
-     * @param approval is the decision of approval (0-decline, 1-approve)
-     * @return
-     */
-    public ResponseEntity<?> registrationApproval(Long userId, boolean approval);
 }

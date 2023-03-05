@@ -80,7 +80,7 @@ public class FacilityServiceImpl implements IFacilityService {
     @Override
     public ResponseEntity<?> createFacility(CreateFacilityDTO createFacilityDTO) {
         // Check if Owner's account is active?
-        if (userRepository.getStatusByUserId(createFacilityDTO.getUserId()) == 0){
+        if (!userRepository.getStatusByUserId(createFacilityDTO.getUserId())){
             return new ResponseEntity<>("Activate your account first!", HttpStatus.BAD_REQUEST);
         } else {
             // Retrieve facility information and create new one
@@ -153,7 +153,5 @@ public class FacilityServiceImpl implements IFacilityService {
         } else {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
-
     }
-
 }
