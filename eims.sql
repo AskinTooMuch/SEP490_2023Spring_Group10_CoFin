@@ -76,7 +76,7 @@ CREATE TABLE breed(
     average_weight_male		double,
     average_weight_female	double,
     common_disease			varchar(255),
-    growth_time				time		NOT NULL,
+    growth_time				integer		NOT NULL,
     image_src				varchar(1027),
     status 					boolean		NOT NULL
 );
