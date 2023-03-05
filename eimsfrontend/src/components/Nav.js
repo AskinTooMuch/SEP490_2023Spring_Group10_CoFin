@@ -17,6 +17,7 @@ import HelpIcon from '@mui/icons-material/Help';
 import LogoutIcon from '@mui/icons-material/Logout';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import "../css/navbar.css"
+import logo from '../pics/EIMSlogo.png'
 const Nav = () => {
     const auth = sessionStorage.getItem("curPhone");
     const navigate = useNavigate();
@@ -138,7 +139,8 @@ const Nav = () => {
                             component="div"
                             sx={{ display: { xs: 'none', sm: 'block' } }}
                         >
-                            <Link className='title' to="/">EIMS</Link>
+                            
+                            <Link className='title' to="/"><img src={logo} alt="logo" height={70}></img>EIMS</Link>
                         </Typography>
                         {
                             auth ?
