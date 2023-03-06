@@ -11,6 +11,7 @@
 
 package com.example.eims.service.interfaces;
 
+import com.example.eims.dto.specie.DetailSpecieDTO;
 import com.example.eims.dto.specie.EditSpecieDTO;
 import com.example.eims.dto.specie.NewSpecieDTO;
 import com.example.eims.entity.Specie;
@@ -33,7 +34,7 @@ public interface ISpecieService {
      * @param userId the id of current logged-in user
      * @return
      */
-    public ResponseEntity<List<EditSpecieDTO>> listSpecie(Long userId);
+    public ResponseEntity<List<DetailSpecieDTO>> listSpecie(Long userId);
 
     /**
      * Edit specie's information : Getting the original values

@@ -15,6 +15,7 @@
 
 package com.example.eims.controller;
 
+import com.example.eims.dto.specie.DetailSpecieDTO;
 import com.example.eims.dto.specie.EditSpecieDTO;
 import com.example.eims.dto.specie.NewSpecieDTO;
 import com.example.eims.entity.Specie;
@@ -51,7 +52,7 @@ public class SpecieController {
      * @return
      */
     @GetMapping("/list")
-    public ResponseEntity<List<EditSpecieDTO>> listSpecie(@RequestParam Long userId){
+    public ResponseEntity<List<DetailSpecieDTO>> listSpecie(@RequestParam Long userId){
         return specieService.listSpecie(userId);
     }
 

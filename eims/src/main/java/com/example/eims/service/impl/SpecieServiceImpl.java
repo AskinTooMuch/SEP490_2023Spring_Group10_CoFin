@@ -11,6 +11,7 @@
 
 package com.example.eims.service.impl;
 
+import com.example.eims.dto.specie.DetailSpecieDTO;
 import com.example.eims.dto.specie.EditSpecieDTO;
 import com.example.eims.dto.specie.NewSpecieDTO;
 import com.example.eims.entity.IncubationPhase;
@@ -99,33 +100,34 @@ public class SpecieServiceImpl implements ISpecieService {
      * @return
      */
     @Override
-    public ResponseEntity<List<EditSpecieDTO>> listSpecie(Long userId) {
+    public ResponseEntity<List<DetailSpecieDTO>> listSpecie(Long userId) {
         System.out.println("Requesting user id: " + userId);
         Optional<List<Specie>> speciesOpt = specieRepository.findByUserId(userId);
         if (speciesOpt.isPresent()){
             List<Specie> specieList = speciesOpt.get();
             List<IncubationPhase> incubationPhases = incubationPhaseRepository.findAll();
-            List<EditSpecieDTO> editSpecieDTOList = new ArrayList<>();
+            List<DetailSpecieDTO> detailSpecieDTOList = new ArrayList<>();
             for(Specie s : specieList) {
-                EditSpecieDTO editSpecieDTO = new EditSpecieDTO();
-                editSpecieDTO.setSpecieId(s.getSpecieId());
-                editSpecieDTO.setSpecieName(s.getSpecieName());
-                editSpecieDTO.setSpecieId(s.getSpecieId());
-                editSpecieDTO.setIncubationPeriod(s.getIncubationPeriod());
+                DetailSpecieDTO detailSpecieDTO = new DetailSpecieDTO();
+                detailSpecieDTO.setSpecieId(s.getSpecieId());
+                detailSpecieDTO.setSpecieName(s.getSpecieName());
+                detailSpecieDTO.setSpecieId(s.getSpecieId());
+                detailSpecieDTO.setIncubationPeriod(s.getIncubationPeriod());
                 for(IncubationPhase phase : incubationPhases) {
                     if (Objects.equals(phase.getSpecieId(), s.getSpecieId())) {
                         switch (phase.getPhaseNumber()) {
-                            case 2 -> editSpecieDTO.setEmbryolessDate(phase.getPhasePeriod());
-                            case 3 -> editSpecieDTO.setDiedEmbryoDate(phase.getPhasePeriod());
-                            case 5 -> editSpecieDTO.setHatchingDate(phase.getPhasePeriod());
+                            case 2 -> detailSpecieDTO.setEmbryolessDate(phase.getPhasePeriod());
+                            case 3 -> detailSpecieDTO.setDiedEmbryoDate(phase.getPhasePeriod());
+                            case 5 -> detailSpecieDTO.setHatchingDate(phase.getPhasePeriod());
                         }
                     }
                 }
-                editSpecieDTOList.add(editSpecieDTO);
+                detailSpecieDTO.setStatus(s.isStatus());
+                detailSpecieDTOList.add(detailSpecieDTO);
             }
             System.out.println(specieList);
-            System.out.println(editSpecieDTOList);
-            return new ResponseEntity<>(editSpecieDTOList, HttpStatus.OK);
+            System.out.println(detailSpecieDTOList);
+            return new ResponseEntity<>(detailSpecieDTOList, HttpStatus.OK);
         }
         return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
     }
@@ -179,7 +181,7 @@ public class SpecieServiceImpl implements ISpecieService {
     @Override
     public ResponseEntity<String> deleteSpecie(Long specieId) {
         if (specieRepository.findById(specieId).isPresent()){
-            specieRepository.deleteById(specieId);
+            specieRepository.deactivateById(specieId);
             return new ResponseEntity<>("Specie delete successfully", HttpStatus.OK);
         }
         return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);

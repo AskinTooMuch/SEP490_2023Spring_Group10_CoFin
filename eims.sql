@@ -383,7 +383,6 @@ END //
 DELIMITER ;
 
 -- Update specie and its phases
-
 DELIMITER //
 CREATE PROCEDURE update_existing_specie(s_id integer, s_name varchar(63), i_period integer, embryoless integer, died_embryo integer, hatching integer) 
 BEGIN
@@ -397,6 +396,18 @@ BEGIN
     UPDATE incubation_phase SET phase_period = hatching WHERE specie_id = s_id AND phase_number = 5;
     UPDATE incubation_phase SET phase_period = i_period-1 WHERE specie_id = s_id AND phase_number >= 6;
 	SELECT * FROM specie WHERE specie_id = s_id;
+END //
+DELIMITER ;
+
+-- Deactivates specie and its phases
+DELIMITER //
+CREATE PROCEDURE deactivate_existing_specie(s_id integer) 
+BEGIN
+    UPDATE specie
+	SET status = 0
+	WHERE specie_id = s_id;
+    UPDATE incubation_phase SET status = 0 WHERE specie_id = s_id;
+    SELECT * FROM specie WHERE specie_id = s_id; 
 END //
 DELIMITER ;
 

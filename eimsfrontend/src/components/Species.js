@@ -208,6 +208,7 @@ const Species = () => {
         withCredentials: false
       });
     setSpecieList(result.data);
+    console.log(specieList);
   }
 
   // Load data into edit specie fields
@@ -357,6 +358,7 @@ const Species = () => {
             { /**JSX to load rows */}
             {
               specieList.map((item, index) => (
+                item.status &&
                 <tr key={item.specieId} data-key={index} className='trclick2'>
                   <th scope="row" onClick={() => LoadData(index)}>{index + 1} </th>
                   <td onClick={() => LoadData(index)}>{item.specieName}</td>
