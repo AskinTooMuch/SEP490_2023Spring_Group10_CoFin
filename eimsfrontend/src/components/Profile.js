@@ -173,7 +173,6 @@ const Profile = () => {
                 }
             );
             const responseJson = response.data;
-            console.log(sessionStorage.getItem("facilityId"));
             console.log(responseJson);
             //Set User information
             setUpdateUserDTO({
@@ -429,48 +428,49 @@ const Profile = () => {
                                     </div>
                                     <div className="col-md-6">
                                         <Button onClick={handleUpdateGet} style={{ width: "100%" }} className="btn btn-light">Cập nhật</Button >
-                                        <form><Modal show={show2} onHide={handleClose2}
+                                        <Modal show={show2} onHide={handleClose2}
                                             size="lg"
                                             aria-labelledby="contained-modal-title-vcenter"
                                             centered >
-                                            <Modal.Header><h4>Chỉnh sửa thông tin cá nhân</h4></Modal.Header>
-                                            <Modal.Body>
-                                                <div className="mb-3">
-                                                    <label className="form-label">Họ và Tên</label>
-                                                    <input type="text" className="form-control" name="username"
-                                                        ref={userRef} onChange={e => handleUpdateUser(e, "username")}
-                                                        value={updateUserDTO.username} required />
+                                            <form onSubmit={handleUpdateSave}>
+                                                <Modal.Header><h4>Chỉnh sửa thông tin cá nhân</h4></Modal.Header>
+                                                <Modal.Body>
+                                                    <div className="mb-3">
+                                                        <label className="form-label">Họ và Tên</label>
+                                                        <input type="text" className="form-control" name="username"
+                                                            ref={userRef} onChange={e => handleUpdateUser(e, "username")}
+                                                            value={updateUserDTO.username} required />
+                                                    </div>
+                                                    <div className="mb-3">
+                                                        <label className="form-label">Ngày sinh</label>
+                                                        <input type="date" className="form-control" name="dob"
+                                                            ref={userRef} onChange={e => handleUpdateUser(e, "dob")}
+                                                            value={updateUserDTO.dob} required />
+                                                    </div>
+                                                    <div className="mb-3">
+                                                        <label className="form-label">Email</label>
+                                                        <input type="email" className="form-control" name="email"
+                                                            ref={userRef} onChange={e => handleUpdateUser(e, "email")}
+                                                            value={updateUserDTO.email} required />
+                                                    </div>
+                                                    <div className="mb-3">
+                                                        <label className="form-label">Địa chỉ</label>
+                                                        <input type="text" style={{ minHeight: "50px" }} className="form-control" name="address"
+                                                            ref={userRef} onChange={e => handleUpdateUser(e, "address")}
+                                                            value={updateUserDTO.address} required />
+                                                    </div>
+                                                </Modal.Body>
+                                                <div className='model-footer'>
+                                                    <button style={{ width: "30%" }} className="col-md-6 btn-light" type='submit' >
+                                                        Xác nhận
+                                                    </button>
+                                                    <button  style={{ width: "20%" }} className="btn btn-light" onClick={handleClose2}>
+                                                        Huỷ
+                                                    </button>
                                                 </div>
-                                                <div className="mb-3">
-                                                    <label className="form-label">Ngày sinh</label>
-                                                    <input type="date" className="form-control" name="dob"
-                                                        ref={userRef} onChange={e => handleUpdateUser(e, "dob")}
-                                                        value={updateUserDTO.dob} required />
-                                                </div>
-                                                <div className="mb-3">
-                                                    <label className="form-label">Email</label>
-                                                    <input type="email" className="form-control" name="email"
-                                                        ref={userRef} onChange={e => handleUpdateUser(e, "email")}
-                                                        value={updateUserDTO.email} required />
-                                                </div>
-                                                <div className="mb-3">
-                                                    <label className="form-label">Địa chỉ</label>
-                                                    <input type="text" style={{ minHeight: "50px" }} className="form-control" name="address"
-                                                        ref={userRef} onChange={e => handleUpdateUser(e, "address")}
-                                                        value={updateUserDTO.address} required />
-                                                </div>
-                                            </Modal.Body>
-
-                                            <Modal.Footer>
-                                                <Button variant="light" style={{ width: "20%" }} onClick={handleClose2}>
-                                                    Huỷ
-                                                </Button>
-                                                <Button variant="light" style={{ width: "30%" }} className="col-md-6" onClick={handleUpdateSave}>
-                                                    Xác nhận
-                                                </Button>
-                                            </Modal.Footer>
+                                            </form>
                                         </Modal>
-                                        </form>
+
                                     </div>
                                 </div>
                                 {/*End: Chnage account details*/}
