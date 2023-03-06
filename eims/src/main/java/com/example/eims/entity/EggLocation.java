@@ -25,5 +25,5 @@ public class EggLocation {
     private Long productId;
     private Long machineId;
     private int amount;
-    private boolean status;
+    private int status;
 }
