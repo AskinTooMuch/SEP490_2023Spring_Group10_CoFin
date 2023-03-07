@@ -50,18 +50,18 @@ public class FacilityController {
         return facilityService.getFacilityOfOwner(userId);
     }
 
-    /**
+/*    *//**
      * Create a facility of a user.
      *
      * @param createFacilityDTO contains the name, address, found date, subscription's expiration date, hotline and
      * status of the facility
      * @return
-     */
+     *//*
     @Secured({"ROLE_OWNER"})
     @PostMapping("/create")
     public ResponseEntity<?> createFacility(@RequestBody CreateFacilityDTO createFacilityDTO) {
         return facilityService.createFacility(createFacilityDTO);
-    }
+    }*/
 
     /**
      * Show form to update the facility of a user.

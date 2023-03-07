@@ -12,6 +12,8 @@
 
 package com.example.eims.entity;
 
+import com.example.eims.dto.customer.CreateCustomerDTO;
+import com.example.eims.dto.customer.UpdateCustomerDTO;
 import jakarta.persistence.*;
 import lombok.Data;
 

@@ -32,15 +32,6 @@ public interface IFacilityService {
     public ResponseEntity<?> getFacilityOfOwner(Long userId);
 
     /**
-     * Create a facility of a user.
-     *
-     * @param createFacilityDTO contains the name, address, found date, subscription's expiration date, hotline and
-     * status of the facility
-     * @return
-     */
-    public ResponseEntity<?> createFacility(CreateFacilityDTO createFacilityDTO);
-
-    /**
      * Show form to update the facility of a user.
      *
      * @param facilityId the id of the user

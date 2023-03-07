@@ -18,6 +18,7 @@ import com.example.eims.entity.ImportReceipt;
 import com.example.eims.entity.Supplier;
 import com.example.eims.repository.ImportReceiptRepository;
 import com.example.eims.repository.SupplierRepository;
+import com.example.eims.repository.UserRepository;
 import com.example.eims.service.interfaces.ISupplierService;
 import com.example.eims.utils.StringDealer;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,13 +35,18 @@ import java.util.Optional;
 @Service
 public class SupplierServiceImpl implements ISupplierService {
     @Autowired
+    private final UserRepository userRepository;
+    @Autowired
     private final SupplierRepository supplierRepository;
     @Autowired
     private final ImportReceiptRepository importReceiptRepository;
-
-    public SupplierServiceImpl(SupplierRepository supplierRepository, ImportReceiptRepository importReceiptRepository) {
+    private final StringDealer stringDealer;
+    public SupplierServiceImpl(UserRepository userRepository, SupplierRepository supplierRepository,
+                               ImportReceiptRepository importReceiptRepository) {
+        this.userRepository = userRepository;
         this.supplierRepository = supplierRepository;
         this.importReceiptRepository = importReceiptRepository;
+        this.stringDealer = new StringDealer();
     }
 
     /**
@@ -95,25 +101,61 @@ public class SupplierServiceImpl implements ISupplierService {
      */
     @Override
     public ResponseEntity<?> createSupplier(CreateSupplierDTO createSupplierDTO) {
+        // Check if Owner's account is still activated
+        Long userId = createSupplierDTO.getUserId();
+        int accountStatus = (userRepository.getStatusByUserId(userId)? 1:0);
+        if (accountStatus == 0) { /* status = 0 (deactivated) */
+            return new ResponseEntity<>("Activate your account first", HttpStatus.BAD_REQUEST);
+        }
         System.out.println(createSupplierDTO);
+        // Retrieve supplier information and create new supplier
+        Supplier supplier = new Supplier();
+        // Check input
+        // Name
+        String name = stringDealer.trimMax(createSupplierDTO.getSupplierName());
+        if (name.equals("")) { /* Supplier name is empty */
+            return new ResponseEntity<>("Supplier name", HttpStatus.BAD_REQUEST);
+        }
+        // Phone number
+        String phone = stringDealer.trimMax(createSupplierDTO.getSupplierName());
+        if (phone.equals("")) { /* Phone number is empty */
+            return new ResponseEntity<>("Supplier phone", HttpStatus.BAD_REQUEST);
+        }
+        if (stringDealer.checkPhoneRegex(phone)) { /* Phone number is not valid */
+            return new ResponseEntity<>("Supplier phone", HttpStatus.BAD_REQUEST);
+        }
         // Check phone number existed or not
         boolean existed = supplierRepository.existsBySupplierPhone(createSupplierDTO.getSupplierPhone());
         if (existed) { /* if phone number existed */
             return new ResponseEntity<>("Supplier's phone existed!", HttpStatus.OK);
-        } else { /* if phone number not existed */
-            // Retrieve supplier information and create new supplier
-            Supplier supplier = new Supplier();
-            supplier.setUserId(createSupplierDTO.getUserId());
-            supplier.setSupplierName(createSupplierDTO.getSupplierName());
-            supplier.setSupplierPhone(createSupplierDTO.getSupplierPhone());
-            supplier.setSupplierAddress(createSupplierDTO.getSupplierAddress());
-            supplier.setFacilityName(createSupplierDTO.getFacilityName());
-            supplier.setSupplierMail(createSupplierDTO.getSupplierMail());
-            supplier.setStatus(1);
-            // Save
-            supplierRepository.save(supplier);
-            return new ResponseEntity<>("Supplier created!", HttpStatus.OK);
         }
+        // Address
+        String address = stringDealer.trimMax(createSupplierDTO.getSupplierAddress());
+        if (address.equals("")) { /* Address is empty */
+            return new ResponseEntity<>("Address", HttpStatus.BAD_REQUEST);
+        }
+        // Facility name
+        String fName = stringDealer.trimMax(createSupplierDTO.getFacilityName());
+        if (fName.equals("")) { /* Facility name is empty */
+            return new ResponseEntity<>("Facility name", HttpStatus.BAD_REQUEST);
+        }
+        // Email
+        String email = stringDealer.trimMax(createSupplierDTO.getFacilityName());
+        if (!stringDealer.checkEmailRegex(email)) { /* Email is not valid */
+            return new ResponseEntity<>("Email", HttpStatus.BAD_REQUEST);
+        }
+        // Set attribute
+        supplier.setUserId(userId);
+        supplier.setSupplierName(name);
+        supplier.setSupplierPhone(phone);
+        supplier.setSupplierAddress(address);
+        supplier.setFacilityName(fName);
+        supplier.setSupplierMail(email);
+        supplier.setStatus(1);
+        // Save
+        supplierRepository.save(supplier);
+        return new ResponseEntity<>("Supplier created!", HttpStatus.OK);
+
     }
 
     /**
@@ -141,16 +183,59 @@ public class SupplierServiceImpl implements ISupplierService {
      */
     @Override
     public ResponseEntity<?> updateSupplier(UpdateSupplierDTO updateSupplierDTO) {
+        // Check blank input
+        // Name
+        String name = stringDealer.trimMax(updateSupplierDTO.getSupplierName());
+        if (name.equals("")) { /* Supplier name is empty */
+            return new ResponseEntity<>("Supplier name", HttpStatus.BAD_REQUEST);
+        }
+        // Phone number
+        String phone = stringDealer.trimMax(updateSupplierDTO.getSupplierName());
+        if (phone.equals("")) { /* Phone number is empty */
+            return new ResponseEntity<>("Supplier phone", HttpStatus.BAD_REQUEST);
+        }
+        if (stringDealer.checkPhoneRegex(phone)) { /* Phone number is not valid */
+            return new ResponseEntity<>("Supplier phone", HttpStatus.BAD_REQUEST);
+        }
+        // Check phone number existed or not
+        boolean existed = supplierRepository.existsBySupplierPhoneNot(phone);
+        if (existed) { /* if phone number existed */
+            return new ResponseEntity<>("Supplier's phone existed!", HttpStatus.OK);
+        }
+        // Address
+        String address = stringDealer.trimMax(updateSupplierDTO.getSupplierAddress());
+        if (address.equals("")) { /* Address is empty */
+            return new ResponseEntity<>("Address", HttpStatus.BAD_REQUEST);
+        }
+        // Facility name
+        String fName = stringDealer.trimMax(updateSupplierDTO.getFacilityName());
+        if (fName.equals("")) { /* Facility name is empty */
+            return new ResponseEntity<>("Facility name", HttpStatus.BAD_REQUEST);
+        }
+        // Email
+        String email = stringDealer.trimMax(updateSupplierDTO.getFacilityName());
+        if (!stringDealer.checkEmailRegex(email)) { /* Email is not valid */
+            return new ResponseEntity<>("Email", HttpStatus.BAD_REQUEST);
+        }
+        // Status
+        int status = updateSupplierDTO.getStatus();
+
         // Retrieve supplier's new information
-        Supplier supplier = supplierRepository.findBySupplierId(updateSupplierDTO.getSupplierId()).get();
-        supplier.setSupplierName(updateSupplierDTO.getSupplierName());
-        supplier.setSupplierPhone(updateSupplierDTO.getSupplierPhone());
-        supplier.setSupplierAddress(updateSupplierDTO.getSupplierAddress());
-        supplier.setSupplierMail(updateSupplierDTO.getSupplierMail());
-        supplier.setStatus(updateSupplierDTO.getStatus());
-        // Save
-        supplierRepository.save(supplier);
-        return new ResponseEntity<>("Supplier updated!", HttpStatus.OK);
+        Optional<Supplier> supplierOptional = supplierRepository.findBySupplierId(updateSupplierDTO.getSupplierId());
+        if (supplierOptional.isPresent()){
+            Supplier supplier = supplierOptional.get();
+            supplier.setSupplierName(name);
+            supplier.setSupplierPhone(phone);
+            supplier.setSupplierAddress(address);
+            supplier.setSupplierMail(email);
+            supplier.setStatus(status);
+            // Save
+            supplierRepository.save(supplier);
+            return new ResponseEntity<>("Supplier updated!", HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+
     }
 
     /**

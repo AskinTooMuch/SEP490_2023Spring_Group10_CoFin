@@ -15,8 +15,11 @@ package com.example.eims.dto.facility;
 import com.example.eims.entity.Facility;
 import lombok.Data;
 
+import java.sql.Date;
+
 @Data
 public class UpdateFacilityDTO {
+    private Long userId;
     private Long facilityId;
     private String facilityName;
     private String facilityAddress;

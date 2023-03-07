@@ -22,6 +22,7 @@ import com.example.eims.entity.Machine;
 import com.example.eims.entity.MachineType;
 import com.example.eims.repository.*;
 import com.example.eims.service.interfaces.IMachineService;
+import com.example.eims.utils.StringDealer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -49,6 +50,7 @@ public class MachineServiceImpl implements IMachineService {
     private final MachineTypeRepository machineTypeRepository;
     @Autowired
     private final EggProductRepository eggProductRepository;
+    private final StringDealer stringDealer;
 
     public MachineServiceImpl(MachineRepository machineRepository, FacilityRepository facilityRepository, EggLocationRepository eggLocationRepository, MachineTypeRepository machineTypeRepository, EggProductRepository eggProductRepository) {
         this.machineRepository = machineRepository;
@@ -56,7 +58,9 @@ public class MachineServiceImpl implements IMachineService {
         this.eggLocationRepository = eggLocationRepository;
         this.machineTypeRepository = machineTypeRepository;
         this.eggProductRepository = eggProductRepository;
+        this.stringDealer = new StringDealer();
     }
+
 
     /**
      * Get all of their machines.
@@ -70,7 +74,7 @@ public class MachineServiceImpl implements IMachineService {
         Optional<List<Machine>> machineListOptional = machineRepository.findByFacilityId(facilityId);
         List<MachineListItemDTO> machineList = new ArrayList<>();
         if (machineListOptional.isPresent()) {
-            for (Machine machine: machineListOptional.get()){
+            for (Machine machine : machineListOptional.get()) {
                 // Get and set attribute to DTO
                 MachineType machineType = machineTypeRepository.findByMachineTypeId(machine.getMachineTypeId());
                 String machineTypeName = machineType.getMachineTypeName();
@@ -104,7 +108,7 @@ public class MachineServiceImpl implements IMachineService {
             machineDetailDTO.setMachineTypeName(machineType.getMachineTypeName());
             List<EggLocation> eggs = eggLocationRepository.getAllByMachineId(machineId).get();
             List<EggLocationMachineDetailDTO> eggLocations = new ArrayList<>();
-            for (EggLocation eggLocation: eggs){
+            for (EggLocation eggLocation : eggs) {
                 EggLocationMachineDetailDTO eggLocationMachineDetailDTO = new EggLocationMachineDetailDTO();
                 eggLocationMachineDetailDTO.getFromEntity(eggLocation);
                 EggProduct eggProduct = eggProductRepository.getByProductId(eggLocation.getProductId()).get();
@@ -126,19 +130,35 @@ public class MachineServiceImpl implements IMachineService {
      */
     @Override
     public ResponseEntity<?> createMachine(CreateMachineDTO createMachineDTO) {
-        if (facilityRepository.getStatusById(createMachineDTO.getFacilityId()) == 0) { /*Facility stopped running*/
+        // Check if facility is not running
+        Long facilityId = createMachineDTO.getFacilityId();
+        if (facilityRepository.getStatusById(facilityId) == 0) { /*Facility stopped running*/
             return new ResponseEntity<>("Facility stopped running", HttpStatus.BAD_REQUEST);
         } else {
             // Retrieve machine information and create new machine
             Machine machine = new Machine();
-            machine.setMachineTypeId(createMachineDTO.getMachineTypeId());
-            machine.setFacilityId(createMachineDTO.getFacilityId());
-            machine.setMachineName(createMachineDTO.getName());
-            machine.setMaxCapacity(createMachineDTO.getMaxCapacity());
+            // Check blank input
+            // Machine's name
+            String name = stringDealer.trimMax(createMachineDTO.getName());
+            if (name.equals("")) { /* Machine name is empty */
+                return new ResponseEntity<>("Machine name", HttpStatus.BAD_REQUEST);
+            }
+            // Machine type
+            Long machineType = createMachineDTO.getMachineTypeId();
+            // Max capacity
+            int maxCapacity = createMachineDTO.getMaxCapacity();
+            if (maxCapacity <= 0) { /* Capacity must bigger than 0 */
+                return new ResponseEntity<>("Machine capacity ", HttpStatus.BAD_REQUEST);
+            }
+            // Set attribute
+            machine.setFacilityId(facilityId);
+            machine.setMachineTypeId(machineType);
+            machine.setMachineName(name);
+            machine.setMaxCapacity(maxCapacity);
             machine.setCurCapacity(0);
             Date date = Date.valueOf(LocalDate.now());/* format yyyy-MM-dd*/
             machine.setAddedDate(date);
-            machine.setActive(0);
+            machine.setActive(1);
             // Save
             machineRepository.save(machine);
             return new ResponseEntity<>("Machine created!", HttpStatus.OK);
@@ -176,8 +196,15 @@ public class MachineServiceImpl implements IMachineService {
         Optional<Machine> machineOptional = machineRepository.findByMachineId(updateMachineDTO.getMachineId());
         if (machineOptional.isPresent()) {
             Machine machine = machineOptional.get();
-            machine.setMachineName(updateMachineDTO.getName());
-            machine.setActive(updateMachineDTO.getStatus());
+            // Check blank input
+            // Machine's name
+            String name = stringDealer.trimMax(updateMachineDTO.getName());
+            if (name.equals("")) { /* Machine name is empty */
+                return new ResponseEntity<>("Machine name", HttpStatus.BAD_REQUEST);
+            }
+            machine.setMachineName(name);
+
+            machine.setActive(updateMachineDTO.getActive());
             // Save
             machineRepository.save(machine);
             return new ResponseEntity<>("Machine updated!", HttpStatus.OK);

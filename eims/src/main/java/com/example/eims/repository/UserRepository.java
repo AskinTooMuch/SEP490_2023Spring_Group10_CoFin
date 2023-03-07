@@ -33,5 +33,4 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<List<User>> findAllByRoleIdAndStatus(int roleId, int status);
     @Query(value = "SELECT status FROM eims.user WHERE user_id = ?1", nativeQuery = true)
     boolean getStatusByUserId(Long userId);
-
 }

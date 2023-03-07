@@ -21,13 +21,6 @@ import java.sql.Date;
 @Data
 @Entity
 @Table(name = "user")
-/*
-* , uniqueConstraints = {
-        @UniqueConstraint(columnNames = {"userName"}),
-        @UniqueConstraint(columnNames = {"phone"}),
-        @UniqueConstraint(columnNames = {"email"})
-}
-* */
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,10 +35,4 @@ public class User {
     private String password;
     private String address;
     private int status;
-
-//    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-//    @JoinTable(name = "user_role",
-//            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
-//            inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
-//    private Set<UserRole> roles;
 }

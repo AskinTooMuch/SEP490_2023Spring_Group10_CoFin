@@ -39,11 +39,13 @@ public class UserServiceImpl implements IUserService {
     private final UserRepository userRepository;
     @PersistenceContext
     private final EntityManager em;
-
+    private final StringDealer stringDealer;
     public UserServiceImpl(UserRepository userRepository, EntityManager em) {
         this.userRepository = userRepository;
         this.em = em;
+        this.stringDealer = new StringDealer();
     }
+
 
     /**
      * Requesting user information and facility information with the requesting DTO consists of user phone number.
@@ -123,18 +125,44 @@ public class UserServiceImpl implements IUserService {
      */
     @Override
     public ResponseEntity<?> updateUser(UpdateUserDTO updateUserDTO) {
+        // Check if Owner's account is still activated
+        Long userId = updateUserDTO.getUserId();
+        int accountStatus = (userRepository.getStatusByUserId(userId)? 1:0);
+        if (accountStatus == 0) { /* status = 0 (deactivated) */
+            return new ResponseEntity<>("Activate your account first", HttpStatus.BAD_REQUEST);
+        }
         // Retrieve user's new information
         Optional<User> userOptional = userRepository.findById(updateUserDTO.getUserId());
         if (userOptional.isPresent()){
             User user = userOptional.get();
-            user.setUsername(updateUserDTO.getUsername());
-            StringDealer stringDealer = new StringDealer();
-            String sDate = updateUserDTO.getDob();
-            Date date = stringDealer.convertToDateAndFormat(sDate);
-            user.setDob(date);
-            user.setAddress(updateUserDTO.getAddress());
-            user.setEmail(updateUserDTO.getEmail());
-            //user.setStatus(updateUserDTO.getStatus());
+            // Check input
+            // Name
+            String name = stringDealer.trimMax(updateUserDTO.getUsername());
+            if (name.equals("")){ /* Name is empty */
+                return new ResponseEntity<>("User name", HttpStatus.BAD_REQUEST);
+            }
+            // Date of birth
+            String sDate = stringDealer.trimMax(updateUserDTO.getDob());
+            if (sDate.equals("")){ /* Date of birth is empty */
+                return new ResponseEntity<>("Date of birth", HttpStatus.BAD_REQUEST);
+            }
+            // Email
+            String email = stringDealer.trimMax(updateUserDTO.getEmail());
+            if (!stringDealer.checkEmailRegex(email)){ /* Email is not valid*/
+                return new ResponseEntity<>("Email", HttpStatus.BAD_REQUEST);
+            }
+            // Address
+            String address = stringDealer.trimMax(updateUserDTO.getAddress());
+            if (address.equals("")){ /* Address is empty */
+                return new ResponseEntity<>("Address", HttpStatus.BAD_REQUEST);
+            }
+            Date dob = stringDealer.convertToDateAndFormat(sDate);
+
+            // Set attribute
+            user.setUsername(name);
+            user.setDob(dob);
+            user.setAddress(address);
+            user.setEmail(email);
             // Save
             userRepository.save(user);
             return new ResponseEntity<>("User information updated!", HttpStatus.OK);

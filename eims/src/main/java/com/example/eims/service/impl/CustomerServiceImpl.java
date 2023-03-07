@@ -15,6 +15,7 @@ import com.example.eims.dto.customer.CreateCustomerDTO;
 import com.example.eims.dto.customer.UpdateCustomerDTO;
 import com.example.eims.entity.Customer;
 import com.example.eims.repository.CustomerRepository;
+import com.example.eims.repository.UserRepository;
 import com.example.eims.service.interfaces.ICustomerService;
 import com.example.eims.utils.StringDealer;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,9 +34,13 @@ public class CustomerServiceImpl implements ICustomerService {
 
     @Autowired
     private final CustomerRepository customerRepository;
+    @Autowired
+    private final UserRepository userRepository;
+    private StringDealer stringDealer = new StringDealer();
 
-    public CustomerServiceImpl(CustomerRepository customerRepository) {
+    public CustomerServiceImpl(CustomerRepository customerRepository, UserRepository userRepository) {
         this.customerRepository = customerRepository;
+        this.userRepository = userRepository;
     }
 
     /**
@@ -79,33 +84,53 @@ public class CustomerServiceImpl implements ICustomerService {
      */
     @Override
     public ResponseEntity<?> createCustomer(CreateCustomerDTO createCustomerDTO) {
+        // Check if Owner's account is still activated
+        Long userId = createCustomerDTO.getUserId();
+        int accountStatus = (userRepository.getStatusByUserId(userId)? 1:0);
+        if (accountStatus == 0) { /* status = 0 (deactivated) */
+            return new ResponseEntity<>("Activate your account first", HttpStatus.BAD_REQUEST);
+        }
         // Check blank input
-        if (createCustomerDTO.getName().equals("")) {
+        // Name
+        String name = stringDealer.trimMax(createCustomerDTO.getName());
+        if (name.equals("")) { /* Supplier name is empty */
             return new ResponseEntity<>("Tên khách hàng không được để trống", HttpStatus.BAD_REQUEST);
         }
-        if (createCustomerDTO.getPhone().equals("")) {
+        // Phone number
+        String phone = stringDealer.trimMax(createCustomerDTO.getPhone());
+        if (phone.equals("")) { /* Phone number is empty */
             return new ResponseEntity<>("Số điện thoại khách hàng không được để trống", HttpStatus.BAD_REQUEST);
         }
-        if (createCustomerDTO.getAddress().equals("")) {
-            return new ResponseEntity<>("Địa chỉ khách hàng không được để trống", HttpStatus.BAD_REQUEST);
+        if (!stringDealer.checkPhoneRegex(phone)) { /* Phone number is not valid */
+            return new ResponseEntity<>("Số điện thoại khách hàng không hợp lệ", HttpStatus.BAD_REQUEST);
         }
         // Check phone number existed or not
         boolean existed = customerRepository.existsByCustomerPhone(createCustomerDTO.getPhone());
         if (existed) { /* if phone number existed */
-            return new ResponseEntity<>("Customer's phone existed!", HttpStatus.OK);
-        } else { /* if phone number not existed */
-            // Retrieve customer information and create new customer
-            Customer customer = new Customer();
-            customer.setUserId(createCustomerDTO.getUserId());
-            customer.setCustomerName(createCustomerDTO.getName());
-            customer.setCustomerPhone(createCustomerDTO.getPhone());
-            customer.setCustomerAddress(createCustomerDTO.getAddress());
-            customer.setCustomerMail(createCustomerDTO.getMail());
-            customer.setStatus(1);
-            // Save
-            customerRepository.save(customer);
-            return new ResponseEntity<>("Customer created!", HttpStatus.OK);
+            return new ResponseEntity<>("Customer's phone existed!", HttpStatus.BAD_REQUEST);
         }
+        // Email
+        String mail = stringDealer.trimMax(createCustomerDTO.getMail());
+        if (stringDealer.checkEmailRegex(mail)) { /* Supplier email is not valid */
+            return new ResponseEntity<>("Địa chỉ Email khách hàng không hợp lệ", HttpStatus.BAD_REQUEST);
+        }
+        // Address
+        String address = stringDealer.trimMax(createCustomerDTO.getAddress());
+        if (address.equals("")) { /* Address is empty */
+            return new ResponseEntity<>("Địa chỉ khách hàng không được để trống", HttpStatus.BAD_REQUEST);
+        }
+
+        // Retrieve customer information and create new customer
+        Customer customer = new Customer();
+        customer.setUserId(createCustomerDTO.getUserId());
+        customer.setCustomerName(name);
+        customer.setCustomerPhone(phone);
+        customer.setCustomerAddress(address);
+        customer.setCustomerMail(mail);
+        customer.setStatus(1);
+        // Save
+        customerRepository.save(customer);
+        return new ResponseEntity<>("Customer created!", HttpStatus.OK);
     }
 
     /**
@@ -133,26 +158,45 @@ public class CustomerServiceImpl implements ICustomerService {
      */
     @Override
     public ResponseEntity<?> updateCustomer(UpdateCustomerDTO updateCustomerDTO) {
-        // Check blank input
-        if (updateCustomerDTO.getName().equals("")) {
+        // Name
+        String name = stringDealer.trimMax(updateCustomerDTO.getName());
+        if (name.equals("")) { /* Supplier name is empty */
             return new ResponseEntity<>("Tên khách hàng không được để trống", HttpStatus.BAD_REQUEST);
         }
-        if (updateCustomerDTO.getPhone().equals("")) {
+        // Phone number
+        String newPhone = stringDealer.trimMax(updateCustomerDTO.getPhone());
+        if (newPhone.equals("")) { /* Phone number is empty */
             return new ResponseEntity<>("Số điện thoại khách hàng không được để trống", HttpStatus.BAD_REQUEST);
         }
-        if (updateCustomerDTO.getAddress().equals("")) {
+        if (!stringDealer.checkPhoneRegex(newPhone)) { /* Phone number is not valid */
+            return new ResponseEntity<>("Số điện thoại khách hàng không hợp lệ", HttpStatus.BAD_REQUEST);
+        }
+        String oldPhone = customerRepository.findCustomerPhoneById(updateCustomerDTO.getCustomerId());
+        if (customerRepository.existsByCustomerPhoneNot(oldPhone)){ /* Phone number existed */
+            return new ResponseEntity<>("Phone number", HttpStatus.BAD_REQUEST);
+        }
+        // Email
+        String mail = stringDealer.trimMax(updateCustomerDTO.getMail());
+        if (!stringDealer.checkEmailRegex(mail)) { /* Supplier email is not valid */
+            return new ResponseEntity<>("Địa chỉ Email khách hàng không hợp lệ", HttpStatus.BAD_REQUEST);
+        }
+        // Address
+        String address = stringDealer.trimMax(updateCustomerDTO.getAddress());
+        if (address.equals("")) { /* Address is empty */
             return new ResponseEntity<>("Địa chỉ khách hàng không được để trống", HttpStatus.BAD_REQUEST);
         }
+        // Status
+        int status = updateCustomerDTO.getStatus();
 
         Optional<Customer> customerOptional = customerRepository.findByCustomerId(updateCustomerDTO.getCustomerId());
         if (customerOptional.isPresent()) {
             // Retrieve customer's new information
             Customer customer = customerOptional.get();
-            customer.setCustomerName(updateCustomerDTO.getName());
-            customer.setCustomerPhone(updateCustomerDTO.getPhone());
-            customer.setCustomerAddress(updateCustomerDTO.getAddress());
-            customer.setCustomerMail(updateCustomerDTO.getMail());
-            customer.setStatus(updateCustomerDTO.getStatus());
+            customer.setCustomerName(name);
+            customer.setCustomerPhone(newPhone);
+            customer.setCustomerAddress(address);
+            customer.setCustomerMail(mail);
+            customer.setStatus(status);
             // Save
             customerRepository.save(customer);
             return new ResponseEntity<>("Customer updated!", HttpStatus.OK);

@@ -31,4 +31,7 @@ public interface SupplierRepository extends JpaRepository<Supplier, Long> {
             "AND supplier_phone LIKE %?2% OR supplier_name LIKE %?2%", nativeQuery = true)
     Optional<List<Supplier>> searchByUsernameOrPhone(Long userId, String key);
     Page<Supplier> findAllByUserId(Long userId, Pageable pageable);
+    boolean existsBySupplierPhoneNot(String phone);
+    @Query(value = "SELECT supplier_phone FROM eims.supplier WHERE supplier_id = ?1 ", nativeQuery = true)
+    String findSupplierPhoneById(Long supplierId);
 }

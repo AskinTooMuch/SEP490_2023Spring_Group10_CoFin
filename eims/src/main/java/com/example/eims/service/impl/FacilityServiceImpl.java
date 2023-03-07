@@ -35,11 +35,14 @@ public class FacilityServiceImpl implements IFacilityService {
     private final FacilityRepository facilityRepository;
     @Autowired
     private final UserRepository userRepository;
-
+    private final StringDealer stringDealer;
     public FacilityServiceImpl(FacilityRepository facilityRepository, UserRepository userRepository) {
         this.facilityRepository = facilityRepository;
         this.userRepository = userRepository;
+        this.stringDealer = new StringDealer();
     }
+
+
 
     /**
      * Get all facilities.
@@ -71,41 +74,6 @@ public class FacilityServiceImpl implements IFacilityService {
     }
 
     /**
-     * Create a facility of a user.
-     *
-     * @param createFacilityDTO contains the name, address, found date, subscription's expiration date, hotline and
-     *                          status of the facility
-     * @return
-     */
-    @Override
-    public ResponseEntity<?> createFacility(CreateFacilityDTO createFacilityDTO) {
-        // Check if Owner's account is active?
-        if (!userRepository.getStatusByUserId(createFacilityDTO.getUserId())){
-            return new ResponseEntity<>("Activate your account first!", HttpStatus.BAD_REQUEST);
-        } else {
-            // Retrieve facility information and create new one
-            Facility facility = new Facility();
-            facility.setUserId(createFacilityDTO.getUserId());
-            facility.setFacilityName(createFacilityDTO.getFacilityName());
-            facility.setFacilityAddress(createFacilityDTO.getFacilityAddress());
-
-            StringDealer stringDealer = new StringDealer();
-            String fDate = createFacilityDTO.getFoundDate();
-            String eDate = createFacilityDTO.getExpirationDate();
-            Date foundDate = stringDealer.convertToDateAndFormat(fDate);
-            Date expirationDate = stringDealer.convertToDateAndFormat(eDate);
-            facility.setFacilityFoundDate(foundDate);
-            facility.setSubscriptionExpirationDate(expirationDate);
-
-            facility.setHotline(createFacilityDTO.getHotline());
-            facility.setStatus(createFacilityDTO.getStatus());
-            // Save
-            facilityRepository.save(facility);
-            return new ResponseEntity<>("Facility created!", HttpStatus.OK);
-        }
-    }
-
-    /**
      * Show form to update the facility of a user.
      *
      * @param facilityId the id of the user
@@ -132,19 +100,55 @@ public class FacilityServiceImpl implements IFacilityService {
      */
     @Override
     public ResponseEntity<?> updateFacility(UpdateFacilityDTO updateFacilityDTO) {
+        // Check if Owner's account is still activated
+        Long userId = updateFacilityDTO.getUserId();
+        int accountStatus = (userRepository.getStatusByUserId(userId)? 1:0);
+        if (accountStatus == 0) { /* status = 0 (deactivated) */
+            return new ResponseEntity<>("Activate your account first", HttpStatus.BAD_REQUEST);
+        }
         // Retrieve facility's new information and create new one
         Optional<Facility> facilityOptional = facilityRepository.findById(updateFacilityDTO.getFacilityId());
         if (facilityOptional.isPresent()) {
             Facility facility = facilityOptional.get();
-            facility.setFacilityName(updateFacilityDTO.getFacilityName());
-            facility.setFacilityAddress(updateFacilityDTO.getFacilityAddress());
-
-            StringDealer stringDealer = new StringDealer();
+            // Facility name
+            String name =  stringDealer.trimMax(updateFacilityDTO.getFacilityName());
+            if (name.equals("")){ /* Facility name empty */
+                return new ResponseEntity<>("Facility name", HttpStatus.BAD_REQUEST);
+            }
+            // Found date
             String fDate = updateFacilityDTO.getFoundDate();
+            if (fDate.equals("")){ /* Found date is empty */
+                return new ResponseEntity<>("Found date", HttpStatus.BAD_REQUEST);
+            }
+            // Hotline
+            String hotline = stringDealer.trimMax(updateFacilityDTO.getHotline());
+            if (hotline.equals("")){ /* Hotline empty */
+                return new ResponseEntity<>("Hot line", HttpStatus.BAD_REQUEST);
+            }
+            if (!stringDealer.checkPhoneRegex(hotline)){ /* Hotline is not valid */
+                return new ResponseEntity<>("Hotline", HttpStatus.BAD_REQUEST);
+            }
+            // Facility address
+            String address =  stringDealer.trimMax(updateFacilityDTO.getFacilityAddress());
+            if (address.equals("")){ /* Facility address empty */
+                return new ResponseEntity<>("Facility address", HttpStatus.BAD_REQUEST);
+            }
+            // Business license number
+            String licenseNumber = stringDealer.trimMax(updateFacilityDTO.getBusinessLicenseNumber());
+            if (licenseNumber.equals("")){ /* Business License Number empty */
+                return new ResponseEntity<>("Facility address", HttpStatus.BAD_REQUEST);
+            }
+            // Status
+            int status = updateFacilityDTO.getStatus();
+
+            // Set attribute
+            facility.setFacilityName(name);
             Date foundDate = stringDealer.convertToDateAndFormat(fDate);
             facility.setFacilityFoundDate(foundDate);
-            facility.setHotline(updateFacilityDTO.getHotline());
-            facility.setStatus(updateFacilityDTO.getStatus());
+            facility.setHotline(hotline);
+            facility.setFacilityAddress(address);
+            facility.setBusinessLicenseNumber(licenseNumber);
+            facility.setStatus(status);
             // Save
             facilityRepository.save(facility);
             return new ResponseEntity<>("Facility updated!", HttpStatus.OK);

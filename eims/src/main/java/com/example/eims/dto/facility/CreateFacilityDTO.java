@@ -13,13 +13,15 @@ package com.example.eims.dto.facility;
 
 import lombok.Data;
 
+import java.sql.Date;
+
 @Data
 public class CreateFacilityDTO {
     private Long userId;
     private String facilityName;
     private String facilityAddress;
-    private String foundDate;
-    private String expirationDate;
+    private Date foundDate;
+    private Date expirationDate;
+    private String businessLicenseNumber;
     private String hotline;
-    private int status;
 }

@@ -23,15 +23,11 @@ public class UpdateUserDTO {
         this.username = user.getUsername();
         this.dob = user.getDob().toString();
         this.email = user.getEmail();
-        //this.salary = user.getSalary();
         this.address = user.getAddress();
-        //this.status = user.getStatus();
     }
     private Long userId;
     private String username;
     private String dob;
     private String email;
-    //private Float salary;
     private String address;
-    //private int status;
 }

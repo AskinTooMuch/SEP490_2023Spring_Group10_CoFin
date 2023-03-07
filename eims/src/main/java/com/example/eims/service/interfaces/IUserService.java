@@ -14,6 +14,7 @@ package com.example.eims.service.interfaces;
 
 import com.example.eims.dto.user.UpdateUserDTO;
 import com.example.eims.dto.user.UserDetailDTO;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 public interface IUserService {

@@ -13,6 +13,9 @@
 
 package com.example.eims.entity;
 
+import com.example.eims.dto.facility.CreateFacilityDTO;
+import com.example.eims.dto.facility.UpdateFacilityDTO;
+import com.example.eims.utils.StringDealer;
 import jakarta.persistence.*;
 import lombok.Data;
 
