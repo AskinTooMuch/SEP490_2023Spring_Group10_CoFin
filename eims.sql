@@ -407,6 +407,7 @@ BEGIN
 	SET status = 0
 	WHERE specie_id = s_id;
     UPDATE incubation_phase SET status = 0 WHERE specie_id = s_id;
+    UPDATE breed SET status = 0 WHERE specie_id = id;
     SELECT * FROM specie WHERE specie_id = s_id; 
 END //
 DELIMITER ;

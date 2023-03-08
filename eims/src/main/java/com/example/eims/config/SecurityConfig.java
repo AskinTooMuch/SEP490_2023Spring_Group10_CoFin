@@ -69,6 +69,7 @@ public class SecurityConfig {
                                         .requestMatchers("/api/facility/**").permitAll()
                                         .requestMatchers("/api/machine/**").permitAll()
                                         .requestMatchers("/api/registration/**").permitAll()
+                                        .requestMatchers("/api/breed/**").permitAll()
                                         .anyRequest().authenticated()
                 );
         return http.build();

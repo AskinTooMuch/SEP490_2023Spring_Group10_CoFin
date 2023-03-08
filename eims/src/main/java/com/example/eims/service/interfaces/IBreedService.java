@@ -10,10 +10,8 @@
  */
 package com.example.eims.service.interfaces;
 
-import com.example.eims.dto.breed.BreedDTO;
 import com.example.eims.dto.breed.NewBreedDTO;
-import com.example.eims.dto.breed.UpdateBreedDTO;
-import com.example.eims.entity.Breed;
+import com.example.eims.dto.breed.EditBreedDTO;
 import org.springframework.http.ResponseEntity;
 
 public interface IBreedService {
@@ -28,10 +26,10 @@ public interface IBreedService {
     /**
      * Service to update existing breed.
      * The new information will be updated through the breed id
-     * @param updateBreedDTO Payload
+     * @param editBreedDTO Payload
      * @return Breed updated or response message
      */
-    ResponseEntity<?> updateBreed (UpdateBreedDTO updateBreedDTO);
+    ResponseEntity<?> updateBreed (EditBreedDTO editBreedDTO);
 
     /**
      * Service to delete (disable) existing breed.

@@ -13,10 +13,9 @@ package com.example.eims.dto.breed;
 import lombok.Data;
 
 @Data
-public class BreedDTO {
+public class EditBreedDTO {
     private Long breedId;
     private Long specieId;
-    private Long userId;
     private String breedName;
     private Float averageWeightMale;
     private Float averageWeightFemale;
@@ -25,3 +24,4 @@ public class BreedDTO {
     private String imageSrc;
     private boolean status;
 }
+
