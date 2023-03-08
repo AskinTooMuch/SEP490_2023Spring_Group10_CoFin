@@ -53,10 +53,11 @@ public interface IAuthService {
     /**
      * Verify OTP forgot password.
      *
-     * @param OTP code to verify phone number
+     * @param phone the phone number of the account
+     * @param OTP   code to verify phone number
      * @return
      */
-    public ResponseEntity<?> verifyOTP(String OTP);
+    public ResponseEntity<?> verifyOTP(String phone, String OTP);
 
     /**
      * Re-send OTP forgot password.

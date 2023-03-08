@@ -72,19 +72,20 @@ public class AuthController {
      * @return
      */
     @GetMapping("/forgotPassword/sendOTP")
-    public ResponseEntity<?> sendOTP(@RequestParam String phone) {
+    public ResponseEntity<?> sendOTPForgotPassword(@RequestParam String phone) {
         return authService.sendOTP(phone);
     }
 
     /**
      * Verify OTP forgot password.
      *
-     * @param OTP code to verify phone number
+     * @param phone the phone number of account
+     * @param otp code to verify phone number
      * @return
      */
     @PostMapping("/forgotPassword/verifyOTP")
-    public ResponseEntity<?> verifyOTP(@RequestBody String OTP) {
-        return authService.verifyOTP(OTP);
+    public ResponseEntity<?> verifyOTPForgotPassword(@RequestParam String phone, @RequestParam String otp) {
+        return authService.verifyOTP(phone, otp);
     }
 
     /**
@@ -93,7 +94,40 @@ public class AuthController {
      * @return
      */
     @GetMapping("/forgotPassword/resendOTP")
-    public ResponseEntity<?> resendOTP(@RequestBody String phone) {
+    public ResponseEntity<?> resendOTPForgotPassword(@RequestBody String phone) {
+        return authService.resendOTP(phone);
+    }
+
+    /**
+     * Send OTP to reset password.
+     *
+     * @param phone the phone number of the account
+     * @return
+     */
+    @GetMapping("/forgotPassword/sendOTP")
+    public ResponseEntity<?> sendOTPRegisterOwner(@RequestParam String phone) {
+        return authService.sendOTP(phone);
+    }
+
+    /**
+     * Verify OTP forgot password.
+     *
+     * @param phone the phone number of account
+     * @param otp code to verify phone number
+     * @return
+     */
+    @PostMapping("/forgotPassword/verifyOTP")
+    public ResponseEntity<?> verifyOTPRegisterOwner(@RequestParam String phone, @RequestParam String otp) {
+        return authService.verifyOTP(phone, otp);
+    }
+
+    /**
+     * Re-send OTP forgot password.
+     *
+     * @return
+     */
+    @GetMapping("/forgotPassword/resendOTP")
+    public ResponseEntity<?> resendOTPRegisterOwner(@RequestBody String phone) {
         return authService.resendOTP(phone);
     }
 

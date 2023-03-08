@@ -12,20 +12,17 @@
 package com.example.eims.service.impl;
 
 import com.example.eims.dto.user.UpdateUserDTO;
-import com.example.eims.entity.Facility;
+import com.example.eims.dto.user.UserDetailDTO;
 import com.example.eims.entity.User;
 import com.example.eims.service.interfaces.IUserService;
 import com.example.eims.utils.StringDealer;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.sql.Date;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -69,7 +66,12 @@ class UserServiceImplTest {
 
     @Test
     void sendUserDetail() {
-
+        ResponseEntity<?> responseEntity = userService.sendUserDetail(2L);
+        // Facility name = Test name
+        UserDetailDTO userDetailDTO = (UserDetailDTO) responseEntity.getBody();
+        // Assert
+        assertEquals(userDetailDTO.getFacilityName(), "Test name fail"); /* Fail */
+        //assertEquals(userDetailDTO.getFacilityName(), "Test name"); /* Pass */
     }
 
     @Test
@@ -77,6 +79,7 @@ class UserServiceImplTest {
         ResponseEntity<?> responseEntity = userService.getAllUser();
         // 5 users
         List<User> userList = (List<User>) responseEntity.getBody();
+        // Assert
         assertEquals(userList.size(), 4); /* Fail */
         //assertEquals(userList.size(), 5); /* Pass */
     }
@@ -86,6 +89,7 @@ class UserServiceImplTest {
         ResponseEntity<?> responseEntity = userService.getAllUserPaging(2,3, "ASC");
         // 5 users-> (page 2, size 3) -> return 2 pages
         Page<User> userPage = (Page<User>) responseEntity.getBody();
+        // Assert
         assertEquals(userPage.getTotalPages(), 3); /* Fail */
         //assertEquals(userPage.getTotalPages(), 2); /* Pass */
     }
@@ -95,6 +99,7 @@ class UserServiceImplTest {
         ResponseEntity<?> responseEntity = userService.showFormUpdate(2L);
         // name = Test Owner
         UpdateUserDTO updateUserDTO = (UpdateUserDTO) responseEntity.getBody();
+        // Assert
         assertEquals(updateUserDTO.getUsername(), "Test Employee"); /* Fail */
         //assertEquals(user.getUsername(), "Test Owner"); /* Pass */
     }
@@ -106,7 +111,6 @@ class UserServiceImplTest {
         UpdateUserDTO updateUserDTO = (UpdateUserDTO) responseEntity.getBody();
         // Set new name
         updateUserDTO.setUsername("Test Owner 2");
-
         ResponseEntity<?> responseEntity2 = userService.updateUser(updateUserDTO);
         // Assert
         //assertEquals(responseEntity2.getBody(), "Fail"); /* Fail */

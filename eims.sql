@@ -43,7 +43,8 @@ CREATE TABLE user(
     email		varchar(127),
     salary		decimal(15,2),
     password	varchar(127)	NOT NULL,
-    address	varchar(511),
+    address		varchar(511),
+    otp 		varchar(15) 	DEFAULT "",
 	status		boolean			NOT NULL
 );
 
@@ -431,8 +432,8 @@ VALUES 	(1,	2, 'Nguyễn Chức', '2001-12-16', '0969044714',	'ownerchuc@gmail.c
 
 -- facility
 INSERT INTO facility(facility_id, user_id, facility_name, facility_address, facility_found_date, subscription_expiration_date, hotline, business_license_number, status)
-VALUES 	(1, 1, 'Test name', '{"city":"Tỉnh Hải Dương","district":"Huyện Gia Lộc","ward":"Xã Hoàng Diệu","street":"Thôn Nghĩa Hy"}', '2019-02-17', '2023-5-31', '0987654322', '4103012754', 1),
-		(2, 2, 'Chu Xuong Trung', '{"city":"Tỉnh Hải Dương","district":"Huyện Gia Lộc","ward":"Xã Hoàng Diệu","street":"Thôn Nghĩa Hy"}', '2019-02-17', '2023-5-31', '0969044714', '4103012753', 1),
+VALUES 	(1, 2, 'Test name', '{"city":"Tỉnh Hải Dương","district":"Huyện Gia Lộc","ward":"Xã Hoàng Diệu","street":"Thôn Nghĩa Hy"}', '2019-02-17', '2023-5-31', '0987654322', '4103012754', 1),
+		(2, 1, 'Chu Xuong Trung', '{"city":"Tỉnh Hải Dương","district":"Huyện Gia Lộc","ward":"Xã Hoàng Diệu","street":"Thôn Nghĩa Hy"}', '2019-02-17', '2023-5-31', '0969044714', '4103012753', 1),
 		(3, 5, 'ZTrung09', '{"city":"Tỉnh Hải Dương","district":"Huyện Gia Lộc","ward":"Xã Hoàng Diệu","street":"Thôn Nghĩa Hy"}', '2011-05-09', '2021-10-22', '0852274855', '7243012533', 0);
         
         

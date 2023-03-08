@@ -85,7 +85,7 @@ public class AuthServiceImpl implements IAuthService {
         if (user.getStatus() == 0) {
             return new ResponseEntity<>("Account deactivated", HttpStatus.BAD_REQUEST);
         }
-/*        if (user.getRoleId() == 2L) { *//*role is OWNER (have Facility)*//*
+        /*        if (user.getRoleId() == 2L) { *//*role is OWNER (have Facility)*//*
             // Check status of registration
             // 0 - considering
             // 1 - rejected
@@ -127,6 +127,12 @@ public class AuthServiceImpl implements IAuthService {
         }
     }
 
+    /**
+     * Sign up.
+     *
+     * @param signUpDTO contains the User's name, email, phone number, date of birth, address.
+     * @return
+     */
     @Override
     @Transactional
     public ResponseEntity<?> registerUser(SignUpDTO signUpDTO) {
@@ -161,7 +167,7 @@ public class AuthServiceImpl implements IAuthService {
         }
         // Address
         String address = stringDealer.trimMax(signUpDTO.getUserAddress());
-        if (address.equals("")){ /* Address is empty */
+        if (address.equals("")) { /* Address is empty */
             return new ResponseEntity<>("Address", HttpStatus.BAD_REQUEST);
         }
         // Password
@@ -175,7 +181,7 @@ public class AuthServiceImpl implements IAuthService {
             return new ResponseEntity<>("rePassword", HttpStatus.BAD_REQUEST);
         }
         // Password match
-        if (!password.equals(rePassword)){ /* Password not match */
+        if (!password.equals(rePassword)) { /* Password not match */
             return new ResponseEntity<>("Password not match", HttpStatus.BAD_REQUEST);
         }
         // Set attribute
@@ -280,12 +286,15 @@ public class AuthServiceImpl implements IAuthService {
     @Override
     public ResponseEntity<?> sendOTP(String phone) {
         // Check credentials, if not valid then return Bad request (403)
-        Boolean existed = userRepository.existsByPhone(phone);
-        if (!existed) {
+        Optional<User> userOptional = userRepository.findByPhone(phone);
+        if (!userOptional.isPresent()) { /* No user found */
             return new ResponseEntity<>("No phone number found!", HttpStatus.BAD_REQUEST);
         } else {
             // Create OTP
-
+            String OTP = "111";
+            User user = userOptional.get();
+            user.setOtp(OTP);
+            userRepository.save(user);
             // Send OTP
 
             return new ResponseEntity<>("OTP send!", HttpStatus.OK);
@@ -295,15 +304,20 @@ public class AuthServiceImpl implements IAuthService {
     /**
      * Verify OTP forgot password.
      *
-     * @param OTP code to verify phone number
+     * @param phone the phone number of the account
+     * @param otp   code to verify phone number
      * @return
      */
     @Override
-    public ResponseEntity<?> verifyOTP(String OTP) {
+    public ResponseEntity<?> verifyOTP(String phone, String otp) {
         // Check if the OTP match
-        String OTP_REAL = "111";
-        if (OTP.equals(OTP_REAL)) {      /* OTP match*/
-            return new ResponseEntity<>("OTP confirmed! Please enter your new password.", HttpStatus.OK);
+        User user = userRepository.findByPhone(phone).get();
+        String OTP_REAL = user.getOtp();
+        if (otp.equals(OTP_REAL)) {      /* OTP match*/
+            // Reset otp
+            user.setOtp("");
+            userRepository.save(user);
+            return new ResponseEntity<>("OTP confirmed!", HttpStatus.OK);
         } else {                        /* OTP not match*/
 
             return new ResponseEntity<>("OTP wrong!", HttpStatus.BAD_REQUEST);
@@ -317,11 +331,13 @@ public class AuthServiceImpl implements IAuthService {
      */
     @Override
     public ResponseEntity<?> resendOTP(String phone) {
+        User user = userRepository.findByPhone(phone).get();
         // Create OTP
-
+        String OTP = "111";
+        user.setOtp(OTP);
+        userRepository.save(user);
         // Send OTP
-
-        return new ResponseEntity<>("OTP re-send!", HttpStatus.OK);
+        return new ResponseEntity<>("OTP send!", HttpStatus.OK);
     }
 
     /**

@@ -34,5 +34,6 @@ public class User {
     private Float salary;
     private String password;
     private String address;
+    private String otp;
     private int status;
 }
