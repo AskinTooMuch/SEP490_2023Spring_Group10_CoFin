@@ -178,7 +178,7 @@ public class UserServiceImpl implements IUserService {
      * @return
      */
     @Override
-    public ResponseEntity<?> getAllUserByRole(int roleId) {
+    public ResponseEntity<?> getAllUserByRole(Long roleId) {
         Optional<List<User>> userList = userRepository.findAllByRoleId(roleId);
         if (userList.isPresent()) {
             return new ResponseEntity<>(userList.get(), HttpStatus.OK);
@@ -195,7 +195,7 @@ public class UserServiceImpl implements IUserService {
      * @return
      */
     @Override
-    public ResponseEntity<?> getAllUserByRoleAndStatus(int roleId, int status) {
+    public ResponseEntity<?> getAllUserByRoleAndStatus(Long roleId, int status) {
         Optional<List<User>> userList = userRepository.findAllByRoleIdAndStatus(roleId, status);
         if (userList.isPresent()) {
             return new ResponseEntity<>(userList.get(), HttpStatus.OK);

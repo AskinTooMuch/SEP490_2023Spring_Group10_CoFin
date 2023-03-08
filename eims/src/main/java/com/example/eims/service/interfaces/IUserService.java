@@ -67,7 +67,7 @@ public interface IUserService {
      * @param roleId the id of user's role
      * @return
      */
-    public ResponseEntity<?> getAllUserByRole(int roleId);
+    public ResponseEntity<?> getAllUserByRole(Long roleId);
 
     /**
      * View list of users with same role and status.
@@ -76,5 +76,5 @@ public interface IUserService {
      * @param status the status of user
      * @return
      */
-    public ResponseEntity<?> getAllUserByRoleAndStatus(int roleId, int status);
+    public ResponseEntity<?> getAllUserByRoleAndStatus(Long roleId, int status);
 }
