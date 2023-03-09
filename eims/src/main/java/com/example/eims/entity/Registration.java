@@ -26,4 +26,19 @@ public class Registration {
     private Long userId;
     private Date registerDate;
     private int status;
+
+    public Registration() {
+    }
+
+    public Registration(Long registrationId, Long userId, Date registerDate, int status) {
+        this.registrationId = registrationId;
+        this.userId = userId;
+        this.registerDate = registerDate;
+        this.status = status;
+    }
+
+    public Registration(Long userId, int status) {
+        this.userId = userId;
+        this.status = status;
+    }
 }

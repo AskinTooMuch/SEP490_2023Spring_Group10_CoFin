@@ -16,4 +16,12 @@ import lombok.Data;
 public class LoginDTO {
     private String phone;
     private String password;
+
+    public LoginDTO() {
+    }
+
+    public LoginDTO(String phone, String password) {
+        this.phone = phone;
+        this.password = password;
+    }
 }

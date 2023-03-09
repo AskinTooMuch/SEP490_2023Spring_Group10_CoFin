@@ -16,6 +16,7 @@ import com.example.eims.dto.user.UserDetailDTO;
 import com.example.eims.entity.User;
 import com.example.eims.service.interfaces.IUserService;
 import com.example.eims.utils.StringDealer;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -64,6 +65,15 @@ class UserServiceImplTest {
         facility.setStatus(1);
     }*/
 
+    @AfterEach
+    void tearDown() {
+        // Roll back update user
+        ResponseEntity<?> responseEntity = userService.showFormUpdate(2L);
+        UpdateUserDTO updateUserDTO = (UpdateUserDTO) responseEntity.getBody();
+        updateUserDTO.setUsername("Test Owner");
+        ResponseEntity<?> responseEntity2 = userService.updateUser(updateUserDTO);
+    }
+
     @Test
     void sendUserDetail() {
         ResponseEntity<?> responseEntity = userService.sendUserDetail(2L);
@@ -106,7 +116,7 @@ class UserServiceImplTest {
 
     @Test
     void updateUser() {
-        // Get user (showFromUpdate)
+        // Get updateUserDTO (showFromUpdate)
         ResponseEntity<?> responseEntity = userService.showFormUpdate(2L);
         UpdateUserDTO updateUserDTO = (UpdateUserDTO) responseEntity.getBody();
         // Set new name
@@ -114,7 +124,7 @@ class UserServiceImplTest {
         ResponseEntity<?> responseEntity2 = userService.updateUser(updateUserDTO);
         // Assert
         //assertEquals(responseEntity2.getBody(), "Fail"); /* Fail */
-        assertEquals(responseEntity2.getBody(), "User information updated"); /* Pass */
+        assertEquals(responseEntity2.getBody(), "User information updated!"); /* Pass */
     }
 
     @Test

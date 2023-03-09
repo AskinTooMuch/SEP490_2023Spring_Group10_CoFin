@@ -109,7 +109,7 @@ public class AuthServiceImpl implements IAuthService {
         Authentication auth = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(phone, password));
         SecurityContextHolder.getContext().setAuthentication(auth);
-        System.out.println(SecurityContextHolder.getContext().getAuthentication().getAuthorities());
+        // System.out.println(SecurityContextHolder.getContext().getAuthentication().getAuthorities());
         // Set attribute to sessionDTO
         SessionDTO sessionDTO = new SessionDTO();
         sessionDTO.setUserId(user.getUserId());
@@ -162,7 +162,7 @@ public class AuthServiceImpl implements IAuthService {
         }
         // Email
         String email = stringDealer.trimMax(signUpDTO.getUserEmail());
-        if (!stringDealer.checkEmailRegex(email)) { /* Email is not valid */
+        if ((!email.equals("")) && !stringDealer.checkEmailRegex(email)) { /* Email is not valid */
             return new ResponseEntity<>("Email không đúng định dạng", HttpStatus.BAD_REQUEST);
         }
         // Address

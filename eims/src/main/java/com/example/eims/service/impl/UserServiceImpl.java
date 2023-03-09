@@ -40,6 +40,7 @@ public class UserServiceImpl implements IUserService {
     @PersistenceContext
     private final EntityManager em;
     private final StringDealer stringDealer;
+
     public UserServiceImpl(UserRepository userRepository, EntityManager em) {
         this.userRepository = userRepository;
         this.em = em;
@@ -107,7 +108,7 @@ public class UserServiceImpl implements IUserService {
     public ResponseEntity<?> showFormUpdate(Long userId) {
         // Retrieve user
         Optional<User> user = userRepository.findById(userId);
-        if (user.isPresent()){
+        if (user.isPresent()) {
             UpdateUserDTO updateUserDTO = new UpdateUserDTO();
             updateUserDTO.getFromEntity(user.get());
             // Return
@@ -127,45 +128,45 @@ public class UserServiceImpl implements IUserService {
     public ResponseEntity<?> updateUser(UpdateUserDTO updateUserDTO) {
         // Check if Owner's account is still activated
         Long userId = updateUserDTO.getUserId();
-        int accountStatus = (userRepository.getStatusByUserId(userId)? 1:0);
+        int accountStatus = (userRepository.getStatusByUserId(userId) ? 1 : 0);
         if (accountStatus == 0) { /* status = 0 (deactivated) */
-            return new ResponseEntity<>("Activate your account first", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Tài khoản đã bị vô hiệu hóa", HttpStatus.BAD_REQUEST);
         }
         // Retrieve user's new information
         Optional<User> userOptional = userRepository.findById(updateUserDTO.getUserId());
-        if (userOptional.isPresent()){
+        if (userOptional.isPresent()) {
             User user = userOptional.get();
             // Check input
             // Name
             String name = stringDealer.trimMax(updateUserDTO.getUsername());
-            if (name.equals("")){ /* Name is empty */
-                return new ResponseEntity<>("User name", HttpStatus.BAD_REQUEST);
+            if (name.equals("")) { /* Name is empty */
+                return new ResponseEntity<>("Tên không được để trống", HttpStatus.BAD_REQUEST);
             }
             // Date of birth
             String sDate = stringDealer.trimMax(updateUserDTO.getDob());
-            if (sDate.equals("")){ /* Date of birth is empty */
-                return new ResponseEntity<>("Date of birth", HttpStatus.BAD_REQUEST);
+            if (sDate.equals("")) { /* Date of birth is empty */
+                return new ResponseEntity<>("Ngày sinh không được để trống", HttpStatus.BAD_REQUEST);
             }
             // Email
             String email = stringDealer.trimMax(updateUserDTO.getEmail());
-            if (!stringDealer.checkEmailRegex(email)){ /* Email is not valid*/
-                return new ResponseEntity<>("Email", HttpStatus.BAD_REQUEST);
+            if ((!email.equals("")) && !stringDealer.checkEmailRegex(email)) { /* Email is not valid*/
+                return new ResponseEntity<>("Email không hợp lệ", HttpStatus.BAD_REQUEST);
             }
             // Address
             String address = stringDealer.trimMax(updateUserDTO.getAddress());
-            if (address.equals("")){ /* Address is empty */
-                return new ResponseEntity<>("Address", HttpStatus.BAD_REQUEST);
+            if (address.equals("")) { /* Address is empty */
+                return new ResponseEntity<>("Địa chỉ không được để trống", HttpStatus.BAD_REQUEST);
             }
-            Date dob = stringDealer.convertToDateAndFormat(sDate);
 
             // Set attribute
             user.setUsername(name);
+            Date dob = stringDealer.convertToDateAndFormat(sDate);
             user.setDob(dob);
             user.setAddress(address);
             user.setEmail(email);
             // Save
             userRepository.save(user);
-            return new ResponseEntity<>("User information updated!", HttpStatus.OK);
+            return new ResponseEntity<>("Cập nhật thông tin thành công", HttpStatus.OK);
         } else {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }

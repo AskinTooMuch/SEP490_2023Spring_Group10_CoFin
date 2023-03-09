@@ -36,4 +36,29 @@ public class User {
     private String address;
     private String otp;
     private int status;
+
+    public User() {
+    }
+
+    public User(Long userId, Long roleId, String username, Date dob, String phone, String email, Float salary,
+                String password, String address, int status) {
+        this.userId = userId;
+        this.roleId = roleId;
+        this.username = username;
+        this.dob = dob;
+        this.phone = phone;
+        this.email = email;
+        this.salary = salary;
+        this.password = password;
+        this.address = address;
+        this.status = status;
+    }
+
+    public User(Long userId, Long roleId, String phone, String password, int status) {
+        this.userId = userId;
+        this.roleId = roleId;
+        this.phone = phone;
+        this.password = password;
+        this.status = status;
+    }
 }

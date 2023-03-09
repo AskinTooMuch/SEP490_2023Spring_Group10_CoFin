@@ -133,7 +133,7 @@ public class MachineServiceImpl implements IMachineService {
         // Check if facility is not running
         Long facilityId = createMachineDTO.getFacilityId();
         if (facilityRepository.getStatusById(facilityId) == 0) { /*Facility stopped running*/
-            return new ResponseEntity<>("Facility stopped running", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Cơ sở đã ngừng hoạt động", HttpStatus.BAD_REQUEST);
         } else {
             // Retrieve machine information and create new machine
             Machine machine = new Machine();
@@ -141,14 +141,14 @@ public class MachineServiceImpl implements IMachineService {
             // Machine's name
             String name = stringDealer.trimMax(createMachineDTO.getName());
             if (name.equals("")) { /* Machine name is empty */
-                return new ResponseEntity<>("Machine name", HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>("Tên máy không được để trống", HttpStatus.BAD_REQUEST);
             }
             // Machine type
             Long machineType = createMachineDTO.getMachineTypeId();
             // Max capacity
             int maxCapacity = createMachineDTO.getMaxCapacity();
             if (maxCapacity <= 0) { /* Capacity must bigger than 0 */
-                return new ResponseEntity<>("Machine capacity ", HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>("Sức chứa của máy phải lớn hơn 0", HttpStatus.BAD_REQUEST);
             }
             // Set attribute
             machine.setFacilityId(facilityId);
@@ -161,7 +161,7 @@ public class MachineServiceImpl implements IMachineService {
             machine.setActive(1);
             // Save
             machineRepository.save(machine);
-            return new ResponseEntity<>("Machine created!", HttpStatus.OK);
+            return new ResponseEntity<>("Tạo máy mới thành công", HttpStatus.OK);
         }
     }
 
@@ -200,14 +200,14 @@ public class MachineServiceImpl implements IMachineService {
             // Machine's name
             String name = stringDealer.trimMax(updateMachineDTO.getName());
             if (name.equals("")) { /* Machine name is empty */
-                return new ResponseEntity<>("Machine name", HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>("Tên máy không được để trống", HttpStatus.BAD_REQUEST);
             }
             machine.setMachineName(name);
 
             machine.setActive(updateMachineDTO.getActive());
             // Save
             machineRepository.save(machine);
-            return new ResponseEntity<>("Machine updated!", HttpStatus.OK);
+            return new ResponseEntity<>("Cập nhật thông tin máy thành công", HttpStatus.OK);
         } else {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
@@ -224,11 +224,11 @@ public class MachineServiceImpl implements IMachineService {
         if (machineRepository.existsByMachineId(machineId)) {
             // Check if Machine is running
             if (eggLocationRepository.existsByMachineId(machineId)) { /*Machine is running (have eggs in it)*/
-                return new ResponseEntity<>("Machine is still running, can not delete", HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>("Chuyển trứng sang máy khác trước khi xóa", HttpStatus.BAD_REQUEST);
             } else {
                 // Delete
                 machineRepository.deleteById(machineId);
-                return new ResponseEntity<>("Machine deleted!", HttpStatus.OK);
+                return new ResponseEntity<>("Xóa máy thành công", HttpStatus.OK);
             }
         } else {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);

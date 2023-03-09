@@ -36,4 +36,26 @@ public class Facility {
     private String hotline;
     private String businessLicenseNumber;
     private int status;
+
+    public Facility() {
+    }
+
+    public Facility(Long facilityId, Long userId, String facilityName, String facilityAddress, Date facilityFoundDate,
+                    Date subscriptionExpirationDate, String hotline, String businessLicenseNumber, int status) {
+        this.facilityId = facilityId;
+        this.userId = userId;
+        this.facilityName = facilityName;
+        this.facilityAddress = facilityAddress;
+        this.facilityFoundDate = facilityFoundDate;
+        this.subscriptionExpirationDate = subscriptionExpirationDate;
+        this.hotline = hotline;
+        this.businessLicenseNumber = businessLicenseNumber;
+        this.status = status;
+    }
+
+    public Facility(Long facilityId, Long userId, int status) {
+        this.facilityId = facilityId;
+        this.userId = userId;
+        this.status = status;
+    }
 }
