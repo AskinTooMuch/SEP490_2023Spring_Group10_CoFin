@@ -12,6 +12,7 @@ package com.example.eims.service.interfaces;
 
 import com.example.eims.dto.breed.NewBreedDTO;
 import com.example.eims.dto.breed.EditBreedDTO;
+import jakarta.servlet.http.HttpServlet;
 import org.springframework.http.ResponseEntity;
 
 public interface IBreedService {
@@ -44,7 +45,7 @@ public interface IBreedService {
      * @param breedId Breed id to be queried
      * @return Breed information or response message
      */
-    ResponseEntity<?> viewBreedDetailById (Long breedId);
+    ResponseEntity<?> viewBreedDetailById (Long breedId, HttpServlet request);
 
     /**
      * Service to view breed detail information of 1 specie

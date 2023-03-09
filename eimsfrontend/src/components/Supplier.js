@@ -77,7 +77,7 @@ const Supplier = () => {
   }, [dataLoaded]);
 
   const loadAddress = async () => {
-    const result = await axios.get("https://raw.githubusercontent.com/kenzouno1/DiaGioiHanhChinhVN/master/data.json",
+    const result = await axios.get( "https://raw.githubusercontent.com/kenzouno1/DiaGioiHanhChinhVN/master/data.json",
       {});
     setFullAddresses(result.data);
     console.log("Full address");
@@ -187,7 +187,7 @@ const Supplier = () => {
         withCredentials: false
       });
     setSupplierList(result.data);
-    console.log(supplierList );
+    console.log(supplierList);
   }
 
   //Navigate to detail Page
@@ -195,7 +195,7 @@ const Supplier = () => {
   const routeChange = (sid) => {
     // let path = '/supplierdetail';
     // navigate(path, { state: { id: id, supplier: supplierList[sid]}});
-    navigate('/supplierdetail', { state: { id: sid, supplier: supplierList[sid] } });
+    navigate('/supplierdetail', { state: { id: sid } });
   }
 
   return (
@@ -357,7 +357,7 @@ const Supplier = () => {
             {
               supplierList && supplierList.length > 0 ?
                 supplierList.map((item, index) => 
-                  <tr className='trclick' onClick={() => routeChange(index)} key={item.userId}>
+                  <tr className='trclick' onClick={() => routeChange(item.supplierId)} key={item.userId}>
                     <th scope="row">{index+1}</th>
                     <td>{item.supplierName}</td>
                     <td>{item.supplierPhone}</td>

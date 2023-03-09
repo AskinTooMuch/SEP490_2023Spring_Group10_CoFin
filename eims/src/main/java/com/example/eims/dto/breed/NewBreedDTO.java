@@ -10,7 +10,8 @@
  */
 package com.example.eims.dto.breed;
 
-import lombok.Data;
+import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @Data
 public class NewBreedDTO {
@@ -20,6 +21,5 @@ public class NewBreedDTO {
     private Float averageWeightFemale;
     private String commonDisease;
     private int growthTime;
-    private String imageSrc;
-    private boolean status;
+    private MultipartFile image;
 }

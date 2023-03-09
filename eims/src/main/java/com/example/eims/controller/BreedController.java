@@ -13,15 +13,19 @@ package com.example.eims.controller;
 import com.example.eims.dto.auth.LoginDTO;
 import com.example.eims.dto.breed.EditBreedDTO;
 import com.example.eims.dto.breed.NewBreedDTO;
+import com.example.eims.dto.file.FileResponse;
 import com.example.eims.dto.specie.EditSpecieDTO;
+import com.example.eims.service.impl.FileStorageService;
 import com.example.eims.service.interfaces.IAuthService;
 import com.example.eims.service.interfaces.IBreedService;
 import com.example.eims.utils.Validator;
+import jakarta.servlet.http.HttpServlet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
@@ -30,6 +34,9 @@ public class BreedController {
 
     @Autowired
     private IBreedService breedService;
+
+    @Autowired
+    private FileStorageService fileStorageService;
 
     public final Validator validator = new Validator();
 
@@ -40,8 +47,8 @@ public class BreedController {
      * @return response message or new breed
      */
     @PostMapping("/new")
-    public ResponseEntity<?> createNewBreed(@RequestBody NewBreedDTO newBreedDTO) {
-        System.out.println(newBreedDTO);
+    public ResponseEntity<?> createNewBreed(@ModelAttribute NewBreedDTO newBreedDTO) {
+        System.out.println(newBreedDTO.getBreedName());
         //Check data and trim
         if ((newBreedDTO.getAverageWeightFemale() <= 0) ||
                 (newBreedDTO.getAverageWeightMale() <= 0) ||
@@ -51,7 +58,6 @@ public class BreedController {
         try {
             newBreedDTO.setBreedName(validator.advanceTrim(newBreedDTO.getBreedName(), true));
             newBreedDTO.setCommonDisease(validator.advanceTrim(newBreedDTO.getCommonDisease(), false));
-            newBreedDTO.setImageSrc(validator.advanceTrim(newBreedDTO.getImageSrc(), false));
         } catch (RuntimeException runtimeException) {
             return new ResponseEntity<>("Invalid request", HttpStatus.BAD_REQUEST);
         }
@@ -66,8 +72,8 @@ public class BreedController {
      * @return response message or new breed
      */
     @GetMapping("/detail/breedId")
-    public ResponseEntity<?> getBreedDetailByBreedId(@RequestParam Long breedId){
-        return breedService.viewBreedDetailById(breedId);
+    public ResponseEntity<?> getBreedDetailByBreedId(@RequestParam Long breedId, HttpServlet request){
+        return breedService.viewBreedDetailById(breedId, request);
     }
 
     /**
@@ -121,11 +127,10 @@ public class BreedController {
         try {
             editBreedDTO.setBreedName(validator.advanceTrim(editBreedDTO.getBreedName(), true));
             editBreedDTO.setCommonDisease(validator.advanceTrim(editBreedDTO.getCommonDisease(), false));
-            editBreedDTO.setImageSrc(validator.advanceTrim(editBreedDTO.getImageSrc(), false));
         } catch (RuntimeException runtimeException) {
             return new ResponseEntity<>("Invalid request", HttpStatus.BAD_REQUEST);
         }
-        //Create new breed
+        //Update breed info
         return breedService.updateBreed(editBreedDTO);
     }
 }

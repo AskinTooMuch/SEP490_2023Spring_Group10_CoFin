@@ -7,6 +7,7 @@
  * Record of change:<br>
  * DATE         Version     Author      DESCRIPTION<br>
  * 02/03/2023   1.0         DuongVV     First Deploy<br>
+ * 09/03/2023   1.1         ChucNV      Hot Fix
  */
 
 package com.example.eims.service.impl;
@@ -78,6 +79,7 @@ public class SupplierServiceImpl implements ISupplierService {
         Optional<Supplier> supplierOptional = supplierRepository.findBySupplierId(supplierId);
         if (supplierOptional.isPresent()) {
             Supplier supplier = supplierOptional.get();
+            System.out.println(supplier);
             // Get and add attribute to DTO
             // Get fertilized rate
             Float fertilizedRate = 9.0F;
@@ -87,7 +89,8 @@ public class SupplierServiceImpl implements ISupplierService {
             supplierDetailDTO.getFromEntity(supplier);
             supplierDetailDTO.setFertilizedRate(fertilizedRate);
             supplierDetailDTO.setMaleRate(maleRate);
-            return new ResponseEntity<>(supplierDetailDTO, HttpStatus.BAD_REQUEST);
+            System.out.println(supplierDetailDTO);
+            return new ResponseEntity<>(supplierDetailDTO, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
@@ -121,13 +124,13 @@ public class SupplierServiceImpl implements ISupplierService {
         if (phone.equals("")) { /* Phone number is empty */
             return new ResponseEntity<>("Số điện thoại không được để trống", HttpStatus.BAD_REQUEST);
         }
-        if (stringDealer.checkPhoneRegex(phone)) { /* Phone number is not valid */
+        if (!stringDealer.checkPhoneRegex(phone)) { /* Phone number is not valid */
             return new ResponseEntity<>("Số điện thoại không hợp lệ", HttpStatus.BAD_REQUEST);
         }
         // Check phone number existed or not
         boolean existed = supplierRepository.existsBySupplierPhone(createSupplierDTO.getSupplierPhone());
         if (existed) { /* if phone number existed */
-            return new ResponseEntity<>("Số điện thoại đã được sử dụng", HttpStatus.OK);
+            return new ResponseEntity<>("Số điện thoại đã được sử dụng", HttpStatus.BAD_REQUEST);
         }
         // Address
         String address = stringDealer.trimMax(createSupplierDTO.getSupplierAddress());
@@ -190,11 +193,11 @@ public class SupplierServiceImpl implements ISupplierService {
             return new ResponseEntity<>("Tên không được để trống", HttpStatus.BAD_REQUEST);
         }
         // Phone number
-        String newPhone = stringDealer.trimMax(updateSupplierDTO.getSupplierName());
+        String newPhone = stringDealer.trimMax(updateSupplierDTO.getSupplierPhone());
         if (newPhone.equals("")) { /* Phone number is empty */
             return new ResponseEntity<>("Số điện thoại không được để trống", HttpStatus.BAD_REQUEST);
         }
-        if (stringDealer.checkPhoneRegex(newPhone)) { /* Phone number is not valid */
+        if (!stringDealer.checkPhoneRegex(newPhone)) { /* Phone number is not valid */
             return new ResponseEntity<>("Số điện thoại không hợp lệ", HttpStatus.BAD_REQUEST);
         }
         String oldPhone = supplierRepository.findSupplierPhoneById(updateSupplierDTO.getSupplierId());

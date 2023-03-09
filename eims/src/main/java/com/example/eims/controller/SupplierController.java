@@ -65,12 +65,6 @@ public class SupplierController {
     @PostMapping("/create")
     @Secured({"ROLE_OWNER"})
     public ResponseEntity<?> createSupplier(@RequestBody CreateSupplierDTO createSupplierDTO) {
-        if (createSupplierDTO.getSupplierName().equals(""))
-            return new ResponseEntity<>("Tên nhà cung cấp không được để trống", HttpStatus.BAD_REQUEST);
-        if (createSupplierDTO.getSupplierPhone().equals(""))
-            return new ResponseEntity<>("Số điện thoại nhà cung cấp không được để trống", HttpStatus.BAD_REQUEST);
-        if (createSupplierDTO.getSupplierAddress().equals(""))
-            return new ResponseEntity<>("Địa chỉ nhà cung cấp không được để trống", HttpStatus.BAD_REQUEST);
         return supplierService.createSupplier(createSupplierDTO);
     }
 
