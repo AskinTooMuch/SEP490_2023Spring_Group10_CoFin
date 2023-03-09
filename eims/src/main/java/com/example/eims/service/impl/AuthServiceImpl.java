@@ -74,16 +74,16 @@ public class AuthServiceImpl implements IAuthService {
     public ResponseEntity<?> authenticateUser(LoginDTO loginDTO) {
         String phone = stringDealer.trimMax(loginDTO.getPhone());
         if (phone.equals("")) { /* Phone number is empty */
-            return new ResponseEntity<>("Phone number", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Số điện thoại không được để trống", HttpStatus.BAD_REQUEST);
         }
         String password = stringDealer.trimMax(loginDTO.getPassword());
         if (password.equals("")) { /* Password is empty */
-            return new ResponseEntity<>("Password", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Mật khẩu không được để trống", HttpStatus.BAD_REQUEST);
         }
         User user = userRepository.findByPhone(loginDTO.getPhone()).get();
         // Check status of Account
         if (user.getStatus() == 0) {
-            return new ResponseEntity<>("Account deactivated", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Tài khoản đã bị vô hiệu hóa", HttpStatus.BAD_REQUEST);
         }
         /*        if (user.getRoleId() == 2L) { *//*role is OWNER (have Facility)*//*
             // Check status of registration
@@ -142,47 +142,50 @@ public class AuthServiceImpl implements IAuthService {
         // Username
         String username = stringDealer.trimMax(signUpDTO.getUsername());
         if (username.equals("")) { /* Username is empty */
-            return new ResponseEntity<>("Username must not empty", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Tên không được để trống", HttpStatus.BAD_REQUEST);
         }
         // Date of birth
         String sDate = stringDealer.trimMax(signUpDTO.getUserDob());
-        if (!sDate.equals("")) { /* Date of birth is empty */
-            return new ResponseEntity<>("Date of birth", HttpStatus.BAD_REQUEST);
+        if (sDate.equals("")) { /* Date of birth is empty */
+            return new ResponseEntity<>("Ngày sinh không được để trống", HttpStatus.BAD_REQUEST);
         }
         // Phone number
         String phone = stringDealer.trimMax(signUpDTO.getUserPhone());
         if (phone.equals("")) { /* Phone number is empty */
-            return new ResponseEntity<>("Phone number", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Số điện thoại không được để trống", HttpStatus.BAD_REQUEST);
         }
         if (!stringDealer.checkPhoneRegex(phone)) { /* Phone number is not valid*/
-            return new ResponseEntity<>("Phone number", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Số điện thoại không đúng đinh dạng", HttpStatus.BAD_REQUEST);
         }
         if (userRepository.existsByPhone(phone)) {/* Phone number is existed*/
-            return new ResponseEntity<>("Phone number", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Số điện thoại đã được sử dụng", HttpStatus.BAD_REQUEST);
         }
         // Email
         String email = stringDealer.trimMax(signUpDTO.getUserEmail());
         if (!stringDealer.checkEmailRegex(email)) { /* Email is not valid */
-            return new ResponseEntity<>("Email", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Email không đúng định dạng", HttpStatus.BAD_REQUEST);
         }
         // Address
         String address = stringDealer.trimMax(signUpDTO.getUserAddress());
         if (address.equals("")) { /* Address is empty */
-            return new ResponseEntity<>("Address", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Địa chỉ không được để trống", HttpStatus.BAD_REQUEST);
         }
         // Password
         String password = stringDealer.trimMax(signUpDTO.getUserPassword());
         if (password.equals("")) { /* Password is empty */
-            return new ResponseEntity<>("Password", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Mật khẩu không được để trống", HttpStatus.BAD_REQUEST);
+        }
+        if (!stringDealer.checkPasswordRegex(password)) { /* Password is not valid */
+            return new ResponseEntity<>("Mật khẩu không đúng định dạng", HttpStatus.BAD_REQUEST);
         }
         // Confirm password
         String rePassword = stringDealer.trimMax(signUpDTO.getUserPassword());
         if (rePassword.equals("")) { /* Confirm password is empty */
-            return new ResponseEntity<>("rePassword", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Mật khẩu không được để trống", HttpStatus.BAD_REQUEST);
         }
         // Password match
         if (!password.equals(rePassword)) { /* Password not match */
-            return new ResponseEntity<>("Password not match", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Mật khẩu không khớp", HttpStatus.BAD_REQUEST);
         }
         // Set attribute
         user.setUsername(username);
@@ -203,41 +206,41 @@ public class AuthServiceImpl implements IAuthService {
             // Name
             String fName = stringDealer.trimMax(signUpDTO.getFacilityName());
             if (fName.equals("")) { /* Facility name is empty */
-                return new ResponseEntity<>("Facility name", HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>("Tên cơ sở không được để trống", HttpStatus.BAD_REQUEST);
             }
             facility.setFacilityName(fName);
             // Found date
             sDate = stringDealer.trimMax(signUpDTO.getFacilityFoundDate());
             if (sDate.equals("")) {  /* Found date is empty */
-                return new ResponseEntity<>("Found date", HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>("Ngày thành lập không được để trống", HttpStatus.BAD_REQUEST);
             }
             date = stringDealer.convertToDateAndFormat(sDate);
             facility.setFacilityFoundDate(date);
             // Hotline (Using the same format with cellphone number)
             String hotline = stringDealer.trimMax(signUpDTO.getFacilityHotline());
             if (hotline.equals("")) { /* Hotline is empty */
-                return new ResponseEntity<>("Hot line", HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>("Hotline không được để trống", HttpStatus.BAD_REQUEST);
             }
             if (!stringDealer.checkPhoneRegex(hotline)) { /* Hotline is not valid */
-                return new ResponseEntity<>("Hot line", HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>("Hotline không đúng định dạng", HttpStatus.BAD_REQUEST);
             }
             facility.setHotline(hotline);
             // Address
             String fAddress = stringDealer.trimMax(signUpDTO.getFacilityAddress());
             if (fAddress.equals("")) { /* Address is empty */
-                return new ResponseEntity<>("Address", HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>("Địa chỉ cơ sở không được để trống", HttpStatus.BAD_REQUEST);
             }
             facility.setFacilityAddress(fAddress);
             // Business license number
             String licenseNumber = stringDealer.trimMax(signUpDTO.getBusinessLicenseNumber());
             if (licenseNumber.equals("")) { /* Business license number is empty */
-                return new ResponseEntity<>("Business license number", HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>("Số đăng kí kinh doanh không được để trống", HttpStatus.BAD_REQUEST);
             }
             facility.setBusinessLicenseNumber(licenseNumber);
 
             facility.setStatus(0);  /* Inactivated, need registration's approval */
             facilityRepository.save(facility);
-            return new ResponseEntity<>("User registered successfully", HttpStatus.OK);
+            return new ResponseEntity<>("Đăng kí thành công, vui lòng đợi xác nhận tài khoản", HttpStatus.OK);
         } catch (IllegalArgumentException iae) {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
@@ -254,11 +257,14 @@ public class AuthServiceImpl implements IAuthService {
         // Check blank input
         String password = stringDealer.trimMax(changePasswordDTO.getPassword());
         if (password.equals("")) { /* Password is empty */
-            return new ResponseEntity<>("Password", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Mật khẩu không được để trống", HttpStatus.BAD_REQUEST);
         }
         String newPassword = stringDealer.trimMax(changePasswordDTO.getNewPassword());
         if (newPassword.equals("")) { /* New password is empty */
-            return new ResponseEntity<>("New Password", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Mật khẩu mới không được để trống", HttpStatus.BAD_REQUEST);
+        }
+        if (!stringDealer.checkPasswordRegex(newPassword)) { /* New password is not valid */
+            return new ResponseEntity<>("Mật khẩu mới không đúng định dạng", HttpStatus.BAD_REQUEST);
         }
         //Local variable for the user
         Optional<User> userOpt;
@@ -266,14 +272,14 @@ public class AuthServiceImpl implements IAuthService {
         userOpt = userRepository.findByUserId(changePasswordDTO.getUserId());
         if (userOpt.isEmpty() ||
                 !passwordEncoder.matches(password, userOpt.get().getPassword())) { /* Old password not match*/
-            return new ResponseEntity<>("Old password is wrong.", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Mật khẩu cũ sai", HttpStatus.BAD_REQUEST);
         } else { /* Old password is correct */
             //Encode the passwords
             newPassword = passwordEncoder.encode(newPassword);
             User user = userOpt.get();
             user.setPassword(newPassword);
             userRepository.save(user);
-            return new ResponseEntity<>("Password changed successfully", HttpStatus.OK);
+            return new ResponseEntity<>("Thay đổi mật khẩu thành công", HttpStatus.OK);
         }
     }
 
@@ -288,7 +294,7 @@ public class AuthServiceImpl implements IAuthService {
         // Check credentials, if not valid then return Bad request (403)
         Optional<User> userOptional = userRepository.findByPhone(phone);
         if (!userOptional.isPresent()) { /* No user found */
-            return new ResponseEntity<>("No phone number found!", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Không tìm thấy số điện thoại", HttpStatus.BAD_REQUEST);
         } else {
             // Create OTP
             String OTP = "111";
@@ -297,7 +303,7 @@ public class AuthServiceImpl implements IAuthService {
             userRepository.save(user);
             // Send OTP
 
-            return new ResponseEntity<>("OTP send!", HttpStatus.OK);
+            return new ResponseEntity<>("Đã gửi mã OTP", HttpStatus.OK);
         }
     }
 
@@ -317,10 +323,10 @@ public class AuthServiceImpl implements IAuthService {
             // Reset otp
             user.setOtp("");
             userRepository.save(user);
-            return new ResponseEntity<>("OTP confirmed!", HttpStatus.OK);
+            return new ResponseEntity<>("Mã OTP đã đúng", HttpStatus.OK);
         } else {                        /* OTP not match*/
 
-            return new ResponseEntity<>("OTP wrong!", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Mã OTP sai", HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -331,14 +337,22 @@ public class AuthServiceImpl implements IAuthService {
      */
     @Override
     public ResponseEntity<?> resendOTP(String phone) {
-        User user = userRepository.findByPhone(phone).get();
-        // Create OTP
-        String OTP = "111";
-        user.setOtp(OTP);
-        userRepository.save(user);
-        // Send OTP
-        return new ResponseEntity<>("OTP send!", HttpStatus.OK);
+        // Check credentials, if not valid then return Bad request (403)
+        Optional<User> userOptional = userRepository.findByPhone(phone);
+        if (!userOptional.isPresent()) { /* No user found */
+            return new ResponseEntity<>("Không tìm thấy số điện thoại", HttpStatus.BAD_REQUEST);
+        } else {
+            // Create OTP
+            String OTP = "111";
+            User user = userOptional.get();
+            user.setOtp(OTP);
+            userRepository.save(user);
+            // Send OTP
+
+            return new ResponseEntity<>("Đã gửi lại mã OTP", HttpStatus.OK);
+        }
     }
+
 
     /**
      * Change password after verify OTP.
@@ -350,15 +364,18 @@ public class AuthServiceImpl implements IAuthService {
     public ResponseEntity<?> resetPassword(ForgotPasswordDTO forgotPasswordDTO) {
         String phone = stringDealer.trimMax(forgotPasswordDTO.getPhone());
         if (phone.equals("")) { /* Phone number is empty */
-            return new ResponseEntity<>("Phone number", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Số điện thoại không được để trống", HttpStatus.BAD_REQUEST);
         }
         String password = stringDealer.trimMax(forgotPasswordDTO.getNewPassword());
         if (password.equals("")) { /* Password is empty */
-            return new ResponseEntity<>("Password empty", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Mật khẩu không được để trống", HttpStatus.BAD_REQUEST);
         }
         String confirmPassword = stringDealer.trimMax(forgotPasswordDTO.getConfirmPassword());
         if (confirmPassword.equals("")) { /* Confirm Password is empty */
-            return new ResponseEntity<>("Confirm Password empty", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Xác nhận mật khẩu không được để trống", HttpStatus.BAD_REQUEST);
+        }
+        if (!stringDealer.checkPasswordRegex(password)) { /* Password is not valid */
+            return new ResponseEntity<>("Mật khẩu không đúng định dạng", HttpStatus.BAD_REQUEST);
         }
         // Encode the passwords
         password = passwordEncoder.encode(password);
@@ -368,9 +385,9 @@ public class AuthServiceImpl implements IAuthService {
         if (passwordEncoder.matches(forgotPasswordDTO.getConfirmPassword(), forgotPasswordDTO.getNewPassword())) {
             user.setPassword(password);
             userRepository.save(user);
-            return new ResponseEntity<>("Password changed successfully", HttpStatus.OK);
+            return new ResponseEntity<>("Mật khẩu thay đổi thành công", HttpStatus.OK);
         } else {
-            return new ResponseEntity<>("Password not match!", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Mật khẩu không khớp", HttpStatus.BAD_REQUEST);
         }
     }
 }

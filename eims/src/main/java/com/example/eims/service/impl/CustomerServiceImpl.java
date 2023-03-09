@@ -172,8 +172,11 @@ public class CustomerServiceImpl implements ICustomerService {
             return new ResponseEntity<>("Số điện thoại khách hàng không hợp lệ", HttpStatus.BAD_REQUEST);
         }
         String oldPhone = customerRepository.findCustomerPhoneById(updateCustomerDTO.getCustomerId());
-        if (customerRepository.existsByCustomerPhoneNot(oldPhone)){ /* Phone number existed */
-            return new ResponseEntity<>("Phone number", HttpStatus.BAD_REQUEST);
+        if (!newPhone.equals(oldPhone)) {
+            Optional<Customer> customerOptional = customerRepository.findByCustomerPhone(newPhone);
+            if (customerOptional.isPresent()) {
+                return new ResponseEntity<>("Số điện thoại khách hàng đã tồn tại", HttpStatus.BAD_REQUEST);
+            }
         }
         // Email
         String mail = stringDealer.trimMax(updateCustomerDTO.getMail());
@@ -187,7 +190,6 @@ public class CustomerServiceImpl implements ICustomerService {
         }
         // Status
         int status = updateCustomerDTO.getStatus();
-
         Optional<Customer> customerOptional = customerRepository.findByCustomerId(updateCustomerDTO.getCustomerId());
         if (customerOptional.isPresent()) {
             // Retrieve customer's new information

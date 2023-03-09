@@ -33,4 +33,5 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
     boolean existsByCustomerPhoneNot(String phone);
     @Query(value = "SELECT customer_phone FROM eims.customer WHERE customer_id = ?1 ", nativeQuery = true)
     String findCustomerPhoneById(Long customerId);
+    Optional<Customer> findByCustomerPhone(String phone);
 }

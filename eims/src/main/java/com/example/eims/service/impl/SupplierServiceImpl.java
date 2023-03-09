@@ -190,17 +190,19 @@ public class SupplierServiceImpl implements ISupplierService {
             return new ResponseEntity<>("Supplier name", HttpStatus.BAD_REQUEST);
         }
         // Phone number
-        String phone = stringDealer.trimMax(updateSupplierDTO.getSupplierName());
-        if (phone.equals("")) { /* Phone number is empty */
+        String newPhone = stringDealer.trimMax(updateSupplierDTO.getSupplierName());
+        if (newPhone.equals("")) { /* Phone number is empty */
             return new ResponseEntity<>("Supplier phone", HttpStatus.BAD_REQUEST);
         }
-        if (stringDealer.checkPhoneRegex(phone)) { /* Phone number is not valid */
+        if (stringDealer.checkPhoneRegex(newPhone)) { /* Phone number is not valid */
             return new ResponseEntity<>("Supplier phone", HttpStatus.BAD_REQUEST);
         }
-        // Check phone number existed or not
-        boolean existed = supplierRepository.existsBySupplierPhoneNot(phone);
-        if (existed) { /* if phone number existed */
-            return new ResponseEntity<>("Supplier's phone existed!", HttpStatus.OK);
+        String oldPhone = supplierRepository.findSupplierPhoneById(updateSupplierDTO.getSupplierId());
+        if (!oldPhone.equals(newPhone)){
+            Optional<Supplier> supplierOptional = supplierRepository.findBySupplierPhone(newPhone);
+            if (supplierOptional.isPresent()) {
+                return new ResponseEntity<>("Supplier phone existed", HttpStatus.BAD_REQUEST);
+            }
         }
         // Address
         String address = stringDealer.trimMax(updateSupplierDTO.getSupplierAddress());
@@ -213,7 +215,10 @@ public class SupplierServiceImpl implements ISupplierService {
             return new ResponseEntity<>("Facility name", HttpStatus.BAD_REQUEST);
         }
         // Email
-        String email = stringDealer.trimMax(updateSupplierDTO.getFacilityName());
+        String email = stringDealer.trimMax(updateSupplierDTO.getSupplierMail());
+        if (email.equals("")) { /* Email is empty */
+            return new ResponseEntity<>("Email", HttpStatus.BAD_REQUEST);
+        }
         if (!stringDealer.checkEmailRegex(email)) { /* Email is not valid */
             return new ResponseEntity<>("Email", HttpStatus.BAD_REQUEST);
         }
@@ -225,7 +230,7 @@ public class SupplierServiceImpl implements ISupplierService {
         if (supplierOptional.isPresent()){
             Supplier supplier = supplierOptional.get();
             supplier.setSupplierName(name);
-            supplier.setSupplierPhone(phone);
+            supplier.setSupplierPhone(newPhone);
             supplier.setSupplierAddress(address);
             supplier.setSupplierMail(email);
             supplier.setStatus(status);

@@ -34,4 +34,5 @@ public interface SupplierRepository extends JpaRepository<Supplier, Long> {
     boolean existsBySupplierPhoneNot(String phone);
     @Query(value = "SELECT supplier_phone FROM eims.supplier WHERE supplier_id = ?1 ", nativeQuery = true)
     String findSupplierPhoneById(Long supplierId);
+    Optional<Supplier> findBySupplierPhone(String phone);
 }

@@ -74,4 +74,21 @@ public class StringDealer {
             return false;
         }
     }
+
+    /**
+     * Check if password is valid or not.
+     *
+     * @param password the password
+     * @return boolean value, true if password is valid, false if not
+     */
+    public boolean checkPasswordRegex(String password){
+        String regex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,20}$";
+        if (password.matches(regex)){
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+
 }
