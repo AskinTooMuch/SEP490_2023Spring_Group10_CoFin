@@ -104,7 +104,7 @@ public class AuthController {
      * @param phone the phone number of the account
      * @return
      */
-    @GetMapping("/forgotPassword/sendOTP")
+    @GetMapping("/registerPassword/sendOTP")
     public ResponseEntity<?> sendOTPRegisterOwner(@RequestParam String phone) {
         return authService.sendOTP(phone);
     }
@@ -116,7 +116,7 @@ public class AuthController {
      * @param otp code to verify phone number
      * @return
      */
-    @PostMapping("/forgotPassword/verifyOTP")
+    @PostMapping("/registerPassword/verifyOTP")
     public ResponseEntity<?> verifyOTPRegisterOwner(@RequestParam String phone, @RequestParam String otp) {
         return authService.verifyOTP(phone, otp);
     }
@@ -126,7 +126,7 @@ public class AuthController {
      *
      * @return
      */
-    @GetMapping("/forgotPassword/resendOTP")
+    @GetMapping("/registerPassword/resendOTP")
     public ResponseEntity<?> resendOTPRegisterOwner(@RequestBody String phone) {
         return authService.resendOTP(phone);
     }
