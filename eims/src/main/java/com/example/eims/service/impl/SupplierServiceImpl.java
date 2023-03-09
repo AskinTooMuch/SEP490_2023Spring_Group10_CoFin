@@ -117,7 +117,7 @@ public class SupplierServiceImpl implements ISupplierService {
             return new ResponseEntity<>("Supplier name", HttpStatus.BAD_REQUEST);
         }
         // Phone number
-        String phone = stringDealer.trimMax(createSupplierDTO.getSupplierName());
+        String phone = stringDealer.trimMax(createSupplierDTO.getSupplierPhone());
         if (phone.equals("")) { /* Phone number is empty */
             return new ResponseEntity<>("Supplier phone", HttpStatus.BAD_REQUEST);
         }
@@ -140,8 +140,8 @@ public class SupplierServiceImpl implements ISupplierService {
             return new ResponseEntity<>("Facility name", HttpStatus.BAD_REQUEST);
         }
         // Email
-        String email = stringDealer.trimMax(createSupplierDTO.getFacilityName());
-        if (!stringDealer.checkEmailRegex(email)) { /* Email is not valid */
+        String email = stringDealer.trimMax(createSupplierDTO.getSupplierMail());
+        if ((!email.equals("")) && (!stringDealer.checkEmailRegex(email))) { /* Email is not valid */
             return new ResponseEntity<>("Email", HttpStatus.BAD_REQUEST);
         }
         // Set attribute
