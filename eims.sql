@@ -427,7 +427,7 @@ VALUES 	(1,	2, 'Nguyễn Chức', '2001-12-16', '0969044714',	'ownerchuc@gmail.c
 		(2,	2, 'Test Owner', '2001-01-01', '0987654322', 'owner@gmail.com', 0, '$2a$10$NpyM9vyE2zQ7bTdEA7nYAeoirBlK5SqI/7v23kVQd7nCZq9nI.oUu', '{"city":"Tỉnh Hải Dương","district":"Huyện Gia Lộc","ward":"Xã Hoàng Diệu","street":"Thôn Nghĩa Hy"}', 1),
 		(3,	3, 'Test Employee', '2001-01-01', '0978654323', 'employee@gmail.com', 0, '$2a$10$uRRgBmQCWBLgBsB4lImrguTBcHkx96MErC2fhvxmgUPDacoHPPr6W', '{"city":"Tỉnh Hải Dương","district":"Huyện Gia Lộc","ward":"Xã Hoàng Diệu","street":"Thôn Nghĩa Hy"}', 1),
 		(4, 4, 'Test Moderator', '2001-01-01', '0987654324', 'moderator@gmail.com', 0, '$2a$10$FNOLtGaY4coy0.CAHUxLpuBj9PIEO5J3/nqbORI8UmZuZd4eqARw2', '{"city":"Tỉnh Hải Dương","district":"Huyện Gia Lộc","ward":"Xã Hoàng Diệu","street":"Thôn Nghĩa Hy"}', 1),
-        (5,	2, 'Nguyễn Dương', '2001-01-01', '0852274855', 'ownerduong@gmail.com', 0, '$2a$10$UOEamoIHKWrb7BVNTOtZHebHBp6zPZ03STsKXDCZFD0BJusC9xFlO', '{"city":"Tỉnh Hải Dương","district":"Huyện Gia Lộc","ward":"Xã Hoàng Diệu","street":"Thôn Nghĩa Hy"}', 0);
+        (5,	2, 'Nguyễn Dương', '2001-01-01', '0852274855', 'ownerduong@gmail.com', 0, '$2a$10$UOEamoIHKWrb7BVNTOtZHebHBp6zPZ03STsKXDCZFD0BJusC9xFlO', '{"city":"Tỉnh Hải Dương","district":"Huyện Gia Lộc","ward":"Xã Hoàng Diệu","street":"Thôn Nghĩa Hy"}', 1);
 		
 
 -- facility
