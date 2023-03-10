@@ -8,9 +8,14 @@ import ImportExportIcon from '@mui/icons-material/ImportExport';
 import { Modal } from 'react-bootstrap'
 import { faStarOfLife } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import ConfirmBox from './ConfirmBox';
 const Species = () => {
-
+  const [open, setOpen] = useState(false);
   const [specieList, setSpecieList] = useState([]);
+  //ConfirmBox
+  function openDelete(data) {
+    setOpen(true);
+  }
   // Create new specie JSON
   const [newSpecieDTO, setNewSpecieDTO] = useState({
     userId: sessionStorage.getItem("curUserId"),
@@ -106,9 +111,9 @@ const Species = () => {
     let dtos;
     switch (type) {
       case "new": dtos = newSpecieDTO;
-                  break;
+        break;
       case "edit": dtos = editSpecieDTO;
-                  break;
+        break;
       default: return;
     }
     if (dtos.specieName.trim() === "") {
@@ -174,6 +179,7 @@ const Species = () => {
           withCredentials: false
         });
       console.clear(response)
+      setOpen(false);
       loadSpecieList();
       toast.success("Xóa loài thành công");
     } catch (err) {
@@ -227,6 +233,18 @@ const Species = () => {
   return (
     <div>
       <nav className="navbar justify-content-between">
+        <div className='filter my-2 my-lg-0'>
+          <p><FilterAltIcon />Lọc</p>
+          <p><ImportExportIcon />Sắp xếp</p>
+          <form className="form-inline">
+            <div className="input-group">
+              <div className="input-group-prepend">
+                <button ><span className="input-group-text" ><SearchIcon /></span></button>
+              </div>
+              <input type="text" className="form-control" placeholder="Tìm kiếm" aria-label="Username" aria-describedby="basic-addon1" />
+            </div>
+          </form>
+        </div>
         <button className='btn btn-light' onClick={handleShow}>+ Thêm</button>
         <Modal show={show} onHide={handleClose}
           size="lg"
@@ -330,150 +348,154 @@ const Species = () => {
           </form>
         </Modal>
 
-        <div className='filter my-2 my-lg-0'>
-          <p><FilterAltIcon />Lọc</p>
-          <p><ImportExportIcon />Sắp xếp</p>
-          <form className="form-inline">
-            <div className="input-group">
-              <div className="input-group-prepend">
-                <button ><span className="input-group-text" ><SearchIcon /></span></button>
-              </div>
-              <input type="text" className="form-control" placeholder="Tìm kiếm" aria-label="Username" aria-describedby="basic-addon1" />
-            </div>
-          </form>
-        </div>
+
       </nav>
       <div>
         {/*Table for list of species */}
-        <table className="table table-bordered" id="list_specie_table">
-          <thead>
-            <tr>
-              <th scope="col">STT</th>
-              <th scope="col">Tên loài</th>
-              <th scope="col">Tổng thời gian ấp nở</th>
-              <th scope="col"> </th>
-            </tr>
-          </thead>
-          <tbody id="specie_list_table_body">
-            { /**JSX to load rows */}
-            {
-              specieList.map((item, index) => (
-                item.status &&
-                <tr key={item.specieId} data-key={index} className='trclick2'>
-                  <th scope="row" onClick={() => LoadData(index)}>{index + 1} </th>
-                  <td onClick={() => LoadData(index)}>{item.specieName}</td>
-                  <td onClick={() => LoadData(index)}>{item.incubationPeriod} (ngày)</td>
-                  <td><button className='btn btn-light' style={{ width: "50%" }} onClick={() => handleDelete(index)}>Xoá</button></td>
-                </tr>
-              ))
-            }
-
-            <Modal show={show2} onHide={() => handleClose2}
-              size="lg"
-              aria-labelledby="contained-modal-title-vcenter"
-              centered 
-              onSubmit={handleEditSpecieSubmit}>
-              {/**Edit species */}
-              <form>
-                <Modal.Header closeButton onClick={handleClose2}>
-                  <Modal.Title>Sửa thông tin loài</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                  <div className="speiciesfix">
-                    {/**Basic inf */}
-                    <div className="row">
-                      <div className="col-md-6 ">
-                        <p>Tên loài<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
+        <section className="u-align-center u-clearfix u-section-1" id="sec-b42b">
+          <div className="u-clearfix u-sheet u-sheet-1">
+            <div className="u-expanded-width u-table u-table-responsive u-table-1">
+              <table className="u-table-entity u-table-entity-1" id="list_specie_table">
+                <colgroup>
+                  <col width="5%" />
+                  <col width="40%" />
+                  <col width="35%" />
+                  <col width="20%" />
+                </colgroup>
+                <thead className="u-palette-4-base u-table-header u-table-header-1">
+                  <tr style={{ height: "21px" }}>
+                    <th className="u-border-1 u-border-custom-color-1 u-palette-2-base u-table-cell u-table-cell-1" scope="col">STT</th>
+                    <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-2" scope="col">Tên loài</th>
+                    <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-2" scope="col">Tổng thời gian ấp nở</th>
+                    <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-2" scope="col"> </th>
+                  </tr>
+                </thead>
+                <tbody id="specie_list_table_body" className="u-table-body">
+                  { /**JSX to load rows */}
+                  {
+                    specieList.map((item, index) => (
+                      item.status &&
+                      <tr key={item.specieId} data-key={index} className='trclick2' style={{ height: "21px" }}>
+                        <th className="u-border-1 u-border-grey-30 u-first-column u-grey-5 u-table-cell u-table-cell-5" scope="row" onClick={() => LoadData(index)}>{index + 1} </th>
+                        <td className="u-border-1 u-border-grey-30 u-table-cell" onClick={() => LoadData(index)}>{item.specieName}</td>
+                        <td className="u-border-1 u-border-grey-30 u-table-cell" onClick={() => LoadData(index)}>{item.incubationPeriod} (ngày)</td>
+                        <td className="u-border-1 u-border-grey-30 u-table-cell" style={{textAlign:"center"}}><button className='btn btn-light' style={{ width: "50%" }} onClick={() => openDelete(index)}>Xoá</button>
+                          <ConfirmBox open={open} closeDialog={() => setOpen(false)} title={item.specieName} deleteFunction={() => handleDelete(index)}
+                          />
+                        </td>
+                      </tr>
+                    ))
+                  }
+                  {/**Popup edit spicies */}
+                  <Modal show={show2} onHide={() => handleClose2}
+                    size="lg"
+                    aria-labelledby="contained-modal-title-vcenter"
+                    centered
+                    onSubmit={handleEditSpecieSubmit}>
+                    {/**Edit species */}
+                    <form>
+                      <Modal.Header closeButton onClick={handleClose2}>
+                        <Modal.Title>Sửa thông tin loài</Modal.Title>
+                      </Modal.Header>
+                      <Modal.Body>
+                        <div className="speiciesfix">
+                          {/**Basic inf */}
+                          <div className="row">
+                            <div className="col-md-6 ">
+                              <p>Tên loài<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
+                            </div>
+                            <div className="col-md-6">
+                              <input placeholder='Gà, Ngan, Vịt, v.v' id="editSpecieName"
+                                value={editSpecieDTO.specieName}
+                                onChange={e => handleEditSpecieChange(e, "specieName")}
+                                required
+                                className='form-control' />
+                            </div>
+                          </div>
+                          <div className="row">
+                            <div className="col-md-6 ">
+                              <p>Thời gian ấp<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
+                            </div>
+                            <div className="col-md-6">
+                              <input placeholder='Số ngày ấp'
+                                id="editIncubationPeriod"
+                                value={editSpecieDTO.incubationPeriod}
+                                onChange={e => handleEditSpecieChange(e, "incubationPeriod")}
+                                required
+                                type="number"
+                                min="0"
+                                className='form-control' />
+                            </div>
+                          </div>
+                          {/**Incubation phase inf: only 3 params are needed; the rest could be auto-generated*/}
+                          <div className="row">
+                            <div className="col-md-6 ">
+                              <p>Ngày xác định các giai đoạn ấp của trứng</p>
+                            </div>
+                            <div className="col-md-6">
+                            </div>
+                          </div>
+                          <div className="row">
+                            <div className="col-md-6 ">
+                              <p>Trứng trắng/tròn (trứng không có phôi)&nbsp;<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
+                            </div>
+                            <div className="col-md-6">
+                              <input placeholder='Ngày thứ ...'
+                                onChange={e => handleEditSpecieChange(e, "embryolessDate")}
+                                value={editSpecieDTO.embryolessDate}
+                                type="number"
+                                min="0"
+                                max={editSpecieDTO.incubationPeriod}
+                                required
+                                className="form-control" />
+                            </div>
+                          </div>
+                          <div className="row">
+                            <div className="col-md-6 ">
+                              <p>Trứng loãng/tàu (phôi chết non)&nbsp;<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
+                            </div>
+                            <div className="col-md-6">
+                              <input placeholder='Ngày thứ ...'
+                                onChange={e => handleEditSpecieChange(e, "diedEmbryoDate")}
+                                value={editSpecieDTO.diedEmbryoDate}
+                                type="number"
+                                min={editSpecieDTO.embryolessDate}
+                                max={editSpecieDTO.incubationPeriod}
+                                required
+                                className="form-control" />
+                            </div>
+                            <div className="col-md-6 ">
+                              <p>Trứng đang nở&nbsp;<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
+                            </div>
+                            <div className="col-md-6">
+                              <input placeholder='Ngày thứ ...'
+                                onChange={e => handleEditSpecieChange(e, "hatchingDate")}
+                                type="number"
+                                min={editSpecieDTO.diedEmbryoDate}
+                                max={editSpecieDTO.incubationPeriod}
+                                value={editSpecieDTO.hatchingDate}
+                                required
+                                className="form-control" />
+                            </div>
+                          </div>
+                        </div>
+                      </Modal.Body>
+                      <div className='model-footer'>
+                        <button style={{ width: "30%" }} type='submit' className="col-md-6 btn-light">
+                          Cập nhật
+                        </button>
+                        <button style={{ width: "20%" }} onClick={handleClose2} className="btn btn-light">
+                          Huỷ
+                        </button>
                       </div>
-                      <div className="col-md-6">
-                        <input placeholder='Gà, Ngan, Vịt, v.v' id="editSpecieName"
-                          value={editSpecieDTO.specieName}
-                          onChange={e => handleEditSpecieChange(e, "specieName")}
-                          required
-                          className='form-control' />
-                      </div>
-                    </div>
-                    <div className="row">
-                      <div className="col-md-6 ">
-                        <p>Thời gian ấp<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
-                      </div>
-                      <div className="col-md-6">
-                        <input placeholder='Số ngày ấp'
-                          id="editIncubationPeriod"
-                          value={editSpecieDTO.incubationPeriod}
-                          onChange={e => handleEditSpecieChange(e, "incubationPeriod")}
-                          required
-                          type="number"
-                          min="0"
-                          className='form-control' />
-                      </div>
-                    </div>
-                    {/**Incubation phase inf: only 3 params are needed; the rest could be auto-generated*/}
-                    <div className="row">
-                      <div className="col-md-6 ">
-                        <p>Ngày xác định các giai đoạn ấp của trứng</p>
-                      </div>
-                      <div className="col-md-6">
-                      </div>
-                    </div>
-                    <div className="row">
-                      <div className="col-md-6 ">
-                        <p>Trứng trắng/tròn (trứng không có phôi)&nbsp;<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
-                      </div>
-                      <div className="col-md-6">
-                        <input placeholder='Ngày thứ ...'
-                          onChange={e => handleEditSpecieChange(e, "embryolessDate")}
-                          value={editSpecieDTO.embryolessDate}
-                          type="number"
-                          min="0"
-                          max={editSpecieDTO.incubationPeriod}
-                          required
-                          className="form-control" />
-                      </div>
-                    </div>
-                    <div className="row">
-                      <div className="col-md-6 ">
-                        <p>Trứng loãng/tàu (phôi chết non)&nbsp;<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
-                      </div>
-                      <div className="col-md-6">
-                        <input placeholder='Ngày thứ ...'
-                          onChange={e => handleEditSpecieChange(e, "diedEmbryoDate")}
-                          value={editSpecieDTO.diedEmbryoDate}
-                          type="number"
-                          min={editSpecieDTO.embryolessDate}
-                          max={editSpecieDTO.incubationPeriod}
-                          required
-                          className="form-control" />
-                      </div>
-                      <div className="col-md-6 ">
-                        <p>Trứng đang nở&nbsp;<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
-                      </div>
-                      <div className="col-md-6">
-                        <input placeholder='Ngày thứ ...'
-                          onChange={e => handleEditSpecieChange(e, "hatchingDate")}
-                          type="number"
-                          min={editSpecieDTO.diedEmbryoDate}
-                          max={editSpecieDTO.incubationPeriod}
-                          value={editSpecieDTO.hatchingDate}
-                          required
-                          className="form-control" />
-                      </div>
-                    </div>
-                  </div>
-                </Modal.Body>
-                <div className='model-footer'>
-                  <button style={{ width: "30%" }} type='submit' className="col-md-6 btn-light">
-                    Cập nhật
-                  </button>
-                  <button style={{ width: "20%" }} onClick={handleClose2} className="btn btn-light">
-                    Huỷ
-                  </button>
-                </div>
-              </form>
-            </Modal>
-
-          </tbody>
-        </table>
+                    </form>
+                  </Modal>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+        {/**Thông báo */}
         <ToastContainer position="top-left"
           autoClose={5000}
           hideProgressBar={false}

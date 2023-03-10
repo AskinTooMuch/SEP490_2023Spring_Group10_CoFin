@@ -9,7 +9,7 @@ import { useNavigate } from "react-router-dom";
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import ImportExportIcon from '@mui/icons-material/ImportExport';
 import SearchIcon from '@mui/icons-material/Search';
-import { Modal} from 'react-bootstrap'
+import { Modal } from 'react-bootstrap'
 import { faStarOfLife } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 function Machine(props) {
@@ -88,7 +88,7 @@ export default function BasicTabs() {
                                             <p>Tên máy<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                         </div>
                                         <div className="col-md-6">
-                                            <input required style={{ width: "100%" }}/>
+                                            <input required style={{ width: "100%" }} />
                                         </div>
                                     </div>
                                     <div className="row">
@@ -109,7 +109,7 @@ export default function BasicTabs() {
                                             <p>Sức chứa<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                         </div>
                                         <div className="col-md-6">
-                                            <input required style={{ width: "100%" }}/>
+                                            <input required style={{ width: "100%" }} />
                                         </div>
                                     </div>
                                 </div>
@@ -139,9 +139,8 @@ export default function BasicTabs() {
                     </div>
                 </nav>
                 <div>
-                <section className="u-align-center u-clearfix u-section-1" id="sec-b42b">
+                    <section className="u-align-center u-clearfix u-section-1" id="sec-b42b">
                         <div className="u-clearfix u-sheet u-sheet-1">
-
                             <div className="u-expanded-width u-table u-table-responsive u-table-1">
                                 <table className="u-table-entity u-table-entity-1">
                                     <colgroup>
@@ -184,7 +183,7 @@ export default function BasicTabs() {
                             </div>
                         </div>
                     </section>
-                    
+
                 </div>
             </Machine>
 

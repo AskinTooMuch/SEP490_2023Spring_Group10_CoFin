@@ -150,8 +150,8 @@ c6.177,6.18,9.262,14.271,9.262,22.366C354.708,234.018,351.617,242.115,345.441,24
 	l14.854-7.808c0.291-0.154,0.638-0.154,0.931,0l14.852,7.808l-2.836-16.538c-0.056-0.324,0.052-0.655,0.287-0.885l12.016-11.713
 	l-16.605-2.413c-0.326-0.047-0.607-0.252-0.753-0.547L27.934,4.578l-7.427,15.047c-0.146,0.295-0.427,0.5-0.753,0.547L3.149,22.584z
 	"></path></svg></span>
-                                <h5 class="u-align-center-sm u-align-center-xs u-align-left-lg u-align-left-md u-align-left-xl u-text u-text-2"> Search engine optimization</h5>
-                                <p class="u-align-center-sm u-align-center-xs u-align-left-lg u-align-left-md u-align-left-xl u-text u-text-default u-text-3">Sample text. Click to select the Text Element.</p>
+                                <h5 class="u-align-center-sm u-align-center-xs u-align-left-lg u-align-left-md u-align-left-xl u-text u-text-2"> Cập nhật thời gian thực</h5>
+                                <p class="u-align-center-sm u-align-center-xs u-align-left-lg u-align-left-md u-align-left-xl u-text u-text-default u-text-3">Cập nhật các trạng thái ấp/nở trứng theo thời gian thực tế của Việt Nam UTC+7</p>
                             </div>
                         </div>
                         <div class="u-container-align-center-sm u-container-align-center-xs u-container-style u-custom-item u-list-item u-palette-2-base u-repeater-item u-list-item-2">
@@ -179,8 +179,8 @@ c6.177,6.18,9.262,14.271,9.262,22.366C354.708,234.018,351.617,242.115,345.441,24
 	 M9.691,47.846c2.366-1.572,4.885-2.836,7.517-3.781c1.945,4.36,4.737,8.333,8.271,11.698C19.328,54.958,13.823,52.078,9.691,47.846
 	z M32.521,55.763c3.534-3.364,6.326-7.337,8.271-11.698c2.632,0.945,5.15,2.209,7.517,3.781
 	C44.177,52.078,38.672,54.958,32.521,55.763z"></path></svg></span>
-                                <h5 class="u-align-center-sm u-align-center-xs u-align-left-lg u-align-left-md u-align-left-xl u-text u-text-4"> Social media marketing</h5>
-                                <p class="u-align-center-sm u-align-center-xs u-align-left-lg u-align-left-md u-align-left-xl u-text u-text-default u-text-5">Sample text. Click to select the Text Element.</p>
+                                <h5 class="u-align-center-sm u-align-center-xs u-align-left-lg u-align-left-md u-align-left-xl u-text u-text-4">Ghi nhớ và tính toán tự động</h5>
+                                <p class="u-align-center-sm u-align-center-xs u-align-left-lg u-align-left-md u-align-left-xl u-text u-text-default u-text-5">Có công cụ hỗ trợ giúp ghi nhớ thời gian nhập, xuất đơn và tính toán thời gian tự động</p>
                             </div>
                         </div>
                         <div class="u-container-align-center-sm u-container-align-center-xs u-container-align-left-lg u-container-align-left-md u-container-align-left-xl u-container-style u-custom-item u-list-item u-palette-3-base u-repeater-item u-list-item-3">
@@ -209,8 +209,8 @@ c6.177,6.18,9.262,14.271,9.262,22.366C354.708,234.018,351.617,242.115,345.441,24
 		l-3.572,3.571c-1.148,1.148-1.476,2.794-0.854,4.294c0.621,1.5,2.016,2.432,3.64,2.432h5.052C51.65,23,52,23.35,52,23.78V30.22z"></path><path d="M27,18c-4.963,0-9,4.037-9,9s4.037,9,9,9s9-4.037,9-9S31.963,18,27,18z M27,34c-3.859,0-7-3.141-7-7s3.141-7,7-7
 		s7,3.141,7,7S30.859,34,27,34z"></path>
                             </g></svg></span>
-                                <h5 class="u-align-center-sm u-align-center-xs u-align-left-lg u-align-left-md u-align-left-xl u-text u-text-6"> Online marketing strategy</h5>
-                                <p class="u-align-center-sm u-align-center-xs u-align-left-lg u-align-left-md u-align-left-xl u-text u-text-default u-text-7">Sample text. Click to select the Text Element.</p>
+                                <h5 class="u-align-center-sm u-align-center-xs u-align-left-lg u-align-left-md u-align-left-xl u-text u-text-6"> Dễ sử dụng</h5>
+                                <p class="u-align-center-sm u-align-center-xs u-align-left-lg u-align-left-md u-align-left-xl u-text u-text-default u-text-7">Chỉ cần đăng ký tài khoản và đăng nhập, bạn có thể dễ dàng sử dụng với hướng dẫn cụ thể</p>
                             </div>
                         </div>
                     </div>
@@ -229,7 +229,7 @@ c6.177,6.18,9.262,14.271,9.262,22.366C354.708,234.018,351.617,242.115,345.441,24
                             </div>
                             <div class="u-container-align-center u-container-style u-list-item u-repeater-item">
                                 <div class="u-container-layout u-similar-container u-valign-middle-lg u-valign-middle-md u-valign-middle-sm u-valign-middle-xs u-container-layout-2">
-                                    <h3 class="u-align-center u-custom-font u-font-ubuntu u-text u-text-palette-3-base u-text-3" data-animation-name="counter" data-animation-event="scroll" data-animation-duration="3000">N</h3>
+                                    <h3 class="u-align-center u-custom-font u-font-ubuntu u-text u-text-palette-3-base u-text-3" data-animation-name="counter" data-animation-event="scroll" data-animation-duration="3000">80%</h3>
                                     <h5 class="u-align-center u-text u-text-body-alt-color u-text-4">Sự tin tưởng</h5>
                                 </div>
                             </div>

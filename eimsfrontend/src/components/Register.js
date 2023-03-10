@@ -278,9 +278,9 @@ const Register = () => {
                                             <div className="card-body p-0">
                                                 <div className="row g-0">
                                                     {/*Profile information*/}
-                                                    <div className="col-lg-6">
+                                                    <div className="col-lg-6 first">
                                                         <div className="p-5">
-                                                            <h3 className="" style={{ color: " #4835d4" }}>Thông tin chung</h3>
+                                                            <h3 className="" style={{ color: " #ff7300" }}>Thông tin chung</h3>
                                                             <div className="mb-4 ">
                                                                 <div className="form-outline">
                                                                     <label htmlFor="username">Tên <FontAwesomeIcon className="star" icon={faStarOfLife} /></label>
