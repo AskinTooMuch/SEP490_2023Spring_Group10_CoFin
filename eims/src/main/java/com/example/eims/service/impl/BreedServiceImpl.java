@@ -32,11 +32,12 @@ public class BreedServiceImpl implements IBreedService {
     @Autowired
     private final BreedRepository breedRepository;
     @Autowired
-    private FileStorageService fileStorageService;
+    private final FileStorageService fileStorageService;
 
-    public BreedServiceImpl(SpecieRepository specieRepository, BreedRepository breedRepository) {
+    public BreedServiceImpl(SpecieRepository specieRepository, BreedRepository breedRepository, FileStorageService fileStorageService) {
         this.specieRepository = specieRepository;
         this.breedRepository = breedRepository;
+        this.fileStorageService = fileStorageService;
     }
 
     /**

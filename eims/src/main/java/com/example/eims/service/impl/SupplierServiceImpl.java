@@ -157,7 +157,7 @@ public class SupplierServiceImpl implements ISupplierService {
         supplier.setStatus(1);
         // Save
         supplierRepository.save(supplier);
-        return new ResponseEntity<>("Supplier created!", HttpStatus.OK);
+        return new ResponseEntity<>("Thêm nhà cung cấp thành công", HttpStatus.OK);
 
     }
 

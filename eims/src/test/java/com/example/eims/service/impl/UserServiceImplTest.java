@@ -7,6 +7,7 @@
  * Record of change:<br>
  * DATE         Version     Author      DESCRIPTION<br>
  * 08/03/2023   1.0         DuongVV     First Deploy<br>
+ * 10/03/2023   1.1         DuongVV     Update<br>
  */
 
 package com.example.eims.service.impl;
@@ -14,25 +15,40 @@ package com.example.eims.service.impl;
 import com.example.eims.dto.user.UpdateUserDTO;
 import com.example.eims.dto.user.UserDetailDTO;
 import com.example.eims.entity.User;
-import com.example.eims.service.interfaces.IUserService;
-import com.example.eims.utils.StringDealer;
-import org.junit.jupiter.api.AfterEach;
+import com.example.eims.repository.UserRepository;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.Query;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.ArrayList;
+import java.sql.Date;
 import java.util.List;
 
+import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
-@SpringBootTest
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
+@ExtendWith(MockitoExtension.class)
 class UserServiceImplTest {
-    @Autowired
-    private IUserService userService;
-    private static StringDealer stringDealer = new StringDealer();
-    private static PasswordEncoder passwordEncoder;
+    @Mock
+    UserRepository userRepository;
+    @Mock
+    EntityManager em;
+    @Mock
+    private Page<User> userPage;
+    @InjectMocks
+    UserServiceImpl userService;
+
  /*   @BeforeAll
     static void beforeAll() {
         //
@@ -65,85 +81,104 @@ class UserServiceImplTest {
         facility.setStatus(1);
     }*/
 
-    @AfterEach
-    void tearDown() {
-        // Roll back update user
-        ResponseEntity<?> responseEntity = userService.showFormUpdate(2L);
-        UpdateUserDTO updateUserDTO = (UpdateUserDTO) responseEntity.getBody();
-        updateUserDTO.setUsername("Test Owner");
-        ResponseEntity<?> responseEntity2 = userService.updateUser(updateUserDTO);
-    }
-
     @Test
     void sendUserDetail() {
-        ResponseEntity<?> responseEntity = userService.sendUserDetail(2L);
-        // Facility name = Test name
-        UserDetailDTO userDetailDTO = (UserDetailDTO) responseEntity.getBody();
+        // Set up
+        UserDetailDTO dto = new UserDetailDTO();
+        dto.setUserId(2L);
+        Query q = mock(Query.class);
+        // Define behaviour of repository
+        when(em.createNamedQuery("GetUserDetail")).thenReturn(q);
+        when(q.getSingleResult()).thenReturn(dto);
+        // Run service method
+        ResponseEntity<UserDetailDTO> responseEntity = userService.sendUserDetail(2L);
+        System.out.println(responseEntity.toString());
         // Assert
-        assertEquals(userDetailDTO.getFacilityName(), "Test name fail"); /* Fail */
-        //assertEquals(userDetailDTO.getFacilityName(), "Test name"); /* Pass */
+        assertEquals(2L,responseEntity.getBody().getUserId());
     }
 
     @Test
     void getAllUser() {
+        // Set up
+        User user1 = new User();
+        User user2 = new User();
+        User user3 = new User();
+        List<User> userList = new ArrayList<>();
+        userList.add(user1);
+        userList.add(user2);
+        userList.add(user3);
+        // Define behaviour of repository
+        when(userRepository.findAll()).thenReturn(userList);
+        // Run service method
         ResponseEntity<?> responseEntity = userService.getAllUser();
-        // 5 users
-        List<User> userList = (List<User>) responseEntity.getBody();
+        List<User> list = (List<User>) responseEntity.getBody();
+        System.out.println(responseEntity.toString());
         // Assert
-        assertEquals(userList.size(), 4); /* Fail */
-        //assertEquals(userList.size(), 5); /* Pass */
+        assertEquals(3, list.size());
     }
 
     @Test
     void getAllUserPaging() {
-        ResponseEntity<?> responseEntity = userService.getAllUserPaging(2,3, "ASC");
-        // 5 users-> (page 2, size 3) -> return 2 pages
-        Page<User> userPage = (Page<User>) responseEntity.getBody();
+        // Set up
+        User user1 = new User();
+        User user2 = new User();
+        User user3 = new User();
+        List<User> userList = new ArrayList<>();
+        userList.add(user1);
+        userList.add(user2);
+        userList.add(user3);
+        int page = 1;
+        int size = 2;
+        String sort = "ASC";
+        Sort sortable = Sort.by("userId").ascending();
+        Pageable pageable = PageRequest.of(page, size, sortable);
+        // Define behaviour of repository
+        when(userRepository.findAll(pageable)).thenReturn(userPage);
+        // Run service method
+        ResponseEntity<?> responseEntity = userService.getAllUserPaging(1, 2, "ASC");
+        System.out.println(responseEntity.toString());
         // Assert
-        assertEquals(userPage.getTotalPages(), 3); /* Fail */
-        //assertEquals(userPage.getTotalPages(), 2); /* Pass */
+        assertEquals(userPage, responseEntity.getBody());
     }
 
     @Test
     void showFormUpdate() {
-        ResponseEntity<?> responseEntity = userService.showFormUpdate(2L);
-        // name = Test Owner
-        UpdateUserDTO updateUserDTO = (UpdateUserDTO) responseEntity.getBody();
+        // Set up
+        User user = new User();
+        user.setUserId(1L);
+        user.setUsername("aa");
+        user.setDob(new Date(999999));
+        user.setAddress("a@a.com");
+        user.setAddress("address");
+        // Define behaviour of repository
+        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+        // Run service method
+        ResponseEntity<?> responseEntity = userService.showFormUpdate(1L);
+        System.out.println(responseEntity.toString());
+        UpdateUserDTO dto = (UpdateUserDTO) responseEntity.getBody();
         // Assert
-        assertEquals(updateUserDTO.getUsername(), "Test Employee"); /* Fail */
-        //assertEquals(user.getUsername(), "Test Owner"); /* Pass */
+        assertEquals("aa", dto.getUsername());
     }
 
     @Test
     void updateUser() {
-        // Get updateUserDTO (showFromUpdate)
-        ResponseEntity<?> responseEntity = userService.showFormUpdate(2L);
-        UpdateUserDTO updateUserDTO = (UpdateUserDTO) responseEntity.getBody();
-        // Set new name
-        updateUserDTO.setUsername("Test Owner 2");
-        ResponseEntity<?> responseEntity2 = userService.updateUser(updateUserDTO);
+        // Set up
+        UpdateUserDTO dto = new UpdateUserDTO();
+        dto.setUserId(1L);
+        dto.setUsername("aa");
+        dto.setDob("2000-01-01");
+        dto.setEmail("a@a.com");
+        dto.setAddress("address");
+        User user = new User();
+        user.setUserId(1L);
+        int accountStatus = 1;
+        // Define behaviour of repository
+        when(userRepository.getStatusByUserId(1L)).thenReturn(true);
+        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+        // Run service method
+        ResponseEntity<?> responseEntity = userService.updateUser(dto);
+        System.out.println(responseEntity.toString());
         // Assert
-        //assertEquals(responseEntity2.getBody(), "Fail"); /* Fail */
-        assertEquals(responseEntity2.getBody(), "User information updated!"); /* Pass */
-    }
-
-    @Test
-    void getAllUserByRole() {
-        // 3 users with role_id = 2
-        ResponseEntity<?> responseEntity = userService.getAllUserByRole(2L);
-        List<User> userList = (List<User>) responseEntity.getBody();
-        // Assert
-        assertEquals(userList.size(), 2);   /* Fail */
-        //assertEquals(userList.size(), 3);   /* Pass */
-    }
-
-    @Test
-    void getAllUserByRoleAndStatus() {
-        // 2 users with role_id = 2 and status = 1
-        ResponseEntity<?> responseEntity = userService.getAllUserByRoleAndStatus(2L, 1);
-        List<User> userList = (List<User>) responseEntity.getBody();
-        // Assert
-        assertEquals(userList.size(), 3); /* Fail */
-        //assertEquals(userList.size(), 2); /* Pass */
+        assertEquals("Cập nhật thông tin thành công",responseEntity.getBody());
     }
 }

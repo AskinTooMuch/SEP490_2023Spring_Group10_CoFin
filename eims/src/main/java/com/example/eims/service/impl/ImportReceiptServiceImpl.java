@@ -17,6 +17,7 @@ import com.example.eims.repository.ImportReceiptRepository;
 import com.example.eims.service.interfaces.IImportReceiptService;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -32,9 +33,9 @@ import java.util.Optional;
 public class ImportReceiptServiceImpl implements IImportReceiptService {
 
     @Autowired
-    private ImportReceiptRepository importReceiptRepository;
+    private final ImportReceiptRepository importReceiptRepository;
     @PersistenceContext
-    private EntityManager em;
+    private final EntityManager em;
 
     public ImportReceiptServiceImpl(ImportReceiptRepository importReceiptRepository, EntityManager em) {
         this.importReceiptRepository = importReceiptRepository;
@@ -129,9 +130,9 @@ public class ImportReceiptServiceImpl implements IImportReceiptService {
      */
     @Override
     public ResponseEntity<?> viewImportStatistic(Long userId) {
-        List<ImportReceiptStatisticDTO> statistics = em.createNamedQuery("getImportReceiptStatisticByUserId")
-                .setParameter(1, userId)
-                .getResultList();
+        Query query = em.createNamedQuery("getImportReceiptStatisticByUserId");
+        query.setParameter(1, userId);
+        List<ImportReceiptStatisticDTO> statistics = query.getResultList();
         return new ResponseEntity<>(statistics, HttpStatus.OK);
     }
 }

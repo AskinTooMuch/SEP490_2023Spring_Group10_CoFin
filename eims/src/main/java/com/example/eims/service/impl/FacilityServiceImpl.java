@@ -79,6 +79,11 @@ public class FacilityServiceImpl implements IFacilityService {
      */
     @Override
     public ResponseEntity<?> showFormUpdate(Long facilityId) {
+        // Check if facility is still running
+        int facilityStatus = facilityRepository.getStatusById(facilityId);
+        if (facilityStatus == 0) { /* status = 0 (deactivated) */
+            return new ResponseEntity<>("Cơ sở đã ngừng hoạt động", HttpStatus.BAD_REQUEST);
+        }
         // Get a facility of the current User
         Optional<Facility> facility = facilityRepository.findByFacilityId(facilityId);
         if (facility.isPresent()) {
@@ -98,11 +103,10 @@ public class FacilityServiceImpl implements IFacilityService {
      */
     @Override
     public ResponseEntity<?> updateFacility(UpdateFacilityDTO updateFacilityDTO) {
-        // Check if Owner's account is still activated
-        Long userId = updateFacilityDTO.getUserId();
-        int accountStatus = (userRepository.getStatusByUserId(userId) ? 1 : 0);
-        if (accountStatus == 0) { /* status = 0 (deactivated) */
-            return new ResponseEntity<>("Tài khoản đã bị vô hiệu hóa", HttpStatus.BAD_REQUEST);
+        // Check if facility is still running
+        int facilityStatus = facilityRepository.getStatusById(updateFacilityDTO.getFacilityId());
+        if (facilityStatus == 0) { /* status = 0 (deactivated) */
+            return new ResponseEntity<>("Cơ sở đã ngừng hoạt động", HttpStatus.BAD_REQUEST);
         }
         // Retrieve facility's new information and create new one
         Optional<Facility> facilityOptional = facilityRepository.findById(updateFacilityDTO.getFacilityId());

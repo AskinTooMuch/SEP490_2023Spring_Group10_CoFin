@@ -54,7 +54,6 @@ public class StringDealer {
     public boolean checkEmailRegex(String email){
         String regex = "^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$";
         return email.matches(regex);
-
     }
 
     /**
@@ -76,12 +75,6 @@ public class StringDealer {
      */
     public boolean checkPasswordRegex(String password){
         String regex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,20}$";
-        if (password.matches(regex)){
-            return true;
-        } else {
-            return false;
-        }
+        return password.matches(regex);
     }
-
-
 }
