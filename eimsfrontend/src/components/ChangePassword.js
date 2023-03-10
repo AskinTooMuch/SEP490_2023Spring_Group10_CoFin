@@ -59,12 +59,12 @@ const ChangePassword = () => {
             <h2 className="Auth-form-title">Đổi mật khẩu</h2>
             <div className="form-group mt-3">
 
-              <input type="text" name="account" className="form-control mt-1" placeholder="Mật khẩu mới"
+              <input type="text" name="newPassword" className="form-control mt-1" placeholder="Mật khẩu mới"
                 required ref={userRef} onChange={(e) => setAccount(e.target.value)}value={account} /> <button onClick={handleSend}></button>
             </div>
             <div className="form-group mt-3">
 
-              <input type="text" name="OTP" className="form-control mt-1" placeholder="Xác nhận mật khẩu"
+              <input type="text" name="confirmNewPassword" className="form-control mt-1" placeholder="Xác nhận mật khẩu"
                 required ref={userRef} onChange={(e) => setOTP(e.target.value)}
                 value={otp}
               />

@@ -84,13 +84,13 @@ const Login = () => {
               <div class="u-form u-login-control u-form-1">
                 <form onSubmit={handleSubmit} class="u-clearfix u-form-custom-backend u-form-spacing-10 u-form-vertical u-inner-form" source="custom" name="form" style={{ padding: "0px" }}>
                   <div class="u-form-group u-form-name">
-                    <label for="username-a30d" class="u-label u-text-grey-25 u-label-1">Username </label>
+                    <label for="username-a30d" class="u-label u-text-grey-25 u-label-1">Tài khoản </label>
                     <input type="text" name="phone" placeholder="Nhập số điện thoại"
                       ref={userRef} onChange={e => handleChange(e, "phone")} value={loginDetail.phone}
                       class="u-border-2 u-border-grey-10 u-grey-10 u-input u-input-rectangle u-input-1" required />
                   </div>
                   <div class="u-form-group u-form-password login-wrapper">
-                    <label for="password-a30d" class="u-label u-text-grey-25 u-label-2">Password </label>
+                    <label for="password-a30d" class="u-label u-text-grey-25 u-label-2">Mật khẩu </label>
                     <input type={passwordShown ? "text" : "password"} name="password" placeholder="Nhập mật khẩu"
                       ref={userRef} onChange={e => handleChange(e, "password")} value={loginDetail.password}
                       class="u-border-2 u-border-grey-10 u-grey-10 u-input u-input-rectangle u-input-2" required />
