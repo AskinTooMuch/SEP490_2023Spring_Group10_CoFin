@@ -12,9 +12,7 @@
 package com.example.eims.service.impl;
 
 import com.example.eims.dto.importReceipt.ImportReceiptStatisticDTO;
-import com.example.eims.dto.user.UserDetailDTO;
 import com.example.eims.entity.ImportReceipt;
-import com.example.eims.entity.User;
 import com.example.eims.repository.ImportReceiptRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;

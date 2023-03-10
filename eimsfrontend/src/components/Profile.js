@@ -31,7 +31,6 @@ const Profile = () => {
         setPasswordShown3(passwordShown3 ? false : true);
     };
 
-
     //show-hide popup
     const [show, setShow] = useState(false);
 
@@ -216,7 +215,7 @@ const Profile = () => {
             console.log(responseJson);
             setUpdateUserDTO('');
             loadUserDetails();
-            toast.success("Cập nhật thông tin thành công")
+            toast.success("Cập nhật thông tin thành công");
         } catch (err) {
             if (!err?.response) {
                 toast.error('Server không phản hồi');
@@ -472,7 +471,7 @@ const Profile = () => {
                                                     <button style={{ width: "30%" }} className="col-md-6 btn-light" type='submit' id = "submitUserUpdate">
                                                         Xác nhận
                                                     </button>
-                                                    <button  style={{ width: "20%" }} className="btn btn-light" onClick={handleClose2} id = "cancelUserUpdate">
+                                                    <button  style={{ width: "20%" }} className="btn btn-light" onClick={handleClose2} type='button' id = "cancelUserUpdate">
                                                         Huỷ
                                                     </button>
                                                 </div>

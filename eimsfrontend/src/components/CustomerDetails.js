@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState, useRef } from 'react';
+import { useNavigate, useParams, useLocation } from "react-router-dom";
 import PropTypes from 'prop-types';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
@@ -9,10 +9,11 @@ import '../css/machine.css'
 import { faStarOfLife } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Modal } from 'react-bootstrap'
+import axios from 'axios';
+//Toast
+import { ToastContainer, toast } from 'react-toastify';
 function CustomerDetails(props) {
     const { children, value, index, ...other } = props;
-
-
     return (
         <div
             role="tabpanel"
@@ -44,17 +45,233 @@ function a11yProps(index) {
 }
 
 export default function BasicTabs() {
-    const [value, setValue] = React.useState(0);
+    //Dependency
+    const [addressLoaded, setAddressLoaded] = useState(false);
+    const [addressValLoaded, setAddressValLoaded] = useState(false);
+    const [customerLoaded, setCustomerLoaded] = useState(false);
 
+    //URL
+    const CUSTOMER_UPDATE = "/api/customer/update/save";
+    const CUSTOMER_GET = "/api/customer/get";
+
+    const userRef = useRef();
+    const [value, setValue] = React.useState(0);
+    const navigate = useNavigate();
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
-    const navigate = useNavigate();
-    return (
 
+    //DTO
+    const [updateCustomerDTO, setUpdateCustomerDTO] = useState({
+        customerId: "",
+        customerName: "",
+        customerPhone: "",
+        customerAddress: "",
+        customerMail: "",
+        status: ""
+    })
+
+    //Address consts
+    //Full Json addresses
+    const [fullAddresses, setFullAddresses] = useState('');
+    const [city, setCity] = useState([
+        { value: '', label: 'Chọn Tỉnh/Thành phố' }
+    ]);
+    const [district, setDistrict] = useState(''); //For populate dropdowns
+    const [ward, setWard] = useState('');
+    const [cityIndex, setCityIndex] = useState(); //Save the index of selected dropdowns
+    const [districtIndex, setDistrictIndex] = useState();
+    const [wardIndex, setWardIndex] = useState();
+    const [street, setStreet] = useState();
+
+    // Set value for address fields
+    //User
+    useEffect(() => {
+        console.log("Load address");
+        loadAddress();
+        console.log(fullAddresses);
+    }, [addressLoaded]);
+
+    const loadAddress = async () => {
+        const result = await axios.get("https://raw.githubusercontent.com/kenzouno1/DiaGioiHanhChinhVN/master/data.json",
+            {});
+        setFullAddresses(result.data);
+        console.log("Full address");
+        console.log(fullAddresses);
+        // Set inf
+        const cityList = fullAddresses.slice();
+        for (let i in cityList) {
+            cityList[i] = { value: cityList[i].Id, label: cityList[i].Name }
+        }
+        setCity(cityList);
+        setAddressLoaded(true);
+    }
+
+    //Get sent params
+    const { state } = useLocation();
+    const { id } = state;
+    const [addressJson, setAddressJson] = useState({
+        city: "",
+        district: "",
+        ward: "",
+        street: ""
+    });
+
+    //Get customer details
+    useEffect(() => {
+        console.log("Get customer");
+        loadCustomer();
+    }, [customerLoaded]);
+
+    const loadCustomer = async () => {
+        const result = await axios.get(CUSTOMER_GET,
+            { params: { customerId: id } });
+        // Set inf
+        setAddressJson(JSON.parse(result.data.customerAddress));
+        updateCustomerDTO.customerId = result.data.customerId;
+        updateCustomerDTO.customerName = result.data.customerName;
+        updateCustomerDTO.customerPhone = result.data.customerPhone;
+        updateCustomerDTO.customerAddress = result.data.customerAddress;
+        updateCustomerDTO.customerMail = result.data.customerMail;
+        updateCustomerDTO.status = result.data.status;
+        // Get index of dropdowns
+        console.log("load values");
+        console.log(fullAddresses);
+        console.log(addressJson);
+        for (let i in city) {
+            console.log(i);
+            if (addressJson.city === city[i].label) {
+                setCityIndex(i);
+                addressJson.city = fullAddresses[i].Name;
+                console.log("City " + i);
+                setCityIndex(i);
+                const districtOnIndex = fullAddresses[i].Districts;
+                const districtList = districtOnIndex.slice();
+                for (let i in districtList) {
+                    districtList[i] = { value: districtList[i].Id, label: districtList[i].Name }
+                }
+                setDistrict(districtList);
+                for (let j in districtList) {
+                    if (addressJson.district === districtList[j].label) {
+                        setDistrictIndex(j);
+                        console.log(j);
+                        addressJson.district = fullAddresses[i].Districts[j].Name;
+                        console.log("District " + j);
+                        setDistrictIndex(j);
+                        const wardOnIndex = fullAddresses[i].Districts[j].Wards;
+                        const wardList = wardOnIndex.slice();
+                        for (let i in wardList) {
+                            wardList[i] = { value: wardList[i].Id, label: wardList[i].Name }
+                        }
+                        setWard(wardList);
+                        for (let k in wardList) {
+                            if (addressJson.ward === wardList[k].label) {
+                                setWardIndex(k);
+                                addressJson.ward = fullAddresses[i].Districts[j].Wards[k].Name;
+                                break;
+                            }
+                        }
+                        break;
+                    }
+                }
+                break;
+            }
+        }
+        setStreet(addressJson.street);
+        console.log(addressJson);
+        setCustomerLoaded(true);
+    }
+
+    //Function for populating dropdowns
+    function loadDistrict(index) {
+        console.log("City " + index);
+        setCityIndex(index);
+        const districtOnIndex = fullAddresses[index].Districts;
+        const districtList = districtOnIndex.slice();
+        for (let i in districtList) {
+            districtList[i] = { value: districtList[i].Id, label: districtList[i].Name }
+        }
+        setDistrict(districtList);
+    }
+
+
+    //Load user ward list
+    function loadWard(districtIndex, cIndex) {
+        if (cIndex === -1) {
+            cIndex = cityIndex;
+        }
+        console.log("District " + districtIndex);
+        setDistrictIndex(districtIndex);
+        const wardOnIndex = fullAddresses[cIndex].Districts[districtIndex].Wards;
+        const wardList = wardOnIndex.slice();
+        for (let i in wardList) {
+            wardList[i] = { value: wardList[i].Id, label: wardList[i].Name }
+        }
+        setWard(wardList);
+    }
+
+    function saveWard(index) {
+        console.log("Ward " + index);
+        setWardIndex(index);
+    }
+
+    function saveAddressJson(s) {
+        console.log("ward " + wardIndex);
+        setStreet(s);
+        addressJson.city = fullAddresses[cityIndex].Name;
+        addressJson.district = fullAddresses[cityIndex].Districts[districtIndex].Name;
+        addressJson.ward = fullAddresses[cityIndex].Districts[districtIndex].Wards[wardIndex].Name;
+        addressJson.street = street;
+        updateCustomerDTO.customerAddress = JSON.stringify(addressJson);
+    }
+
+    //Handle Change functions:
+    //CreateCustomer
+    const handleUpdateCustomerChange = (event, field) => {
+        let actualValue = event.target.value
+        setUpdateCustomerDTO({
+            ...updateCustomerDTO,
+            [field]: actualValue
+        })
+    }
+
+    //Handle Submit functions
+    //Handle submit new customer
+    const handleUpdateCustomerSubmit = async (event) => {
+        event.preventDefault();
+        saveAddressJson(street);
+        let response;
+        try {
+            response = await axios.put(CUSTOMER_UPDATE,
+                updateCustomerDTO,
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Access-Control-Allow-Origin': '*'
+                    },
+                    withCredentials: false
+                }
+            );
+            //loadSupplier(id);
+            console.log(response);
+            toast.success("Cập nhật thành công");
+            setShow(false);
+        } catch (err) {
+            if (!err?.response) {
+                toast.error('Server không phản hồi');
+            } else {
+                toast.error(response);
+            }
+        }
+    }
+
+
+
+
+    return (
         <Box sx={{ width: '100%' }}>
             <Box sx={{ borderBottom: 1, borderColor: 'black' }}>
                 <Tabs sx={{
@@ -72,7 +289,7 @@ export default function BasicTabs() {
                         size="lg"
                         aria-labelledby="contained-modal-title-vcenter"
                         centered >
-                        <form>
+                        <form onSubmit={handleUpdateCustomerSubmit}>
                             <Modal.Header closeButton onClick={handleClose}>
                                 <Modal.Title>Thông tin khách hàng</Modal.Title>
                             </Modal.Header>
@@ -83,7 +300,10 @@ export default function BasicTabs() {
                                             <p>Họ và tên<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                         </div>
                                         <div className="col-md-6">
-                                            <input style={{ width: "100%" }} required />
+                                            <input style={{ width: "100%" }} required
+                                                value={updateCustomerDTO.customerName}
+                                                onChange={(e) => handleUpdateCustomerChange(e, "customerName")}
+                                                className="form-control " />
                                         </div>
                                     </div>
                                     <div className="row">
@@ -91,7 +311,10 @@ export default function BasicTabs() {
                                             <p>Số điện thoại<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                         </div>
                                         <div className="col-md-6">
-                                            <input style={{ width: "100%" }} required />
+                                            <input style={{ width: "100%" }} required
+                                                value={updateCustomerDTO.customerPhone}
+                                                onChange={(e) => handleUpdateCustomerChange(e, "customerPhone")}
+                                                className="form-control " />
                                         </div>
                                     </div>
                                     <div className="row">
@@ -99,55 +322,124 @@ export default function BasicTabs() {
                                             <p>Email</p>
                                         </div>
                                         <div className="col-md-6">
-                                            <input style={{ width: "100%" }} />
+                                            <input style={{ width: "100%" }}
+                                                value={updateCustomerDTO.customerMail}
+                                                onChange={(e) => handleUpdateCustomerChange(e, "customerMail")}
+                                                className="form-control " />
                                         </div>
                                     </div>
+                                    {/*City*/}
                                     <div className="row">
-                                        <div className="col-md-6">
-                                            <p>Số nhà</p>
+                                        <div className="col-md-6 ">
+                                            <p>Thành phố<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                         </div>
                                         <div className="col-md-6">
-                                            <input style={{ width: "100%" }} required />
-                                        </div>
-                                    </div>
-                                    <div className="row">
-                                        <div className="col-md-6">
-                                            <p>Phường/Xã</p>
-                                        </div>
-                                        <div className="col-md-6">
-                                            <select class="form-control mt-1" aria-label="Default select example">
-                                                <option selected>Chọn phường</option>
+                                            <select className="form-control mt-1" id="uprovince"
+                                                ref={userRef}
+                                                autoComplete="off"
+                                                onChange={(e) => loadDistrict(e.target.value)}
+                                                value={cityIndex}
+                                                required>
+                                                <option value="" disabled>Chọn Tỉnh/Thành phố</option>
+                                                {city &&
+                                                    city.map((item, index) => (
+                                                        <>
+                                                            {item.label === addressJson.city
+                                                                ? <option value={index} selected>{item.label}</option>
+                                                                : <option value={index}>{item.label}</option>
+                                                            }
+                                                        </>
+                                                    ))
+                                                }
                                             </select>
                                         </div>
                                     </div>
+                                    {/*District*/}
                                     <div className="row">
-                                        <div className="col-md-6">
-                                            <p>Quận/Huyện</p>
+                                        <div className="col-md-6 ">
+                                            <p>Quận/Huyện<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                         </div>
                                         <div className="col-md-6">
-                                            <select class="form-control mt-1" aria-label="Default select example">
-                                                <option selected>Chọn quận</option>
+                                            <select className="form-control mt-1" id="udistrict"
+                                                ref={userRef}
+                                                autoComplete="off"
+                                                onChange={(e) => loadWard(e.target.value, -1)}
+                                                value={districtIndex}
+                                                required>
+                                                <option value="" disabled>Chọn Quận/Huyện</option>
+                                                {district &&
+                                                    district.map((item, index) => (
+                                                        <>
+                                                            {item.label === addressJson.district
+                                                                ? <option value={index} selected>{item.label}</option>
+                                                                : <option value={index}>{item.label}</option>
+                                                            }
+                                                        </>
+                                                    ))
+                                                }
                                             </select>
+                                        </div>
+                                    </div>
+                                    {/*Ward*/}
+                                    <div className="row">
+                                        <div className="col-md-6 ">
+                                            <p>Phường xã<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
+                                        </div>
+                                        <div className="col-md-6">
+                                            <select className="form-control mt-1" id="uward"
+                                                ref={userRef}
+                                                autoComplete="off"
+                                                onChange={(e) => saveWard(e.target.value)}
+                                                value={wardIndex}
+                                                required>
+                                                <option value="" disabled>Chọn Phường/Xã</option>
+                                                {ward &&
+                                                    ward.map((item, index) => (
+                                                        <>
+                                                            {item.label === addressJson.ward
+                                                                ? <option value={index} selected>{item.label}</option>
+                                                                : <option value={index}>{item.label}</option>
+                                                            }
+                                                        </>
+                                                    ))
+                                                }
+                                            </select>
+                                        </div>
+                                    </div>
+                                    {/*Street*/}
+                                    <div className="row">
+                                        <div className="col-md-6 ">
+                                            <p>Số nhà<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
+                                        </div>
+                                        <div className="col-md-6">
+                                            <input type="text" id="uhomenum"
+                                                ref={userRef}
+                                                autoComplete="off"
+                                                onChange={(e) => saveAddressJson(e.target.value)}
+                                                required
+                                                className="form-control"
+                                                value={addressJson.street} />
                                         </div>
                                     </div>
                                     <div className="row">
                                         <div className="col-md-6">
-                                            <p>Thành phố <FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
+                                            <p>Trạng thái<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                         </div>
                                         <div className="col-md-6">
-                                            <select class="form-control mt-1" aria-label="Default select example">
-                                                <option selected>Chọn Thành phố</option>
+                                            <select class="form-select" aria-label="Default select example"
+                                                onChange={(e) => handleUpdateCustomerChange(e, "status")}>
+                                                <option value="1" className='text-green'>Đang hoạt động</option>
+                                                <option value="0" className='text-red'>Ngừng hoạt động</option>
                                             </select>
                                         </div>
                                     </div>
                                 </div>
-
                             </Modal.Body>
                             <div className='model-footer'>
-                                <button style={{ width: "30%" }} className="col-md-6 btn-light" onClick={handleClose}>
+                                <button style={{ width: "30%" }} className="col-md-6 btn-light" onClick={handleClose} type='submit'>
                                     Cập nhật
                                 </button>
-                                <button style={{ width: "20%" }} onClick={handleClose} className="btn btn-light">
+                                <button style={{ width: "20%" }} className="btn btn-light" type='button'>
                                     Huỷ
                                 </button>
                             </div>
@@ -159,7 +451,7 @@ export default function BasicTabs() {
                                 <p>Họ và tên</p>
                             </div>
                             <div className="col-md-4">
-                                <p>Lê Tùng Nah</p>
+                                <p>{updateCustomerDTO.customerName}</p>
                             </div>
                             <div className="col-md-4 ">
                                 <div className='button'>
@@ -172,15 +464,7 @@ export default function BasicTabs() {
                                 <p>Số điện thoại</p>
                             </div>
                             <div className="col-md-4">
-                                <p>09124719471</p>
-                            </div>
-                        </div>
-                        <div className="row">
-                            <div className="col-md-4">
-                                <p>Địa chỉ</p>
-                            </div>
-                            <div className="col-md-4">
-                                <p>Hà Nội</p>
+                                <p>{updateCustomerDTO.customerPhone}</p>
                             </div>
                         </div>
                         <div className="row">
@@ -188,12 +472,44 @@ export default function BasicTabs() {
                                 <p>Email</p>
                             </div>
                             <div className="col-md-4">
-                                <p>abc@gmail.com</p>
+                                <p>{updateCustomerDTO.customerMail}</p>
+                            </div>
+                        </div>
+                        <div className="row">
+                            <div className="col-md-4">
+                                <p>Địa chỉ</p>
+                            </div>
+                            <div className="col-md-4">
+                                <p>{addressJson.street + " " + addressJson.ward + " " + addressJson.district + " " + addressJson.city}</p>
+                            </div>
+                        </div>
+                        <div className="row">
+                            <div className="col-md-4">
+                                <p>Trạng thái</p>
+                            </div>
+                            <div className="col-md-4">
+                                {updateCustomerDTO.status === 1
+                                    ? <p className='text-green'>
+                                        Đang hoạt động
+                                    </p>
+                                    : <p className='text-red'>
+                                        Ngừng hoạt động
+                                    </p>
+                                }
                             </div>
                         </div>
                     </div>
-
                 </div>
+                <ToastContainer position="top-left"
+                    autoClose={5000}
+                    hideProgressBar={false}
+                    newestOnTop={false}
+                    closeOnClick
+                    rtl={false}
+                    pauseOnFocusLoss
+                    draggable
+                    pauseOnHover
+                    theme="colored" />
             </CustomerDetails>
         </Box>
 

@@ -92,17 +92,17 @@ public class AuthServiceImpl implements IAuthService {
             // 2 - approved
             Registration registration = registrationRepository.findByUserId(user.getUserId()).get();
             if (registration.getStatus() == 0L) { *//* status = 0 (considering) *//*
-                return new ResponseEntity<>("Wait", HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>("Đơn đăng ký chưa được chấp thuận", HttpStatus.BAD_REQUEST);
             }
             if (registration.getStatus() == 1L) { *//* status = 1 (rejected) *//*
-                return new ResponseEntity<>("Rejected", HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>("Đơn đăng ký bị từ chối ", HttpStatus.BAD_REQUEST);
             }
         }
         if (user.getRoleId() == 3L) { *//*role is EMPLOYEE (work in Facility)*//*
             WorkIn workIn = workInRepository.findByUserId(user.getUserId()).get();
             Long facilityId = workIn.getFacilityId();
             if (facilityRepository.getStatusById(facilityId) == 0) { *//* status = 0 (facility stopped running) *//*
-                return new ResponseEntity<>("Facility stopped running", HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>("Cơ sở đã dừng hoạt động", HttpStatus.BAD_REQUEST);
             }
         }*/
 
@@ -349,6 +349,7 @@ public class AuthServiceImpl implements IAuthService {
             userRepository.save(user);
             // Send OTP
 
+            //
             return new ResponseEntity<>("Đã gửi lại mã OTP", HttpStatus.OK);
         }
     }
