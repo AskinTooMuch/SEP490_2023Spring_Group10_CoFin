@@ -333,6 +333,14 @@ const Profile = () => {
                                         <p id="email">{accountInformation.userEmail}</p>
                                     </div>
                                 </div>
+                                <div className="row">
+                                    <div className="col-md-6">
+                                        <p>Địa chỉ</p>
+                                    </div>
+                                    <div className="col-md-6">
+                                        <p id="userAddress">{userAddress.street + ", " + userAddress.ward + ", " + userAddress.district + ", " + userAddress.city}</p>
+                                    </div>
+                                </div>
                                 {/*Start: Chnage account details*/}
                                 <div className="row">
                                     <div className="col-md-6">
@@ -353,7 +361,7 @@ const Profile = () => {
                                                             <p>Mật khẩu cũ</p>
                                                         </div>
                                                         <div className="col-md-6 pass-wrapper ">
-                                                            <input ref={userRef} onChange={e => handleChange(e, "password")}
+                                                            <input ref={userRef} name="oldPassword" onChange={e => handleChange(e, "password")}
                                                                 value={changePasswordDTO.password} required
                                                                 type={passwordShown ? "text" : "password"}
                                                                 minLength="8" maxLength="20"
@@ -487,10 +495,26 @@ const Profile = () => {
                                 <div className="card-body"> Người dùng hiện chưa có cơ sở; vui lòng tạo mới hoặc kích hoạt cơ sở. </div>
                             </div>
                             : <div>
-                                <div className="card-header">Thông tin cơ sở: {facilityInformation.facilityName}</div>
+                                <div className="card-header"><p id="facilityName" >Thông tin cơ sở: {facilityInformation.facilityName}</p></div>
                                 <div className="card-body">
                                     <form>
                                         <div className="tab-pane " >
+                                        <div className="row">
+                                                <div className="col-md-6">
+                                                    <p>Ngày thành lập</p>
+                                                </div>
+                                                <div className="col-md-6">
+                                                    <p id="facilityFoundDate">{facilityInformation.facilityFoundDate}</p>
+                                                </div>
+                                            </div>
+                                            <div className="row">
+                                                <div className="col-md-6">
+                                                    <p>Mã số kinh doanh</p>
+                                                </div>
+                                                <div className="col-md-6">
+                                                    <p id="licenseNumber">Fuck tuan</p>
+                                                </div>
+                                            </div>
                                             <div className="row">
                                                 <div className="col-md-6">
                                                     <p>Số nhà</p>
