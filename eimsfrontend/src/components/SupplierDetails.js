@@ -293,7 +293,7 @@ export default function BasicTabs() {
                                         <p>Họ và tên<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                     </div>
                                     <div className="col-md-6">
-                                        <input required
+                                        <input required id = "updateSupplierName"
                                             value={updateSupplierDTO.supplierName}
                                             onChange={(e) => handleUpdateSupplierChange(e, "supplierName")}
                                             className="form-control " />
@@ -304,7 +304,7 @@ export default function BasicTabs() {
                                         <p>Số điện thoại<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                     </div>
                                     <div className="col-md-6">
-                                        <input required
+                                        <input required id="updateSupplierPhoneNumber"
                                             value={updateSupplierDTO.supplierPhone}
                                             onChange={(e) => handleUpdateSupplierChange(e, "supplierPhone")}
                                             className="form-control " />
@@ -315,7 +315,7 @@ export default function BasicTabs() {
                                         <p>Email</p>
                                     </div>
                                     <div className="col-md-6">
-                                        <input
+                                        <input id="updateSupplierEmail"
                                             value={updateSupplierDTO.supplierMail}
                                             onChange={(e) => handleUpdateSupplierChange(e, "supplierMail")}
                                             className="form-control " />
@@ -326,7 +326,7 @@ export default function BasicTabs() {
                                         <p>Tên cơ sở<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                     </div>
                                     <div className="col-md-6">
-                                        <input required
+                                        <input required id="updateSupplierFacilityName"
                                             value={updateSupplierDTO.facilityName}
                                             onChange={(e) => handleUpdateSupplierChange(e, "facilityName")}
                                             className="form-control " />
@@ -430,7 +430,7 @@ export default function BasicTabs() {
                                         <p>Trạng thái<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                     </div>
                                     <div className="col-md-6">
-                                        <select class="form-select" aria-label="Default select example"
+                                        <select class="form-select" aria-label="Default select example" id="updateSupplierStatus"
                                             onChange={(e) => handleUpdateSupplierChange(e, "status")}>
                                             <option value="1" className='text-green'>Đang hoạt động</option>
                                             <option value="0" className='text-red'>Ngừng hoạt động</option>
@@ -440,10 +440,10 @@ export default function BasicTabs() {
                             </div>
                         </Modal.Body>
                         <Modal.Footer>
-                            <Button variant="danger" style={{ width: "20%" }} onClick={handleClose}>
+                            <Button variant="danger" style={{ width: "20%" }} onClick={handleClose} id="cancelUpdateSupplier" >
                                 Huỷ
                             </Button>
-                            <Button variant="success" style={{ width: "30%" }} className="col-md-6" onClick={handleUpdateSupplierSubmit}>
+                            <Button variant="success" style={{ width: "30%" }} className="col-md-6" id="confirmUpdateSupplier" onClick={handleUpdateSupplierSubmit}>
                                 Cập nhật
                             </Button>
                         </Modal.Footer>
@@ -459,7 +459,7 @@ export default function BasicTabs() {
                             </div>
                             <div className="col-md-4 ">
                                 <div className='button'>
-                                    <button className='btn btn-success ' onClick={handleShow}>Sửa</button>
+                                    <button id="startEditSupplier" className='btn btn-success' onClick={handleShow}>Sửa</button>
                                 </div>
                             </div>
                         </div>

@@ -132,7 +132,7 @@ const Breed = () => {
     return (
         <div>
             <nav className="navbar justify-content-between">
-                <button className='btn btn-light' onClick={handleShow}>+ Thêm</button>
+                <button className='btn btn-light' onClick={handleShow} id="startCreateBreed">+ Thêm</button>
                 <Modal show={show} onHide={handleClose}
                     size="lg"
                     aria-labelledby="contained-modal-title-vcenter"
@@ -148,7 +148,7 @@ const Breed = () => {
                                         <p>Loài<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                     </div>
                                     <div className="col-md-6">
-                                        <select className="form-control mt-1" aria-label="Default select example">
+                                        <select id="createBreedSpecie" className="form-control mt-1" aria-label="Default select example">
                                             <option disabled value="">Open this select menu</option>
                                             { /**JSX to load options */}
                                             {
@@ -165,7 +165,7 @@ const Breed = () => {
                                         <p>Tên loại<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                     </div>
                                     <div className="col-md-6">
-                                        <input required
+                                        <input required id = "createSpecieName"
                                             style={{ width: "100%" }}
                                             onChange={e => handleChange(e, "breedName")} />
                                     </div>
@@ -175,7 +175,7 @@ const Breed = () => {
                                         <p>Cân nặng trung bình con đực<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                     </div>
                                     <div className="col-md-6">
-                                        <input required style={{ width: "100%" }}
+                                        <input id="createBreedMaleAvg" required style={{ width: "100%" }}
                                             onChange={e => handleChange(e, "averageWeightMale")} />
                                     </div>
                                 </div>
@@ -184,7 +184,7 @@ const Breed = () => {
                                         <p>Cân nặng trung bình con cái<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                     </div>
                                     <div className="col-md-6">
-                                        <input required style={{ width: "100%" }}
+                                        <input id="createBreedFemaleAvg" required style={{ width: "100%" }}
                                             onChange={e => handleChange(e, "averageWeightFemale")} />
                                     </div>
                                 </div>
@@ -193,7 +193,7 @@ const Breed = () => {
                                         <p>Thời gian lớn lên<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                     </div>
                                     <div className="col-md-6">
-                                        <input required style={{ width: "100%" }}
+                                        <input id="createBreedGrownTime" required style={{ width: "100%" }}
                                             onChange={e => handleChange(e, "growthTime")} />
                                     </div>
                                 </div>
@@ -202,7 +202,7 @@ const Breed = () => {
                                         <p>Các bệnh thường gặp</p>
                                     </div>
                                     <div className="col-md-6">
-                                        <textarea style={{ width: "100%" }}
+                                        <textarea id="createBreedCommondisease" style={{ width: "100%" }}
                                             onChange={e => handleChange(e, "commonDisease")} />
                                     </div>
                                 </div>
@@ -211,17 +211,17 @@ const Breed = () => {
                                         <p>Hình ảnh</p>
                                     </div>
                                     <div className="col-md-6">
-                                        <input type="file" multiple accept="image/*" onChange={onImageChange} />
+                                        <input id="createBreedImg" type="file" multiple accept="image/*" onChange={onImageChange} />
                                         {imageURLs.map(imageSrc => <img style={{ width: "100%", minHeight: "100%" }} alt='' src={imageSrc} />)}
                                     </div>
                                 </div>
                             </div>
                         </Modal.Body>
                         <div className='model-footer'>
-                            <button style={{ width: "20%" }} type="submit" className="col-md-6 btn-light" >
+                            <button style={{ width: "20%" }} type="submit" className="col-md-6 btn-light" id="confirmCreateBreed">
                                 Tạo
                             </button>
-                            <button className='btn btn-light' style={{ width: "20%" }} onClick={handleClose}>
+                            <button className='btn btn-light' style={{ width: "20%" }} onClick={handleClose} id="cancelCreateBreed">
                                 Huỷ
                             </button>
                         </div>
@@ -236,7 +236,7 @@ const Breed = () => {
                             <div className="input-group-prepend">
                                 <button ><span className="input-group-text" ><SearchIcon /></span></button>
                             </div>
-                            <input type="text" className="form-control" placeholder="Tìm kiếm" aria-label="Username" aria-describedby="basic-addon1" />
+                            <input id = "searchBreed" type="text" className="form-control" placeholder="Tìm kiếm" aria-label="Username" aria-describedby="basic-addon1" />
                         </div>
                     </form>
                 </div>

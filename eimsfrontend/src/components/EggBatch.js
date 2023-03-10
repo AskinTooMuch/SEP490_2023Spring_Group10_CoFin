@@ -22,7 +22,7 @@ const EggBatch = () => {
                     <form className="form-inline">
                         <div className="input-group">
                             <div className="input-group-prepend">
-                                <button ><span className="input-group-text" ><SearchIcon /></span></button>
+                                <button id="searchEggBatch"><span className="input-group-text" ><SearchIcon /></span></button>
                             </div>
                             <input type="text" className="form-control" placeholder="Tìm kiếm" aria-label="Username" aria-describedby="basic-addon1" />
                         </div>

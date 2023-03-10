@@ -201,7 +201,7 @@ const Supplier = () => {
   return (
     <div>
       <nav className="navbar justify-content-between">
-        <button className='btn btn-light' onClick={handleShow}>+ Thêm</button>
+        <button className='btn btn-light' onClick={handleShow} id="startCreateSupplier">+ Thêm</button>
         {/* Start: form to add new supplier */}
         <Modal show={show} onHide={handleClose}
           size="lg" aria-labelledby="contained-modal-title-vcenter" centered >
@@ -216,14 +216,14 @@ const Supplier = () => {
                   <p>Họ và tên<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                 </div>
                 <div className="col-md-3">
-                  <input name = "supplierName" className="form-control mt-1" style={{ width: "100%" }} onChange={e => handleNewSupplierChange(e, "supplierName")} />
+                  <input id = "supplierName" className="form-control mt-1" style={{ width: "100%" }} onChange={e => handleNewSupplierChange(e, "supplierName")} />
                 </div>
                 {/*City*/}
                 <div className="col-md-3">
                   <label htmlFor="uprovince" >Tỉnh/Thành Phố <FontAwesomeIcon className="star" icon={faStarOfLife} /></label>
                 </div>
                 <div className="col-md-3">
-                  <select className="form-control mt-1" id="uprovince" name="supplierCity"
+                  <select className="form-control mt-1" id="uprovince" 
                     ref={userRef}
                     autoComplete="off"
                     onChange={(e) => loadDistrict(e.target.value)}
@@ -243,7 +243,7 @@ const Supplier = () => {
                   <p>Số điện thoại<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                 </div>
                 <div className="col-md-3">
-                  <input className="form-control mt-1" style={{ width: "100%" }} onChange={e => handleNewSupplierChange(e, "supplierPhone")} />
+                  <input id="supplierPhoneNumber" className="form-control mt-1" style={{ width: "100%" }} onChange={e => handleNewSupplierChange(e, "supplierPhone")} />
                 </div>
                 {/*District*/}
                 <div className="col-md-3">
@@ -270,7 +270,7 @@ const Supplier = () => {
                   <p>Email</p>
                 </div>
                 <div className="col-md-3">
-                  <input className="form-control mt-1" style={{ width: "100%" }} onChange={e => handleNewSupplierChange(e, "supplierMail")} />
+                  <input id="supplierEmail" className="form-control mt-1" style={{ width: "100%" }} onChange={e => handleNewSupplierChange(e, "supplierMail")} />
                 </div>
                 {/*User ward*/}
                 <div className="col-md-3">
@@ -297,7 +297,7 @@ const Supplier = () => {
                   <p>Tên cơ sở<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                 </div>
                 <div className="col-md-3">
-                  <input className="form-control mt-1" style={{ width: "100%" }} onChange={e => handleNewSupplierChange(e, "facilityName")} />
+                  <input id="supplierFacilityName" className="form-control mt-1" style={{ width: "100%" }} onChange={e => handleNewSupplierChange(e, "facilityName")} />
                 </div>
                 {/*User Street*/}
                 <div className="col-md-3">
@@ -315,10 +315,10 @@ const Supplier = () => {
             </div>
           </Modal.Body>
           <div className='model-footer'>
-              <button style={{ width: "20%" }} type="submit" className="col-md-6 btn-light" >
+              <button style={{ width: "20%" }} type="submit" className="col-md-6 btn-light" id="confirmCreateSupplier">
                 Tạo
               </button>
-              <button className='btn btn-light' style={{ width: "20%" }} onClick={handleClose}>
+              <button className='btn btn-light' style={{ width: "20%" }} onClick={handleClose} id="cancelCreateSupplier">
                 Huỷ
               </button>
             </div>
@@ -335,7 +335,7 @@ const Supplier = () => {
               <div className="input-group-prepend">
                 <button ><span className="input-group-text" ><SearchIcon /></span></button>
               </div>
-              <input type="text" className="form-control" placeholder="Tìm kiếm" aria-label="Username" aria-describedby="basic-addon1" />
+              <input id="searchSupplier" type="text" className="form-control" placeholder="Tìm kiếm" aria-label="Username" aria-describedby="basic-addon1" />
             </div>
           </form>
         </div>

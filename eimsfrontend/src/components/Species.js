@@ -245,7 +245,7 @@ const Species = () => {
             </div>
           </form>
         </div>
-        <button className='btn btn-light' onClick={handleShow}>+ Thêm</button>
+        <button id="startCreateSpecie" className='btn btn-light' onClick={handleShow}>+ Thêm</button>
         <Modal show={show} onHide={handleClose}
           size="lg"
           aria-labelledby="contained-modal-title-vcenter"

@@ -341,10 +341,10 @@ const Profile = () => {
                                         <p id="userAddress">{userAddress.street + ", " + userAddress.ward + ", " + userAddress.district + ", " + userAddress.city}</p>
                                     </div>
                                 </div>
-                                {/*Start: Chnage account details*/}
+                                {/*Start: Change account details*/}
                                 <div className="row">
                                     <div className="col-md-6">
-                                        <Button onClick={handleShow} style={{ width: "100%" }} className="btn btn-light">Đổi mật khẩu</Button >
+                                        <Button onClick={handleShow} style={{ width: "100%" }} className="btn btn-light" id="startChangePassword">Đổi mật khẩu</Button >
 
                                         <Modal show={show} onHide={handleClose}
                                             size="lg"
@@ -435,7 +435,7 @@ const Profile = () => {
                                         </Modal>
                                     </div>
                                     <div className="col-md-6">
-                                        <Button onClick={handleUpdateGet} style={{ width: "100%" }} className="btn btn-light">Cập nhật</Button >
+                                        <Button onClick={handleUpdateGet} style={{ width: "100%" }} className="btn btn-light" id="startChangeUserInformation">Cập nhật</Button >
                                         <Modal show={show2} onHide={handleClose2}
                                             size="lg"
                                             aria-labelledby="contained-modal-title-vcenter"
@@ -567,7 +567,7 @@ const Profile = () => {
                                                 </div>
                                             </div>
                                             <div style={{ textAlign: "center" }}>
-                                                <button className="btn btn-light" style={{ width: "50%" }}>Cập nhật</button>
+                                                <button className="btn btn-light" style={{ width: "50%" }} id="startChangeFacilityInformation">Cập nhật</button>
                                             </div>
 
                                         </div>

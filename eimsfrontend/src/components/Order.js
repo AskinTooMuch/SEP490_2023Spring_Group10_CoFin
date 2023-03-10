@@ -53,10 +53,10 @@ export default function BasicTabs() {
             '& .MuiTabs-indicator': { backgroundColor: "#d25d19" },
             '& .Mui-selected': { color: "#d25d19" },
           }}value={value} onChange={handleChange} aria-label="basic tabs example">
-          <Tab style={{ textTransform: "capitalize" }} label="Hoá đơn nhập" {...a11yProps(0)} />
-          <Tab style={{ textTransform: "capitalize" }} label="Hoá đơn xuất" {...a11yProps(1)} />
-          <Tab style={{ textTransform: "capitalize" }} label="Nhà cung cấp" {...a11yProps(2)} />
-          <Tab style={{ textTransform: "capitalize" }} label="Khách hàng" {...a11yProps(3)} />
+          <Tab id = "importBillTab" style={{ textTransform: "capitalize" }} label="Hoá đơn nhập" {...a11yProps(0)} />
+          <Tab id = "exportBillTab" style={{ textTransform: "capitalize" }} label="Hoá đơn xuất" {...a11yProps(1)} />
+          <Tab id = "supplierTab" style={{ textTransform: "capitalize" }} label="Nhà cung cấp" {...a11yProps(2)} />
+          <Tab id = "customerTab" style={{ textTransform: "capitalize" }} label="Khách hàng" {...a11yProps(3)} />
         </Tabs>
       </Box>
       <Order value={value} index={0}>

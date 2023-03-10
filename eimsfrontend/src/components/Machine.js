@@ -72,7 +72,7 @@ export default function BasicTabs() {
             </Box>
             <Machine value={value} index={0}>
                 <nav className="navbar justify-content-between">
-                    <button className='btn btn-light' onClick={handleShow}>+ Thêm</button>
+                    <button className='btn btn-light' onClick={handleShow} id="startCreateMachine">+ Thêm</button>
                     <Modal show={show} onHide={handleClose}
                         size="lg"
                         aria-labelledby="contained-modal-title-vcenter"
@@ -88,7 +88,7 @@ export default function BasicTabs() {
                                             <p>Tên máy<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                         </div>
                                         <div className="col-md-6">
-                                            <input required style={{ width: "100%" }} />
+                                            <input id="createMachineName" required style={{ width: "100%" }} />
                                         </div>
                                     </div>
                                     <div className="row">
@@ -96,7 +96,7 @@ export default function BasicTabs() {
                                             <p>Loại máy<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                         </div>
                                         <div className="col-md-6">
-                                            <select className="form-select" aria-label="Default select example">
+                                            <select id="createMachineType" className="form-select" aria-label="Default select example">
                                                 <option defaultValue="0">Open this select menu</option>
                                                 <option value="1" >Oneg</option>
                                                 <option value="2">Two</option>
@@ -109,16 +109,16 @@ export default function BasicTabs() {
                                             <p>Sức chứa<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                         </div>
                                         <div className="col-md-6">
-                                            <input required style={{ width: "100%" }} />
+                                            <input id="createMachineCapacity" required style={{ width: "100%" }} />
                                         </div>
                                     </div>
                                 </div>
                             </Modal.Body>
                             <div className='model-footer'>
-                                <button style={{ width: "20%" }} type="submit" className="col-md-6 btn-light" >
+                                <button style={{ width: "20%" }} type="submit" className="col-md-6 btn-light" id="confirmCreateMachine">
                                     Tạo
                                 </button>
-                                <button className='btn btn-light' style={{ width: "20%" }} onClick={handleClose}>
+                                <button className='btn btn-light' style={{ width: "20%" }} onClick={handleClose} id="cancelCreateMachine ">
                                     Huỷ
                                 </button>
                             </div>
@@ -133,7 +133,7 @@ export default function BasicTabs() {
                                 <div className="input-group-prepend">
                                     <button ><span className="input-group-text" ><SearchIcon /></span></button>
                                 </div>
-                                <input type="text" className="form-control" placeholder="Tìm kiếm" aria-label="Username" aria-describedby="basic-addon1" />
+                                <input id="searchMachine" type="text" className="form-control" placeholder="Tìm kiếm" aria-label="Username" aria-describedby="basic-addon1" />
                             </div>
                         </form>
                     </div>

@@ -96,7 +96,7 @@ export default function BasicTabs() {
                                             <p>Loài<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                         </div>
                                         <div className="col-md-6">
-                                            <select class="form-select" aria-label="Default select example">
+                                            <select id="updateBreedSpecie" class="form-select" aria-label="Default select example">
                                                 <option selected>Open this select menu</option>
                                                 <option value="1" >One</option>
                                                 <option value="2">Two</option>
@@ -109,15 +109,23 @@ export default function BasicTabs() {
                                             <p>Tên loại<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                         </div>
                                         <div className="col-md-6">
-                                            <input />
+                                            <input required id = "updateSpecieName"></input>
                                         </div>
                                     </div>
                                     <div className="row">
                                         <div className="col-md-6">
-                                            <p>Cân nặng trung bình<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
+                                            <p>Cân nặng trung bình con đực<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                         </div>
                                         <div className="col-md-6">
-                                            <input />
+                                            <input required id = "updateBreedMaleAvg"></input>
+                                        </div>
+                                    </div>
+                                    <div className="row">
+                                        <div className="col-md-6">
+                                            <p>Cân nặng trung bình con cái<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
+                                        </div>
+                                        <div className="col-md-6">
+                                            <input required id = "updateBreedFemaleAvg"></input>
                                         </div>
                                     </div>
                                     <div className="row">
@@ -125,7 +133,7 @@ export default function BasicTabs() {
                                             <p>Thời gian lớn lên<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                         </div>
                                         <div className="col-md-6">
-                                            <input />
+                                            <input id="updateBreedGrownTime" required></input>
                                         </div>
                                     </div>
                                     <div className="row">
@@ -133,7 +141,7 @@ export default function BasicTabs() {
                                             <p>Các bệnh thường gặp</p>
                                         </div>
                                         <div className="col-md-6">
-                                            <input />
+                                            <input id="updateBreedCommondisease" />
                                         </div>
                                     </div>
                                     <div className="row">
@@ -141,7 +149,7 @@ export default function BasicTabs() {
                                             <p>Hình ảnh</p>
                                         </div>
                                         <div className="col-md-6">
-                                            <input type="file" multiple accept="image/*" onChange={onImageChange} />
+                                            <input id = "updateBreedImg" type="file" multiple accept="image/*" onChange={onImageChange} />
                                             {imageURLs.map(imageSrc => <img style={{ width: "100%", minHeight: "100%" }} alt='' src={imageSrc} />)}
                                         </div>
                                     </div>
@@ -149,10 +157,10 @@ export default function BasicTabs() {
 
                             </Modal.Body>
                             <div className='model-footer'>
-                                <button style={{ width: "30%" }} className="col-md-6 btn-light" type='submit'>
+                                <button style={{ width: "30%" }} className="col-md-6 btn-light" type='submit' id="confirmUpdateBreed">
                                     Cập nhật
                                 </button>
-                                <button style={{ width: "20%" }} onClick={handleClose} className="btn btn-light">
+                                <button style={{ width: "20%" }} onClick={handleClose} className="btn btn-light" id="cancelUpdateBreed">
                                     Huỷ
                                 </button>
                             </div>
@@ -177,8 +185,8 @@ export default function BasicTabs() {
                             </div>
                             <div className="col-md-4 ">
                                 <div className='button'>
-                                    <button className='btn btn-light ' onClick={handleShow}>Sửa</button>
-                                    <button className='btn btn-light ' >Xoá</button>
+                                    <button id="startEditBreed" className='btn btn-light ' onClick={handleShow}>Sửa</button>
+                                    <button id="startDeleteBreed" className='btn btn-light ' >Xoá</button>
                                 </div>
 
                             </div>
