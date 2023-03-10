@@ -361,7 +361,7 @@ const Profile = () => {
                                                             <p>Mật khẩu cũ</p>
                                                         </div>
                                                         <div className="col-md-6 pass-wrapper ">
-                                                            <input ref={userRef} name="oldPassword" onChange={e => handleChange(e, "password")}
+                                                            <input ref={userRef} id="oldPassword" onChange={e => handleChange(e, "password")}
                                                                 value={changePasswordDTO.password} required
                                                                 type={passwordShown ? "text" : "password"}
                                                                 minLength="8" maxLength="20"
@@ -424,10 +424,10 @@ const Profile = () => {
 
                                                 </h6> */}
                                                 <div className='model-footer'>
-                                                    <button className="btn btn-light" style={{ width: "30%" }} >
+                                                    <button className="btn btn-light" style={{ width: "30%" }} id = "confirmChangePassword">
                                                         Đổi mật khẩu
                                                     </button>
-                                                    <button className="btn btn-light" style={{ width: "20%" }} onClick={handleClose}>
+                                                    <button className="btn btn-light" style={{ width: "20%" }} onClick={handleClose} id = "cancelChangePassword">
                                                         Huỷ
                                                     </button>
                                                 </div>
@@ -445,34 +445,34 @@ const Profile = () => {
                                                 <Modal.Body>
                                                     <div className="mb-3">
                                                         <label className="form-label">Họ và Tên</label>
-                                                        <input type="text" className="form-control" name="username"
+                                                        <input type="text" className="form-control" name="username" id = "updateUsername"
                                                             ref={userRef} onChange={e => handleUpdateUser(e, "username")}
                                                             value={updateUserDTO.username} required />
                                                     </div>
                                                     <div className="mb-3">
                                                         <label className="form-label">Ngày sinh</label>
-                                                        <input type="date" className="form-control" name="dob"
+                                                        <input type="date" className="form-control" name="dob" id = "updateDob"
                                                             ref={userRef} onChange={e => handleUpdateUser(e, "dob")}
                                                             value={updateUserDTO.dob} required />
                                                     </div>
                                                     <div className="mb-3">
                                                         <label className="form-label">Email</label>
-                                                        <input type="email" className="form-control" name="email"
+                                                        <input type="email" className="form-control" name="email" id="updateEmail"
                                                             ref={userRef} onChange={e => handleUpdateUser(e, "email")}
                                                             value={updateUserDTO.email} required />
                                                     </div>
                                                     <div className="mb-3">
                                                         <label className="form-label">Địa chỉ</label>
-                                                        <input type="text" style={{ minHeight: "50px" }} className="form-control" name="address"
+                                                        <input type="text" style={{ minHeight: "50px" }} className="form-control" name="address" id = "updateAddress"
                                                             ref={userRef} onChange={e => handleUpdateUser(e, "address")}
                                                             value={updateUserDTO.address} required />
                                                     </div>
                                                 </Modal.Body>
                                                 <div className='model-footer'>
-                                                    <button style={{ width: "30%" }} className="col-md-6 btn-light" type='submit' >
+                                                    <button style={{ width: "30%" }} className="col-md-6 btn-light" type='submit' id = "submitUserUpdate">
                                                         Xác nhận
                                                     </button>
-                                                    <button  style={{ width: "20%" }} className="btn btn-light" onClick={handleClose2}>
+                                                    <button  style={{ width: "20%" }} className="btn btn-light" onClick={handleClose2} id = "cancelUserUpdate">
                                                         Huỷ
                                                     </button>
                                                 </div>

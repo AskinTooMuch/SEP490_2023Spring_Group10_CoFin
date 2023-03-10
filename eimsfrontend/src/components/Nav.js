@@ -69,10 +69,10 @@ const Nav = () => {
             open={isMenuOpen}
             onClose={handleMenuClose}
         >
-            <MenuItem style={{fontSize:"medium"}} onClick={handleMenuClose} name="profile"><AccountCircle fontSize="small"/><Link to="/profile" > Thông tin cá nhân</Link></MenuItem>
-            <MenuItem style={{fontSize:"medium"}} onClick={handleMenuClose} name="setting"><SettingsIcon fontSize="small"/> Cài đặt</MenuItem>
-            <MenuItem style={{fontSize:"medium"}} onClick={handleMenuClose} name="help"><HelpIcon fontSize="small"/> Trợ giúp & hỗ trợ</MenuItem>
-            <MenuItem style={{fontSize:"medium"}} onClick={logout} name="logout"><LogoutIcon fontSize="small"/> Đăng xuất</MenuItem>
+            <MenuItem style={{fontSize:"medium"}}><button onClick={handleMenuClose} id="profile"><AccountCircle fontSize="small"/><Link to="/profile" > Thông tin cá nhân</Link></button></MenuItem>
+            <MenuItem style={{fontSize:"medium"}}><button onClick={handleMenuClose} id="setting"><SettingsIcon fontSize="small"/> Cài đặt</button></MenuItem>
+            <MenuItem style={{fontSize:"medium"}}><button onClick={handleMenuClose} id="help"><HelpIcon fontSize="small"/> Trợ giúp & hỗ trợ</button></MenuItem>
+            <MenuItem style={{fontSize:"medium"}}><button onClick={logout} id="logout"> <LogoutIcon fontSize="small"/> Đăng xuất</button></MenuItem>
         </Menu>
     );
 

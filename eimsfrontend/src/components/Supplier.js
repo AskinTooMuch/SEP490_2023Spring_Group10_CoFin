@@ -216,14 +216,14 @@ const Supplier = () => {
                   <p>Họ và tên<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                 </div>
                 <div className="col-md-3">
-                  <input className="form-control mt-1" style={{ width: "100%" }} onChange={e => handleNewSupplierChange(e, "supplierName")} />
+                  <input name = "supplierName" className="form-control mt-1" style={{ width: "100%" }} onChange={e => handleNewSupplierChange(e, "supplierName")} />
                 </div>
                 {/*City*/}
                 <div className="col-md-3">
                   <label htmlFor="uprovince" >Tỉnh/Thành Phố <FontAwesomeIcon className="star" icon={faStarOfLife} /></label>
                 </div>
                 <div className="col-md-3">
-                  <select className="form-control mt-1" id="uprovince"
+                  <select className="form-control mt-1" id="uprovince" name="supplierCity"
                     ref={userRef}
                     autoComplete="off"
                     onChange={(e) => loadDistrict(e.target.value)}
@@ -250,7 +250,7 @@ const Supplier = () => {
                   <label htmlFor="udistrict" >Quận/Huyện <FontAwesomeIcon className="star" icon={faStarOfLife} /></label>
                 </div>
                 <div className="col-md-3">
-                  <select className="form-control mt-1" id="udistrict"
+                  <select className="form-control mt-1" id="udistrict" name="supplierDistrict"
                     ref={userRef}
                     autoComplete="off"
                     onChange={(e) => loadWard(e.target.value)}
@@ -277,7 +277,7 @@ const Supplier = () => {
                   <label htmlFor="uward" >Phường/Xã <FontAwesomeIcon className="star" icon={faStarOfLife} /></label>
                 </div>
                 <div className="col-md-3">
-                  <select className="form-control mt-1" id="uward"
+                  <select className="form-control mt-1" id="uward" name="supplierWard"
                     ref={userRef}
                     autoComplete="off"
                     onChange={(e) => saveWard(e.target.value)}
