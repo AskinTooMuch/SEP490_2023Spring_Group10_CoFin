@@ -60,21 +60,21 @@ public interface IUserService {
      * @return
      */
     public ResponseEntity<?> updateUser(UpdateUserDTO updateUserDTO);
-/*
-    *//**
+
+    /**
      * View list of users with same role.
      *
      * @param roleId the id of user's role
      * @return
-     *//*
+     */
     public ResponseEntity<?> getAllUserByRole(Long roleId);
 
-    *//**
+    /**
      * View list of users with same role and status.
      *
      * @param roleId the id of user's role
      * @param status the status of user
      * @return
-     *//*
-    public ResponseEntity<?> getAllUserByRoleAndStatus(Long roleId, int status);*/
+     */
+    public ResponseEntity<?> getAllUserByRoleAndStatus(Long roleId, int status);
 }

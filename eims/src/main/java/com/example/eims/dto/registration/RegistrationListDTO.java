@@ -25,9 +25,9 @@ import java.sql.Date;
                 "JOIN eims.user U ON R.user_id = U.user_id " +
                 "JOIN eims.facility F ON F.user_id = U.user_id " +
                 "WHERE R.status = ? ",
-        resultClass = RegistrationListItemDTO.class)
+        resultClass = RegistrationListDTO.class)
 @Entity
-public class RegistrationListItemDTO {
+public class RegistrationListDTO {
     @Id
     private Long registrationId;
     private Long userId;
