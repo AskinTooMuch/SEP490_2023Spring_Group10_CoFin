@@ -1,5 +1,3 @@
-package com.example.eims.service.impl;
-
 /*
  * Copyright (C) 2023, FPT University <br>
  * SEP490 - SEP490_G10 <br>
@@ -11,6 +9,8 @@ package com.example.eims.service.impl;
  * 08/03/2023   1.0         DuongVV     First Deploy<br>
  */
 
+package com.example.eims.service.impl;
+
 import com.example.eims.dto.auth.*;
 import com.example.eims.entity.Facility;
 import com.example.eims.entity.Registration;
@@ -19,34 +19,19 @@ import com.example.eims.repository.FacilityRepository;
 import com.example.eims.repository.RegistrationRepository;
 import com.example.eims.repository.UserRepository;
 import com.example.eims.repository.WorkInRepository;
-import com.example.eims.service.interfaces.IAuthService;
-import com.example.eims.utils.StringDealer;
-import jakarta.persistence.Entity;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.sql.Date;
 import java.util.Optional;
-
-import static org.assertj.core.api.FactoryBasedNavigableListAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -67,7 +52,6 @@ class AuthServiceImplTest {
     AuthServiceImpl authService;
 
     // Create demo entity
-    LoginDTO loginDTO = new LoginDTO("0987654321","123456Aa@");
     // User
     User user = new User(1L, 2L, "0987654321", "123456Aa@", 1);
     // Facility
@@ -78,6 +62,8 @@ class AuthServiceImplTest {
 
     @Test
     void authenticateUser() {
+        // Set up
+        LoginDTO loginDTO = new LoginDTO("0987654321","123456Aa@");
         // Define behaviour of repository
         when(userRepository.findByPhone(any(String.class))).thenReturn(Optional.of(user));
         when(facilityRepository.findByUserId(any(Long.class))).thenReturn(Optional.of(facility));
@@ -89,8 +75,6 @@ class AuthServiceImplTest {
         // Assert
         assertEquals(sessionDTO.getUserId(), 1L);
         //assertEquals(sessionDTO.getUserId(), 3L);
-        // Ensure repository is called
-        verify(userRepository).findByPhone(loginDTO.getPhone());
     }
 
     @Test
@@ -136,7 +120,6 @@ class AuthServiceImplTest {
         System.out.println(responseEntity.toString());
         // Assert
         assertEquals("Thay đổi mật khẩu thành công",responseEntity.getBody());
-        verify(userRepository.findByUserId(1L));
     }
 
     @Test

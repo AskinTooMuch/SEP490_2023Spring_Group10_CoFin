@@ -12,7 +12,7 @@
 package com.example.eims.service.impl;
 
 import com.example.eims.dto.registration.RegistrationInforDTO;
-import com.example.eims.dto.registration.RegistrationListDTO;
+import com.example.eims.dto.registration.RegistrationListItemDTO;
 import com.example.eims.entity.Facility;
 import com.example.eims.entity.Registration;
 import com.example.eims.entity.User;
@@ -22,6 +22,7 @@ import com.example.eims.repository.UserRepository;
 import com.example.eims.service.interfaces.IRegistrationService;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -56,10 +57,10 @@ public class RegistrationServiceImpl implements IRegistrationService {
      */
     @Override
     public ResponseEntity<?> viewListRegistration() {
-        List<RegistrationListDTO> registrationListDTOList = em.createNamedQuery("getRegistrationListByStatus")
-                .setParameter(1,0) /* status = 0 (considering list)*/
-                .getResultList();
-        return new ResponseEntity<>(registrationListDTOList, HttpStatus.OK);
+        Query query = em.createNamedQuery("getRegistrationListByStatus");
+        query.setParameter(1, 0); /* status = 0 (considering list)*/
+        List<RegistrationListItemDTO> registrationListItemDTOList = query.getResultList();
+        return new ResponseEntity<>(registrationListItemDTOList, HttpStatus.OK);
     }
 
     /**
@@ -70,8 +71,9 @@ public class RegistrationServiceImpl implements IRegistrationService {
      */
     @Override
     public ResponseEntity<?> viewRegistration(Long userId) {
-        RegistrationInforDTO registrationInforDTO = (RegistrationInforDTO) em.createNamedQuery("getRegistrationInforForUser")
-                .setParameter(1,userId).getSingleResult();
+        Query query = em.createNamedQuery("getRegistrationInforForUser");
+        query.setParameter(1, userId);
+        RegistrationInforDTO registrationInforDTO = (RegistrationInforDTO) query.getSingleResult();
         return new ResponseEntity<>(registrationInforDTO, HttpStatus.OK);
     }
 
@@ -86,7 +88,7 @@ public class RegistrationServiceImpl implements IRegistrationService {
     public ResponseEntity<?> registrationApproval(Long userId, Long facilityId, boolean approval) {
         int status = (approval ? 2:1); /*1-rejected 2-approved */
         Optional<Registration> registrationOptional = registrationRepository.findByUserId(userId);
-        if (approval) {
+        if (approval) { /* Approve registration */
             // Change status of registration
             if (registrationOptional.isPresent()){
                 Registration registration = registrationOptional.get();
@@ -97,7 +99,7 @@ public class RegistrationServiceImpl implements IRegistrationService {
             }
             // Change status of Owner's account
             Optional<User> userOptional = userRepository.findByUserId(userId);
-            if (registrationOptional.isPresent()){
+            if (userOptional.isPresent()){
                 User user = userOptional.get();
                 user.setStatus(1);
                 userRepository.save(user);
@@ -113,8 +115,8 @@ public class RegistrationServiceImpl implements IRegistrationService {
             } else {
                 return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
             }
-            return new ResponseEntity<>("Owner's registration approved!", HttpStatus.OK);
-        } else {
+            return new ResponseEntity<>("Owner's registration approved", HttpStatus.OK);
+        } else { /* Decline registration */
             // Change status of registration
             if (registrationOptional.isPresent()){
                 Registration registration = registrationOptional.get();
@@ -123,7 +125,7 @@ public class RegistrationServiceImpl implements IRegistrationService {
             } else {
                 return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
             }
-            return new ResponseEntity<>("Owner's registration declined!", HttpStatus.OK);
+            return new ResponseEntity<>("Owner's registration declined", HttpStatus.OK);
         }
     }
 }

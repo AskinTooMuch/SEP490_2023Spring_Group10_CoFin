@@ -171,13 +171,13 @@ public class UserServiceImpl implements IUserService {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
-
-    /**
+/*
+    *//**
      * View list of users with same role.
      *
      * @param roleId the id of user's role
      * @return
-     */
+     *//*
     @Override
     public ResponseEntity<?> getAllUserByRole(Long roleId) {
         Optional<List<User>> userList = userRepository.findAllByRoleId(roleId);
@@ -188,13 +188,13 @@ public class UserServiceImpl implements IUserService {
         }
     }
 
-    /**
+    *//**
      * View list of users with same role and status.
      *
      * @param roleId the id of user's role
      * @param status the status of user
      * @return
-     */
+     *//*
     @Override
     public ResponseEntity<?> getAllUserByRoleAndStatus(Long roleId, int status) {
         Optional<List<User>> userList = userRepository.findAllByRoleIdAndStatus(roleId, status);
@@ -203,5 +203,5 @@ public class UserServiceImpl implements IUserService {
         } else {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
-    }
+    }*/
 }
