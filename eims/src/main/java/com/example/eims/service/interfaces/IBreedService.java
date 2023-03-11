@@ -45,7 +45,7 @@ public interface IBreedService {
      * @param breedId Breed id to be queried
      * @return Breed information or response message
      */
-    ResponseEntity<?> viewBreedDetailById (Long breedId, HttpServlet request);
+    ResponseEntity<?> viewBreedDetailById (Long breedId);
 
     /**
      * Service to view breed detail information of 1 specie
@@ -60,4 +60,11 @@ public interface IBreedService {
      * @return Breed information or response message
      */
     ResponseEntity<?> viewBreedDetailByUser (Long userId);
+
+    /**
+     * Service to view breed image
+     * @param breedId Breed id to be queried
+     * @return Breed's image or response message
+     */
+    ResponseEntity<?> loadBreedImage (Long breedId);
 }

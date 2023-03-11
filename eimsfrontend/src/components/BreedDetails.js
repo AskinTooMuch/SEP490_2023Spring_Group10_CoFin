@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from "react-router-dom";
+import axios from '../api/axios';
+import { useNavigate, useLocation } from "react-router-dom";
 import PropTypes from 'prop-types';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
@@ -45,6 +46,16 @@ function a11yProps(index) {
 }
 
 export default function BasicTabs() {
+    //Dependency
+    const [breedLoaded, setBreedLoaded] = useState(false);
+    const [imageLoaded, setImageLoaded] = useState(false);
+    const [loadedSpecie, setLoadedSpecie] = useState(false);
+
+    //URL
+    const SPECIE_LIST = '/api/specie/list';
+    const BREED_GET = '/api/breed/detail/breedId';
+    const BREED_GET_IMAGE = '/api/breed/detail/breedId/image';
+
     const [value, setValue] = React.useState(0);
     const navigate = useNavigate();
     const handleChange = (event, newValue) => {
@@ -55,7 +66,103 @@ export default function BasicTabs() {
     const handleShow = () => setShow(true);
     const [images, setImages] = useState([]);
     const [imageURLs, setImageURLs] = useState([]);
+    //List data
+    const [specieList, setSpecieList] = useState([]);
 
+    //DTO
+    const [editBreedDTO, setEditBreedDTO] = useState(
+        {
+            breedId: "",
+            specieId: "",
+            breedName: "",
+            specieName: "",
+            averageWeightMale: "",
+            averageWeightFemale: "",
+            commonDisease: "",
+            growthTime: "",
+            image: "",
+            status: ""
+        }
+    );
+
+    const [x64image, setX64image] = useState();
+
+    //Get sent params with data
+    const { state } = useLocation();
+    const { id } = state;
+    //Get specie list
+    useEffect(() => {
+        if (loadedSpecie) return;
+        loadSpecieList();
+        setLoadedSpecie(true);
+    }, []);
+
+    // Request specie list and load the specie list into the dropdowns
+    const loadSpecieList = async () => {
+        const result = await axios.get(SPECIE_LIST,
+            { params: { userId: sessionStorage.getItem("curUserId") } },
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Access-Control-Allow-Origin': '*'
+                },
+                withCredentials: false
+            });
+        setSpecieList(result.data);
+        console.log(specieList);
+    }
+
+    //Get breed details
+    useEffect(() => {
+        console.log("Get breed");
+        loadBreed();
+    }, [breedLoaded]);
+
+    const loadBreed = async () => {
+        const result = await axios.get(BREED_GET,
+            { params: { breedId: id } },
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Access-Control-Allow-Origin': '*'
+                },
+                withCredentials: false
+            });
+        // Set inf
+        editBreedDTO.breedId = result.data.breedId;
+        editBreedDTO.specieId = result.data.specieId;
+        editBreedDTO.breedName = result.data.breedName;
+        editBreedDTO.specieName = result.data.specieName;
+        editBreedDTO.averageWeightMale = result.data.averageWeightMale;
+        editBreedDTO.averageWeightFemale = result.data.averageWeightFemale;
+        editBreedDTO.commonDisease = result.data.commonDisease;
+        editBreedDTO.growthTime = result.data.growthTime;
+        editBreedDTO.status = result.data.status;
+        setBreedLoaded(true);
+    }
+
+    //Get image:
+    useEffect(() => {
+        console.log("Get breed");
+        loadImage();
+    }, [imageLoaded]);
+
+    const loadImage = async () => {
+        const result = await axios.get(BREED_GET_IMAGE,
+            { params: { breedId: id } },
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Access-Control-Allow-Origin': '*'
+                },
+                withCredentials: false
+            });
+        // Set inf
+        setX64image(result.data);
+        setImageLoaded(true);
+    }
+
+    //handle on image change
     useEffect(() => {
         if (images.length < 1) return;
         const newImageUrls = [];
@@ -65,6 +172,15 @@ export default function BasicTabs() {
 
     const onImageChange = (e) => {
         setImages([...e.target.files]);
+    }
+
+    //Handle on input change
+    const handleEditChange = (event, field) => {
+        let actualValue = event.target.value
+        setEditBreedDTO({
+            ...editBreedDTO,
+            [field]: actualValue
+        })
     }
     return (
 
@@ -96,11 +212,16 @@ export default function BasicTabs() {
                                             <p>Loài<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                         </div>
                                         <div className="col-md-6">
-                                            <select id="updateBreedSpecie" class="form-select" aria-label="Default select example">
-                                                <option selected>Open this select menu</option>
-                                                <option value="1" >One</option>
-                                                <option value="2">Two</option>
-                                                <option value="3">Three</option>
+                                            <select class="form-select" aria-label="Default select example"
+                                            onChange={e => handleEditChange(e, "specieId")}>
+                                                <option disabled>Open this select menu</option>
+                                                { /**JSX to load options */}
+                                                {specieList &&
+                                                    specieList.map((item, index) => (
+                                                        item.status &&
+                                                        <option value={item.specieId}>{item.specieName}</option>
+                                                    ))
+                                                }
                                             </select>
                                         </div>
                                     </div>
@@ -109,31 +230,41 @@ export default function BasicTabs() {
                                             <p>Tên loại<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                         </div>
                                         <div className="col-md-6">
-                                            <input required id = "updateSpecieName"></input>
+                                            <input 
+                                            required
+                                            value={editBreedDTO.breedName}
+                                            onChange={e => handleEditChange(e, "breedName")}/>
                                         </div>
                                     </div>
                                     <div className="row">
-                                        <div className="col-md-6">
-                                            <p>Cân nặng trung bình con đực<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
-                                        </div>
-                                        <div className="col-md-6">
-                                            <input required id = "updateBreedMaleAvg"></input>
-                                        </div>
+                                    <div className="col-md-6">
+                                        <p>Cân nặng trung bình con đực<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                     </div>
-                                    <div className="row">
-                                        <div className="col-md-6">
-                                            <p>Cân nặng trung bình con cái<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
-                                        </div>
-                                        <div className="col-md-6">
-                                            <input required id = "updateBreedFemaleAvg"></input>
-                                        </div>
+                                    <div className="col-md-6">
+                                        <input required style={{ width: "100%" }}
+                                        value={editBreedDTO.averageWeightMale}
+                                            onChange={e => handleChange(e, "averageWeightMale")} />
                                     </div>
+                                </div>
+                                <div className="row">
+                                    <div className="col-md-6">
+                                        <p>Cân nặng trung bình con cái<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
+                                    </div>
+                                    <div className="col-md-6">
+                                        <input required style={{ width: "100%" }}
+                                        value={editBreedDTO.averageWeightFemale}
+                                            onChange={e => handleChange(e, "averageWeightFemale")} />
+                                    </div>
+                                </div>
                                     <div className="row">
                                         <div className="col-md-6 ">
                                             <p>Thời gian lớn lên<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                         </div>
                                         <div className="col-md-6">
-                                            <input id="updateBreedGrownTime" required></input>
+                                            <input 
+                                            required
+                                            value={editBreedDTO.growthTime}
+                                            onChange={e => handleEditChange(e, "growthTime")}/>
                                         </div>
                                     </div>
                                     <div className="row">
@@ -141,7 +272,9 @@ export default function BasicTabs() {
                                             <p>Các bệnh thường gặp</p>
                                         </div>
                                         <div className="col-md-6">
-                                            <input id="updateBreedCommondisease" />
+                                            <input
+                                            value={editBreedDTO.commonDisease}
+                                            onChange={e => handleEditChange(e, "commonDisease")}/>
                                         </div>
                                     </div>
                                     <div className="row">
@@ -167,21 +300,19 @@ export default function BasicTabs() {
                         </form>
                     </Modal>
 
-
                     <div className='detailbody'>
 
                         <div className="row">
 
                             <div className="col-md-4">
                                 <p >Tên loài
-                                    <input style={{ display: "block" }} placeholder='Gà ' disabled />
+                                    <input style={{ display: "block" }} value={editBreedDTO.specieName} placeholder='Gà ' disabled />
                                 </p>
                             </div>
                             <div className="col-md-4">
-
                                 <p>Hình ảnh</p>
-                                <img alt='chicpic' style={{ position: "absolute", width: "20%", minHeight: "10%" }} src={chicpic}></img>
-
+                                <img style={{ position: "absolute", width: "20%", minHeight: "10%" }} alt='' src={`data:image/jpeg;base64,${x64image}`} />
+                                
                             </div>
                             <div className="col-md-4 ">
                                 <div className='button'>
@@ -195,7 +326,7 @@ export default function BasicTabs() {
                         <div className="row">
                             <div className="col-md-4">
                                 <p>Tên loại
-                                    <input style={{ display: "block" }} placeholder='Gà ri' disabled />
+                                    <input style={{ display: "block" }} value={editBreedDTO.breedName} placeholder='Gà ri' disabled />
                                 </p>
                             </div>
                             <div className="col-md-4">
@@ -204,39 +335,37 @@ export default function BasicTabs() {
                         </div>
                         <div className="row">
                             <div className="col-md-4">
-                                <p>Cân nặng trung bình
-                                    <input style={{ display: "block" }} placeholder='0.8 kg' disabled />
+                                <p>Cân nặng trung bình con đực
+                                    <input style={{ display: "block" }} value={editBreedDTO.averageWeightMale} placeholder='0.8 kg' disabled />
                                 </p>
                             </div>
+                            <div className="col-md-4"/>
+                        </div>
+                        <div className="row">
                             <div className="col-md-4">
-
+                                <p>Cân nặng trung bình con cái
+                                    <input style={{ display: "block" }} value={editBreedDTO.averageWeightFemale} placeholder='0.8 kg' disabled />
+                                </p>
                             </div>
+                            <div className="col-md-4"/>
                         </div>
                         <div className="row">
                             <div className="col-md-4">
                                 <p>Thời gian lớn lên
-                                    <input style={{ display: "block" }} placeholder='20 ngày' disabled />
+                                    <input style={{ display: "block" }} value={editBreedDTO.growthTime} placeholder='20 ngày' disabled />
                                 </p>
                             </div>
-                            <div className="col-md-4">
-
-                            </div>
+                            <div className="col-md-4"/>
                         </div>
                         <div className="row">
                             <div className="col-md-4">
                                 <p>Các bệnh thường gặp
-                                    <textarea style={{ display: "block" }} placeholder='Cúm gia cầm, đậu gà' disabled />
+                                    <textarea style={{ display: "block" }} value={editBreedDTO.commonDisease} placeholder='Cúm gia cầm, đậu gà' disabled />
                                 </p>
                             </div>
-                            <div className="col-md-4">
-
-                            </div>
+                            <div className="col-md-4"/>
                         </div>
-
-
                     </div>
-
-
                 </div>
             </BreedDetails>
 

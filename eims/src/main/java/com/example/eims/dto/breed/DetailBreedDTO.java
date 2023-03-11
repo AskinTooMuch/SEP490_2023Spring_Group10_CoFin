@@ -8,6 +8,7 @@
  * DATE          Version    Author           DESCRIPTION<br>
  * 08/03/2023    1.0        ChucNV           First deploy
  * 09/03/2023    1.1        ChucNV           Add constructor
+ * 11/03/2023    1.2        ChucNV           Add specie name
  */
 package com.example.eims.dto.breed;
 
@@ -21,11 +22,12 @@ public class DetailBreedDTO {
     private Long specieId;
     private Long userId;
     private String breedName;
+    private String specieName;
     private Float averageWeightMale;
     private Float averageWeightFemale;
     private String commonDisease;
     private int growthTime;
-    private Resource image;
+    //private Resource image;
     private boolean status;
 
     public DetailBreedDTO(Breed breed) {

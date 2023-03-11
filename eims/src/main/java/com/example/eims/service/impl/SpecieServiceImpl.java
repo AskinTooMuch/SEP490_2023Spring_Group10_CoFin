@@ -125,8 +125,6 @@ public class SpecieServiceImpl implements ISpecieService {
                 detailSpecieDTO.setStatus(s.isStatus());
                 detailSpecieDTOList.add(detailSpecieDTO);
             }
-            System.out.println(specieList);
-            System.out.println(detailSpecieDTOList);
             return new ResponseEntity<>(detailSpecieDTOList, HttpStatus.OK);
         }
         return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);

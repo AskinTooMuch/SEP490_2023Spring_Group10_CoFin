@@ -10,22 +10,15 @@
  */
 package com.example.eims.controller;
 
-import com.example.eims.dto.auth.LoginDTO;
 import com.example.eims.dto.breed.EditBreedDTO;
 import com.example.eims.dto.breed.NewBreedDTO;
-import com.example.eims.dto.file.FileResponse;
-import com.example.eims.dto.specie.EditSpecieDTO;
-import com.example.eims.service.impl.FileStorageService;
-import com.example.eims.service.interfaces.IAuthService;
+import com.example.eims.service.impl.FileStorageServiceImpl;
 import com.example.eims.service.interfaces.IBreedService;
 import com.example.eims.utils.Validator;
-import jakarta.servlet.http.HttpServlet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
@@ -36,7 +29,7 @@ public class BreedController {
     private IBreedService breedService;
 
     @Autowired
-    private FileStorageService fileStorageService;
+    private FileStorageServiceImpl fileStorageServiceImpl;
 
     public final Validator validator = new Validator();
 
@@ -72,8 +65,9 @@ public class BreedController {
      * @return response message or new breed
      */
     @GetMapping("/detail/breedId")
-    public ResponseEntity<?> getBreedDetailByBreedId(@RequestParam Long breedId, HttpServlet request){
-        return breedService.viewBreedDetailById(breedId, request);
+    public ResponseEntity<?> getBreedDetailByBreedId(@RequestParam Long breedId){
+        System.out.println("Get by breed id " + breedId);
+        return breedService.viewBreedDetailById(breedId);
     }
 
     /**
@@ -132,5 +126,16 @@ public class BreedController {
         }
         //Update breed info
         return breedService.updateBreed(editBreedDTO);
+    }
+
+    /**
+     * Load breeds image by breed id
+     *
+     * @param breedId contains the breed's id
+     * @return response message or breed image base 64 string
+     */
+    @GetMapping("/detail/breedId/image")
+    public ResponseEntity<?> loadBreedImage(@RequestParam Long breedId){
+        return breedService.loadBreedImage(breedId);
     }
 }

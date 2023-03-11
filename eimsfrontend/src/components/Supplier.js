@@ -193,8 +193,6 @@ const Supplier = () => {
   //Navigate to detail Page
   let navigate = useNavigate();
   const routeChange = (sid) => {
-    // let path = '/supplierdetail';
-    // navigate(path, { state: { id: id, supplier: supplierList[sid]}});
     navigate('/supplierdetail', { state: { id: sid } });
   }
 

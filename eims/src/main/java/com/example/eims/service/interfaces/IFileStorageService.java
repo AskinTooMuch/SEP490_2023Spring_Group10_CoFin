@@ -11,5 +11,5 @@
 
 package com.example.eims.service.interfaces;
 
-public interface IFileStorage {
+public interface IFileStorageService {
 }

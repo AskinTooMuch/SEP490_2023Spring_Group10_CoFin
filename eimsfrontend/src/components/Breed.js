@@ -13,19 +13,22 @@ const Breed = () => {
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
     let navigate = useNavigate();
-    const routeChange = () => {
-        let path = '/breeddetail';
-        navigate(path);
+    const routeChange = (index) => {
+        navigate('/breeddetail', { state: { id: index } });
     }
     const [images, setImages] = useState([]);
     const [imageURLs, setImageURLs] = useState([]);
     //URL
     const NEW_BREED = '/api/breed/new';
     const SPECIE_LIST = '/api/specie/list';
+    const BREED_LIST = '/api/breed/detail/userId';
 
     //Specie List
     const [loadedSpecie, setLoadedSpecie] = useState(false);
     const [specieList, setSpecieList] = useState([]);
+    //BreedList
+    const [loadedBreed, setLoadedBreed] = useState(false);
+    const [breedList, setBreedList] = useState([]);
 
     //Breed DTOs
     const [newBreedDTO, setNewBreedDTO] = useState(
@@ -46,7 +49,7 @@ const Breed = () => {
         setLoadedSpecie(true);
     }, []);
 
-    // Request specie list and load the specie list into the table rows
+    // Request specie list and load the specie list into the dropdowns
     const loadSpecieList = async () => {
         const result = await axios.get(SPECIE_LIST,
             { params: { userId: sessionStorage.getItem("curUserId") } },
@@ -61,6 +64,28 @@ const Breed = () => {
         console.log(specieList);
     }
 
+    //Get breed list
+    useEffect(() => {
+        if (loadedBreed) return;
+        loadBreedList();
+        setLoadedBreed(true);
+    })
+
+    // Request breed list and load the breed list into the table rows
+    const loadBreedList = async () => {
+        const result = await axios.get(BREED_LIST,
+            { params: { userId: sessionStorage.getItem("curUserId") } },
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Access-Control-Allow-Origin': '*'
+                },
+                withCredentials: false
+            });
+        setBreedList(result.data);
+        console.log(breedList);
+    }
+
     //Handle on image change
     useEffect(() => {
         if (images.length < 1) return;
@@ -70,7 +95,6 @@ const Breed = () => {
     }, [images]);
 
     const onImageChange = async (e) => {
-
         const file = e.target.files[0];
         newBreedDTO.image = file;
         console.log(newBreedDTO.image);
@@ -111,6 +135,7 @@ const Breed = () => {
             );
             console.log(JSON.stringify(response?.data));
             setNewBreedDTO('');
+            loadBreedList();
             toast.success("Tạo loài mới thành công")
             setShow(false)
         } catch (err) {
@@ -124,9 +149,7 @@ const Breed = () => {
             else {
                 toast.error('Yêu cầu không đúng định dạng');
             }
-
         }
-
     }
 
     return (
@@ -148,10 +171,11 @@ const Breed = () => {
                                         <p>Loài<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                     </div>
                                     <div className="col-md-6">
-                                        <select id="createBreedSpecie" className="form-control mt-1" aria-label="Default select example">
+                                        <select className="form-control mt-1" aria-label="Default select example"
+                                            onChange={e => handleChange(e, "specieId")}>
                                             <option disabled value="">Open this select menu</option>
                                             { /**JSX to load options */}
-                                            {
+                                            { specieList &&
                                                 specieList.map((item, index) => (
                                                     item.status &&
                                                     <option value={item.specieId}>{item.specieName}</option>
@@ -247,26 +271,25 @@ const Breed = () => {
                         <tr>
                             <th scope="col">STT</th>
                             <th scope="col">Tên loại</th>
-                            <th scope="col">Cân nặng trung bình</th>
+                            <th scope="col">Cân nặng con đực</th>
+                            <th scope="col">Cân nặng con cái</th>
                             <th scope="col">Thời gian lớn</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr className='trclick' onClick={routeChange}>
-
-                            <th scope="row">1</th>
-                            <td>Gà ri</td>
-                            <td>0.8 kg</td>
-                            <td>20 ngày</td>
-
-                        </tr>
-                        <tr>
-                            <th scope="row">2</th>
-                            <td>Vịt cỏ</td>
-                            <td>0.8 kg</td>
-                            <td>20 ngày</td>
-                        </tr>
-
+                        { /**JSX to load breed list */}
+                        { breedList &&
+                            breedList.map((item, index) => (
+                                item.status &&
+                                <tr className='trclick' onClick={() => routeChange(item.breedId)} key={item.breedId}>
+                                    <th scope="row">{index+1}</th>
+                                    <td>{item.breedName}</td>
+                                    <td>{item.averageWeightMale}</td>
+                                    <td>{item.averageWeightFemale}</td>
+                                    <td>{item.growthTime}</td>
+                                </tr>
+                            ))
+                        }
                     </tbody>
                 </table>
             </div>

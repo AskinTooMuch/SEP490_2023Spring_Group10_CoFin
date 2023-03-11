@@ -7,13 +7,14 @@
  * Record of change:<br>
  * DATE         Version     Author      DESCRIPTION<br>
  * 08/03/2023   1.0         ChucNV      First Deploy<br>
+ * 11/03/2023   2.0         ChucNV      Add resourceToX64 method<br>
  */
 package com.example.eims.service.impl;
 
 import com.example.eims.config.FileStorageConfig;
 import com.example.eims.service.CustomFileNotFoundException;
 import com.example.eims.service.FileStorageException;
-import com.example.eims.service.interfaces.IFileStorage;
+import com.example.eims.service.interfaces.IFileStorageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -21,15 +22,18 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.Base64;
 
 @Service
-public class FileStorageService implements IFileStorage {
+public class FileStorageServiceImpl implements IFileStorageService {
     private final Path fileStorageLocation;
 
     /**
@@ -37,7 +41,7 @@ public class FileStorageService implements IFileStorage {
      * @param fileStorageConfig configuration of file storing
      */
     @Autowired
-    public FileStorageService(FileStorageConfig fileStorageConfig) {
+    public FileStorageServiceImpl(FileStorageConfig fileStorageConfig) {
         this.fileStorageLocation = Paths.get(fileStorageConfig.getUploadDir());
         try {
             Files.createDirectories(this.fileStorageLocation);
@@ -81,5 +85,25 @@ public class FileStorageService implements IFileStorage {
         }
     }
 
-
+    /**
+     * Convert resource to x64
+     * @param resource file resource
+     * @return resource obj
+     */
+    public String resourceToX64(Resource resource) {
+        try {
+            InputStream inputStream = resource.getInputStream();
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            byte[] buffer = new byte[4096];
+            int bytesRead = -1;
+            while ((bytesRead = inputStream.read(buffer)) != -1) {
+                outputStream.write(buffer, 0, bytesRead);
+            }
+            byte[] bytes = outputStream.toByteArray();
+            String base64String = Base64.getEncoder().encodeToString(bytes);
+            return base64String;
+        } catch (IOException ioException) {
+            throw new CustomFileNotFoundException("Convert failed");
+        }
+    }
 }

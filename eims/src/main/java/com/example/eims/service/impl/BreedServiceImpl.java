@@ -3,14 +3,14 @@ package com.example.eims.service.impl;
 import com.example.eims.dto.breed.DetailBreedDTO;
 import com.example.eims.dto.breed.NewBreedDTO;
 import com.example.eims.dto.breed.EditBreedDTO;
-import com.example.eims.dto.file.FileResponse;
 import com.example.eims.entity.Breed;
 import com.example.eims.entity.Specie;
 import com.example.eims.repository.BreedRepository;
 import com.example.eims.repository.SpecieRepository;
+import com.example.eims.repository.UserRepository;
+import com.example.eims.service.CustomFileNotFoundException;
 import com.example.eims.service.interfaces.IBreedService;
-import jakarta.servlet.http.HttpServlet;
-import org.apache.tomcat.util.codec.binary.Base64;
+import com.example.eims.utils.StringDealer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
@@ -18,11 +18,12 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.io.FileOutputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 @Service
@@ -32,12 +33,15 @@ public class BreedServiceImpl implements IBreedService {
     @Autowired
     private final BreedRepository breedRepository;
     @Autowired
-    private final FileStorageService fileStorageService;
+    private final UserRepository userRepository;
+    @Autowired
+    private FileStorageServiceImpl fileStorageServiceImpl;
+    private final StringDealer stringDealer = new StringDealer();
 
-    public BreedServiceImpl(SpecieRepository specieRepository, BreedRepository breedRepository, FileStorageService fileStorageService) {
+    public BreedServiceImpl(SpecieRepository specieRepository, BreedRepository breedRepository, UserRepository userRepository) {
         this.specieRepository = specieRepository;
         this.breedRepository = breedRepository;
-        this.fileStorageService = fileStorageService;
+        this.userRepository = userRepository;
     }
 
     /**
@@ -53,17 +57,37 @@ public class BreedServiceImpl implements IBreedService {
         if (specieOpt.isPresent()) {
             Specie specie = specieOpt.get();
             //Create file attributes
-            //String filename = fileStorageService.storeFile(newBreedDTO.getImage());
+            //Save image
+            String filename = fileStorageServiceImpl.storeFile(newBreedDTO.getImage()).trim();
             //Set other attributes
             Breed breed = new Breed();
-            breed.setSpecieId(specie.getSpecieId());
             breed.setUserId(specie.getUserId());
-            breed.setBreedName(newBreedDTO.getBreedName());
+            //Check
+            if (specieRepository.findById(specie.getSpecieId()).isPresent()) {
+                breed.setSpecieId(specie.getSpecieId());
+            } else {
+                return new ResponseEntity<>("Không tìm thấy tên loài.", HttpStatus.NOT_FOUND);
+            }
+            if (userRepository.findById(specie.getSpecieId()).isPresent()) {
+                breed.setSpecieId(specie.getUserId());
+            } else {
+                return new ResponseEntity<>("Không tìm thấy người dùng.", HttpStatus.NOT_FOUND);
+            }
+            // Name
+            String name = stringDealer.trimMax(newBreedDTO.getBreedName());
+            if (name.equals("")) { /* Supplier name is empty */
+                return new ResponseEntity<>("Tên không được để trống", HttpStatus.BAD_REQUEST);
+            } else {
+                breed.setBreedName(name);
+            }
+            String commonDisease = stringDealer.trimMax(newBreedDTO.getCommonDisease());
+            breed.setCommonDisease(commonDisease);
+            // Number fields: DTO has automatically caught any error/exceptions
             breed.setAverageWeightMale(newBreedDTO.getAverageWeightMale());
             breed.setAverageWeightFemale(newBreedDTO.getAverageWeightFemale());
-            breed.setCommonDisease(newBreedDTO.getCommonDisease());
             breed.setGrowthTime(newBreedDTO.getGrowthTime());
-            //breed.setImageSrc(filename);
+            // Saved files name and new breed added as true status for default
+            breed.setImageSrc(filename);
             breed.setStatus(true);
             try {
                 breedRepository.save(breed);
@@ -88,7 +112,7 @@ public class BreedServiceImpl implements IBreedService {
         if (breedOpt.isPresent()) {
             Breed breed = breedOpt.get();
             //Create file attributes
-            String filename = fileStorageService.storeFile(editBreedDTO.getImage());
+            String filename = fileStorageServiceImpl.storeFile(editBreedDTO.getImage());
             //Set other attributes
             breed.setSpecieId(editBreedDTO.getSpecieId());
             breed.setBreedName(editBreedDTO.getBreedName());
@@ -132,25 +156,18 @@ public class BreedServiceImpl implements IBreedService {
      * @return Breed information or response message
      */
     @Override
-    public ResponseEntity<?> viewBreedDetailById(Long breedId, HttpServlet request) {
+    public ResponseEntity<?> viewBreedDetailById(Long breedId) {
         Optional<Breed> breedOpt = breedRepository.findById(breedId);
+        //If breed is available by id
         if (breedOpt.isPresent()) {
             Breed breed = breedOpt.get();
             DetailBreedDTO detailBreedDTO = new DetailBreedDTO(breed);
-            Resource resource = fileStorageService.loadFileAsResource(breed.getImageSrc());
-            String contentType = null;
-            try {
-                contentType = request
-                        .getServletContext()
-                        .getMimeType(resource.getFile().getAbsolutePath());
-                detailBreedDTO.setImage(resource);
-            } catch (IOException ex) {
-                System.out.println("Could not get file");
+            Optional<Specie> specieOpt = specieRepository.findById(detailBreedDTO.getSpecieId());
+            if (specieOpt.isPresent()) {
+                Specie specie = specieOpt.get();
+                detailBreedDTO.setSpecieName(specie.getSpecieName());
+                return new ResponseEntity<>(detailBreedDTO, HttpStatus.OK);
             }
-            if (contentType==null) {
-                contentType = "application/octet-stream";
-            }
-            return new ResponseEntity<>(breedOpt.get(), HttpStatus.OK);
         }
         return new ResponseEntity<>("Breed not found", HttpStatus.BAD_REQUEST);
     }
@@ -179,6 +196,23 @@ public class BreedServiceImpl implements IBreedService {
         Optional<List<Breed>> breedOpt = breedRepository.findByUserId(userId);
         if (breedOpt.isPresent()) {
             return new ResponseEntity<>(breedOpt.get(), HttpStatus.OK);
+        }
+        return new ResponseEntity<>("Breed not found", HttpStatus.BAD_REQUEST);
+    }
+
+    @Override
+    public ResponseEntity<?> loadBreedImage(Long breedId) {
+        Optional<Breed> breedOpt = breedRepository.findById(breedId);
+        //If breed is available by id
+        if (breedOpt.isPresent()) {
+            Breed breed = breedOpt.get();
+            Resource resource = fileStorageServiceImpl.loadFileAsResource(breed.getImageSrc());
+            try {
+                String x64 = fileStorageServiceImpl.resourceToX64(resource);
+                return new ResponseEntity<>(x64, HttpStatus.OK);
+            } catch (CustomFileNotFoundException ce) {
+                System.out.println("Could not get file");
+            }
         }
         return new ResponseEntity<>("Breed not found", HttpStatus.BAD_REQUEST);
     }
