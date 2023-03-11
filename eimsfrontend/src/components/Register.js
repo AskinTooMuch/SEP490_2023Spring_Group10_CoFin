@@ -5,6 +5,7 @@ import axios from '../api/axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import "../css/register.css";
+import { Link, useNavigate } from "react-router-dom";
 //import  '../api/provinces.js';
 const EMAIL_REGEX = /^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/;
 const PHONE_REGEX = /(((\+|)84)|0)(3|5|7|8|9)+([0-9]{8})\b/;
@@ -12,7 +13,7 @@ const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,20}$/;
 const REGISTER_URL = '/api/auth/signup';
 
 const Register = () => {
-
+    const navigate = useNavigate();
     const userRef = useRef();
     const [dataLoaded, setDataLoaded] = useState(false);
     //Full Json addresses
@@ -87,7 +88,7 @@ const Register = () => {
             [field]: actualValue
         })
     }
-
+    //check register success
     const [success, setSuccess] = useState(false);
 
     // Set value for address fields
@@ -266,7 +267,16 @@ const Register = () => {
     return (
         <>
             {success ? (
-                toast.success("Đăng ký thành công")
+                <section className="u-clearfix u-white u-section-1" id="sec-3c81" data-animation-name="" data-animation-duration="0" data-animation-delay="0" data-animation-direction="">
+                    <div className="u-custom-color-2 u-expanded-width u-shape u-shape-rectangle u-shape-1"></div>
+                    <div style={{ minHeight: "0px" }} className="u-align-center u-border-20 u-border-custom-color-1 u-border-no-left u-border-no-right u-border-no-top u-container-style u-custom-border u-group u-radius-46 u-shape-round u-white u-group-1">
+                        <div className="u-container-layout u-valign-middle-xs u-container-layout-1">
+                            <h2 className="u-text u-text-custom-color-1 u-text-default u-text-1">Đăng kí thành công</h2>
+                            <h3>Vui lòng đợi xác thực</h3>
+                            <Link to="/login"><button className="btn btn-light" style={{width:"30%"}}>Đăng nhập</button></Link>
+                        </div>
+                    </div>
+                </section>
             ) : (
                 <div className="">
                     <form onSubmit={handleSubmit} className="">
@@ -479,7 +489,6 @@ const Register = () => {
                                                                         value={signUpDTO.facilityFoundDate}
                                                                         required
                                                                         className="form-control " />
-
                                                                 </div>
                                                             </div>
                                                             <div className="mb-4 ">
@@ -577,7 +586,6 @@ const Register = () => {
                                                                         value={signUpDTO.businessLicenseNumber}
                                                                         required
                                                                         className="form-control " />
-
                                                                 </div>
                                                             </div>
                                                             <button id="confirmRegister" type="submit" className="btn btn-light" style={{ width: "100%", textAlign: "center" }}
@@ -594,7 +602,6 @@ const Register = () => {
                                                                 theme="colored" />
                                                             <p className="regislink">
                                                                 <label> Bạn đã có tài khoản?</label><a style={{ fontSize: "small", fontWeight: "initial", textDecoration: "underline" }} href="login">Đăng nhập</a><br />
-
                                                             </p>
                                                         </div>
                                                     </div>
@@ -605,9 +612,7 @@ const Register = () => {
                                 </div>
                             </div>
                         </section>
-
                     </form>
-
                 </div>
             )}
         </>

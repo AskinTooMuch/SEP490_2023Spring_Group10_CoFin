@@ -243,7 +243,7 @@ export default function BasicTabs() {
                                             <p>Loài<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                         </div>
                                         <div className="col-md-6">
-                                            <select class="form-select" aria-label="Default select example"
+                                            <select className="form-select" aria-label="Default select example"
                                                 onChange={e => handleEditChange(e, "specieId")}>
                                                 <option disabled>Open this select menu</option>
                                                 { /**JSX to load options */}

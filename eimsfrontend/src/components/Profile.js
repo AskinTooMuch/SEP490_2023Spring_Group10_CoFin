@@ -31,16 +31,20 @@ const Profile = () => {
         setPasswordShown3(passwordShown3 ? false : true);
     };
 
-    //show-hide popup
+    //show-hide popup change password
     const [show, setShow] = useState(false);
-
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
-    const [show2, setShow2] = useState(false);
+    //show-hide popup edit profile
+    const [showProfile, setShowProfile] = useState(false);
+    const handleCloseProfile = () => setShowProfile(false);
+    const handleShow2 = () => setShowProfile(true);
 
-    const handleClose2 = () => setShow2(false);
-    const handleShow2 = () => setShow2(true);
+    ////show-hide popup edit facility
+    const [showFaci, setShowFaci] = useState(false);
+    const handleCloseFaci = () => setShowFaci(false);
+    const handleShowFaci = () => setShowFaci(true);
     const inf_fetched_ref = useRef(false);
 
     const [passFocus, setPassFocus] = useState(false);
@@ -159,7 +163,7 @@ const Profile = () => {
 
     // Get user's information to update
     const handleUpdateGet = async () => {
-        setShow2(true);
+        setShowProfile(true);
         try {
             const response = await axios.get(USER_UPDATE_GET,
                 { params: { userId: sessionStorage.getItem("curUserId") } },
@@ -196,7 +200,7 @@ const Profile = () => {
 
     // Update user's information
     const handleUpdateSave = async (event) => {
-        setShow2(false);
+        setShowProfile(false);
         console.log("userId===" + sessionStorage.getItem("curUserId"));
         console.log(updateUserDTO);
         event.preventDefault();
@@ -295,7 +299,7 @@ const Profile = () => {
         <div className="profile-info">
             <h2>Thông tin cá nhân</h2>
             <div className="row outbox">
-                <div className="col-sm-6 col-xs-12">
+                <div className="col-md-6 col-sm-12">
                     <div className="card">
                         <div className="card-header">Thông tin tài khoản</div>
                         <div className="card-body">
@@ -423,10 +427,10 @@ const Profile = () => {
 
                                                 </h6> */}
                                                 <div className='model-footer'>
-                                                    <button className="btn btn-light" style={{ width: "30%" }} id = "confirmChangePassword">
+                                                    <button className="btn btn-light" style={{ width: "30%" }} id="confirmChangePassword">
                                                         Đổi mật khẩu
                                                     </button>
-                                                    <button className="btn btn-light" style={{ width: "20%" }} onClick={handleClose} id = "cancelChangePassword">
+                                                    <button className="btn btn-light" style={{ width: "20%" }} onClick={handleClose} id="cancelChangePassword">
                                                         Huỷ
                                                     </button>
                                                 </div>
@@ -435,7 +439,7 @@ const Profile = () => {
                                     </div>
                                     <div className="col-md-6">
                                         <Button onClick={handleUpdateGet} style={{ width: "100%" }} className="btn btn-light" id="startChangeUserInformation">Cập nhật</Button >
-                                        <Modal show={show2} onHide={handleClose2}
+                                        <Modal show={showProfile} onHide={handleCloseProfile}
                                             size="lg"
                                             aria-labelledby="contained-modal-title-vcenter"
                                             centered >
@@ -444,13 +448,13 @@ const Profile = () => {
                                                 <Modal.Body>
                                                     <div className="mb-3">
                                                         <label className="form-label">Họ và Tên</label>
-                                                        <input type="text" className="form-control" name="username" id = "updateUsername"
+                                                        <input type="text" className="form-control" name="username" id="updateUsername"
                                                             ref={userRef} onChange={e => handleUpdateUser(e, "username")}
                                                             value={updateUserDTO.username} required />
                                                     </div>
                                                     <div className="mb-3">
                                                         <label className="form-label">Ngày sinh</label>
-                                                        <input type="date" className="form-control" name="dob" id = "updateDob"
+                                                        <input type="date" className="form-control" name="dob" id="updateDob"
                                                             ref={userRef} onChange={e => handleUpdateUser(e, "dob")}
                                                             value={updateUserDTO.dob} required />
                                                     </div>
@@ -462,16 +466,16 @@ const Profile = () => {
                                                     </div>
                                                     <div className="mb-3">
                                                         <label className="form-label">Địa chỉ</label>
-                                                        <input type="text" style={{ minHeight: "50px" }} className="form-control" name="address" id = "updateAddress"
+                                                        <input type="text" style={{ minHeight: "50px" }} className="form-control" name="address" id="updateAddress"
                                                             ref={userRef} onChange={e => handleUpdateUser(e, "address")}
                                                             value={updateUserDTO.address} required />
                                                     </div>
                                                 </Modal.Body>
                                                 <div className='model-footer'>
-                                                    <button style={{ width: "30%" }} className="col-md-6 btn-light" type='submit' id = "submitUserUpdate">
+                                                    <button style={{ width: "30%" }} className="col-md-6 btn-light" type='submit' id="submitUserUpdate">
                                                         Xác nhận
                                                     </button>
-                                                    <button  style={{ width: "20%" }} className="btn btn-light" onClick={handleClose2} type='button' id = "cancelUserUpdate">
+                                                    <button style={{ width: "20%" }} className="btn btn-light" onClick={handleCloseProfile} type='button' id="cancelUserUpdate">
                                                         Huỷ
                                                     </button>
                                                 </div>
@@ -485,7 +489,7 @@ const Profile = () => {
                         </div>
                     </div>
                 </div>
-                <div className="col-md-6 col-xs-12">
+                <div className="col-lg-6 col-md-6 col-sm-12">
                     <div className="card">
 
                         {facilityInformation.facilityId == null
@@ -498,7 +502,7 @@ const Profile = () => {
                                 <div className="card-body">
                                     <form>
                                         <div className="tab-pane " >
-                                        <div className="row">
+                                            <div className="row">
                                                 <div className="col-md-6">
                                                     <p>Ngày thành lập</p>
                                                 </div>
@@ -565,12 +569,78 @@ const Profile = () => {
                                                     }
                                                 </div>
                                             </div>
-                                            <div style={{ textAlign: "center" }}>
-                                                <button className="btn btn-light" style={{ width: "50%" }} id="startChangeFacilityInformation">Cập nhật</button>
-                                            </div>
-
                                         </div>
                                     </form>
+                                    <div style={{ textAlign: "center" }}>
+                                        <button className="btn btn-light" onClick={handleShowFaci} style={{ width: "50%" }}>Cập nhật</button>
+                                    </div>
+                                    <Modal show={showFaci} onHide={handleCloseFaci}
+                                        size="lg"
+                                        aria-labelledby="contained-modal-title-vcenter"
+                                        centered >
+                                        <form >
+                                            <Modal.Header><h4>Chỉnh sửa thông tin cơ sở</h4></Modal.Header>
+                                            <Modal.Body>
+                                                <div className="row">
+                                                    <div className="col-md-6 ">
+                                                        <label className="form-label">Tên<FontAwesomeIcon className="star" icon={faStarOfLife} /></label>
+                                                        <input type="text" className="form-control"
+                                                            required />
+                                                    </div>
+                                                    <div className="col-md-6">
+                                                        <label className="form-label">Số nhà<FontAwesomeIcon className="star" icon={faStarOfLife} /></label>
+                                                        <input type="text" className="form-control"
+                                                            required />
+                                                    </div>
+                                                </div>
+                                                <div className="row">
+                                                    <div className="col-md-6 ">
+                                                        <label className="form-label">Ngày thành lập<FontAwesomeIcon className="star" icon={faStarOfLife} /></label>
+                                                        <input type="date" className="form-control"
+                                                            required />
+                                                    </div>
+                                                    <div className="col-md-6">
+                                                        <label className="form-label">Thành phố<FontAwesomeIcon className="star" icon={faStarOfLife} /></label>
+                                                        <input type="text" className="form-control"
+                                                            required />
+                                                    </div>
+                                                </div>
+                                                <div className="row">
+                                                    <div className="col-md-6 ">
+                                                        <label className="form-label">Mã đăng ký kinh doanh<FontAwesomeIcon className="star" icon={faStarOfLife} /></label>
+                                                        <input type="date" className="form-control"
+                                                            required />
+                                                    </div>
+                                                    <div className="col-md-6">
+                                                        <label className="form-label">Quận/Huyện<FontAwesomeIcon className="star" icon={faStarOfLife} /></label>
+                                                        <input type="text" className="form-control"
+                                                            required />
+                                                    </div>
+                                                </div>
+                                                <div className="row">
+                                                    <div className="col-md-6 ">
+                                                        <label className="form-label">Hotline<FontAwesomeIcon className="star" icon={faStarOfLife} /></label>
+                                                        <input type="text" className="form-control"
+                                                            required />
+                                                    </div>
+                                                    <div className="col-md-6">
+                                                        <label className="form-label">Phường<FontAwesomeIcon className="star" icon={faStarOfLife} /></label>
+                                                        <input type="text" className="form-control"
+                                                            required />
+                                                    </div>
+                                                </div>
+                                            </Modal.Body>
+                                            <div className='model-footer'>
+                                                <button style={{ width: "30%" }} className="col-md-6 btn-light" type='submit' id="submitFaciUpdate">
+                                                    Xác nhận
+                                                </button>
+                                                <button style={{ width: "20%" }} className="btn btn-light" onClick={handleCloseFaci} type='button' id="cancelFaciUpdate">
+                                                    Huỷ
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </Modal>
+
                                 </div>
                             </div>
                         }

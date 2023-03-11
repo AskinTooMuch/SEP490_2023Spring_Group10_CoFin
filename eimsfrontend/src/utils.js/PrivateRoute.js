@@ -5,7 +5,7 @@ const PrivateRoute = ({children, ...rest}) =>{
     // let auth = {'token':false};
     const auth2 = sessionStorage.getItem("curUserId");
     return(
-        auth2 ? <Layout> <Outlet/></Layout> : <Navigate to="/unauthorized"/> 
+        auth2 ? <Layout> <Outlet/></Layout> : <Navigate to="/login"/> 
         
     )
 }

@@ -11,82 +11,82 @@ const HomePage = () => {
     return (
         <div className="home u-body u-xl-mode " >
 
-            <section class="u-clearfix u-image u-section-1" id="sec-0fe4" data-image-width="2300" data-image-height="1400">
-                <div class="u-clearfix u-sheet u-sheet-1">
-                    <div class="u-clearfix u-expanded-width u-layout-wrap u-layout-wrap-1">
-                        <div class="u-layout">
-                            <div class="u-layout-row">
-                                <div class="u-container-style u-layout-cell u-size-60 u-layout-cell-1">
-                                    <div class="u-container-layout u-valign-middle u-container-layout-1">
-                                        <h1 class="u-text u-text-default u-text-1"> Egg Incubating <font color="#f46110">Management System</font>
+            <section className="u-clearfix u-image u-section-1" id="sec-0fe4" data-image-width="2300" data-image-height="1400">
+                <div className="u-clearfix u-sheet u-sheet-1">
+                    <div className="u-clearfix u-expanded-width u-layout-wrap u-layout-wrap-1">
+                        <div className="u-layout">
+                            <div className="u-layout-row">
+                                <div className="u-container-style u-layout-cell u-size-60 u-layout-cell-1">
+                                    <div className="u-container-layout u-valign-middle u-container-layout-1">
+                                        <h1 className="u-text u-text-default u-text-1"> Egg Incubating <font color="#f46110">Management System</font>
                                         </h1>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <img class="u-image u-image-round u-radius-17 u-image-1" src={image} alt="" data-image-width="854" data-image-height="562" />
+                    <img className="u-image u-image-round u-radius-17 u-image-1" src={image} alt="" data-image-width="854" data-image-height="562" />
                 </div>
             </section>
-            <section class="u-align-center u-clearfix u-palette-2-base u-section-2" id="carousel_1193">
-                <div class="u-expanded-width u-layout-horizontal u-list u-list-1">
-                    <div class="u-repeater u-repeater-1">
-                        <div class="u-container-align-center u-container-style u-image u-list-item u-repeater-item u-image-1" data-image-width="1280" data-image-height="853">
-                            <div class="u-container-layout u-similar-container u-container-layout-1"></div>
+            <section className="u-align-center u-clearfix u-palette-2-base u-section-2" id="carousel_1193">
+                <div className="u-expanded-width u-layout-horizontal u-list u-list-1">
+                    <div className="u-repeater u-repeater-1">
+                        <div className="u-container-align-center u-container-style u-image u-list-item u-repeater-item u-image-1" data-image-width="1280" data-image-height="853">
+                            <div className="u-container-layout u-similar-container u-container-layout-1"></div>
                         </div>
-                        <div class="u-container-align-center u-container-style u-image u-list-item u-repeater-item u-image-2" data-image-width="1280" data-image-height="854">
-                            <div class="u-container-layout u-similar-container u-container-layout-2"></div>
+                        <div className="u-container-align-center u-container-style u-image u-list-item u-repeater-item u-image-2" data-image-width="1280" data-image-height="854">
+                            <div className="u-container-layout u-similar-container u-container-layout-2"></div>
                         </div>
-                        <div class="u-container-style u-image u-list-item u-repeater-item u-image-3" data-image-width="1280" data-image-height="989">
-                            <div class="u-container-layout u-similar-container u-container-layout-3"></div>
+                        <div className="u-container-style u-image u-list-item u-repeater-item u-image-3" data-image-width="1280" data-image-height="989">
+                            <div className="u-container-layout u-similar-container u-container-layout-3"></div>
                         </div>
-                        <div class="u-container-style u-image u-list-item u-repeater-item u-image-4" data-image-width="1280" data-image-height="853">
-                            <div class="u-container-layout u-similar-container u-container-layout-4"></div>
+                        <div className="u-container-style u-image u-list-item u-repeater-item u-image-4" data-image-width="1280" data-image-height="853">
+                            <div className="u-container-layout u-similar-container u-container-layout-4"></div>
                         </div>
-                        <div class="u-container-align-center u-container-style u-image u-list-item u-repeater-item u-image-5" data-image-width="1280" data-image-height="853">
-                            <div class="u-container-layout u-similar-container u-container-layout-5"></div>
+                        <div className="u-container-align-center u-container-style u-image u-list-item u-repeater-item u-image-5" data-image-width="1280" data-image-height="853">
+                            <div className="u-container-layout u-similar-container u-container-layout-5"></div>
                         </div>
-                        <div class="u-container-align-center u-container-style u-image u-list-item u-repeater-item u-image-6" data-image-width="1280" data-image-height="853">
-                            <div class="u-container-layout u-similar-container u-container-layout-6"></div>
+                        <div className="u-container-align-center u-container-style u-image u-list-item u-repeater-item u-image-6" data-image-width="1280" data-image-height="853">
+                            <div className="u-container-layout u-similar-container u-container-layout-6"></div>
                         </div>
-                        <div class="u-container-align-center u-container-style u-image u-list-item u-repeater-item u-image-7" data-image-width="1280" data-image-height="853">
-                            <div class="u-container-layout u-similar-container u-container-layout-7"></div>
+                        <div className="u-container-align-center u-container-style u-image u-list-item u-repeater-item u-image-7" data-image-width="1280" data-image-height="853">
+                            <div className="u-container-layout u-similar-container u-container-layout-7"></div>
                         </div>
-                        <div class="u-container-align-center u-container-style u-image u-list-item u-repeater-item u-image-8" data-image-width="1280" data-image-height="853">
-                            <div class="u-container-layout u-similar-container u-container-layout-8"></div>
+                        <div className="u-container-align-center u-container-style u-image u-list-item u-repeater-item u-image-8" data-image-width="1280" data-image-height="853">
+                            <div className="u-container-layout u-similar-container u-container-layout-8"></div>
                         </div>
-                        <div class="u-container-align-center u-container-style u-image u-list-item u-repeater-item u-image-9" data-image-width="1280" data-image-height="853">
-                            <div class="u-container-layout u-similar-container u-container-layout-9"></div>
+                        <div className="u-container-align-center u-container-style u-image u-list-item u-repeater-item u-image-9" data-image-width="1280" data-image-height="853">
+                            <div className="u-container-layout u-similar-container u-container-layout-9"></div>
                         </div>
-                        <div class="u-container-align-center u-container-style u-image u-list-item u-repeater-item u-image-10" data-image-width="1280" data-image-height="853">
-                            <div class="u-container-layout u-similar-container u-container-layout-10"></div>
+                        <div className="u-container-align-center u-container-style u-image u-list-item u-repeater-item u-image-10" data-image-width="1280" data-image-height="853">
+                            <div className="u-container-layout u-similar-container u-container-layout-10"></div>
                         </div>
-                        <div class="u-container-align-center u-container-style u-image u-list-item u-repeater-item u-image-11" data-image-width="1280" data-image-height="853">
-                            <div class="u-container-layout u-similar-container u-container-layout-11"></div>
+                        <div className="u-container-align-center u-container-style u-image u-list-item u-repeater-item u-image-11" data-image-width="1280" data-image-height="853">
+                            <div className="u-container-layout u-similar-container u-container-layout-11"></div>
                         </div>
-                        <div class="u-container-align-center u-container-style u-image u-list-item u-repeater-item u-image-12" data-image-width="1280" data-image-height="853">
-                            <div class="u-container-layout u-similar-container u-container-layout-12"></div>
+                        <div className="u-container-align-center u-container-style u-image u-list-item u-repeater-item u-image-12" data-image-width="1280" data-image-height="853">
+                            <div className="u-container-layout u-similar-container u-container-layout-12"></div>
                         </div>
                     </div>
-                    <Link class="u-absolute-vcenter u-gallery-nav u-gallery-nav-prev u-hidden u-icon-circle u-opacity u-opacity-70 u-spacing-10 u-white u-gallery-nav-1" role="button">
+                    <Link className="u-absolute-vcenter u-gallery-nav u-gallery-nav-prev u-hidden u-icon-circle u-opacity u-opacity-70 u-spacing-10 u-white u-gallery-nav-1" role="button">
                         <span aria-hidden="true">
                             <svg viewBox="0 0 451.847 451.847"><path d="M97.141,225.92c0-8.095,3.091-16.192,9.259-22.366L300.689,9.27c12.359-12.359,32.397-12.359,44.751,0
 c12.354,12.354,12.354,32.388,0,44.748L173.525,225.92l171.903,171.909c12.354,12.354,12.354,32.391,0,44.744
 c-12.354,12.365-32.386,12.365-44.745,0l-194.29-194.281C100.226,242.115,97.141,234.018,97.141,225.92z"></path></svg>
                         </span>
-                        <span class="sr-only">
+                        <span className="sr-only">
                             <svg viewBox="0 0 451.847 451.847"><path d="M97.141,225.92c0-8.095,3.091-16.192,9.259-22.366L300.689,9.27c12.359-12.359,32.397-12.359,44.751,0
 c12.354,12.354,12.354,32.388,0,44.748L173.525,225.92l171.903,171.909c12.354,12.354,12.354,32.391,0,44.744
 c-12.354,12.365-32.386,12.365-44.745,0l-194.29-194.281C100.226,242.115,97.141,234.018,97.141,225.92z"></path></svg>
                         </span>
                     </Link>
-                    <Link class="u-absolute-vcenter u-gallery-nav u-gallery-nav-next u-hidden u-icon-circle u-opacity u-opacity-70 u-spacing-10 u-white u-gallery-nav-2" role="button">
+                    <Link className="u-absolute-vcenter u-gallery-nav u-gallery-nav-next u-hidden u-icon-circle u-opacity u-opacity-70 u-spacing-10 u-white u-gallery-nav-2" role="button">
                         <span aria-hidden="true">
                             <svg viewBox="0 0 451.846 451.847"><path d="M345.441,248.292L151.154,442.573c-12.359,12.365-32.397,12.365-44.75,0c-12.354-12.354-12.354-32.391,0-44.744
 L278.318,225.92L106.409,54.017c-12.354-12.359-12.354-32.394,0-44.748c12.354-12.359,32.391-12.359,44.75,0l194.287,194.284
 c6.177,6.18,9.262,14.271,9.262,22.366C354.708,234.018,351.617,242.115,345.441,248.292z"></path></svg>
                         </span>
-                        <span class="sr-only">
+                        <span className="sr-only">
                             <svg viewBox="0 0 451.846 451.847"><path d="M345.441,248.292L151.154,442.573c-12.359,12.365-32.397,12.365-44.75,0c-12.354-12.354-12.354-32.391,0-44.744
 L278.318,225.92L106.409,54.017c-12.354-12.359-12.354-32.394,0-44.748c12.354-12.359,32.391-12.359,44.75,0l194.287,194.284
 c6.177,6.18,9.262,14.271,9.262,22.366C354.708,234.018,351.617,242.115,345.441,248.292z"></path></svg>
@@ -94,37 +94,37 @@ c6.177,6.18,9.262,14.271,9.262,22.366C354.708,234.018,351.617,242.115,345.441,24
                     </Link>
                 </div>
             </section>
-            <section class="u-clearfix u-container-align-center-sm u-container-align-center-xs u-image u-section-3" id="sec-69f4" data-image-width="2300" data-image-height="1400">
-                <div class="u-clearfix u-sheet u-sheet-1">
-                    <h2 class="u-align-center-sm u-align-center-xs u-text u-text-1"> Giảm thiểu chi phí, tiết kiệm thời gian và&nbsp;<span class="u-text-palette-2-base">tăng chất lượng sản phẩm</span>
+            <section className="u-clearfix u-container-align-center-sm u-container-align-center-xs u-image u-section-3" id="sec-69f4" data-image-width="2300" data-image-height="1400">
+                <div className="u-clearfix u-sheet u-sheet-1">
+                    <h2 className="u-align-center-sm u-align-center-xs u-text u-text-1"> Giảm thiểu chi phí, tiết kiệm thời gian và&nbsp;<span className="u-text-palette-2-base">tăng chất lượng sản phẩm</span>
                     </h2>
-                    <div class="u-clearfix u-expanded-width u-layout-wrap u-layout-wrap-1">
-                        <div class="u-layout">
-                            <div class="u-layout-col">
-                                <div class="u-size-30">
-                                    <div class="u-layout-row">
-                                        <div class="u-container-align-center u-container-style u-layout-cell u-size-15 u-layout-cell-1">
-                                            <div class="u-container-layout u-valign-middle-xl u-container-layout-1">
-                                                <h3 class="u-align-center u-custom-font u-font-ubuntu u-text u-text-2" data-animation-name="counter" data-animation-event="scroll" data-animation-duration="3000">$ 40</h3>
+                    <div className="u-clearfix u-expanded-width u-layout-wrap u-layout-wrap-1">
+                        <div className="u-layout">
+                            <div className="u-layout-col">
+                                <div className="u-size-30">
+                                    <div className="u-layout-row">
+                                        <div className="u-container-align-center u-container-style u-layout-cell u-size-15 u-layout-cell-1">
+                                            <div className="u-container-layout u-valign-middle-xl u-container-layout-1">
+                                                <h3 className="u-align-center u-custom-font u-font-ubuntu u-text u-text-2" data-animation-name="counter" data-animation-event="scroll" data-animation-duration="3000">$ 40</h3>
                                             </div>
                                         </div>
-                                        <div class="u-container-align-center-sm u-container-align-center-xs u-container-style u-layout-cell u-size-45 u-layout-cell-2">
-                                            <div class="u-container-layout u-valign-middle u-container-layout-2">
-                                                <p class="u-align-center-sm u-align-center-xs u-text u-text-default u-text-3"> Chỉ với 40$ đã có thể sự dụng các tính năng của hệ thống</p>
+                                        <div className="u-container-align-center-sm u-container-align-center-xs u-container-style u-layout-cell u-size-45 u-layout-cell-2">
+                                            <div className="u-container-layout u-valign-middle u-container-layout-2">
+                                                <p className="u-align-center-sm u-align-center-xs u-text u-text-default u-text-3"> Chỉ với 40$ đã có thể sự dụng các tính năng của hệ thống</p>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="u-size-30">
-                                    <div class="u-layout-row">
-                                        <div class="u-container-style u-layout-cell u-size-15 u-layout-cell-3">
-                                            <div class="u-container-layout u-container-layout-3">
-                                                <h3 class="u-align-center u-custom-font u-font-ubuntu u-text u-text-4" data-animation-name="counter" data-animation-event="scroll" data-animation-duration="3000">100%</h3>
+                                <div className="u-size-30">
+                                    <div className="u-layout-row">
+                                        <div className="u-container-style u-layout-cell u-size-15 u-layout-cell-3">
+                                            <div className="u-container-layout u-container-layout-3">
+                                                <h3 className="u-align-center u-custom-font u-font-ubuntu u-text u-text-4" data-animation-name="counter" data-animation-event="scroll" data-animation-duration="3000">100%</h3>
                                             </div>
                                         </div>
-                                        <div class="u-container-align-center-sm u-container-align-center-xs u-container-style u-layout-cell u-size-45 u-layout-cell-4">
-                                            <div class="u-container-layout u-valign-middle u-container-layout-4">
-                                                <p class="u-align-center-sm u-align-center-xs u-text u-text-default u-text-5">Quản lý trạng thái ấp trứng</p>
+                                        <div className="u-container-align-center-sm u-container-align-center-xs u-container-style u-layout-cell u-size-45 u-layout-cell-4">
+                                            <div className="u-container-layout u-valign-middle u-container-layout-4">
+                                                <p className="u-align-center-sm u-align-center-xs u-text u-text-default u-text-5">Quản lý trạng thái ấp trứng</p>
                                             </div>
                                         </div>
                                     </div>
@@ -134,14 +134,14 @@ c6.177,6.18,9.262,14.271,9.262,22.366C354.708,234.018,351.617,242.115,345.441,24
                     </div>
                 </div>
             </section>
-            <section class="u-clearfix u-container-align-center-sm u-section-4" id="sec-5e05">
-                <h2 class="u-text u-text-1">
-                    <span class="u-text-palette-2-base">Các tính năng vượt trội</span>&nbsp;
+            <section className="u-clearfix u-container-align-center-sm u-section-4" id="sec-5e05">
+                <h2 className="u-text u-text-1">
+                    <span className="u-text-palette-2-base">Các tính năng vượt trội</span>&nbsp;
                 </h2>
-                <div class="u-list u-list-1">
-                    <div class="u-repeater u-repeater-1">
-                        <div class="u-black u-container-align-center-sm u-container-align-center-xs u-container-align-left-lg u-container-align-left-md u-container-align-left-xl u-container-style u-custom-item u-list-item u-repeater-item u-list-item-1">
-                            <div class="u-container-layout u-similar-container u-container-layout-1"><span class="u-align-center-sm u-align-center-xs u-align-left-lg u-align-left-md u-align-left-xl u-custom-item u-icon u-icon-rounded u-palette-2-base u-text-white u-icon-1"><svg class="u-svg-link" preserveAspectRatio="xMidYMin slice" viewBox="0 0 55.867 55.867" ><use xmlnsXlink="http://www.w3.org/1999/xlink" xlinkHref="#svg-186a"></use></svg><svg class="u-svg-content" viewBox="0 0 55.867 55.867" x="0px" y="0px" id="svg-186a" ><path d="M11.287,54.548c-0.207,0-0.414-0.064-0.588-0.191c-0.308-0.224-0.462-0.603-0.397-0.978l3.091-18.018L0.302,22.602
+                <div className="u-list u-list-1">
+                    <div className="u-repeater u-repeater-1">
+                        <div className="u-black u-container-align-center-sm u-container-align-center-xs u-container-align-left-lg u-container-align-left-md u-container-align-left-xl u-container-style u-custom-item u-list-item u-repeater-item u-list-item-1">
+                            <div className="u-container-layout u-similar-container u-container-layout-1"><span className="u-align-center-sm u-align-center-xs u-align-left-lg u-align-left-md u-align-left-xl u-custom-item u-icon u-icon-rounded u-palette-2-base u-text-white u-icon-1"><svg className="u-svg-link" preserveAspectRatio="xMidYMin slice" viewBox="0 0 55.867 55.867" ><use xmlnsXlink="http://www.w3.org/1999/xlink" xlinkHref="#svg-186a"></use></svg><svg className="u-svg-content" viewBox="0 0 55.867 55.867" x="0px" y="0px" id="svg-186a" ><path d="M11.287,54.548c-0.207,0-0.414-0.064-0.588-0.191c-0.308-0.224-0.462-0.603-0.397-0.978l3.091-18.018L0.302,22.602
 	c-0.272-0.266-0.37-0.663-0.253-1.024c0.118-0.362,0.431-0.626,0.808-0.681l18.09-2.629l8.091-16.393
 	c0.168-0.342,0.516-0.558,0.896-0.558l0,0c0.381,0,0.729,0.216,0.896,0.558l8.09,16.393l18.091,2.629
 	c0.377,0.055,0.689,0.318,0.808,0.681c0.117,0.361,0.02,0.759-0.253,1.024L42.475,35.363l3.09,18.017
@@ -150,12 +150,12 @@ c6.177,6.18,9.262,14.271,9.262,22.366C354.708,234.018,351.617,242.115,345.441,24
 	l14.854-7.808c0.291-0.154,0.638-0.154,0.931,0l14.852,7.808l-2.836-16.538c-0.056-0.324,0.052-0.655,0.287-0.885l12.016-11.713
 	l-16.605-2.413c-0.326-0.047-0.607-0.252-0.753-0.547L27.934,4.578l-7.427,15.047c-0.146,0.295-0.427,0.5-0.753,0.547L3.149,22.584z
 	"></path></svg></span>
-                                <h5 class="u-align-center-sm u-align-center-xs u-align-left-lg u-align-left-md u-align-left-xl u-text u-text-2"> Cập nhật thời gian thực</h5>
-                                <p class="u-align-center-sm u-align-center-xs u-align-left-lg u-align-left-md u-align-left-xl u-text u-text-default u-text-3">Cập nhật các trạng thái ấp/nở trứng theo thời gian thực tế của Việt Nam UTC+7</p>
+                                <h5 className="u-align-center-sm u-align-center-xs u-align-left-lg u-align-left-md u-align-left-xl u-text u-text-2"> Cập nhật thời gian thực</h5>
+                                <p className="u-align-center-sm u-align-center-xs u-align-left-lg u-align-left-md u-align-left-xl u-text u-text-default u-text-3">Cập nhật các trạng thái ấp/nở trứng theo thời gian thực tế của Việt Nam UTC+7</p>
                             </div>
                         </div>
-                        <div class="u-container-align-center-sm u-container-align-center-xs u-container-style u-custom-item u-list-item u-palette-2-base u-repeater-item u-list-item-2">
-                            <div class="u-container-layout u-similar-container u-container-layout-2"><span class="u-align-center-sm u-align-center-xs u-align-left-lg u-align-left-md u-align-left-xl u-black u-custom-item u-icon u-icon-rounded u-icon-2"><svg class="u-svg-link" preserveAspectRatio="xMidYMin slice" viewBox="0 0 58 58"><use xmlnsXlink="http://www.w3.org/1999/xlink" xlinkHref="#svg-ea48"></use></svg><svg class="u-svg-content" viewBox="0 0 58 58" x="0px" y="0px" id="svg-ea48" ><path d="M50.688,48.222C55.232,43.101,58,36.369,58,29c0-7.667-2.996-14.643-7.872-19.834c0,0,0-0.001,0-0.001
+                        <div className="u-container-align-center-sm u-container-align-center-xs u-container-style u-custom-item u-list-item u-palette-2-base u-repeater-item u-list-item-2">
+                            <div className="u-container-layout u-similar-container u-container-layout-2"><span className="u-align-center-sm u-align-center-xs u-align-left-lg u-align-left-md u-align-left-xl u-black u-custom-item u-icon u-icon-rounded u-icon-2"><svg className="u-svg-link" preserveAspectRatio="xMidYMin slice" viewBox="0 0 58 58"><use xmlnsXlink="http://www.w3.org/1999/xlink" xlinkHref="#svg-ea48"></use></svg><svg className="u-svg-content" viewBox="0 0 58 58" x="0px" y="0px" id="svg-ea48" ><path d="M50.688,48.222C55.232,43.101,58,36.369,58,29c0-7.667-2.996-14.643-7.872-19.834c0,0,0-0.001,0-0.001
 	c-0.004-0.006-0.01-0.008-0.013-0.013c-5.079-5.399-12.195-8.855-20.11-9.126l-0.001-0.001L29.439,0.01C29.293,0.005,29.147,0,29,0
 	s-0.293,0.005-0.439,0.01l-0.563,0.015l-0.001,0.001c-7.915,0.271-15.031,3.727-20.11,9.126c-0.004,0.005-0.01,0.007-0.013,0.013
 	c0,0,0,0.001-0.001,0.002C2.996,14.357,0,21.333,0,29c0,7.369,2.768,14.101,7.312,19.222c0.006,0.009,0.006,0.019,0.013,0.028
@@ -179,12 +179,12 @@ c6.177,6.18,9.262,14.271,9.262,22.366C354.708,234.018,351.617,242.115,345.441,24
 	 M9.691,47.846c2.366-1.572,4.885-2.836,7.517-3.781c1.945,4.36,4.737,8.333,8.271,11.698C19.328,54.958,13.823,52.078,9.691,47.846
 	z M32.521,55.763c3.534-3.364,6.326-7.337,8.271-11.698c2.632,0.945,5.15,2.209,7.517,3.781
 	C44.177,52.078,38.672,54.958,32.521,55.763z"></path></svg></span>
-                                <h5 class="u-align-center-sm u-align-center-xs u-align-left-lg u-align-left-md u-align-left-xl u-text u-text-4">Ghi nhớ và tính toán tự động</h5>
-                                <p class="u-align-center-sm u-align-center-xs u-align-left-lg u-align-left-md u-align-left-xl u-text u-text-default u-text-5">Có công cụ hỗ trợ giúp ghi nhớ thời gian nhập, xuất đơn và tính toán thời gian tự động</p>
+                                <h5 className="u-align-center-sm u-align-center-xs u-align-left-lg u-align-left-md u-align-left-xl u-text u-text-4">Ghi nhớ và tính toán tự động</h5>
+                                <p className="u-align-center-sm u-align-center-xs u-align-left-lg u-align-left-md u-align-left-xl u-text u-text-default u-text-5">Có công cụ hỗ trợ giúp ghi nhớ thời gian nhập, xuất đơn và tính toán thời gian tự động</p>
                             </div>
                         </div>
-                        <div class="u-container-align-center-sm u-container-align-center-xs u-container-align-left-lg u-container-align-left-md u-container-align-left-xl u-container-style u-custom-item u-list-item u-palette-3-base u-repeater-item u-list-item-3">
-                            <div class="u-container-layout u-similar-container u-container-layout-3"><span class="u-align-center-sm u-align-center-xs u-align-left-lg u-align-left-md u-align-left-xl u-black u-custom-item u-icon u-icon-rounded u-icon-3"><svg class="u-svg-link" preserveAspectRatio="xMidYMin slice" viewBox="0 0 54 54" ><use xmlnsXlink="http://www.w3.org/1999/xlink" xlinkHref="#svg-02f7"></use></svg><svg class="u-svg-content" viewBox="0 0 54 54" x="0px" y="0px" id="svg-02f7" ><g><path d="M51.22,21h-5.052c-0.812,0-1.481-0.447-1.792-1.197s-0.153-1.54,0.42-2.114l3.572-3.571
+                        <div className="u-container-align-center-sm u-container-align-center-xs u-container-align-left-lg u-container-align-left-md u-container-align-left-xl u-container-style u-custom-item u-list-item u-palette-3-base u-repeater-item u-list-item-3">
+                            <div className="u-container-layout u-similar-container u-container-layout-3"><span className="u-align-center-sm u-align-center-xs u-align-left-lg u-align-left-md u-align-left-xl u-black u-custom-item u-icon u-icon-rounded u-icon-3"><svg className="u-svg-link" preserveAspectRatio="xMidYMin slice" viewBox="0 0 54 54" ><use xmlnsXlink="http://www.w3.org/1999/xlink" xlinkHref="#svg-02f7"></use></svg><svg className="u-svg-content" viewBox="0 0 54 54" x="0px" y="0px" id="svg-02f7" ><g><path d="M51.22,21h-5.052c-0.812,0-1.481-0.447-1.792-1.197s-0.153-1.54,0.42-2.114l3.572-3.571
 		c0.525-0.525,0.814-1.224,0.814-1.966c0-0.743-0.289-1.441-0.814-1.967l-4.553-4.553c-1.05-1.05-2.881-1.052-3.933,0l-3.571,3.571
 		c-0.574,0.573-1.366,0.733-2.114,0.421C33.447,9.313,33,8.644,33,7.832V2.78C33,1.247,31.753,0,30.22,0H23.78
 		C22.247,0,21,1.247,21,2.78v5.052c0,0.812-0.447,1.481-1.197,1.792c-0.748,0.313-1.54,0.152-2.114-0.421l-3.571-3.571
@@ -209,64 +209,64 @@ c6.177,6.18,9.262,14.271,9.262,22.366C354.708,234.018,351.617,242.115,345.441,24
 		l-3.572,3.571c-1.148,1.148-1.476,2.794-0.854,4.294c0.621,1.5,2.016,2.432,3.64,2.432h5.052C51.65,23,52,23.35,52,23.78V30.22z"></path><path d="M27,18c-4.963,0-9,4.037-9,9s4.037,9,9,9s9-4.037,9-9S31.963,18,27,18z M27,34c-3.859,0-7-3.141-7-7s3.141-7,7-7
 		s7,3.141,7,7S30.859,34,27,34z"></path>
                             </g></svg></span>
-                                <h5 class="u-align-center-sm u-align-center-xs u-align-left-lg u-align-left-md u-align-left-xl u-text u-text-6"> Dễ sử dụng</h5>
-                                <p class="u-align-center-sm u-align-center-xs u-align-left-lg u-align-left-md u-align-left-xl u-text u-text-default u-text-7">Chỉ cần đăng ký tài khoản và đăng nhập, bạn có thể dễ dàng sử dụng với hướng dẫn cụ thể</p>
+                                <h5 className="u-align-center-sm u-align-center-xs u-align-left-lg u-align-left-md u-align-left-xl u-text u-text-6"> Dễ sử dụng</h5>
+                                <p className="u-align-center-sm u-align-center-xs u-align-left-lg u-align-left-md u-align-left-xl u-text u-text-default u-text-7">Chỉ cần đăng ký tài khoản và đăng nhập, bạn có thể dễ dàng sử dụng với hướng dẫn cụ thể</p>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="u-align-center-sm u-align-center-xs u-border-2 u-border-grey-dark-1 u-expanded-width u-line u-line-horizontal u-line-1" data-animation-name="customAnimationIn" data-animation-duration="2000"></div>
+                <div className="u-align-center-sm u-align-center-xs u-border-2 u-border-grey-dark-1 u-expanded-width u-line u-line-horizontal u-line-1" data-animation-name="customAnimationIn" data-animation-duration="2000"></div>
             </section>
-            <section class="u-clearfix u-image u-section-5" id="sec-8cac" data-image-width="2300" data-image-height="1400">
-                <div class="u-clearfix u-sheet u-valign-middle-lg u-sheet-1">
-                    <div class="u-expanded-width u-list u-list-1">
-                        <div class="u-repeater u-repeater-1">
-                            <div class="u-container-align-center u-container-style u-list-item u-repeater-item">
-                                <div class="u-container-layout u-similar-container u-valign-middle-lg u-valign-middle-md u-valign-middle-sm u-valign-middle-xs u-container-layout-1">
-                                    <h3 class="u-align-center u-custom-font u-font-ubuntu u-text u-text-palette-3-base u-text-1" data-animation-name="counter" data-animation-event="scroll" data-animation-duration="3000">5</h3>
-                                    <h5 class="u-align-center u-text u-text-body-alt-color u-text-2">thành viên</h5>
+            <section className="u-clearfix u-image u-section-5" id="sec-8cac" data-image-width="2300" data-image-height="1400">
+                <div className="u-clearfix u-sheet u-valign-middle-lg u-sheet-1">
+                    <div className="u-expanded-width u-list u-list-1">
+                        <div className="u-repeater u-repeater-1">
+                            <div className="u-container-align-center u-container-style u-list-item u-repeater-item">
+                                <div className="u-container-layout u-similar-container u-valign-middle-lg u-valign-middle-md u-valign-middle-sm u-valign-middle-xs u-container-layout-1">
+                                    <h3 className="u-align-center u-custom-font u-font-ubuntu u-text u-text-palette-3-base u-text-1" data-animation-name="counter" data-animation-event="scroll" data-animation-duration="3000">5</h3>
+                                    <h5 className="u-align-center u-text u-text-body-alt-color u-text-2">thành viên</h5>
                                 </div>
                             </div>
-                            <div class="u-container-align-center u-container-style u-list-item u-repeater-item">
-                                <div class="u-container-layout u-similar-container u-valign-middle-lg u-valign-middle-md u-valign-middle-sm u-valign-middle-xs u-container-layout-2">
-                                    <h3 class="u-align-center u-custom-font u-font-ubuntu u-text u-text-palette-3-base u-text-3" data-animation-name="counter" data-animation-event="scroll" data-animation-duration="3000">80%</h3>
-                                    <h5 class="u-align-center u-text u-text-body-alt-color u-text-4">Sự tin tưởng</h5>
+                            <div className="u-container-align-center u-container-style u-list-item u-repeater-item">
+                                <div className="u-container-layout u-similar-container u-valign-middle-lg u-valign-middle-md u-valign-middle-sm u-valign-middle-xs u-container-layout-2">
+                                    <h3 className="u-align-center u-custom-font u-font-ubuntu u-text u-text-palette-3-base u-text-3" data-animation-name="counter" data-animation-event="scroll" data-animation-duration="3000">80%</h3>
+                                    <h5 className="u-align-center u-text u-text-body-alt-color u-text-4">Sự tin tưởng</h5>
                                 </div>
                             </div>
-                            <div class="u-container-align-center u-container-style u-list-item u-repeater-item">
-                                <div class="u-container-layout u-similar-container u-valign-middle-lg u-valign-middle-md u-valign-middle-sm u-valign-middle-xs u-container-layout-3">
-                                    <h3 class="u-align-center u-custom-font u-font-ubuntu u-text u-text-palette-3-base u-text-5" data-animation-name="counter" data-animation-event="scroll" data-animation-duration="3000">85%</h3>
-                                    <h5 class="u-align-center u-text u-text-body-alt-color u-text-6">Tỷ lệ hài lòng</h5>
+                            <div className="u-container-align-center u-container-style u-list-item u-repeater-item">
+                                <div className="u-container-layout u-similar-container u-valign-middle-lg u-valign-middle-md u-valign-middle-sm u-valign-middle-xs u-container-layout-3">
+                                    <h3 className="u-align-center u-custom-font u-font-ubuntu u-text u-text-palette-3-base u-text-5" data-animation-name="counter" data-animation-event="scroll" data-animation-duration="3000">85%</h3>
+                                    <h5 className="u-align-center u-text u-text-body-alt-color u-text-6">Tỷ lệ hài lòng</h5>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </section>
-            <section class="u-clearfix u-container-align-center u-image u-section-6" id="sec-0190" data-image-width="2300" data-image-height="1400">
-                <div class="u-clearfix u-sheet u-valign-middle u-sheet-1">
-                    <div class="u-expanded-width u-list u-list-1">
-                        <div class="u-repeater u-repeater-1">
-                            <div class="u-align-left u-container-align-center-sm u-container-align-center-xs u-container-style u-list-item u-repeater-item u-shape-rectangle" data-animation-name="bounceIn" data-animation-duration="1500" data-animation-direction="Right" data-animation-delay="500">
-                                <div class="u-container-layout u-similar-container u-container-layout-1">
-                                    <h5 class="u-align-center-sm u-align-center-xs u-text u-text-body-alt-color u-text-1"><span class="u-file-icon u-icon u-text-palette-2-base"><img src={phone} alt="" /></span>Hotline
+            <section className="u-clearfix u-container-align-center u-image u-section-6" id="sec-0190" data-image-width="2300" data-image-height="1400">
+                <div className="u-clearfix u-sheet u-valign-middle u-sheet-1">
+                    <div className="u-expanded-width u-list u-list-1">
+                        <div className="u-repeater u-repeater-1">
+                            <div className="u-align-left u-container-align-center-sm u-container-align-center-xs u-container-style u-list-item u-repeater-item u-shape-rectangle" data-animation-name="bounceIn" data-animation-duration="1500" data-animation-direction="Right" data-animation-delay="500">
+                                <div className="u-container-layout u-similar-container u-container-layout-1">
+                                    <h5 className="u-align-center-sm u-align-center-xs u-text u-text-body-alt-color u-text-1"><span className="u-file-icon u-icon u-text-palette-2-base"><img src={phone} alt="" /></span>Hotline
                                     </h5>
-                                    <p class="u-align-center-sm u-align-center-xs u-text u-text-body-alt-color u-text-2"> 024 7300 1866<br />096 904 4714
+                                    <p className="u-align-center-sm u-align-center-xs u-text u-text-body-alt-color u-text-2"> 024 7300 1866<br />096 904 4714
                                     </p>
                                 </div>
                             </div>
-                            <div class="u-align-left u-container-align-center-sm u-container-align-center-xs u-container-style u-list-item u-repeater-item u-shape-rectangle" data-animation-name="bounceIn" data-animation-duration="1500" data-animation-direction="Right" data-animation-delay="500">
-                                <div class="u-container-layout u-similar-container u-container-layout-2">
-                                    <h5 class="u-align-center-sm u-align-center-xs u-text u-text-body-alt-color u-text-3"><span class="u-file-icon u-icon u-text-palette-2-base"><img src={location} alt="" /></span>&nbsp;Địa Điểm
+                            <div className="u-align-left u-container-align-center-sm u-container-align-center-xs u-container-style u-list-item u-repeater-item u-shape-rectangle" data-animation-name="bounceIn" data-animation-duration="1500" data-animation-direction="Right" data-animation-delay="500">
+                                <div className="u-container-layout u-similar-container u-container-layout-2">
+                                    <h5 className="u-align-center-sm u-align-center-xs u-text u-text-body-alt-color u-text-3"><span className="u-file-icon u-icon u-text-palette-2-base"><img src={location} alt="" /></span>&nbsp;Địa Điểm
                                     </h5>
-                                    <p class="u-align-center-sm u-align-center-xs u-text u-text-body-alt-color u-text-4"> Km29 Đại lộ Thăng Long, H. Thạch Thất, TP. Hà Nội</p>
+                                    <p className="u-align-center-sm u-align-center-xs u-text u-text-body-alt-color u-text-4"> Km29 Đại lộ Thăng Long, H. Thạch Thất, TP. Hà Nội</p>
                                 </div>
                             </div>
-                            <div class="u-align-left u-container-align-center-sm u-container-align-center-xs u-container-style u-list-item u-repeater-item u-shape-rectangle" data-animation-name="bounceIn" data-animation-duration="1500" data-animation-direction="Right" data-animation-delay="500">
-                                <div class="u-container-layout u-similar-container u-container-layout-3">
-                                    <h5 class="u-align-center-sm u-align-center-xs u-text u-text-body-alt-color u-text-5"><span class="u-file-icon u-icon u-text-palette-2-base"><img src={time} alt="" /></span>&nbsp;Thời gian
+                            <div className="u-align-left u-container-align-center-sm u-container-align-center-xs u-container-style u-list-item u-repeater-item u-shape-rectangle" data-animation-name="bounceIn" data-animation-duration="1500" data-animation-direction="Right" data-animation-delay="500">
+                                <div className="u-container-layout u-similar-container u-container-layout-3">
+                                    <h5 className="u-align-center-sm u-align-center-xs u-text u-text-body-alt-color u-text-5"><span className="u-file-icon u-icon u-text-palette-2-base"><img src={time} alt="" /></span>&nbsp;Thời gian
                                     </h5>
-                                    <p class="u-align-center-sm u-align-center-xs u-text u-text-body-alt-color u-text-6">Mon – Fri …… 11 am – 8 pm,&nbsp;<br />Sat, Sun&nbsp;&nbsp;…… 6 am – 8 pm
+                                    <p className="u-align-center-sm u-align-center-xs u-text u-text-body-alt-color u-text-6">Mon – Fri …… 11 am – 8 pm,&nbsp;<br />Sat, Sun&nbsp;&nbsp;…… 6 am – 8 pm
                                     </p>
                                 </div>
                             </div>

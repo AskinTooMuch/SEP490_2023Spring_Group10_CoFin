@@ -69,7 +69,7 @@ const Nav = () => {
             open={isMenuOpen}
             onClose={handleMenuClose}
         >
-            <MenuItem style={{fontSize:"medium"}} onClick={handleMenuClose} id="profile"><AccountCircle fontSize="small"/><Link to="/profile" > Thông tin cá nhân</Link></MenuItem>
+            <Link to="/profile" ><MenuItem style={{fontSize:"medium"}} onClick={handleMenuClose} id="profile"><AccountCircle fontSize="small"/> Thông tin cá nhân</MenuItem></Link>
             <MenuItem style={{fontSize:"medium"}} onClick={handleMenuClose} id="setting"><SettingsIcon fontSize="small"/> Cài đặt</MenuItem>
             <MenuItem style={{fontSize:"medium"}} onClick={handleMenuClose} id="help"><HelpIcon fontSize="small"/> Trợ giúp & hỗ trợ</MenuItem>
             <MenuItem style={{fontSize:"medium"}} onClick={logout} id="logout"><LogoutIcon fontSize="small"/> Đăng xuất</MenuItem>
@@ -189,7 +189,7 @@ const Nav = () => {
                                 </>
                                 :
                                 <Box sx={{ flexGrow: 1 }}>
-                                    <Button className="signupbutton" color="inherit"><Link style={{ textDecoration: "none" }} to="/register">Đăng ký</Link></Button>
+                                    <Button className="signupbutton" color="inherit"><Link style={{ textDecoration: "none" }} to="/registerotp">Đăng ký</Link></Button>
                                     <Button className="loginbutton" color="inherit"><Link style={{ textDecoration: "none" }} to="/login">Đăng nhập</Link></Button>
                                 </Box>
 

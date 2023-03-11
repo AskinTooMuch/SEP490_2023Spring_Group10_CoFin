@@ -22,6 +22,8 @@ import FinanManage from './components/FinanManage';
 import Employee from './components/Employee';
 import EmployeeDetails from './components/EmployeeDetails';
 import CustomerDetails from './components/CustomerDetails';
+import ChangePassword from './components/ChangePassword';
+import RegisterOTP from './components/RegisterOTP'
 function App() {
   return (
     <>
@@ -50,7 +52,9 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="login" element={<Login />} />
         <Route path="register" element={<Register />} />
+        <Route path="registerotp" element={<RegisterOTP />} />
         <Route path="forgotpassword" element={<ForgotPassword />} />
+        <Route path="changepassword" element={<ChangePassword />} />
         <Route path="unauthorized" element={<Unauthorized />} />
       </Routes>
 

@@ -430,7 +430,7 @@ export default function BasicTabs() {
                                         <p>Trạng thái<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                     </div>
                                     <div className="col-md-6">
-                                        <select class="form-select" aria-label="Default select example" id="updateSupplierStatus"
+                                        <select className="form-select" aria-label="Default select example" id="updateSupplierStatus"
                                             onChange={(e) => handleUpdateSupplierChange(e, "status")}>
                                             <option value="1" className='text-green'>Đang hoạt động</option>
                                             <option value="0" className='text-red'>Ngừng hoạt động</option>
