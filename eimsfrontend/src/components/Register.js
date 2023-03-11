@@ -580,7 +580,7 @@ const Register = () => {
 
                                                                 </div>
                                                             </div>
-                                                            <button type="submit" className="btn btn-light" style={{ width: "100%", textAlign: "center" }}
+                                                            <button id="confirmRegister" type="submit" className="btn btn-light" style={{ width: "100%", textAlign: "center" }}
                                                             >Đăng ký</button>
                                                             <ToastContainer position="top-left"
                                                                 autoClose={5000}

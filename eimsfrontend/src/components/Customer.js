@@ -217,7 +217,7 @@ const Customer = () => {
                                         <p>Họ và tên<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                     </div>
                                     <div className="col-md-3">
-                                        <input className="form-control mt-1" style={{ width: "100%" }} onChange={e => handleCreateCustomerChange(e, "customerName")} />
+                                        <input id="createCustomerName" className="form-control mt-1" style={{ width: "100%" }} onChange={e => handleCreateCustomerChange(e, "customerName")} />
                                     </div>
                                     {/*City*/}
                                     <div className="col-md-3">
@@ -244,7 +244,7 @@ const Customer = () => {
                                         <p>Số điện thoại<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                     </div>
                                     <div className="col-md-3">
-                                        <input className="form-control mt-1" style={{ width: "100%" }} onChange={e => handleCreateCustomerChange(e, "customerPhone")} />
+                                        <input id="createCustomerPhone" className="form-control mt-1" style={{ width: "100%" }} onChange={e => handleCreateCustomerChange(e, "customerPhone")} />
                                     </div>
                                     {/*District*/}
                                     <div className="col-md-3">
@@ -271,7 +271,7 @@ const Customer = () => {
                                         <p>Email</p>
                                     </div>
                                     <div className="col-md-3">
-                                        <input className="form-control mt-1" style={{ width: "100%" }} onChange={e => handleCreateCustomerChange(e, "customerMail")} />
+                                        <input id="createCustomerEmail" className="form-control mt-1" style={{ width: "100%" }} onChange={e => handleCreateCustomerChange(e, "customerMail")} />
                                     </div>
                                     {/*User ward*/}
                                     <div className="col-md-3">
@@ -312,10 +312,10 @@ const Customer = () => {
                             </div>
                         </Modal.Body>
                         <div className='model-footer'>
-                            <button style={{ width: "20%" }} type="submit" className="col-md-6 btn-light" >
+                            <button id = "confirmCreateCustomer" style={{ width: "20%" }} type="submit" className="col-md-6 btn-light" >
                                 Tạo
                             </button>
-                            <button className='btn btn-light' style={{ width: "20%" }} onClick={handleClose} type='button'>
+                            <button id = "cancelCreateCustomer" className='btn btn-light' style={{ width: "20%" }} onClick={handleClose} type='button'>
                                 Huỷ
                             </button>
                         </div>

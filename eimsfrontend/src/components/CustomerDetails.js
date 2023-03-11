@@ -300,7 +300,7 @@ export default function BasicTabs() {
                                             <p>Họ và tên<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                         </div>
                                         <div className="col-md-6">
-                                            <input style={{ width: "100%" }} required
+                                            <input id="updateCustomerName" style={{ width: "100%" }} required
                                                 value={updateCustomerDTO.customerName}
                                                 onChange={(e) => handleUpdateCustomerChange(e, "customerName")}
                                                 className="form-control " />
@@ -311,7 +311,7 @@ export default function BasicTabs() {
                                             <p>Số điện thoại<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                         </div>
                                         <div className="col-md-6">
-                                            <input style={{ width: "100%" }} required
+                                            <input id="updateCustomerPhone" style={{ width: "100%" }} required
                                                 value={updateCustomerDTO.customerPhone}
                                                 onChange={(e) => handleUpdateCustomerChange(e, "customerPhone")}
                                                 className="form-control " />
@@ -322,7 +322,7 @@ export default function BasicTabs() {
                                             <p>Email</p>
                                         </div>
                                         <div className="col-md-6">
-                                            <input style={{ width: "100%" }}
+                                            <input id="updateCustomerEmail" style={{ width: "100%" }}
                                                 value={updateCustomerDTO.customerMail}
                                                 onChange={(e) => handleUpdateCustomerChange(e, "customerMail")}
                                                 className="form-control " />
@@ -426,7 +426,7 @@ export default function BasicTabs() {
                                             <p>Trạng thái<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                         </div>
                                         <div className="col-md-6">
-                                            <select class="form-select" aria-label="Default select example"
+                                            <select id="updateCustomerStatus" class="form-select" aria-label="Default select example"
                                                 onChange={(e) => handleUpdateCustomerChange(e, "status")}>
                                                 <option value="1" className='text-green'>Đang hoạt động</option>
                                                 <option value="0" className='text-red'>Ngừng hoạt động</option>
@@ -436,10 +436,10 @@ export default function BasicTabs() {
                                 </div>
                             </Modal.Body>
                             <div className='model-footer'>
-                                <button style={{ width: "30%" }} className="col-md-6 btn-light" onClick={handleClose} type='submit'>
+                                <button id="confirmUpdateCustomer" style={{ width: "30%" }} className="col-md-6 btn-light" onClick={handleClose} type='submit'>
                                     Cập nhật
                                 </button>
-                                <button style={{ width: "20%" }} className="btn btn-light" type='button'>
+                                <button id="cancelUpdateCustomer" style={{ width: "20%" }} className="btn btn-light" type='button'>
                                     Huỷ
                                 </button>
                             </div>
@@ -455,7 +455,7 @@ export default function BasicTabs() {
                             </div>
                             <div className="col-md-4 ">
                                 <div className='button'>
-                                    <button className='btn btn-light ' onClick={handleShow}>Sửa</button>
+                                    <button id="startEditCustomer" className='btn btn-light ' onClick={handleShow}>Sửa</button>
                                 </div>
                             </div>
                         </div>
