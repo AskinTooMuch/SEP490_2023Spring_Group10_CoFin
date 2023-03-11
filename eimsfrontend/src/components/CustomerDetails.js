@@ -51,8 +51,8 @@ export default function BasicTabs() {
     const [customerLoaded, setCustomerLoaded] = useState(false);
 
     //URL
-    const CUSTOMER_UPDATE = "/api/customer/update/save";
-    const CUSTOMER_GET = "/api/customer/get";
+    const CUSTOMER_UPDATE_SAVE = "/api/customer/update/save";
+    const CUSTOMER_UPDATE_GET = "/api/customer/update/get";
 
     const userRef = useRef();
     const [value, setValue] = React.useState(0);
@@ -127,7 +127,7 @@ export default function BasicTabs() {
     }, [customerLoaded]);
 
     const loadCustomer = async () => {
-        const result = await axios.get(CUSTOMER_GET,
+        const result = await axios.get(CUSTOMER_UPDATE_GET,
             { params: { customerId: id } });
         // Set inf
         setAddressJson(JSON.parse(result.data.customerAddress));
@@ -229,7 +229,7 @@ export default function BasicTabs() {
     }
 
     //Handle Change functions:
-    //CreateCustomer
+    //Update Customer
     const handleUpdateCustomerChange = (event, field) => {
         let actualValue = event.target.value
         setUpdateCustomerDTO({
@@ -239,13 +239,13 @@ export default function BasicTabs() {
     }
 
     //Handle Submit functions
-    //Handle submit new customer
+    //Handle submit update customer
     const handleUpdateCustomerSubmit = async (event) => {
         event.preventDefault();
         saveAddressJson(street);
         let response;
         try {
-            response = await axios.put(CUSTOMER_UPDATE,
+            response = await axios.put(CUSTOMER_UPDATE_SAVE,
                 updateCustomerDTO,
                 {
                     headers: {
@@ -255,7 +255,7 @@ export default function BasicTabs() {
                     withCredentials: false
                 }
             );
-            //loadSupplier(id);
+            loadCustomer();
             console.log(response);
             toast.success("Cập nhật thành công");
             setShow(false);
@@ -263,7 +263,7 @@ export default function BasicTabs() {
             if (!err?.response) {
                 toast.error('Server không phản hồi');
             } else {
-                toast.error(response);
+                toast.error(err.response.data);
             }
         }
     }
@@ -436,10 +436,10 @@ export default function BasicTabs() {
                                 </div>
                             </Modal.Body>
                             <div className='model-footer'>
-                                <button id="confirmUpdateCustomer" style={{ width: "30%" }} className="col-md-6 btn-light" onClick={handleClose} type='submit'>
+                                <button id="confirmUpdateCustomer" style={{ width: "30%" }} className="col-md-6 btn-light" type='submit'>
                                     Cập nhật
                                 </button>
-                                <button id="cancelUpdateCustomer" style={{ width: "20%" }} className="btn btn-light" type='button'>
+                                <button id="cancelUpdateCustomer" style={{ width: "20%" }} className="btn btn-light" onClick={handleClose} type='button'>
                                     Huỷ
                                 </button>
                             </div>

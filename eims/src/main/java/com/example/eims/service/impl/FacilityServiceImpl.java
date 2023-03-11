@@ -80,7 +80,7 @@ public class FacilityServiceImpl implements IFacilityService {
     @Override
     public ResponseEntity<?> showFormUpdate(Long facilityId) {
         // Check if facility is still running
-        int facilityStatus = facilityRepository.getStatusById(facilityId);
+        int facilityStatus = facilityRepository.getStatusById(facilityId) ? 1 : 0;
         if (facilityStatus == 0) { /* status = 0 (deactivated) */
             return new ResponseEntity<>("Cơ sở đã ngừng hoạt động", HttpStatus.BAD_REQUEST);
         }
@@ -104,7 +104,7 @@ public class FacilityServiceImpl implements IFacilityService {
     @Override
     public ResponseEntity<?> updateFacility(UpdateFacilityDTO updateFacilityDTO) {
         // Check if facility is still running
-        int facilityStatus = facilityRepository.getStatusById(updateFacilityDTO.getFacilityId());
+        int facilityStatus = facilityRepository.getStatusById(updateFacilityDTO.getFacilityId()) ? 1 : 0;
         if (facilityStatus == 0) { /* status = 0 (deactivated) */
             return new ResponseEntity<>("Cơ sở đã ngừng hoạt động", HttpStatus.BAD_REQUEST);
         }

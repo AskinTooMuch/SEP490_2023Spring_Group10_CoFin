@@ -21,17 +21,17 @@ import java.util.List;
 @Data
 public class MachineDetailDTO {
     private Long machineId;
-    private String name;
+    private String machineName;
     private String machineTypeName;
     private int curCapacity;
     private int maxCapacity;
     private Date addedDate;
-    private int status;
     private List<EggLocationMachineDetailDTO> eggs;
+    private int status;
 
     public void getFromEntity(Machine machine) {
         this.machineId = machine.getMachineId();
-        this.name = machine.getMachineName();
+        this.machineName = machine.getMachineName();
         this.curCapacity = machine.getCurCapacity();
         this.maxCapacity = machine.getMaxCapacity();
         this.addedDate = machine.getAddedDate();

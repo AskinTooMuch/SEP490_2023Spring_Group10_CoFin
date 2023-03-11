@@ -1,14 +1,16 @@
-
 import React, { useState, useRef, useEffect } from 'react';
-import axios from '../api/axios';
+import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye } from "@fortawesome/free-solid-svg-icons";
-const FORGOT_PASS_URL = '/api/auth/forgotPassword/changePassword';
+
 const eye = <FontAwesomeIcon icon={faEye} />;
 const ChangePassword = () => {
+  // URL
+  const FORGOT_PASS_URL = '/api/auth/forgotPassword/changePassword';
+
   //show-hide password 
   const [passwordShown, setPasswordShown] = useState(false);
   const togglePasswordVisiblity = () => {
@@ -17,16 +19,29 @@ const ChangePassword = () => {
   const navigate = useNavigate();
   const userRef = useRef();
   const errRef = useRef();
-  const [account, setAccount] = useState({
-    password: "",
-    rePassword: ""
+  // DTOs
+  const [forgotPasswordDTO, setForgotPasswordDTO] = useState({
+    phone: sessionStorage.getItem("phone"),
+    newPassword: "",
+    confirmPassword: ""
   })
 
+  // Handle change input
+  // Handle change newPassword, confirmPassword
+  const handleChange = (event, field) => {
+    let actualValue = event.target.value
+    setForgotPasswordDTO({
+      ...forgotPasswordDTO,
+      [field]: actualValue
+    })
+  }
+
+  // Handle submit change new password
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
       const response = await axios.post(FORGOT_PASS_URL,
-        account,
+        forgotPasswordDTO,
         {
           headers: {
             'Content-Type': 'application/json',
@@ -36,22 +51,20 @@ const ChangePassword = () => {
         }
       );
       console.log(JSON.stringify(response?.data));
-      setAccount('');
-      //Set user's phone number in session
+      setForgotPasswordDTO({
+        phone: sessionStorage.getItem("phone"),
+        newPassword: "",
+        confirmPassword: ""
+      });
       toast.success("Đổi mật khẩu thành công")
+      navigate("/login")
     } catch (err) {
       if (!err?.response) {
         toast.error('Server không phản hồi');
-      } else if (err.response?.status === 400) {
-        toast.error('Chưa nhập mật khẩu');
-      } else if (err.response?.status === 401) {
-        toast.error('Không có quyền truy cập');
       } else {
-        toast.error('Sai mật khẩu');
+        toast.error(err.response.data);
       }
-      errRef.current.focus();
     }
-
   }
 
   return (
@@ -66,21 +79,20 @@ const ChangePassword = () => {
                 <div className="u-form-group u-form-password login-wrapper">
                   <label for="password-a30d" className="u-label u-text-grey-25 u-label-2">Mật khẩu mới </label>
                   <input type={passwordShown ? "text" : "password"} name="password" placeholder="Nhập mật khẩu"
-                    ref={userRef} onChange={(e) => setAccount(e.target.value)}
+                    ref={userRef} onChange={(e) => handleChange(e, "newPassword")}
                     className="u-border-2 u-border-grey-10 u-grey-10 u-input u-input-rectangle u-input-2" required />
                   <i onClick={togglePasswordVisiblity}>{eye}</i>
                 </div>
                 <div className="u-form-group u-form-password login-wrapper">
                   <label for="password-a30d" className="u-label u-text-grey-25 u-label-2">Xác nhận mật khẩu </label>
                   <input type={passwordShown ? "text" : "password"} name="repassword" placeholder="Nhập lại mật khẩu"
-                    ref={userRef} onChange={(e) => setAccount(e.target.value)}
+                    ref={userRef} onChange={(e) => handleChange(e, "confirmPassword")}
                     className="u-border-2 u-border-grey-10 u-grey-10 u-input u-input-rectangle u-input-2" required />
                   <i onClick={togglePasswordVisiblity}>{eye}</i>
                 </div>
                 <div className="u-align-left u-form-group u-form-submit">
                   <button type="submit" className="u-btn u-btn-submit u-button-style u-btn-1">Xác nhận</button>
                 </div>
-                <input type="hidden" value="" name="recaptchaResponse" />
                 <ToastContainer position="top-left"
                   autoClose={5000}
                   hideProgressBar={false}

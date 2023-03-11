@@ -13,10 +13,7 @@
 
 package com.example.eims.controller;
 
-import com.example.eims.dto.auth.ChangePasswordDTO;
-import com.example.eims.dto.auth.ForgotPasswordDTO;
-import com.example.eims.dto.auth.LoginDTO;
-import com.example.eims.dto.auth.SignUpDTO;
+import com.example.eims.dto.auth.*;
 import com.example.eims.service.interfaces.IAuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -79,13 +76,12 @@ public class AuthController {
     /**
      * Verify OTP forgot password.
      *
-     * @param phone the phone number of account
-     * @param otp code to verify phone number
+     * @param verifyOtpDTO
      * @return
      */
     @PostMapping("/forgotPassword/verifyOTP")
-    public ResponseEntity<?> verifyOTPForgotPassword(@RequestParam String phone, @RequestParam String otp) {
-        return authService.verifyOTP(phone, otp);
+    public ResponseEntity<?> verifyOTPForgotPassword(@RequestBody VerifyOtpDTO verifyOtpDTO) {
+        return authService.verifyOTP(verifyOtpDTO);
     }
 
     /**
@@ -112,13 +108,12 @@ public class AuthController {
     /**
      * Verify OTP forgot password.
      *
-     * @param phone the phone number of account
-     * @param otp code to verify phone number
+     * @param verifyOtpDTO
      * @return
      */
     @PostMapping("/register/verifyOTP")
-    public ResponseEntity<?> verifyOTPRegisterOwner(@RequestParam String phone, @RequestParam String otp) {
-        return authService.verifyOTP(phone, otp);
+    public ResponseEntity<?> verifyOTPRegisterOwner(@RequestBody VerifyOtpDTO verifyOtpDTO) {
+        return authService.verifyOTP(verifyOtpDTO);
     }
 
     /**

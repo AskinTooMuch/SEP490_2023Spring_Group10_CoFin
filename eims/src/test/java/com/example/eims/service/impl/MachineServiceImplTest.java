@@ -113,10 +113,10 @@ class MachineServiceImplTest {
         CreateMachineDTO dto = new CreateMachineDTO();
         dto.setFacilityId(1L);
         dto.setMachineTypeId(1L);
-        dto.setName("name");
+        dto.setMachineName("name");
         dto.setMaxCapacity(999);
         // Define behaviour of repository
-        when(facilityRepository.getStatusById(1L)).thenReturn(1);
+        when(facilityRepository.getStatusById(1L)).thenReturn(true);
         // Run service method
         ResponseEntity<?> responseEntity = machineService.createMachine(dto);
         System.out.println(responseEntity.toString());
@@ -148,8 +148,8 @@ class MachineServiceImplTest {
         Machine machine = new Machine();
         UpdateMachineDTO dto = new UpdateMachineDTO();
         dto.setMachineId(1L);
-        dto.setName("name");
-        dto.setActive(1);
+        dto.setMachineName("name");
+        dto.setStatus(1);
         // Define behaviour of repository
         when(machineRepository.findByMachineId(1L)).thenReturn(Optional.of(machine));
         // Run service method
@@ -165,8 +165,8 @@ class MachineServiceImplTest {
         Machine machine = new Machine();
         UpdateMachineDTO dto = new UpdateMachineDTO();
         dto.setMachineId(1L);
-        dto.setName("name");
-        dto.setActive(1);
+        dto.setMachineName("name");
+        dto.setStatus(1);
         // Define behaviour of repository
         when(machineRepository.existsByMachineId(1L)).thenReturn(true);
         when(eggLocationRepository.existsByMachineId(1L)).thenReturn(false);

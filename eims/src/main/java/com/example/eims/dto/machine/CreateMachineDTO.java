@@ -17,6 +17,6 @@ import lombok.Data;
 public class CreateMachineDTO {
     private Long machineTypeId;
     private Long facilityId;
-    private String name;
+    private String machineName;
     private int maxCapacity;
 }

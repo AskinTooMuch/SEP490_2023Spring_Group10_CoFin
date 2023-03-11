@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import { useParams, useLocation } from "react-router-dom";
 import PropTypes from 'prop-types';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
@@ -12,10 +13,11 @@ import SearchIcon from '@mui/icons-material/Search';
 import { Modal } from 'react-bootstrap'
 import { faStarOfLife } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import axios from 'axios';
+//Toast
+import { ToastContainer, toast } from 'react-toastify';
 function Machine(props) {
     const { children, value, index, ...other } = props;
-
-
     return (
         <div
             role="tabpanel"
@@ -47,19 +49,108 @@ function a11yProps(index) {
 }
 
 export default function BasicTabs() {
-    const [value, setValue] = React.useState(0);
+    //URL
+    const MACHINE_ALL = "/api/machine/all";
+    const MACHINE_CREATE = "/api/machine/create";
+    const MACHINE_GET = "/api/machine/get";
 
-    const handleChange = (event, newValue) => {
-        setValue(newValue);
-    };
+    //Show-hide Popup
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
-    let navigate = useNavigate();
-    const routeChange = () => {
-        let path = '/machinedetail';
-        navigate(path);
+    const [value, setValue] = React.useState(0);
+    const handleChange = (event, newValue) => {
+        setValue(newValue);
+    };
+    //Data holding objects
+    const [machineList, setMachineList] = useState([]);
+    //Get sent params
+    const { state } = useLocation();
+    //DTOs
+    //CreateMachineDTO
+    const [createMachineDTO, setCreateMachineDTO] = useState({
+        facilityId: sessionStorage.getItem("facilityId"),
+        machineTypeId: 1,
+        machineName: "",
+        maxCapacity: ""
+    })
+
+    //Handle Change functions:
+    //CreateMachine
+    const handleCreateMachineChange = (event, field) => {
+        let actualValue = event.target.value
+        setCreateMachineDTO({
+            ...createMachineDTO,
+            [field]: actualValue
+        })
     }
+
+    //Handle Submit functions
+    //Handle submit new Machine
+    const handleCreateMachineSubmit = async (event) => {
+        event.preventDefault();
+        let response;
+        try {
+            response = await axios.post(MACHINE_CREATE,
+                createMachineDTO,
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Access-Control-Allow-Origin': '*'
+                    },
+                    withCredentials: false
+                }
+            );
+            setCreateMachineDTO({
+                facilityId: sessionStorage.getItem("facilityId"),
+                machineTypeId: 1,
+                machineName: "",
+                maxCapacity: ""
+            });
+            console.log(response);
+            loadMachineList();
+            toast.success("Tạo thành công");
+            setShow(false);
+        } catch (err) {
+            if (!err?.response) {
+                toast.error('Server không phản hồi');
+            } else {
+                toast.error(response);
+            }
+        }
+    }
+
+    // Get list of Machine and show
+    // Get Machine list
+    useEffect(() => {
+        loadMachineList();
+    }, []);
+
+    // Request Machine list and load the Machine list into the table rows
+    const loadMachineList = async () => {
+        const result = await axios.get(MACHINE_ALL,
+            { params: { facilityId: sessionStorage.getItem("facilityId") } },
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Access-Control-Allow-Origin': '*'
+                },
+                withCredentials: false
+            });
+        setMachineList(result.data);
+
+        // Toast Delete Machine success
+        console.log("state:====" + state)
+        if (state != null) toast.success(state);
+    }
+
+    //Navigate to detail Page
+    let navigate = useNavigate();
+    const routeChange = (mId) => {
+        //let path = '/machinedetail';
+        navigate('/machinedetail', { state: { id: mId } });
+    }
+
     return (
         <Box sx={{ width: '100%' }}>
             <Box sx={{ borderBottom: 1, borderColor: 'black' }}>
@@ -67,9 +158,10 @@ export default function BasicTabs() {
                     '& .MuiTabs-indicator': { backgroundColor: "#d25d19" },
                     '& .Mui-selected': { color: "#d25d19" },
                 }} value={value} onChange={handleChange} aria-label="basic tabs example">
-                    <Tab style={{ textTransform: "capitalize" }} label="Máy ấp/nở" {...a11yProps(0)} />
+                    <Tab style={{ textTransform: "capitalize" }} label="Danh sách máy" {...a11yProps(0)} />
                 </Tabs>
             </Box>
+            {/* Start: form to add new machine */}
             <Machine value={value} index={0}>
                 <nav className="navbar justify-content-between">
                     <button className='btn btn-light' onClick={handleShow} id="startCreateMachine">+ Thêm</button>
@@ -77,39 +169,42 @@ export default function BasicTabs() {
                         size="lg"
                         aria-labelledby="contained-modal-title-vcenter"
                         centered >
-                        <form>
+                        <form onSubmit={handleCreateMachineSubmit}>
                             <Modal.Header closeButton onClick={handleClose}>
                                 <Modal.Title>Thêm máy</Modal.Title>
                             </Modal.Header>
                             <Modal.Body>
                                 <div className="changepass">
+                                    {/*Machine name*/}
                                     <div className="row">
                                         <div className="col-md-6 ">
                                             <p>Tên máy<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                         </div>
                                         <div className="col-md-6">
-                                            <input id="createMachineName" required style={{ width: "100%" }} />
+                                            <input id="createMachineName" required style={{ width: "100%" }}
+                                                onChange={(e) => handleCreateMachineChange(e, "machineName")} />
                                         </div>
                                     </div>
+                                    {/*Machine type*/}
                                     <div className="row">
                                         <div className="col-md-6">
                                             <p>Loại máy<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                         </div>
                                         <div className="col-md-6">
-                                            <select id="createMachineType" className="form-select" aria-label="Default select example">
-                                                <option defaultValue="0">Open this select menu</option>
-                                                <option value="1" >Oneg</option>
-                                                <option value="2">Two</option>
-                                                <option value="3">Three</option>
+                                            <select onChange={(e) => handleCreateMachineChange(e, "machineTypeId")} id="createMachineType" className="form-select" aria-label="Default select example">
+                                                <option value="1" selected>Máy ấp </option>
+                                                <option value="2" >Máy nở</option>
                                             </select>
                                         </div>
                                     </div>
+                                    {/*Machine capacity*/}
                                     <div className="row">
                                         <div className="col-md-6">
                                             <p>Sức chứa<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                         </div>
                                         <div className="col-md-6">
-                                            <input id="createMachineCapacity" required style={{ width: "100%" }} />
+                                            <input id="createMachineCapacity" required style={{ width: "100%" }} type="number" min="0"
+                                                onChange={(e) => handleCreateMachineChange(e, "maxCapacity")} />
                                         </div>
                                     </div>
                                 </div>
@@ -118,13 +213,14 @@ export default function BasicTabs() {
                                 <button style={{ width: "20%" }} type="submit" className="col-md-6 btn-light" id="confirmCreateMachine">
                                     Tạo
                                 </button>
-                                <button className='btn btn-light' style={{ width: "20%" }} onClick={handleClose} id="cancelCreateMachine ">
+                                <button className='btn btn-light' style={{ width: "20%" }} onClick={handleClose} id="cancelCreateMachine">
                                     Huỷ
                                 </button>
                             </div>
                         </form>
                     </Modal>
-
+                    {/* End: form to add new machine*/}
+                    {/* Start: Filter and sort table */}
                     <div className='filter my-2 my-lg-0'>
                         <p><FilterAltIcon />Lọc</p>
                         <p><ImportExportIcon />Sắp xếp</p>
@@ -137,7 +233,10 @@ export default function BasicTabs() {
                             </div>
                         </form>
                     </div>
+                    {/* End: Filter and sort table */}
                 </nav>
+
+                {/* Start: Table for machine list */}
                 <div>
                     <section className="u-align-center u-clearfix u-section-1" id="sec-b42b">
                         <div className="u-clearfix u-sheet u-sheet-1">
@@ -149,7 +248,6 @@ export default function BasicTabs() {
                                         <col width="20%" />
                                         <col width="20%" />
                                         <col width="20%" />
-                                        <col width="20%" />
                                     </colgroup>
                                     <thead className="u-palette-4-base u-table-header u-table-header-1">
                                         <tr style={{ height: "21px" }}>
@@ -157,37 +255,49 @@ export default function BasicTabs() {
                                             <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-2">Tên máy</th>
                                             <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-3">Loại máy</th>
                                             <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-4">Sức chứa</th>
-                                            <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-5">Tiến trình</th>
-                                            <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-6">Trạng thái</th>
+                                            <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-5">Trạng thái</th>
                                         </tr>
                                     </thead>
                                     <tbody className="u-table-body">
-                                        <tr style={{ height: "76px" }} onClick={routeChange}>
-                                            <td className="u-border-1 u-border-grey-30 u-first-column u-grey-5 u-table-cell u-table-cell-5">1</td>
-                                            <td className="u-border-1 u-border-grey-30 u-table-cell">Máy 13</td>
-                                            <td className="u-border-1 u-border-grey-30 u-table-cell">Máy ấp</td>
-                                            <td className="u-border-1 u-border-grey-30 u-table-cell">1000/1000</td>
-                                            <td className="u-border-1 u-border-grey-30 u-table-cell">Đang ấp</td>
-                                            <td className="u-border-1 u-border-grey-30 u-table-cell text-green">Đang hoạt động</td>
-                                        </tr>
-                                        <tr style={{ height: "76px" }}>
-                                            <td className="u-border-1 u-border-grey-30 u-first-column u-grey-5 u-table-cell u-table-cell-9">2</td>
-                                            <td className="u-border-1 u-border-grey-30 u-table-cell">Máy 29</td>
-                                            <td className="u-border-1 u-border-grey-30 u-table-cell">Máy ấp</td>
-                                            <td className="u-border-1 u-border-grey-30 u-table-cell">0/1000</td>
-                                            <td className="u-border-1 u-border-grey-30 u-table-cell">Không có tiến trình</td>
-                                            <td className="u-border-1 u-border-grey-30 u-table-cell text-red">Ngừng hoạt động</td>
-                                        </tr>
+                                        {
+                                            machineList && machineList.length > 0 ?
+                                                machineList.map((item, index) =>
+                                                    <tr className='trclick' onClick={() => routeChange(item.machineId)}>
+                                                        <th className="u-border-1 u-border-grey-30 u-first-column u-grey-5 u-table-cell u-table-cell-1" scope="row">{index + 1}</th>
+                                                        <td className="u-border-1 u-border-grey-30 u-table-cell">{item.machineName}</td>
+                                                        <td className="u-border-1 u-border-grey-30 u-table-cell">{item.machineTypeName}</td>
+                                                        <td className="u-border-1 u-border-grey-30 u-table-cell">{item.curCapacity}/{item.maxCapacity}</td>
+
+                                                        {item.status === 1
+                                                            ? <td className="u-border-1 u-border-grey-30 u-table-cell text-green">
+                                                                Đang hoạt động
+                                                            </td>
+                                                            : <td className="u-border-1 u-border-grey-30 u-table-cell text-red">
+                                                                Ngừng hoạt động
+                                                            </td>
+                                                        }
+                                                    </tr>
+                                                ) : 'Nothing'
+                                        }
+
                                     </tbody>
                                 </table>
                             </div>
                         </div>
                     </section>
-
                 </div>
+                {/* End: Table for machine list */}
             </Machine>
-
-
+            <ToastContainer position="top-left"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="colored" />
         </Box>
     );
 }

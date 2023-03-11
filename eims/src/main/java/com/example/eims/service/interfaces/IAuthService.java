@@ -11,10 +11,7 @@
 
 package com.example.eims.service.interfaces;
 
-import com.example.eims.dto.auth.ChangePasswordDTO;
-import com.example.eims.dto.auth.ForgotPasswordDTO;
-import com.example.eims.dto.auth.LoginDTO;
-import com.example.eims.dto.auth.SignUpDTO;
+import com.example.eims.dto.auth.*;
 import org.springframework.http.ResponseEntity;
 
 public interface IAuthService {
@@ -53,11 +50,10 @@ public interface IAuthService {
     /**
      * Verify OTP forgot password.
      *
-     * @param phone the phone number of the account
-     * @param OTP   code to verify phone number
+     * @param verifyOtpDTO
      * @return
      */
-    public ResponseEntity<?> verifyOTP(String phone, String OTP);
+    public ResponseEntity<?> verifyOTP(VerifyOtpDTO verifyOtpDTO);
 
     /**
      * Re-send OTP forgot password.

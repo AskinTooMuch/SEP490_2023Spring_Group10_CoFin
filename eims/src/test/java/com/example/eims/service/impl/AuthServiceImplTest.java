@@ -141,13 +141,16 @@
      @Test
      void verifyOTP() {
          // Set up
+         VerifyOtpDTO verifyOtpDTO = new VerifyOtpDTO();
+         verifyOtpDTO.setPhone(user.getPhone());
+         verifyOtpDTO.setOTP("123");
          String phone = user.getPhone();
          user.setOtp("123");
          // Define behaviour of repository
          when(userRepository.findByPhone(phone)).thenReturn(Optional.of(user));
 
          // Run service method
-         ResponseEntity<?> responseEntity = authService.verifyOTP(phone, "123");
+         ResponseEntity<?> responseEntity = authService.verifyOTP(verifyOtpDTO);
          System.out.println(responseEntity.toString());
          // Assert
          assertEquals("Mã OTP đã đúng", responseEntity.getBody());

@@ -16,4 +16,5 @@ import lombok.Data;
 public class SessionDTO {
     private Long userId;
     private Long facilityId;
+    private Long roleId;
 }

@@ -113,11 +113,13 @@ public class AuthServiceImpl implements IAuthService {
         // Set attribute to sessionDTO
         SessionDTO sessionDTO = new SessionDTO();
         sessionDTO.setUserId(user.getUserId());
-        if (user.getRoleId() == 2L) { /*role is OWNER (have Facility)*/
+        Long userRole = user.getRoleId();
+        sessionDTO.setRoleId(userRole);
+        if (userRole == 2L) { /*role is OWNER (have Facility)*/
             Facility facility = facilityRepository.findByUserId(user.getUserId()).get();
             sessionDTO.setFacilityId(facility.getFacilityId());
             return new ResponseEntity<>(sessionDTO, HttpStatus.OK);
-        } else if (user.getRoleId() == 3L) { /*role is EMPLOYEE (work in Facility)*/
+        } else if (userRole == 3L) { /*role is EMPLOYEE (work in Facility)*/
             WorkIn workIn = workInRepository.findByUserId(user.getUserId()).get();
             sessionDTO.setFacilityId(workIn.getFacilityId());
             return new ResponseEntity<>(sessionDTO, HttpStatus.OK);
@@ -310,13 +312,14 @@ public class AuthServiceImpl implements IAuthService {
     /**
      * Verify OTP forgot password.
      *
-     * @param phone the phone number of the account
-     * @param otp   code to verify phone number
+     * @param verifyOtpDTO the phone number of the account
      * @return
      */
     @Override
-    public ResponseEntity<?> verifyOTP(String phone, String otp) {
+    public ResponseEntity<?> verifyOTP(VerifyOtpDTO verifyOtpDTO) {
         // Check if the OTP match
+        String phone = verifyOtpDTO.getPhone();
+        String otp = verifyOtpDTO.getOTP();
         User user = userRepository.findByPhone(phone).get();
         String OTP_REAL = user.getOtp();
         if (otp.equals(OTP_REAL)) {      /* OTP match*/
@@ -364,27 +367,25 @@ public class AuthServiceImpl implements IAuthService {
     @Override
     public ResponseEntity<?> resetPassword(ForgotPasswordDTO forgotPasswordDTO) {
         String phone = stringDealer.trimMax(forgotPasswordDTO.getPhone());
-        if (phone.equals("")) { /* Phone number is empty */
-            return new ResponseEntity<>("Số điện thoại không được để trống", HttpStatus.BAD_REQUEST);
-        }
-        String password = stringDealer.trimMax(forgotPasswordDTO.getNewPassword());
-        if (password.equals("")) { /* Password is empty */
+        String newPassword = stringDealer.trimMax(forgotPasswordDTO.getNewPassword());
+        String confirmPassword = stringDealer.trimMax(forgotPasswordDTO.getNewPassword());
+        if (newPassword.equals("")) { /* Password is empty */
             return new ResponseEntity<>("Mật khẩu không được để trống", HttpStatus.BAD_REQUEST);
         }
-        String confirmPassword = stringDealer.trimMax(forgotPasswordDTO.getConfirmPassword());
         if (confirmPassword.equals("")) { /* Confirm Password is empty */
             return new ResponseEntity<>("Xác nhận mật khẩu không được để trống", HttpStatus.BAD_REQUEST);
         }
-        if (!stringDealer.checkPasswordRegex(password)) { /* Password is not valid */
+        if (!stringDealer.checkPasswordRegex(newPassword)) { /* Password is not valid */
             return new ResponseEntity<>("Mật khẩu không đúng định dạng", HttpStatus.BAD_REQUEST);
         }
-        // Encode the passwords
-        password = passwordEncoder.encode(password);
+
         // Get user
-        User user = userRepository.findByPhone(forgotPasswordDTO.getPhone()).get();
+        User user = userRepository.findByPhone(phone).get();
         // Confirm password match
-        if (passwordEncoder.matches(forgotPasswordDTO.getConfirmPassword(), forgotPasswordDTO.getNewPassword())) {
-            user.setPassword(password);
+        if (newPassword.equals(confirmPassword)) {
+            // Encode the passwords
+            newPassword = passwordEncoder.encode(newPassword);
+            user.setPassword(newPassword);
             userRepository.save(user);
             return new ResponseEntity<>("Mật khẩu thay đổi thành công", HttpStatus.OK);
         } else {

@@ -163,7 +163,7 @@ const Customer = () => {
             if (!err?.response) {
                 toast.error('Server không phản hồi');
             } else {
-                toast.error(response);
+                toast.error(err.response.data);
             }
         }
     }
@@ -217,7 +217,7 @@ const Customer = () => {
                                         <p>Họ và tên<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                     </div>
                                     <div className="col-md-3">
-                                        <input id="createCustomerName" className="form-control mt-1" style={{ width: "100%" }} onChange={e => handleCreateCustomerChange(e, "customerName")} />
+                                        <input required id="createCustomerName" className="form-control mt-1" style={{ width: "100%" }} onChange={e => handleCreateCustomerChange(e, "customerName")} />
                                     </div>
                                     {/*City*/}
                                     <div className="col-md-3">
@@ -244,7 +244,7 @@ const Customer = () => {
                                         <p>Số điện thoại<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                     </div>
                                     <div className="col-md-3">
-                                        <input id="createCustomerPhone" className="form-control mt-1" style={{ width: "100%" }} onChange={e => handleCreateCustomerChange(e, "customerPhone")} />
+                                        <input  required  id="createCustomerPhone"  className="form-control mt-1" style={{ width: "100%" }} onChange={e => handleCreateCustomerChange(e, "customerPhone")} />
                                     </div>
                                     {/*District*/}
                                     <div className="col-md-3">

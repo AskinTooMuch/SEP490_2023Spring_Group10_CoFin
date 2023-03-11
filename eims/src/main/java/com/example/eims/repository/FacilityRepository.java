@@ -22,7 +22,7 @@ public interface FacilityRepository extends JpaRepository<Facility, Long> {
     Optional<Facility> findByFacilityId(Long facilityId);
     boolean existsByFacilityId(Long facilityId);
     @Query(value = "SELECT status FROM eims.facility where facility_id = ?1", nativeQuery = true)
-    int getStatusById(Long facilityId);
+    boolean getStatusById(Long facilityId);
     @Query(value = "SELECT facility_id FROM eims.facility where user_id = ?1", nativeQuery = true)
     Long getFacilityIdByUserId(Long userId);
 }

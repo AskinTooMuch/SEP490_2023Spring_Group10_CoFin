@@ -132,14 +132,14 @@ public class MachineServiceImpl implements IMachineService {
     public ResponseEntity<?> createMachine(CreateMachineDTO createMachineDTO) {
         // Check if facility is not running
         Long facilityId = createMachineDTO.getFacilityId();
-        if (facilityRepository.getStatusById(facilityId) == 0) { /*Facility stopped running*/
+        if (!facilityRepository.getStatusById(facilityId)) { /*Facility stopped running*/
             return new ResponseEntity<>("Cơ sở đã ngừng hoạt động", HttpStatus.BAD_REQUEST);
         } else {
             // Retrieve machine information and create new machine
             Machine machine = new Machine();
             // Check blank input
             // Machine's name
-            String name = stringDealer.trimMax(createMachineDTO.getName());
+            String name = stringDealer.trimMax(createMachineDTO.getMachineName());
             if (name.equals("")) { /* Machine name is empty */
                 return new ResponseEntity<>("Tên máy không được để trống", HttpStatus.BAD_REQUEST);
             }
@@ -158,7 +158,7 @@ public class MachineServiceImpl implements IMachineService {
             machine.setCurCapacity(0);
             Date date = Date.valueOf(LocalDate.now());/* format yyyy-MM-dd*/
             machine.setAddedDate(date);
-            machine.setActive(1);
+            machine.setStatus(1);
             // Save
             machineRepository.save(machine);
             return new ResponseEntity<>("Tạo máy mới thành công", HttpStatus.OK);
@@ -198,13 +198,12 @@ public class MachineServiceImpl implements IMachineService {
             Machine machine = machineOptional.get();
             // Check blank input
             // Machine's name
-            String name = stringDealer.trimMax(updateMachineDTO.getName());
+            String name = stringDealer.trimMax(updateMachineDTO.getMachineName());
             if (name.equals("")) { /* Machine name is empty */
                 return new ResponseEntity<>("Tên máy không được để trống", HttpStatus.BAD_REQUEST);
             }
             machine.setMachineName(name);
-
-            machine.setActive(updateMachineDTO.getActive());
+            machine.setStatus(updateMachineDTO.getStatus());
             // Save
             machineRepository.save(machine);
             return new ResponseEntity<>("Cập nhật thông tin máy thành công", HttpStatus.OK);

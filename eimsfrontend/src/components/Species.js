@@ -13,7 +13,7 @@ const Species = () => {
   const [open, setOpen] = useState(false);
   const [specieList, setSpecieList] = useState([]);
   //ConfirmBox
-  function openDelete(data) {
+  function openDelete() {
     setOpen(true);
   }
   // Create new specie JSON
@@ -379,7 +379,7 @@ const Species = () => {
                         <th className="u-border-1 u-border-grey-30 u-first-column u-grey-5 u-table-cell u-table-cell-5" scope="row" onClick={() => LoadData(index)}>{index + 1} </th>
                         <td className="u-border-1 u-border-grey-30 u-table-cell" onClick={() => LoadData(index)}>{item.specieName}</td>
                         <td className="u-border-1 u-border-grey-30 u-table-cell" onClick={() => LoadData(index)}>{item.incubationPeriod} (ngày)</td>
-                        <td className="u-border-1 u-border-grey-30 u-table-cell" style={{textAlign:"center"}}><button className='btn btn-light' style={{ width: "50%" }} onClick={() => openDelete(index)}>Xoá</button>
+                        <td className="u-border-1 u-border-grey-30 u-table-cell" style={{textAlign:"center"}}><button className='btn btn-light' style={{ width: "50%" }} onClick={() => openDelete()}>Xoá</button>
                           <ConfirmBox open={open} closeDialog={() => setOpen(false)} title={item.specieName} deleteFunction={() => handleDelete(index)}
                           />
                         </td>

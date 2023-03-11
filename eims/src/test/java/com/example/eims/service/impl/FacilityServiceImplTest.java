@@ -87,7 +87,7 @@ class FacilityServiceImplTest {
         UpdateFacilityDTO dto = new UpdateFacilityDTO();
         dto.getFromEntity(facility);
         // Define behaviour of repository
-        when(facilityRepository.getStatusById(1L)).thenReturn(1);
+        when(facilityRepository.getStatusById(1L)).thenReturn(true);
         when(facilityRepository.findByFacilityId(1L)).thenReturn(Optional.of(facility));
 
         // Run service method
@@ -111,7 +111,7 @@ class FacilityServiceImplTest {
         dto.setHotline("0987654321");
         dto.setStatus(1);
         // Define behaviour of repository
-        when(facilityRepository.getStatusById(1L)).thenReturn(1);
+        when(facilityRepository.getStatusById(1L)).thenReturn(true);
         when(facilityRepository.findById(dto.getFacilityId())).thenReturn(Optional.of(facility));
 
         // Run service method

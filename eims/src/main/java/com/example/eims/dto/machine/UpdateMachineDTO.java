@@ -18,11 +18,11 @@ import lombok.Data;
 @Data
 public class UpdateMachineDTO {
     private Long machineId;
-    private String name;
-    private int active;
+    private String machineName;
+    private int status;
     public void getFromEntity(Machine machine) {
         this.machineId = machine.getMachineId();
-        this.name = machine.getMachineName();
-        this.active = machine.getActive();
+        this.machineName = machine.getMachineName();
+        this.status = machine.getStatus();
     }
 }
