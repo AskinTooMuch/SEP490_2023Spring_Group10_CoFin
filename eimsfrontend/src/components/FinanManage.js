@@ -54,11 +54,11 @@ export default function BasicTabs() {
             '& .Mui-selected': { color: "#d25d19" },
           }}
         value={value} onChange={handleChange} aria-label="basic tabs example">
-          <Tab style={{ textTransform: "capitalize" }} label="Chi Phí" {...a11yProps(0)} />
-          <Tab style={{ textTransform: "capitalize" }} label="Tiền lương" {...a11yProps(1)} />
-          <Tab style={{ textTransform: "capitalize" }} label="Báo cáo nhập" {...a11yProps(2)} />
-          <Tab style={{ textTransform: "capitalize" }} label="Báo cáo xuất" {...a11yProps(3)} />
-          <Tab style={{ textTransform: "capitalize" }} label="Doanh thu" {...a11yProps(4)} />
+          <Tab id="costTab" style={{ textTransform: "capitalize" }} label="Chi Phí" {...a11yProps(0)} />
+          <Tab id="payrollTab" style={{ textTransform: "capitalize" }} label="Tiền lương" {...a11yProps(1)} />
+          <Tab id="importReportTab" style={{ textTransform: "capitalize" }} label="Báo cáo nhập" {...a11yProps(2)} />
+          <Tab id="exportReportTab" style={{ textTransform: "capitalize" }} label="Báo cáo xuất" {...a11yProps(3)} />
+          <Tab id="incomeReportTab" style={{ textTransform: "capitalize" }} label="Doanh thu" {...a11yProps(4)} />
         </Tabs>
       </Box>
       <FinanManage value={value} index={0}>

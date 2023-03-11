@@ -83,7 +83,7 @@ export default function BasicTabs() {
                                             <p>Tên máy<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                         </div>
                                         <div className="col-md-6">
-                                            <input style={{ width: "100%" }}/>
+                                            <input id="updateMachineName" style={{ width: "100%" }}/>
                                         </div>
                                     </div>
                                     <div className="row">
@@ -91,7 +91,7 @@ export default function BasicTabs() {
                                             <p>Trạng thái<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                         </div>
                                         <div className="col-md-6">
-                                            <select class="form-select" aria-label="Default select example">
+                                            <select id = "updateMachineStatus" class="form-select" aria-label="Default select example">
                                                 <option selected>Open this select menu</option>
                                                 <option value="1" className='text-green'>Hoạt động bình thường</option>
                                                 <option value="2">Two</option>
@@ -104,10 +104,10 @@ export default function BasicTabs() {
 
                             </Modal.Body>
                             <div className='model-footer'>
-                                <button style={{ width: "30%" }} className="col-md-6 btn-light" onClick={handleClose}>
+                                <button id="confirmUpdateMachine" style={{ width: "30%" }} className="col-md-6 btn-light" onClick={handleClose}>
                                     Cập nhật
                                 </button>
-                                <button style={{ width: "20%" }} onClick={handleClose} className="btn btn-light">
+                                <button id="cancelUpdateMachine" style={{ width: "20%" }} onClick={handleClose} className="btn btn-light">
                                     Huỷ
                                 </button>
                             </div>
@@ -124,8 +124,8 @@ export default function BasicTabs() {
                             </div>
                             <div className="col-md-4 ">
                                 <div className='button'>
-                                    <button className='btn btn-light ' onClick={handleShow}>Sửa</button>
-                                    <button className='btn btn-light '>Xoá</button>
+                                    <button className='btn btn-light ' onClick={handleShow} id="startEditMachine" >Sửa</button>
+                                    <button className='btn btn-light ' id = "startDeleteMachine" >Xoá</button>
                                 </div>
                             </div>
                         </div>
