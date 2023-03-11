@@ -49,10 +49,11 @@ const Login = () => {
       console.log(JSON.stringify(response?.data));
       localStorage.setItem("user", loginDetail)
       setLoginDetail('');
-      //Set user's phone number, userId, user's facility in session
+      //Set user's phone number, userId, facility, roleId in session
       const responseJson = response.data;
       sessionStorage.setItem("curUserId", responseJson.userId);
       sessionStorage.setItem("curPhone", loginDetail.phone);
+      sessionStorage.setItem("roleId", responseJson.roleId);
       if (responseJson.facilityId != null) { /* role = USER/EMPLOYEE */
         sessionStorage.setItem("facilityId", responseJson.facilityId);
       }
