@@ -98,7 +98,7 @@ public class BreedController {
      * @param breedId contains the breed's id
      * @return response message or new breed
      */
-    @PostMapping("/delete")
+    @GetMapping("/delete")
     public ResponseEntity<?> deactivateBreed(@RequestParam Long breedId){
         return breedService.deleteBreed(breedId);
     }

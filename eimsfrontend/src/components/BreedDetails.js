@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from '../api/axios';
 import { useNavigate, useLocation } from "react-router-dom";
+import { ToastContainer, toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
@@ -55,6 +56,7 @@ export default function BasicTabs() {
     const SPECIE_LIST = '/api/specie/list';
     const BREED_GET = '/api/breed/detail/breedId';
     const BREED_GET_IMAGE = '/api/breed/detail/breedId/image';
+    const BREED_DELETE = '/api/breed/delete';
 
     const [value, setValue] = React.useState(0);
     const navigate = useNavigate();
@@ -182,8 +184,37 @@ export default function BasicTabs() {
             [field]: actualValue
         })
     }
-    return (
+    //Handle submit delete breed
+    const submitDeteteBreed = async () => {
+        console.log("Delete breed " + id);
+        try {
+            const response = await axios.get(BREED_DELETE,
+                { params: { breedId: editBreedDTO.breedId } },
+                {
+                  headers: {
+                    'Content-Type': 'application/json',
+                    'Access-Control-Allow-Origin': '*'
+                  },
+                  withCredentials: false
+                });
+            toast.success("Xóa loại thành công");
+            navigate("/egg");
+        } catch (err) {
+            if (!err?.response) {
+                toast.error('Server không phản hồi');
+            } else if (err.response?.status === 400) {
+                toast.error('Yêu cầu không đúng định dạng');
+            } else if (err.response?.status === 401) {
+                toast.error('Unauthorized');
+            }
+            else {
+                toast.error('Yêu cầu không đúng định dạng');
+            }
+        }
+    }
+    //Handle delete breed
 
+    return (
         <Box sx={{ width: '100%' }}>
             <Box sx={{ borderBottom: 1, borderColor: 'black' }}>
                 <Tabs sx={{
@@ -213,7 +244,7 @@ export default function BasicTabs() {
                                         </div>
                                         <div className="col-md-6">
                                             <select class="form-select" aria-label="Default select example"
-                                            onChange={e => handleEditChange(e, "specieId")}>
+                                                onChange={e => handleEditChange(e, "specieId")}>
                                                 <option disabled>Open this select menu</option>
                                                 { /**JSX to load options */}
                                                 {specieList &&
@@ -230,41 +261,41 @@ export default function BasicTabs() {
                                             <p>Tên loại<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                         </div>
                                         <div className="col-md-6">
-                                            <input 
-                                            required
-                                            value={editBreedDTO.breedName}
-                                            onChange={e => handleEditChange(e, "breedName")}/>
+                                            <input
+                                                required
+                                                value={editBreedDTO.breedName}
+                                                onChange={e => handleEditChange(e, "breedName")} />
                                         </div>
                                     </div>
                                     <div className="row">
-                                    <div className="col-md-6">
-                                        <p>Cân nặng trung bình con đực<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
+                                        <div className="col-md-6">
+                                            <p>Cân nặng trung bình con đực<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
+                                        </div>
+                                        <div className="col-md-6">
+                                            <input required style={{ width: "100%" }}
+                                                value={editBreedDTO.averageWeightMale}
+                                                onChange={e => handleChange(e, "averageWeightMale")} />
+                                        </div>
                                     </div>
-                                    <div className="col-md-6">
-                                        <input required style={{ width: "100%" }}
-                                        value={editBreedDTO.averageWeightMale}
-                                            onChange={e => handleChange(e, "averageWeightMale")} />
+                                    <div className="row">
+                                        <div className="col-md-6">
+                                            <p>Cân nặng trung bình con cái<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
+                                        </div>
+                                        <div className="col-md-6">
+                                            <input required style={{ width: "100%" }}
+                                                value={editBreedDTO.averageWeightFemale}
+                                                onChange={e => handleChange(e, "averageWeightFemale")} />
+                                        </div>
                                     </div>
-                                </div>
-                                <div className="row">
-                                    <div className="col-md-6">
-                                        <p>Cân nặng trung bình con cái<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
-                                    </div>
-                                    <div className="col-md-6">
-                                        <input required style={{ width: "100%" }}
-                                        value={editBreedDTO.averageWeightFemale}
-                                            onChange={e => handleChange(e, "averageWeightFemale")} />
-                                    </div>
-                                </div>
                                     <div className="row">
                                         <div className="col-md-6 ">
                                             <p>Thời gian lớn lên<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                         </div>
                                         <div className="col-md-6">
-                                            <input 
-                                            required
-                                            value={editBreedDTO.growthTime}
-                                            onChange={e => handleEditChange(e, "growthTime")}/>
+                                            <input
+                                                required
+                                                value={editBreedDTO.growthTime}
+                                                onChange={e => handleEditChange(e, "growthTime")} />
                                         </div>
                                     </div>
                                     <div className="row">
@@ -273,8 +304,8 @@ export default function BasicTabs() {
                                         </div>
                                         <div className="col-md-6">
                                             <input
-                                            value={editBreedDTO.commonDisease}
-                                            onChange={e => handleEditChange(e, "commonDisease")}/>
+                                                value={editBreedDTO.commonDisease}
+                                                onChange={e => handleEditChange(e, "commonDisease")} />
                                         </div>
                                     </div>
                                     <div className="row">
@@ -282,12 +313,11 @@ export default function BasicTabs() {
                                             <p>Hình ảnh</p>
                                         </div>
                                         <div className="col-md-6">
-                                            <input id = "updateBreedImg" type="file" multiple accept="image/*" onChange={onImageChange} />
+                                            <input id="updateBreedImg" type="file" multiple accept="image/*" onChange={onImageChange} />
                                             {imageURLs.map(imageSrc => <img style={{ width: "100%", minHeight: "100%" }} alt='' src={imageSrc} />)}
                                         </div>
                                     </div>
                                 </div>
-
                             </Modal.Body>
                             <div className='model-footer'>
                                 <button style={{ width: "30%" }} className="col-md-6 btn-light" type='submit' id="confirmUpdateBreed">
@@ -299,11 +329,8 @@ export default function BasicTabs() {
                             </div>
                         </form>
                     </Modal>
-
                     <div className='detailbody'>
-
                         <div className="row">
-
                             <div className="col-md-4">
                                 <p >Tên loài
                                     <input style={{ display: "block" }} value={editBreedDTO.specieName} placeholder='Gà ' disabled />
@@ -312,16 +339,14 @@ export default function BasicTabs() {
                             <div className="col-md-4">
                                 <p>Hình ảnh</p>
                                 <img style={{ position: "absolute", width: "20%", minHeight: "10%" }} alt='' src={`data:image/jpeg;base64,${x64image}`} />
-                                
                             </div>
+                            {/*Buttons for edit and delete(deactivate) breed */}
                             <div className="col-md-4 ">
                                 <div className='button'>
                                     <button id="startEditBreed" className='btn btn-light ' onClick={handleShow}>Sửa</button>
-                                    <button id="startDeleteBreed" className='btn btn-light ' >Xoá</button>
+                                    <button id="startDeleteBreed" className='btn btn-light ' onClick={() => submitDeteteBreed()} >Xoá</button>
                                 </div>
-
                             </div>
-
                         </div>
                         <div className="row">
                             <div className="col-md-4">
@@ -330,7 +355,6 @@ export default function BasicTabs() {
                                 </p>
                             </div>
                             <div className="col-md-4">
-
                             </div>
                         </div>
                         <div className="row">
@@ -339,7 +363,7 @@ export default function BasicTabs() {
                                     <input style={{ display: "block" }} value={editBreedDTO.averageWeightMale} placeholder='0.8 kg' disabled />
                                 </p>
                             </div>
-                            <div className="col-md-4"/>
+                            <div className="col-md-4" />
                         </div>
                         <div className="row">
                             <div className="col-md-4">
@@ -347,7 +371,7 @@ export default function BasicTabs() {
                                     <input style={{ display: "block" }} value={editBreedDTO.averageWeightFemale} placeholder='0.8 kg' disabled />
                                 </p>
                             </div>
-                            <div className="col-md-4"/>
+                            <div className="col-md-4" />
                         </div>
                         <div className="row">
                             <div className="col-md-4">
@@ -355,7 +379,7 @@ export default function BasicTabs() {
                                     <input style={{ display: "block" }} value={editBreedDTO.growthTime} placeholder='20 ngày' disabled />
                                 </p>
                             </div>
-                            <div className="col-md-4"/>
+                            <div className="col-md-4" />
                         </div>
                         <div className="row">
                             <div className="col-md-4">
@@ -363,15 +387,21 @@ export default function BasicTabs() {
                                     <textarea style={{ display: "block" }} value={editBreedDTO.commonDisease} placeholder='Cúm gia cầm, đậu gà' disabled />
                                 </p>
                             </div>
-                            <div className="col-md-4"/>
+                            <div className="col-md-4" />
                         </div>
                     </div>
                 </div>
             </BreedDetails>
-
-
-
+            <ToastContainer position="top-left"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="colored" />
         </Box>
-
     );
 }

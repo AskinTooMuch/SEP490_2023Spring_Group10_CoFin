@@ -166,7 +166,7 @@ const Species = () => {
   }
   //
 
-  // Handle submit to send request to API (Create new specie)
+  // Handle submit to send request to API (Delete specie)
   const handleDelete = async (index) => {
     try {
       const response = await axios.get(SPECIE_DELETE,
