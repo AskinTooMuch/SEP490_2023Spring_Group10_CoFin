@@ -108,6 +108,7 @@ const Breed = () => {
             ...newBreedDTO,
             [field]: actualValue
         })
+        console.log(newBreedDTO);
     }
 
     //Send request new breed through Axios
@@ -134,7 +135,6 @@ const Breed = () => {
                 }
             );
             console.log(JSON.stringify(response?.data));
-            setNewBreedDTO('');
             loadBreedList();
             toast.success("Tạo loài mới thành công")
             setShow(false)
@@ -172,6 +172,7 @@ const Breed = () => {
                                     </div>
                                     <div className="col-md-6">
                                         <select className="form-control mt-1" aria-label="Default select example"
+                                        required
                                             onChange={e => handleChange(e, "specieId")}>
                                             <option disabled value="">Open this select menu</option>
                                             { /**JSX to load options */}
@@ -200,6 +201,10 @@ const Breed = () => {
                                     </div>
                                     <div className="col-md-6">
                                         <input id="createBreedMaleAvg" required style={{ width: "100%" }}
+                                        placeholder="Số ngày"
+                                        type='number'
+                                        min='0'
+                                        step='0.01'
                                             onChange={e => handleChange(e, "averageWeightMale")} />
                                     </div>
                                 </div>
@@ -209,6 +214,9 @@ const Breed = () => {
                                     </div>
                                     <div className="col-md-6">
                                         <input id="createBreedFemaleAvg" required style={{ width: "100%" }}
+                                        type='number'
+                                        min='0'
+                                        step='0.01'
                                             onChange={e => handleChange(e, "averageWeightFemale")} />
                                     </div>
                                 </div>
@@ -218,6 +226,9 @@ const Breed = () => {
                                     </div>
                                     <div className="col-md-6">
                                         <input id="createBreedGrownTime" required style={{ width: "100%" }}
+                                        type='number'
+                                        min='0'
+                                        step='1'
                                             onChange={e => handleChange(e, "growthTime")} />
                                     </div>
                                 </div>

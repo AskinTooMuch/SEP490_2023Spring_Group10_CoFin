@@ -1,3 +1,14 @@
+/*
+ * Copyright (C) 2023, FPT University <br>
+ * SEP490 - SEP490_G10 <br>
+ * EIMS <br>
+ * Eggs Incubating Management System <br>
+ *
+ * Record of change:<br>
+ * DATE         Version     Author      DESCRIPTION<br>
+ * 07/03/2023   1.0         ChucNV      First Deploy<br>
+ * 12/03/2023   2.0         ChucNV      Fix edit breed<br>
+ */
 package com.example.eims.service.impl;
 
 import com.example.eims.dto.breed.DetailBreedDTO;
@@ -64,12 +75,12 @@ public class BreedServiceImpl implements IBreedService {
             breed.setUserId(specie.getUserId());
             //Check
             if (specieRepository.findById(specie.getSpecieId()).isPresent()) {
-                breed.setSpecieId(specie.getSpecieId());
+                breed.setSpecieId(newBreedDTO.getSpecieId());
             } else {
                 return new ResponseEntity<>("Không tìm thấy tên loài.", HttpStatus.NOT_FOUND);
             }
             if (userRepository.findById(specie.getSpecieId()).isPresent()) {
-                breed.setSpecieId(specie.getUserId());
+                breed.setUserId(specie.getUserId());
             } else {
                 return new ResponseEntity<>("Không tìm thấy người dùng.", HttpStatus.NOT_FOUND);
             }
@@ -96,7 +107,7 @@ public class BreedServiceImpl implements IBreedService {
             }
             return new ResponseEntity<>("Breed added successfully", HttpStatus.OK);
         }
-        return new ResponseEntity<>("Breed not found with Id number "+newBreedDTO.getSpecieId(), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>("Specie not found with Id number "+newBreedDTO.getSpecieId(), HttpStatus.BAD_REQUEST);
     }
 
     /**
@@ -106,30 +117,44 @@ public class BreedServiceImpl implements IBreedService {
      * @return Breed updated or response message
      */
     @Override
-    public ResponseEntity<?> updateBreed(EditBreedDTO editBreedDTO) {
+    public ResponseEntity<?> updateBreed(@ModelAttribute EditBreedDTO editBreedDTO) {
         System.out.println(editBreedDTO);
-        Optional<Breed> breedOpt = breedRepository.findById(editBreedDTO.getBreedId());
-        if (breedOpt.isPresent()) {
-            Breed breed = breedOpt.get();
-            //Create file attributes
-            String filename = fileStorageServiceImpl.storeFile(editBreedDTO.getImage());
-            //Set other attributes
-            breed.setSpecieId(editBreedDTO.getSpecieId());
-            breed.setBreedName(editBreedDTO.getBreedName());
-            breed.setAverageWeightMale(editBreedDTO.getAverageWeightMale());
-            breed.setAverageWeightFemale(editBreedDTO.getAverageWeightFemale());
-            breed.setCommonDisease(editBreedDTO.getCommonDisease());
-            breed.setGrowthTime(editBreedDTO.getGrowthTime());
-            breed.setImageSrc(filename);
-            breed.setStatus(editBreedDTO.isStatus());
-            try {
-                breedRepository.save(breed);
-            } catch (IllegalArgumentException iae) {
-                return null;
-            }
-            return new ResponseEntity<>("Breed saved successfully", HttpStatus.OK);
+        // Check if the breed or specie exist or not
+        Optional<Specie> specieOpt = specieRepository.findById(editBreedDTO.getSpecieId());
+        if (specieOpt.isEmpty()) {
+            return new ResponseEntity<>("Không tìm thấy tên loài với id " + editBreedDTO.getSpecieId(), HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>("Breed not found with Id number "+editBreedDTO.getBreedId(), HttpStatus.BAD_REQUEST);
+        Optional<Breed> breedOpt = breedRepository.findById(editBreedDTO.getBreedId());
+        if (breedOpt.isEmpty()) {
+            return new ResponseEntity<>("Không tìm thấy tên loại với id " + editBreedDTO.getBreedId(), HttpStatus.BAD_REQUEST);
+        }
+        Breed breed = breedOpt.get();
+        //Create file attributes
+        String filename = fileStorageServiceImpl.storeFile(editBreedDTO.getImage());
+        //Set other attributes
+        breed.setSpecieId(editBreedDTO.getSpecieId());
+        // Name
+        String name = stringDealer.trimMax(editBreedDTO.getBreedName());
+        if (name.equals("")) { /* Supplier name is empty */
+            return new ResponseEntity<>("Tên không được để trống", HttpStatus.BAD_REQUEST);
+        } else {
+            breed.setBreedName(name);
+        }
+        // Number fields: DTO has automatically caught any error/exceptions
+        breed.setAverageWeightMale(editBreedDTO.getAverageWeightMale());
+        breed.setAverageWeightFemale(editBreedDTO.getAverageWeightFemale());
+        breed.setGrowthTime(editBreedDTO.getGrowthTime());
+
+        breed.setCommonDisease(stringDealer.trimMax(editBreedDTO.getCommonDisease()));
+        breed.setImageSrc(filename);
+        //The user not allowed to deactivate a breed in this form, only through delete tab
+        breed.setStatus(true);
+        try {
+            breedRepository.save(breed);
+        } catch (IllegalArgumentException iae) {
+            return null;
+        }
+        return new ResponseEntity<>("Breed saved successfully", HttpStatus.OK);
     }
 
     /**

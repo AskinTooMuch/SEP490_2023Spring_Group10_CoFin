@@ -7,6 +7,7 @@
  * Record of change:<br>
  * DATE          Version    Author           DESCRIPTION<br>
  * 07/03/2023    1.0        ChucNV           First Deploy<br>
+ * 12/03/2023    1.1        ChucNV           Fix notation<br>
  */
 package com.example.eims.controller;
 
@@ -110,7 +111,7 @@ public class BreedController {
      * @return response message or new breed
      */
     @PostMapping("/edit")
-    public ResponseEntity<?> editBreed(@RequestBody EditBreedDTO editBreedDTO){
+    public ResponseEntity<?> editBreed(@ModelAttribute EditBreedDTO editBreedDTO){
         System.out.println(editBreedDTO);
         //Check data and trim
         if ((editBreedDTO.getAverageWeightFemale() <= 0) ||
