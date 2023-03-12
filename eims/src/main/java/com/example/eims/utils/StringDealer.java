@@ -14,6 +14,7 @@ package com.example.eims.utils;
 import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.concurrent.TimeUnit;
 
 public class StringDealer {
     public StringDealer() {
@@ -76,5 +77,27 @@ public class StringDealer {
     public boolean checkPasswordRegex(String password){
         String regex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,20}$";
         return password.matches(regex);
+    }
+
+    /**
+     * Get difference in days between 2 dates.
+     *
+     * @param startDate
+     * @param endDate
+     * @return
+     */
+    public long dateDiff(Date startDate, Date endDate){
+        long daysDiff = 0L;
+        try {
+            // calculating the difference b/w startDate and endDate
+
+            long getDiff = endDate.getTime() - startDate.getTime();
+
+            // using TimeUnit class from java.util.concurrent package
+            daysDiff = TimeUnit.MILLISECONDS.toDays(getDiff);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return daysDiff;
     }
 }

@@ -11,8 +11,8 @@
 package com.example.eims.repository;
 
 import com.example.eims.entity.Breed;
-import com.example.eims.entity.Supplier;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 import java.util.Optional;
@@ -20,4 +20,9 @@ import java.util.Optional;
 public interface BreedRepository extends JpaRepository<Breed, Long> {
     Optional<List<Breed>> findBySpecieId(Long specieId);
     Optional<List<Breed>> findByUserId(Long userId);
+    @Query(value = "SELECT b.* FROM eims.egg_product ep " +
+            "JOIN eims.egg_batch eb ON ep.egg_batch_id = eb.egg_batch_id " +
+            "JOIN eims.breed b ON eb.breed_id = b.breed_id " +
+            "WHERE ep.product_id = ?1", nativeQuery = true)
+    Breed getBreedOfProduct(Long productId);
 }

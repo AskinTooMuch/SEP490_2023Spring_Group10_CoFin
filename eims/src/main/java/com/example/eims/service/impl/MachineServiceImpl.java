@@ -16,10 +16,7 @@ import com.example.eims.dto.machine.CreateMachineDTO;
 import com.example.eims.dto.machine.MachineDetailDTO;
 import com.example.eims.dto.machine.MachineListItemDTO;
 import com.example.eims.dto.machine.UpdateMachineDTO;
-import com.example.eims.entity.EggLocation;
-import com.example.eims.entity.EggProduct;
-import com.example.eims.entity.Machine;
-import com.example.eims.entity.MachineType;
+import com.example.eims.entity.*;
 import com.example.eims.repository.*;
 import com.example.eims.service.interfaces.IMachineService;
 import com.example.eims.utils.StringDealer;
@@ -50,14 +47,19 @@ public class MachineServiceImpl implements IMachineService {
     private final MachineTypeRepository machineTypeRepository;
     @Autowired
     private final EggProductRepository eggProductRepository;
+    @Autowired
+    private final BreedRepository breedRepository;
     private final StringDealer stringDealer;
 
-    public MachineServiceImpl(MachineRepository machineRepository, FacilityRepository facilityRepository, EggLocationRepository eggLocationRepository, MachineTypeRepository machineTypeRepository, EggProductRepository eggProductRepository) {
+    public MachineServiceImpl(MachineRepository machineRepository, FacilityRepository facilityRepository,
+                              EggLocationRepository eggLocationRepository, MachineTypeRepository machineTypeRepository,
+                              EggProductRepository eggProductRepository, BreedRepository breedRepository) {
         this.machineRepository = machineRepository;
         this.facilityRepository = facilityRepository;
         this.eggLocationRepository = eggLocationRepository;
         this.machineTypeRepository = machineTypeRepository;
         this.eggProductRepository = eggProductRepository;
+        this.breedRepository = breedRepository;
         this.stringDealer = new StringDealer();
     }
 
@@ -112,6 +114,14 @@ public class MachineServiceImpl implements IMachineService {
                 EggLocationMachineDetailDTO eggLocationMachineDetailDTO = new EggLocationMachineDetailDTO();
                 eggLocationMachineDetailDTO.getFromEntity(eggLocation);
                 EggProduct eggProduct = eggProductRepository.getByProductId(eggLocation.getProductId()).get();
+                Date startDate = eggProduct.getIncubationDate();
+                Date endDate = Date.valueOf(LocalDate.now());
+                Breed breed = breedRepository.getBreedOfProduct(eggProduct.getProductId());
+                int growthTime = breed.getGrowthTime();
+                String breedName = breed.getBreedName();
+                eggLocationMachineDetailDTO.setGrowthTime(growthTime);
+                eggLocationMachineDetailDTO.setBreedName(breedName);
+                eggLocationMachineDetailDTO.setIncubationDateToNow(stringDealer.dateDiff(startDate, endDate));
                 eggLocationMachineDetailDTO.setEggBatchId(eggProduct.getEggBatchId());
                 eggLocations.add(eggLocationMachineDetailDTO);
             }

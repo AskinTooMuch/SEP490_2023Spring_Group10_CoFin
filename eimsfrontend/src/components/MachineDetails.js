@@ -331,9 +331,9 @@ export default function BasicTabs() {
                         <thead>
                             <tr>
                                 <th scope="col">Mã lô</th>
+                                <th scope="col">Loại</th>
                                 <th scope="col">Tiến trình</th>
                                 <th scope="col">Số lượng</th>
-                                <th scope="col">Thời gian hoàn thành</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -341,9 +341,9 @@ export default function BasicTabs() {
                                 listEggLocation.map((item, index) =>
                                     <tr>
                                         <th scope="row">{item.eggBatchId}</th>
-                                        <td>Ngày </td>
-                                        <td>{item.amount}</td>
-                                        <td>26/01/2023</td>
+                                        <th scope="row">{item.breedName}</th>
+                                        <td scope="row">Ngày {item.incubationDateToNow}/{item.growthTime} </td>
+                                        <td scope="row">{item.amount}</td>
                                     </tr>
                                 ) : "Nothing"
                             }

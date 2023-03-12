@@ -14,11 +14,16 @@ package com.example.eims.dto.eggLocation;
 import com.example.eims.entity.EggLocation;
 import lombok.Data;
 
+import java.sql.Date;
+
 @Data
 public class EggLocationMachineDetailDTO {
     private Long eggLocationId;
     private Long eggBatchId;
     private Long machineId;
+    private Long incubationDateToNow;
+    private int growthTime;
+    private String breedName;
     private int amount;
     private int status;
 
