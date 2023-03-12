@@ -13,7 +13,6 @@ package com.example.eims.controller;
 
 import com.example.eims.dto.breed.EditBreedDTO;
 import com.example.eims.dto.breed.NewBreedDTO;
-import com.example.eims.service.impl.FileStorageServiceImpl;
 import com.example.eims.service.interfaces.IBreedService;
 import com.example.eims.utils.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,9 +27,6 @@ public class BreedController {
 
     @Autowired
     private IBreedService breedService;
-
-    @Autowired
-    private FileStorageServiceImpl fileStorageServiceImpl;
 
     public final Validator validator = new Validator();
 

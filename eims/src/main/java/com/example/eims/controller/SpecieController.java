@@ -15,16 +15,13 @@
 
 package com.example.eims.controller;
 
-import com.example.eims.dto.specie.DetailSpecieDTO;
 import com.example.eims.dto.specie.EditSpecieDTO;
 import com.example.eims.dto.specie.NewSpecieDTO;
-import com.example.eims.entity.Specie;
 import com.example.eims.service.interfaces.ISpecieService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
@@ -41,7 +38,7 @@ public class SpecieController {
      */
     @PostMapping("/new")
     //@Secured({"ROLE_OWNER"})
-    public ResponseEntity<String> newSpecie(@RequestBody NewSpecieDTO newSpecieDTO){
+    public ResponseEntity<?> newSpecie(@RequestBody NewSpecieDTO newSpecieDTO){
         return specieService.newSpecie(newSpecieDTO);
     }
 
@@ -52,7 +49,7 @@ public class SpecieController {
      * @return
      */
     @GetMapping("/list")
-    public ResponseEntity<List<DetailSpecieDTO>> listSpecie(@RequestParam Long userId){
+    public ResponseEntity<?> listSpecie(@RequestParam Long userId){
         return specieService.listSpecie(userId);
     }
 
@@ -63,7 +60,7 @@ public class SpecieController {
      * @return
      */
     @PostMapping("/edit/get")
-    public ResponseEntity<Specie> getSpecie(@RequestParam Long specieId){
+    public ResponseEntity<?> getSpecie(@RequestParam Long specieId){
         return specieService.getSpecie(specieId);
     }
 
@@ -85,7 +82,7 @@ public class SpecieController {
      * @return
      */
     @GetMapping("/delete")
-    public ResponseEntity<String> deleteSpecie(@RequestParam(value = "specieId") Long specieId){
+    public ResponseEntity<?> deleteSpecie(@RequestParam(value = "specieId") Long specieId){
         return specieService.deleteSpecie(specieId);
     }
 }

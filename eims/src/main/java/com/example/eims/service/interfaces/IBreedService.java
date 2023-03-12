@@ -55,7 +55,7 @@ public interface IBreedService {
     ResponseEntity<?> viewBreedDetailBySpecie (Long specieId);
 
     /**
-     * Service to view breed detail information of 1 specie
+     * Service to view breed detail information created by a user
      * @param userId User id to be queried
      * @return Breed information or response message
      */
