@@ -102,7 +102,8 @@ class SupplierServiceImplTest {
 
         // Define behaviour of repository
         when(userRepository.getStatusByUserId(1L)).thenReturn(true);
-        when(supplierRepository.existsBySupplierPhone("0987654321")).thenReturn(false);
+        when(supplierRepository.existsBySupplierPhoneAndUserId("0987654321", dto.getUserId()))
+                .thenReturn(false);
 
         // Run service method
         ResponseEntity<?> responseEntity = supplierService.createSupplier(dto);
@@ -133,6 +134,7 @@ class SupplierServiceImplTest {
         Supplier supplier = new Supplier();
         supplier.setSupplierId(1L);
         UpdateSupplierDTO dto = new UpdateSupplierDTO();
+        dto.setUserId(1L);
         dto.setSupplierId(1L);
         dto.setSupplierName("name");
         dto.setSupplierPhone("0987654321");
@@ -143,7 +145,8 @@ class SupplierServiceImplTest {
         String oldPhone = "0987654320";
         // Define behaviour of repository
         when(supplierRepository.findSupplierPhoneById(dto.getSupplierId())).thenReturn(oldPhone);
-        when(supplierRepository.findBySupplierPhone(dto.getSupplierPhone())).thenReturn(Optional.empty());
+        when(supplierRepository.existsBySupplierPhoneAndUserId(dto.getSupplierPhone(), dto.getUserId()))
+                .thenReturn(false);
         when(supplierRepository.findBySupplierId(1L)).thenReturn(Optional.of(supplier));
         // Run service method
         ResponseEntity<?> responseEntity = supplierService.updateSupplier(dto);

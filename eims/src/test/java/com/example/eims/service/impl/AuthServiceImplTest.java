@@ -14,12 +14,10 @@
 
  import com.example.eims.dto.auth.*;
  import com.example.eims.entity.Facility;
+ import com.example.eims.entity.Otp;
  import com.example.eims.entity.Registration;
  import com.example.eims.entity.User;
- import com.example.eims.repository.FacilityRepository;
- import com.example.eims.repository.RegistrationRepository;
- import com.example.eims.repository.UserRepository;
- import com.example.eims.repository.WorkInRepository;
+ import com.example.eims.repository.*;
  import org.junit.jupiter.api.DisplayName;
  import org.junit.jupiter.api.Test;
  import org.junit.jupiter.api.extension.ExtendWith;
@@ -48,6 +46,8 @@
      WorkInRepository workInRepository;
      @Mock
      RegistrationRepository registrationRepository;
+     @Mock
+     OtpRepository otpRepository;
      @Mock
      PasswordEncoder passwordEncoder;
      @InjectMocks
@@ -145,9 +145,10 @@
          verifyOtpDTO.setPhone(user.getPhone());
          verifyOtpDTO.setOTP("123");
          String phone = user.getPhone();
-         user.setOtp("123");
+         Otp otp = new Otp();
+         otp.setOtp("123");
          // Define behaviour of repository
-         when(userRepository.findByPhone(phone)).thenReturn(Optional.of(user));
+         when(otpRepository.findByPhoneNumber(phone)).thenReturn(Optional.of(otp));
 
          // Run service method
          ResponseEntity<?> responseEntity = authService.verifyOTP(verifyOtpDTO);
@@ -160,8 +161,10 @@
      void resendOTP() {
          // Set up
          String phone = "0987654321";
+         Otp otp = new Otp();
+
          // Define behaviour of repository
-         when(userRepository.findByPhone(phone)).thenReturn(Optional.of(user));
+         when(otpRepository.findByPhoneNumber(phone)).thenReturn(Optional.of(otp));
 
          // Run service method
          ResponseEntity<?> responseEntity = authService.resendOTP(phone);
@@ -179,8 +182,6 @@
          dto.setConfirmPassword("1234567Aa@");
          // Define behaviour of repository
          when(userRepository.findByPhone(dto.getPhone())).thenReturn(Optional.of(user));
-         when(passwordEncoder.matches(dto.getNewPassword(), dto.getConfirmPassword()))
-                 .thenReturn((dto.getNewPassword().equals(dto.getConfirmPassword())));
          // Run service method
          ResponseEntity<?> responseEntity = authService.resetPassword(dto);
          System.out.println(responseEntity.toString());

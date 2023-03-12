@@ -105,7 +105,7 @@ public class CustomerServiceImpl implements ICustomerService {
             return new ResponseEntity<>("Số điện thoại không hợp lệ", HttpStatus.BAD_REQUEST);
         }
         // Check phone number existed or not
-        boolean existed = customerRepository.existsByCustomerPhone(phone);
+        boolean existed = customerRepository.existsByCustomerPhoneAndUserId(phone, userId);
         if (existed) { /* if phone number existed */
             return new ResponseEntity<>("Số điện thoại đã được sử dụng", HttpStatus.BAD_REQUEST);
         }
@@ -158,6 +158,7 @@ public class CustomerServiceImpl implements ICustomerService {
      */
     @Override
     public ResponseEntity<?> updateCustomer(UpdateCustomerDTO updateCustomerDTO) {
+        Long userId = updateCustomerDTO.getUserId();
         // Name
         String name = stringDealer.trimMax(updateCustomerDTO.getCustomerName());
         if (name.equals("")) { /* Supplier name is empty */
@@ -173,8 +174,8 @@ public class CustomerServiceImpl implements ICustomerService {
         }
         String oldPhone = customerRepository.findCustomerPhoneById(updateCustomerDTO.getCustomerId());
         if (!newPhone.equals(oldPhone)) {
-            Optional<Customer> customerOptional = customerRepository.findByCustomerPhone(newPhone);
-            if (customerOptional.isPresent()) {
+            boolean existed = customerRepository.existsByCustomerPhoneAndUserId(newPhone, userId);
+            if (existed) {
                 return new ResponseEntity<>("Số điện thoại đã được sử dụng", HttpStatus.BAD_REQUEST);
             }
         }

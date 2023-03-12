@@ -16,23 +16,25 @@ import lombok.Data;
 
 @Data
 public class SupplierDetailDTO {
+    private Long userId;
     private Long supplierId;
     private String supplierName;
-    private String phone;
-    private String email;
     private String facilityName;
-    private String address;
+    private String supplierPhone;
+    private String supplierMail;
+    private String supplierAddress;
     private Float fertilizedRate;
     private Float maleRate;
     private int status;
 
     public void getFromEntity(Supplier supplier) {
+        this.userId = supplier.getUserId();
         this.supplierId = supplier.getSupplierId();
         this.supplierName = supplier.getSupplierName();
-        this.phone = supplier.getSupplierPhone();
-        this.email = supplier.getSupplierMail();
+        this.supplierPhone = supplier.getSupplierPhone();
+        this.supplierMail = supplier.getSupplierMail();
         this.facilityName = supplier.getFacilityName();
-        this.address = supplier.getSupplierAddress();
+        this.supplierAddress = supplier.getSupplierAddress();
         this.status = supplier.getStatus();
     }
 }

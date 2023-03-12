@@ -88,13 +88,14 @@ class CustomerServiceImplTest {
         user.setUserId(1L);
         user.setStatus(1);
         dto.setUserId(1L);
-        dto.setName("name");
-        dto.setPhone("0987654321");
-        dto.setMail("a@a.com");
-        dto.setAddress("address");
+        dto.setCustomerName("name");
+        dto.setCustomerPhone("0987654321");
+        dto.setCustomerMail("a@a.com");
+        dto.setCustomerAddress("address");
         // Define behaviour of repository
         when(userRepository.getStatusByUserId(user.getUserId())).thenReturn(user.getStatus() == 1);
-        when(customerRepository.existsByCustomerPhone(dto.getPhone())).thenReturn(false);
+        when(customerRepository.existsByCustomerPhoneAndUserId(dto.getCustomerPhone(), user.getUserId()))
+                .thenReturn(false);
 
         // Run service method
         ResponseEntity<?> responseEntity = customerService.createCustomer(dto);
@@ -122,16 +123,18 @@ class CustomerServiceImplTest {
         // Set up
         UpdateCustomerDTO dto = new UpdateCustomerDTO();
         Customer customer = new Customer();
+        dto.setUserId(1L);
         dto.setCustomerId(1L);
-        dto.setName("name");
-        dto.setPhone("0987654321");
-        dto.setAddress("address");
-        dto.setMail("a@a.com");
+        dto.setCustomerName("name");
+        dto.setCustomerPhone("0987654321");
+        dto.setCustomerAddress("address");
+        dto.setCustomerMail("a@a.com");
         dto.setStatus(1);
         String oldPhone = "0987654320";
         // Define behaviour of repository
         when(customerRepository.findCustomerPhoneById(1L)).thenReturn(oldPhone);
-        when(customerRepository.findByCustomerPhone(dto.getPhone())).thenReturn(Optional.empty());
+        when(customerRepository.existsByCustomerPhoneAndUserId(dto.getCustomerPhone(), dto.getUserId()))
+                .thenReturn(false);
         when(customerRepository.findByCustomerId(dto.getCustomerId())).thenReturn(Optional.of(customer));
         // Run service method
         ResponseEntity<?> responseEntity = customerService.updateCustomer(dto);

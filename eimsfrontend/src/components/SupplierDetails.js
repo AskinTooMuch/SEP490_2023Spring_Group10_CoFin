@@ -71,6 +71,8 @@ export default function BasicTabs() {
         supplierPhone: "",
         supplierAddress: "",
         supplierMail: "",
+        fertilizedRate: "",
+        maleRate: "",
         status: ""
     })
 
@@ -129,13 +131,15 @@ export default function BasicTabs() {
         const result = await axios.get(SUPPLIER_GET,
             { params: { supplierId: id } });
         // Set inf
-        setAddressJson(JSON.parse(result.data.address));
+        setAddressJson(JSON.parse(result.data.supplierAddress));
         updateSupplierDTO.supplierId = result.data.supplierId;
         updateSupplierDTO.supplierName = result.data.supplierName;
         updateSupplierDTO.facilityName = result.data.facilityName;
-        updateSupplierDTO.supplierPhone = result.data.phone;
+        updateSupplierDTO.supplierPhone = result.data.supplierPhone;
         updateSupplierDTO.supplierAddress = result.data.supplierAddress;
-        updateSupplierDTO.supplierMail = result.data.email;
+        updateSupplierDTO.supplierMail = result.data.supplierMail;
+        updateSupplierDTO.fertilizedRate = result.data.fertilizedRate;
+        updateSupplierDTO.maleRate = result.data.maleRate;
         updateSupplierDTO.status = result.data.status;
         // Get index of dropdowns
         console.log("load values");
@@ -500,7 +504,7 @@ export default function BasicTabs() {
                                 <p>Tỉ lệ trứng thụ tinh</p>
                             </div>
                             <div className="col-md-4">
-                                <p>8.9/10</p>
+                                <p>{updateSupplierDTO.fertilizedRate}/10</p>
                             </div>
                         </div>
                         <div className="row">
@@ -508,7 +512,7 @@ export default function BasicTabs() {
                                 <p>Tỉ lệ thành gà trống</p>
                             </div>
                             <div className="col-md-4">
-                                <p>6.2/10</p>
+                                <p>{updateSupplierDTO.maleRate}/10</p>
                             </div>
                         </div>
                         <div className="row">

@@ -128,7 +128,7 @@ public class SupplierServiceImpl implements ISupplierService {
             return new ResponseEntity<>("Số điện thoại không hợp lệ", HttpStatus.BAD_REQUEST);
         }
         // Check phone number existed or not
-        boolean existed = supplierRepository.existsBySupplierPhone(createSupplierDTO.getSupplierPhone());
+        boolean existed = supplierRepository.existsBySupplierPhoneAndUserId(phone, userId);
         if (existed) { /* if phone number existed */
             return new ResponseEntity<>("Số điện thoại đã được sử dụng", HttpStatus.BAD_REQUEST);
         }
@@ -186,6 +186,7 @@ public class SupplierServiceImpl implements ISupplierService {
      */
     @Override
     public ResponseEntity<?> updateSupplier(UpdateSupplierDTO updateSupplierDTO) {
+        Long userId = updateSupplierDTO.getUserId();
         // Check blank input
         // Name
         String name = stringDealer.trimMax(updateSupplierDTO.getSupplierName());
@@ -202,8 +203,8 @@ public class SupplierServiceImpl implements ISupplierService {
         }
         String oldPhone = supplierRepository.findSupplierPhoneById(updateSupplierDTO.getSupplierId());
         if (!oldPhone.equals(newPhone)){
-            Optional<Supplier> supplierOptional = supplierRepository.findBySupplierPhone(newPhone);
-            if (supplierOptional.isPresent()) {
+            boolean existed = supplierRepository.existsBySupplierPhoneAndUserId(newPhone, userId);
+            if (existed) {
                 return new ResponseEntity<>("Số điện thoại đã được sử dụng", HttpStatus.BAD_REQUEST);
             }
         }

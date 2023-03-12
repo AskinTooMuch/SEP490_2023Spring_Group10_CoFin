@@ -41,8 +41,8 @@ class BreedServiceImplTest {
     SpecieRepository specieRepository;
     @Mock
     BreedRepository breedRepository;
-    @Mock
-    FileStorageService fileStorageService;
+    //@Mock
+    //FileStorageService fileStorageService;
     @InjectMocks
     BreedServiceImpl breedService;
 

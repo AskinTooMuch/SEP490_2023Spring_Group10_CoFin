@@ -26,6 +26,7 @@ public interface SupplierRepository extends JpaRepository<Supplier, Long> {
     Optional<List<Supplier>> findByUserId(Long userId);
     Optional<Supplier> findBySupplierId(Long supplierId);
     boolean existsBySupplierPhone(String phoneNumber);
+    boolean existsBySupplierPhoneAndUserId(String phoneNumber, Long userId);
     boolean existsBySupplierId(Long supplierId);
     @Query(value = "SELECT FROM eims.supplier WHERE user_id = ?1 " +
             "AND supplier_phone LIKE %?2% OR supplier_name LIKE %?2%", nativeQuery = true)
@@ -35,4 +36,5 @@ public interface SupplierRepository extends JpaRepository<Supplier, Long> {
     @Query(value = "SELECT supplier_phone FROM eims.supplier WHERE supplier_id = ?1 ", nativeQuery = true)
     String findSupplierPhoneById(Long supplierId);
     Optional<Supplier> findBySupplierPhone(String phone);
+    Optional<Supplier> findBySupplierPhoneAndUserId(String phone, Long userId);
 }

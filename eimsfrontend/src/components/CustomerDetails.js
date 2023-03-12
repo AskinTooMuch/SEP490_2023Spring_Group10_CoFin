@@ -66,6 +66,7 @@ export default function BasicTabs() {
 
     //DTO
     const [updateCustomerDTO, setUpdateCustomerDTO] = useState({
+        userId: sessionStorage.getItem("curUserId"),
         customerId: "",
         customerName: "",
         customerPhone: "",
@@ -131,6 +132,7 @@ export default function BasicTabs() {
             { params: { customerId: id } });
         // Set inf
         setAddressJson(JSON.parse(result.data.customerAddress));
+        updateCustomerDTO.userId = sessionStorage.getItem("curUserId");
         updateCustomerDTO.customerId = result.data.customerId;
         updateCustomerDTO.customerName = result.data.customerName;
         updateCustomerDTO.customerPhone = result.data.customerPhone;
