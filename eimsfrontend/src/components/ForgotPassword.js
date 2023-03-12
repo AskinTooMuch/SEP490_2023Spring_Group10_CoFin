@@ -75,7 +75,7 @@ const ForgotPassword = () => {
         }
       );
       console.log(JSON.stringify(response?.data));
-      toast.success("OTP đã gửi")
+      toast.success("Đã gửi lại OTP")
     } catch (err) {
       if (!err?.response) {
         toast.error('Server không phản hồi');
@@ -159,7 +159,7 @@ const ForgotPassword = () => {
               <div className="u-form u-login-control u-form-1">
                 <form onSubmit={handleSend} className="u-clearfix u-form-custom-backend u-form-spacing-10 u-form-vertical u-inner-form" source="custom" name="form" style={{ padding: "0px" }}>
                   <div className="u-form-group u-form-name">
-                    <label for="username-a30d" className="u-label u-text-grey-25 u-label-1">Tài khoản </label>
+                    <label for="username-a30d" className="u-label u-text-grey-25 u-label-1">Số điện thoại</label>
                     <input type="text" name="account" value={verifyOtpDTO.phone} placeholder="Nhập số điện thoại" required ref={userRef} onChange={(e) => handleChange(e, "phone")}
                       className="u-border-2 u-border-grey-10 u-grey-10 u-input u-input-rectangle u-input-1" />
                   </div>

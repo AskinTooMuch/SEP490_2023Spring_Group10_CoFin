@@ -69,7 +69,7 @@ const Register = () => {
     const [signUpDTO, setSignUpDTO] = useState({
         username: "",
         userDob: "",
-        userPhone: "",
+        userPhone: sessionStorage.getItem("curPhone"),
         userEmail: "",
         userAddress: "",
         userPassword: "",

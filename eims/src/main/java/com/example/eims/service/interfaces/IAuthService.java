@@ -69,4 +69,27 @@ public interface IAuthService {
      * @return
      */
     public ResponseEntity<?> resetPassword(ForgotPasswordDTO forgotPasswordDTO);
+
+    /**
+     * Send OTP to register owner.
+     *
+     * @param phone the phone number of the account
+     * @return
+     */
+    public ResponseEntity<?> sendOTPRegister(String phone);
+
+    /**
+     * Verify OTP to register owner.
+     *
+     * @param verifyOtpDTO
+     * @return
+     */
+    public ResponseEntity<?> verifyOTPRegister(VerifyOtpDTO verifyOtpDTO);
+
+    /**
+     * Re-send OTP register owner.
+     *
+     * @return
+     */
+    public ResponseEntity<?> resendOTPRegister(String phone);
 }

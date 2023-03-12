@@ -44,7 +44,6 @@ CREATE TABLE user(
     salary		decimal(15,2),
     password	varchar(127)	NOT NULL,
     address		varchar(511),
-    otp 		varchar(15) 	DEFAULT "",
 	status		boolean			NOT NULL
 );
 
@@ -231,12 +230,20 @@ CREATE TABLE registration(
 );
 
 CREATE TABLE notification(
-	notification_id		integer	AUTO_INCREMENT PRIMARY KEY,
+	notification_id		integer		AUTO_INCREMENT PRIMARY KEY,
     facility_id		    integer		NOT NULL,
     notification_brief	varchar(255),
     product_id			integer,
     status				boolean
 );
+
+CREATE TABLE otp(
+	otp_id		integer			AUTO_INCREMENT PRIMARY KEY,
+    phone_number	varchar(15)		NOT NULL,
+    otp				varchar(10) 	DEFAULT "",
+    status				boolean
+);
+
 
 -- Add the foreign keys and references to created tables.
 ALTER TABLE facility 

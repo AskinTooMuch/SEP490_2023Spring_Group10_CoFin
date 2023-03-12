@@ -12,14 +12,8 @@
 package com.example.eims.service.impl;
 
 import com.example.eims.dto.auth.*;
-import com.example.eims.entity.Facility;
-import com.example.eims.entity.Registration;
-import com.example.eims.entity.User;
-import com.example.eims.entity.WorkIn;
-import com.example.eims.repository.FacilityRepository;
-import com.example.eims.repository.RegistrationRepository;
-import com.example.eims.repository.UserRepository;
-import com.example.eims.repository.WorkInRepository;
+import com.example.eims.entity.*;
+import com.example.eims.repository.*;
 import com.example.eims.service.interfaces.IAuthService;
 import com.example.eims.utils.StringDealer;
 import jakarta.transaction.Transactional;
@@ -49,17 +43,21 @@ public class AuthServiceImpl implements IAuthService {
     @Autowired
     private final RegistrationRepository registrationRepository;
     @Autowired
+    private final OtpRepository otpRepository;
+    @Autowired
     private final PasswordEncoder passwordEncoder;
     private final StringDealer stringDealer;
 
     public AuthServiceImpl(AuthenticationManager authenticationManager, UserRepository userRepository,
                            FacilityRepository facilityRepository, WorkInRepository workInRepository,
-                           RegistrationRepository registrationRepository, PasswordEncoder passwordEncoder) {
+                           RegistrationRepository registrationRepository, OtpRepository otpRepository,
+                           PasswordEncoder passwordEncoder) {
         this.authenticationManager = authenticationManager;
         this.userRepository = userRepository;
         this.facilityRepository = facilityRepository;
         this.workInRepository = workInRepository;
         this.registrationRepository = registrationRepository;
+        this.otpRepository = otpRepository;
         this.passwordEncoder = passwordEncoder;
         this.stringDealer = new StringDealer();
     }
@@ -300,11 +298,14 @@ public class AuthServiceImpl implements IAuthService {
         } else {
             // Create OTP
             String OTP = "111";
-            User user = userOptional.get();
-            user.setOtp(OTP);
-            userRepository.save(user);
+            Otp otp = new Otp();
+            otp.setPhoneNumber(phone);
+            otp.setOtp(OTP);
+            otpRepository.save(otp);
+
             // Send OTP
 
+            //
             return new ResponseEntity<>("Đã gửi mã OTP", HttpStatus.OK);
         }
     }
@@ -312,7 +313,7 @@ public class AuthServiceImpl implements IAuthService {
     /**
      * Verify OTP forgot password.
      *
-     * @param verifyOtpDTO the phone number of the account
+     * @param verifyOtpDTO
      * @return
      */
     @Override
@@ -320,12 +321,10 @@ public class AuthServiceImpl implements IAuthService {
         // Check if the OTP match
         String phone = verifyOtpDTO.getPhone();
         String otp = verifyOtpDTO.getOTP();
-        User user = userRepository.findByPhone(phone).get();
-        String OTP_REAL = user.getOtp();
-        if (otp.equals(OTP_REAL)) {      /* OTP match*/
+        Otp otpReal = otpRepository.findByPhoneNumber(verifyOtpDTO.getPhone()).get();
+        if (otp.equals(otpReal.getOtp())) {      /* OTP match*/
             // Reset otp
-            user.setOtp("");
-            userRepository.save(user);
+            otpRepository.delete(otpReal);
             return new ResponseEntity<>("Mã OTP đã đúng", HttpStatus.OK);
         } else {                        /* OTP not match*/
 
@@ -346,10 +345,12 @@ public class AuthServiceImpl implements IAuthService {
             return new ResponseEntity<>("Không tìm thấy số điện thoại", HttpStatus.BAD_REQUEST);
         } else {
             // Create OTP
+            // Create OTP
             String OTP = "111";
-            User user = userOptional.get();
-            user.setOtp(OTP);
-            userRepository.save(user);
+            Otp otp = otpRepository.findByPhoneNumber(phone).get();
+            otp.setPhoneNumber(phone);
+            otp.setOtp(OTP);
+            otpRepository.save(otp);
             // Send OTP
 
             //
@@ -390,6 +391,76 @@ public class AuthServiceImpl implements IAuthService {
             return new ResponseEntity<>("Mật khẩu thay đổi thành công", HttpStatus.OK);
         } else {
             return new ResponseEntity<>("Mật khẩu không khớp", HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    /**
+     * Send OTP to register owner.
+     *
+     * @param phone the phone number
+     * @return
+     */
+    @Override
+    public ResponseEntity<?> sendOTPRegister(String phone) {
+        // Check credentials, if not valid then return Bad request (403)
+        Optional<User> userOptional = userRepository.findByPhone(phone);
+        if (userOptional.isPresent()) { /* No user found */
+            return new ResponseEntity<>("Số điện thoại đã được sử dụng", HttpStatus.BAD_REQUEST);
+        } else {
+            // Create OTP
+            String OTP = "111";
+            Otp otp = new Otp();
+            otp.setPhoneNumber(phone);
+            otp.setOtp(OTP);
+            otpRepository.save(otp);
+            // Send OTP
+
+            return new ResponseEntity<>(OTP, HttpStatus.OK);
+        }
+    }
+
+    /**
+     * Verify OTP to register owner.
+     *
+     * @param verifyOtpDTO
+     * @return
+     */
+    @Override
+    public ResponseEntity<?> verifyOTPRegister(VerifyOtpDTO verifyOtpDTO) {
+        // Check if the OTP match
+        String phone = verifyOtpDTO.getPhone();
+        String otpSend = verifyOtpDTO.getOTP();
+        Otp otp = otpRepository.findByPhoneNumber(phone).get();
+        if (otpSend.equals(otp.getOtp())) {      /* OTP match*/
+            otpRepository.delete(otp);
+            return new ResponseEntity<>("Mã OTP đã đúng", HttpStatus.OK);
+        } else {                        /* OTP not match*/
+            return new ResponseEntity<>("Mã OTP sai", HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    /**
+     * Re-send OTP register owner.
+     *
+     * @param phone
+     * @return
+     */
+    @Override
+    public ResponseEntity<?> resendOTPRegister(String phone) {
+        Optional<Otp> otpOptional =otpRepository.findByPhoneNumber(phone);
+        if (!otpOptional.isPresent()) { /* Not exist in database */
+            return new ResponseEntity<>("Số điện thoại đã được sử dụng", HttpStatus.BAD_REQUEST);
+        } else { /* Exist in database, registering */
+            // Create OTP
+            String OTP = "111";
+            Otp otp = otpOptional.get();
+            otp.setPhoneNumber(phone);
+            otp.setOtp(OTP);
+            otpRepository.save(otp);
+            // Send OTP
+
+            //
+            return new ResponseEntity<>("Đã gửi lại mã OTP", HttpStatus.OK);
         }
     }
 }

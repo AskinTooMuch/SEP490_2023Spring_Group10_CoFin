@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, useLayoutEffect } from 'react';
-import axios from '../api/axios';
+import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { faCheck, faTimes, faInfoCircle, faStarOfLife } from "@fortawesome/free-solid-svg-icons";
@@ -16,6 +16,16 @@ const Profile = () => {
     const USER_DETAIL_URL = '/api/user/details';
     const USER_UPDATE_GET = '/api/user/update/get';
     const USER_UPDATE_SAVE = '/api/user/update/save';
+
+    // Dependency
+    const [addressLoaded, setAddressLoaded] = useState(false);
+    const [userDetailLoaded, setUserDetailLoaded] = useState(false);
+    const [addressJson, setAddressJson] = useState({
+        city: "",
+        district: "",
+        ward: "",
+        street: ""
+    });
 
     //show-hide password 
     const [passwordShown, setPasswordShown] = useState(false);
@@ -60,7 +70,7 @@ const Profile = () => {
 
     // DTO for displaying user's information
     const [updateUserDTO, setUpdateUserDTO] = useState({
-        userId: "",
+        userId: sessionStorage.getItem("curUserId"),
         username: "",
         dob: "",
         email: "",
@@ -70,7 +80,7 @@ const Profile = () => {
     //Spliting the user's information into 2 objects: user account information and facility information
     //Account information
     const [accountInformation, setAccountInformation] = useState({
-        userId: "",
+        userId: sessionStorage.getItem("curUserId"),
         userRoleName: "",
         username: "",
         userDob: "",
@@ -81,7 +91,7 @@ const Profile = () => {
     });
     //Facility information
     const [facilityInformation, setFacilityInformation] = useState({
-        facilityId: "",
+        facilityId: sessionStorage.getItem("facilityId"),
         facilityName: "",
         facilityAddress: "",
         facilityFoundDate: "",
@@ -90,6 +100,19 @@ const Profile = () => {
         subscriptionId: "",
         subscriptionExpirationDate: ""
     });
+
+
+    //Full Json addresses
+    const [fullAddresses, setFullAddresses] = useState('');
+    const [city, setCity] = useState([
+        { value: '', label: 'Chọn Tỉnh/Thành phố' }
+    ]);
+    const [district, setDistrict] = useState(''); //For populate dropdowns
+    const [ward, setWard] = useState('');
+    const [cityIndex, setCityIndex] = useState(); //Save the index of selected dropdowns
+    const [districtIndex, setDistrictIndex] = useState();
+    const [wardIndex, setWardIndex] = useState();
+    const [street, setStreet] = useState();
 
     //address
     const [userAddress, setUserAddress] = useState(
@@ -113,12 +136,35 @@ const Profile = () => {
     const [matchPwd, setMatchPwd] = useState('');
     const [validMatch, setValidMatch] = useState(false);
 
+    // Set value for address fields
+    //User
+    useEffect(() => {
+        console.log("Load address");
+        loadAddress();
+        console.log(fullAddresses);
+    }, [addressLoaded]);
+
     //Get user details
     useEffect(() => {
         if (inf_fetched_ref.current) return;
         inf_fetched_ref.current = true;
         loadUserDetails();
-    }, []);
+    }, [userDetailLoaded]);
+
+    const loadAddress = async () => {
+        const result = await axios.get("https://raw.githubusercontent.com/kenzouno1/DiaGioiHanhChinhVN/master/data.json",
+            {});
+        setFullAddresses(result.data);
+        console.log("Full address");
+        console.log(fullAddresses);
+        // Set inf
+        const cityList = fullAddresses.slice();
+        for (let i in cityList) {
+            cityList[i] = { value: cityList[i].Id, label: cityList[i].Name }
+        }
+        setCity(cityList);
+        setAddressLoaded(true);
+    }
 
     const loadUserDetails = async () => {
         const result = await axios.get(USER_DETAIL_URL,
@@ -132,6 +178,7 @@ const Profile = () => {
             });
         const responseJson = result.data;
         console.log(responseJson);
+        setAddressJson(JSON.parse(responseJson.userAddress));
         //Set account information
         setAccountInformation({
             userId: responseJson.userId,
@@ -158,8 +205,50 @@ const Profile = () => {
         })
         setFaciAddress(JSON.parse(responseJson.facilityAddress))
         console.log(facilityInformation.subscriptionId === '');
+        
     }
 
+    //Function for populating dropdowns
+    function loadDistrict(index) {
+        console.log("City " + index);
+        setCityIndex(index);
+        const districtOnIndex = fullAddresses[index].Districts;
+        const districtList = districtOnIndex.slice();
+        for (let i in districtList) {
+            districtList[i] = { value: districtList[i].Id, label: districtList[i].Name }
+        }
+        setDistrict(districtList);
+    }
+
+    //Load user ward list
+    function loadWard(districtIndex, cIndex) {
+        if (cIndex === -1) {
+            cIndex = cityIndex;
+        }
+        console.log("District " + districtIndex);
+        setDistrictIndex(districtIndex);
+        const wardOnIndex = fullAddresses[cIndex].Districts[districtIndex].Wards;
+        const wardList = wardOnIndex.slice();
+        for (let i in wardList) {
+            wardList[i] = { value: wardList[i].Id, label: wardList[i].Name }
+        }
+        setWard(wardList);
+    }
+
+    function saveWard(index) {
+        console.log("Ward " + index);
+        setWardIndex(index);
+    }
+
+    function saveAddressJson(s) {
+        console.log("ward " + wardIndex);
+        setStreet(s);
+        addressJson.city = fullAddresses[cityIndex].Name;
+        addressJson.district = fullAddresses[cityIndex].Districts[districtIndex].Name;
+        addressJson.ward = fullAddresses[cityIndex].Districts[districtIndex].Wards[wardIndex].Name;
+        addressJson.street = street;
+        updateUserDTO.address = JSON.stringify(addressJson);
+    }
 
     // Get user's information to update
     const handleUpdateGet = async () => {
@@ -176,7 +265,6 @@ const Profile = () => {
                 }
             );
             const responseJson = response.data;
-            console.log(responseJson);
             //Set User information
             setUpdateUserDTO({
                 userId: sessionStorage.getItem("curUserId"),
@@ -184,16 +272,59 @@ const Profile = () => {
                 dob: responseJson.dob,
                 email: responseJson.email,
                 address: responseJson.address
-            })
+            });
+
+            // Get index of dropdowns
+            console.log("load values");
+            console.log(fullAddresses);
+            console.log(addressJson);
+            for (let i in city) {
+                console.log(i);
+                if (addressJson.city === city[i].label) {
+                    setCityIndex(i);
+                    addressJson.city = fullAddresses[i].Name;
+                    console.log("City " + i);
+                    setCityIndex(i);
+                    const districtOnIndex = fullAddresses[i].Districts;
+                    const districtList = districtOnIndex.slice();
+                    for (let i in districtList) {
+                        districtList[i] = { value: districtList[i].Id, label: districtList[i].Name }
+                    }
+                    setDistrict(districtList);
+                    for (let j in districtList) {
+                        if (addressJson.district === districtList[j].label) {
+                            setDistrictIndex(j);
+                            console.log(j);
+                            addressJson.district = fullAddresses[i].Districts[j].Name;
+                            console.log("District " + j);
+                            setDistrictIndex(j);
+                            const wardOnIndex = fullAddresses[i].Districts[j].Wards;
+                            const wardList = wardOnIndex.slice();
+                            for (let i in wardList) {
+                                wardList[i] = { value: wardList[i].Id, label: wardList[i].Name }
+                            }
+                            setWard(wardList);
+                            for (let k in wardList) {
+                                if (addressJson.ward === wardList[k].label) {
+                                    setWardIndex(k);
+                                    addressJson.ward = fullAddresses[i].Districts[j].Wards[k].Name;
+                                    break;
+                                }
+                            }
+                            break;
+                        }
+                    }
+                    break;
+                }
+            }
+            setStreet(addressJson.street);
+            console.log(addressJson);
+            setUserDetailLoaded(true);
         } catch (err) {
             if (!err?.response) {
                 toast.error('Server không phản hồi');
-            } else if (err.response?.status === 400) {
-                toast.error('Yêu cầu không đúng định dạng');
-            } else if (err.response?.status === 401) {
-                toast.error('Không có quyền thực hiện hành động này');
             } else {
-                toast.error('Yêu cầu không đúng định dạng');
+                toast.error(err.response.data);
             }
         }
     }
@@ -223,12 +354,8 @@ const Profile = () => {
         } catch (err) {
             if (!err?.response) {
                 toast.error('Server không phản hồi');
-            } else if (err.response?.status === 400) {
-                toast.error('Yêu cầu không đúng định dạng');
-            } else if (err.response?.status === 401) {
-                toast.error('Không có quyền thực hiện hành động này');
             } else {
-                toast.error('Yêu cầu không đúng định dạng');
+                toast.error(err.response.data);
             }
         }
     }
@@ -282,15 +409,9 @@ const Profile = () => {
         } catch (err) {
             if (!err?.response) {
                 toast.error('Server không phản hồi');
-            } else if (err.response?.status === 400) {
-                toast.error('Mật khẩu cũ không đúng');
-            } else if (err.response?.status === 401) {
-                toast.error('Unauthorized');
+            } else {
+                toast.error(err.response.data);
             }
-            else {
-                toast.error('Sai mật khẩu');
-            }
-
         }
 
     }
@@ -306,7 +427,7 @@ const Profile = () => {
                             <div className="tab-pane " >
                                 <div className="row">
                                     <div className="col-md-6">
-                                        <p>Tài khoản</p>
+                                        <p>Số điện thoại</p>
                                     </div>
                                     <div className="col-md-6">
                                         <p id="account">{sessionStorage.getItem("curPhone").substring(0, 2) + "*****" + sessionStorage.getItem("curPhone").substring(7)}</p>
@@ -445,29 +566,129 @@ const Profile = () => {
                                             <form onSubmit={handleUpdateSave}>
                                                 <Modal.Header><h4>Chỉnh sửa thông tin cá nhân</h4></Modal.Header>
                                                 <Modal.Body>
-                                                    <div className="mb-3">
-                                                        <label className="form-label">Họ và Tên</label>
-                                                        <input type="text" className="form-control" name="username" id="updateUsername"
-                                                            ref={userRef} onChange={e => handleUpdateUser(e, "username")}
-                                                            value={updateUserDTO.username} required />
+                                                    <div className="row">
+                                                        <div className="col-md-6 ">
+                                                            <p>Họ và tên<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
+                                                        </div>
+                                                        <div className="col-md-6">
+                                                            <input type="text" className="form-control" name="username" id="updateUsername"
+                                                                ref={userRef} onChange={e => handleUpdateUser(e, "username")}
+                                                                value={updateUserDTO.username} required />
+                                                        </div>
                                                     </div>
-                                                    <div className="mb-3">
-                                                        <label className="form-label">Ngày sinh</label>
-                                                        <input type="date" className="form-control" name="dob" id="updateDob"
-                                                            ref={userRef} onChange={e => handleUpdateUser(e, "dob")}
-                                                            value={updateUserDTO.dob} required />
+                                                    <div className="row">
+                                                        <div className="col-md-6 ">
+                                                            <p>Ngày sinh<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
+                                                        </div>
+                                                        <div className="col-md-6">
+                                                            <input type="date" className="form-control" name="dob" id="updateDob"
+                                                                ref={userRef} onChange={e => handleUpdateUser(e, "dob")}
+                                                                value={updateUserDTO.dob} required />
+                                                        </div>
                                                     </div>
-                                                    <div className="mb-3">
-                                                        <label className="form-label">Email</label>
-                                                        <input type="email" className="form-control" name="email" id="updateEmail"
-                                                            ref={userRef} onChange={e => handleUpdateUser(e, "email")}
-                                                            value={updateUserDTO.email} required />
+
+                                                    <div className="row">
+                                                        <div className="col-md-6">
+                                                            <p>Email</p>
+                                                        </div>
+                                                        <div className=" col-md-6">
+                                                            <input type="email" className="form-control" name="email" id="updateEmail"
+                                                                ref={userRef} onChange={e => handleUpdateUser(e, "email")}
+                                                                value={updateUserDTO.email} />
+                                                        </div>
                                                     </div>
-                                                    <div className="mb-3">
-                                                        <label className="form-label">Địa chỉ</label>
-                                                        <input type="text" style={{ minHeight: "50px" }} className="form-control" name="address" id="updateAddress"
-                                                            ref={userRef} onChange={e => handleUpdateUser(e, "address")}
-                                                            value={updateUserDTO.address} required />
+                                                    {/*City*/}
+                                                    <div className="row">
+                                                        <div className="col-md-6 ">
+                                                            <p>Thành phố<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
+                                                        </div>
+                                                        <div className="col-md-6">
+                                                            <select className="form-control mt-1" id="uprovince"
+                                                                ref={userRef}
+                                                                autoComplete="off"
+                                                                onChange={(e) => loadDistrict(e.target.value)}
+                                                                value={cityIndex}
+                                                                required>
+                                                                <option value="" disabled>Chọn Tỉnh/Thành phố</option>
+                                                                {city &&
+                                                                    city.map((item, index) => (
+                                                                        <>
+                                                                            {item.label === addressJson.city
+                                                                                ? <option value={index} selected>{item.label}</option>
+                                                                                : <option value={index}>{item.label}</option>
+                                                                            }
+                                                                        </>
+                                                                    ))
+                                                                }
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    {/*District*/}
+                                                    <div className="row">
+                                                        <div className="col-md-6 ">
+                                                            <p>Quận/Huyện<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
+                                                        </div>
+                                                        <div className="col-md-6">
+                                                            <select className="form-control mt-1" id="udistrict"
+                                                                ref={userRef}
+                                                                autoComplete="off"
+                                                                onChange={(e) => loadWard(e.target.value, -1)}
+                                                                value={districtIndex}
+                                                                required>
+                                                                <option value="" disabled>Chọn Quận/Huyện</option>
+                                                                {district &&
+                                                                    district.map((item, index) => (
+                                                                        <>
+                                                                            {item.label === addressJson.district
+                                                                                ? <option value={index} selected>{item.label}</option>
+                                                                                : <option value={index}>{item.label}</option>
+                                                                            }
+                                                                        </>
+                                                                    ))
+                                                                }
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    {/*Ward*/}
+                                                    <div className="row">
+                                                        <div className="col-md-6 ">
+                                                            <p>Phường xã<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
+                                                        </div>
+                                                        <div className="col-md-6">
+                                                            <select className="form-control mt-1" id="uward"
+                                                                ref={userRef}
+                                                                autoComplete="off"
+                                                                onChange={(e) => saveWard(e.target.value)}
+                                                                value={wardIndex}
+                                                                required>
+                                                                <option value="" disabled>Chọn Phường/Xã</option>
+                                                                {ward &&
+                                                                    ward.map((item, index) => (
+                                                                        <>
+                                                                            {item.label === addressJson.ward
+                                                                                ? <option value={index} selected>{item.label}</option>
+                                                                                : <option value={index}>{item.label}</option>
+                                                                            }
+                                                                        </>
+                                                                    ))
+                                                                }
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    {/*Street*/}
+                                                    <div className="row">
+                                                        <div className="col-md-6 ">
+                                                            <p>Số nhà<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
+                                                        </div>
+                                                        <div className="col-md-6">
+                                                            <input type="text" id="uhomenum"
+                                                                ref={userRef}
+                                                                autoComplete="off"
+                                                                onChange={(e) => saveAddressJson(e.target.value)}
+                                                                required
+                                                                className="form-control"
+                                                                value={addressJson.street} />
+                                                        </div>
                                                     </div>
                                                 </Modal.Body>
                                                 <div className='model-footer'>
