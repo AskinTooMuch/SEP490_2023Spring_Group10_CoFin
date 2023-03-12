@@ -354,8 +354,8 @@ DELIMITER //
 CREATE PROCEDURE user_and_facility(uid integer) 
 BEGIN
 SELECT U.user_id, UR.role_name, U.username, U.dob, U.email, U.salary, U.address, U.status AS USER_STATUS, 
-		F.facility_id, F.facility_name, F.facility_address, F.facility_found_date, F.hotline, F.status AS FACILITY_STATUS, F.subscription_expiration_date,
-        US.subscription_id
+		F.facility_id, F.facility_name, F.facility_address, F.facility_found_date, F.business_license_number,
+        F.hotline, F.status AS FACILITY_STATUS, F.subscription_expiration_date, US.subscription_id
 
 FROM user U JOIN user_role UR ON U.role_id = UR.role_id
 		LEFT JOIN facility F ON U.user_id = F.user_id
