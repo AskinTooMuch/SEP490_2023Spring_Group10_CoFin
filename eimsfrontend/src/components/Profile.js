@@ -16,6 +16,9 @@ const Profile = () => {
     const USER_DETAIL_URL = '/api/user/details';
     const USER_UPDATE_GET = '/api/user/update/get';
     const USER_UPDATE_SAVE = '/api/user/update/save';
+    const FACILITY_UPDATE_GET = 'api/facility/update/get';
+    const FACILITY_UPDATE_SAVE = 'api/facility/update/save';
+
 
     // Dependency
     const [addressLoaded, setAddressLoaded] = useState(false);
@@ -68,13 +71,25 @@ const Profile = () => {
         newPassword: ""
     });
 
-    // DTO for displaying user's information
+    // DTO for updating user's information
     const [updateUserDTO, setUpdateUserDTO] = useState({
         userId: sessionStorage.getItem("curUserId"),
         username: "",
         dob: "",
         email: "",
         address: ""
+    });
+
+    // DTO for updating facility's information
+    const [updateFacilityDTO, setUpdateFacilityDTO] = useState({
+        userId: sessionStorage.getItem("curUserId"),
+        facilityId: "",
+        facilityName: "",
+        facilityAddress: "",
+        foundDate: "",
+        businessLicenseNumber: "",
+        hotline: "",
+        status: ""
     });
 
     //Spliting the user's information into 2 objects: user account information and facility information
@@ -95,6 +110,7 @@ const Profile = () => {
         facilityName: "",
         facilityAddress: "",
         facilityFoundDate: "",
+        businessLicenseNumber: "",
         hotline: "",
         facilityStatus: "",
         subscriptionId: "",
@@ -198,14 +214,14 @@ const Profile = () => {
             facilityName: responseJson.facilityName,
             facilityAddress: responseJson.facilityAddress,
             facilityFoundDate: responseJson.facilityFoundDate,
+            businessLicenseNumber: responseJson.businessLicenseNumber,
             hotline: responseJson.hotline,
             facilityStatus: responseJson.facilityStatus,
             subscriptionId: responseJson.subscriptionId,
             subscriptionExpirationDate: responseJson.subscriptionExpirationDate
         })
         setFaciAddress(JSON.parse(responseJson.facilityAddress))
-        console.log(facilityInformation.subscriptionId === '');
-        
+
     }
 
     //Function for populating dropdowns
@@ -240,7 +256,7 @@ const Profile = () => {
         setWardIndex(index);
     }
 
-    function saveAddressJson(s) {
+    function saveAddressJsonUser(s) {
         console.log("ward " + wardIndex);
         setStreet(s);
         addressJson.city = fullAddresses[cityIndex].Name;
@@ -250,8 +266,18 @@ const Profile = () => {
         updateUserDTO.address = JSON.stringify(addressJson);
     }
 
+    function saveAddressJsonFacility(s) {
+        console.log("ward " + wardIndex);
+        setStreet(s);
+        addressJson.city = fullAddresses[cityIndex].Name;
+        addressJson.district = fullAddresses[cityIndex].Districts[districtIndex].Name;
+        addressJson.ward = fullAddresses[cityIndex].Districts[districtIndex].Wards[wardIndex].Name;
+        addressJson.street = street;
+        updateFacilityDTO.facilityAddress = JSON.stringify(addressJson);
+    }
+
     // Get user's information to update
-    const handleUpdateGet = async () => {
+    const handleUpdateUserGet = async () => {
         setShowProfile(true);
         try {
             const response = await axios.get(USER_UPDATE_GET,
@@ -329,11 +355,91 @@ const Profile = () => {
         }
     }
 
+
+    // Get facility's information to update
+    const handleUpdateFacilityGet = async () => {
+        setShowFaci(true);
+        try {
+            const response = await axios.get(FACILITY_UPDATE_GET,
+                { params: { facilityId: sessionStorage.getItem("facilityId") } },
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Access-Control-Allow-Origin': '*'
+                    },
+                    withCredentials: false
+                }
+            );
+            const responseJson = response.data;
+            //Set User information
+            setUpdateFacilityDTO({
+                userId: sessionStorage.getItem("curUserId"),
+                facilityId: sessionStorage.getItem("facilityId"),
+                facilityName: responseJson.facilityName,
+                facilityAddress: responseJson.facilityAddress,
+                foundDate: responseJson.foundDate,
+                businessLicenseNumber: responseJson.businessLicenseNumber,
+                hotline: responseJson.hotline,
+                status: responseJson.status
+            });
+
+            // Get index of dropdowns
+            console.log("load values");
+            console.log(fullAddresses);
+            console.log(addressJson);
+            for (let i in city) {
+                console.log(i);
+                if (addressJson.city === city[i].label) {
+                    setCityIndex(i);
+                    addressJson.city = fullAddresses[i].Name;
+                    console.log("City " + i);
+                    setCityIndex(i);
+                    const districtOnIndex = fullAddresses[i].Districts;
+                    const districtList = districtOnIndex.slice();
+                    for (let i in districtList) {
+                        districtList[i] = { value: districtList[i].Id, label: districtList[i].Name }
+                    }
+                    setDistrict(districtList);
+                    for (let j in districtList) {
+                        if (addressJson.district === districtList[j].label) {
+                            setDistrictIndex(j);
+                            console.log(j);
+                            addressJson.district = fullAddresses[i].Districts[j].Name;
+                            console.log("District " + j);
+                            setDistrictIndex(j);
+                            const wardOnIndex = fullAddresses[i].Districts[j].Wards;
+                            const wardList = wardOnIndex.slice();
+                            for (let i in wardList) {
+                                wardList[i] = { value: wardList[i].Id, label: wardList[i].Name }
+                            }
+                            setWard(wardList);
+                            for (let k in wardList) {
+                                if (addressJson.ward === wardList[k].label) {
+                                    setWardIndex(k);
+                                    addressJson.ward = fullAddresses[i].Districts[j].Wards[k].Name;
+                                    break;
+                                }
+                            }
+                            break;
+                        }
+                    }
+                    break;
+                }
+            }
+            setStreet(addressJson.street);
+            console.log(addressJson);
+            setUserDetailLoaded(true);
+        } catch (err) {
+            if (!err?.response) {
+                toast.error('Server không phản hồi');
+            } else {
+                toast.error(err.response.data);
+            }
+        }
+    }
+
     // Update user's information
-    const handleUpdateSave = async (event) => {
-        setShowProfile(false);
-        console.log("userId===" + sessionStorage.getItem("curUserId"));
-        console.log(updateUserDTO);
+    const handleUpdateUserSave = async (event) => {
         event.preventDefault();
         try {
             const response = await axios.put(USER_UPDATE_SAVE,
@@ -351,6 +457,37 @@ const Profile = () => {
             setUpdateUserDTO('');
             loadUserDetails();
             toast.success("Cập nhật thông tin thành công");
+            setShowProfile(false);
+        } catch (err) {
+            if (!err?.response) {
+                toast.error('Server không phản hồi');
+            } else {
+                toast.error(err.response.data);
+            }
+        }
+    }
+
+
+    // Update facility's information
+    const handleUpdateFacilitySave = async (event) => {
+        event.preventDefault();
+        try {
+            const response = await axios.put(FACILITY_UPDATE_SAVE,
+                updateFacilityDTO,
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Access-Control-Allow-Origin': '*'
+                    },
+                    withCredentials: false
+                }
+            );
+            const responseJson = response.data;
+            console.log(responseJson);
+            setUpdateFacilityDTO('');
+            loadUserDetails();
+            toast.success("Cập nhật thông tin thành công");
+            setShowFaci(false);
         } catch (err) {
             if (!err?.response) {
                 toast.error('Server không phản hồi');
@@ -361,10 +498,20 @@ const Profile = () => {
     }
 
     // Handle input update information
+    // User's profile
     const handleUpdateUser = (event, field) => {
         let actualValue = event.target.value
         setUpdateUserDTO({
             ...updateUserDTO,
+            [field]: actualValue
+        })
+    }
+
+    // Facility
+    const handleUpdateFacility = (event, field) => {
+        let actualValue = event.target.value
+        setUpdateFacilityDTO({
+            ...updateFacilityDTO,
             [field]: actualValue
         })
     }
@@ -422,7 +569,7 @@ const Profile = () => {
             <div className="row outbox">
                 <div className="col-md-6 col-sm-12">
                     <div className="card">
-                        <div className="card-header">Thông tin tài khoản</div>
+                        <div className="card-header"><p id="titleUserProfile" >Thông tin người dùng</p></div>
                         <div className="card-body">
                             <div className="tab-pane " >
                                 <div className="row">
@@ -558,12 +705,12 @@ const Profile = () => {
                                         </Modal>
                                     </div>
                                     <div className="col-md-6">
-                                        <Button onClick={handleUpdateGet} style={{ width: "100%" }} className="btn btn-light" id="startChangeUserInformation">Cập nhật</Button >
+                                        <Button onClick={handleUpdateUserGet} style={{ width: "100%" }} className="btn btn-light" id="startChangeUserInformation">Cập nhật</Button >
                                         <Modal show={showProfile} onHide={handleCloseProfile}
                                             size="lg"
                                             aria-labelledby="contained-modal-title-vcenter"
                                             centered >
-                                            <form onSubmit={handleUpdateSave}>
+                                            <form onSubmit={handleUpdateUserSave}>
                                                 <Modal.Header><h4>Chỉnh sửa thông tin cá nhân</h4></Modal.Header>
                                                 <Modal.Body>
                                                     <div className="row">
@@ -684,7 +831,7 @@ const Profile = () => {
                                                             <input type="text" id="uhomenum"
                                                                 ref={userRef}
                                                                 autoComplete="off"
-                                                                onChange={(e) => saveAddressJson(e.target.value)}
+                                                                onChange={(e) => saveAddressJsonUser(e.target.value)}
                                                                 required
                                                                 className="form-control"
                                                                 value={addressJson.street} />
@@ -718,10 +865,18 @@ const Profile = () => {
                                 <div className="card-body"> Người dùng hiện chưa có cơ sở; vui lòng tạo mới hoặc kích hoạt cơ sở. </div>
                             </div>
                             : <div>
-                                <div className="card-header"><p id="facilityName" >Thông tin cơ sở: {facilityInformation.facilityName}</p></div>
+                                <div className="card-header"><p id="facilityName" >Thông tin cơ sở</p></div>
                                 <div className="card-body">
                                     <form>
                                         <div className="tab-pane " >
+                                            <div className="row">
+                                                <div className="col-md-6">
+                                                    <p>Tên cơ sở</p>
+                                                </div>
+                                                <div className="col-md-6">
+                                                    <p id="facilityName">{facilityInformation.facilityName}</p>
+                                                </div>
+                                            </div>
                                             <div className="row">
                                                 <div className="col-md-6">
                                                     <p>Ngày thành lập</p>
@@ -735,7 +890,7 @@ const Profile = () => {
                                                     <p>Mã số kinh doanh</p>
                                                 </div>
                                                 <div className="col-md-6">
-                                                    <p id="licenseNumber">Fuck tuan</p>
+                                                    <p id="licenseNumber">{facilityInformation.businessLicenseNumber}</p>
                                                 </div>
                                             </div>
                                             <div className="row">
@@ -792,61 +947,146 @@ const Profile = () => {
                                         </div>
                                     </form>
                                     <div style={{ textAlign: "center" }}>
-                                        <button className="btn btn-light" onClick={handleShowFaci} style={{ width: "50%" }}>Cập nhật</button>
+                                        <button className="btn btn-light" onClick={handleUpdateFacilityGet} style={{ width: "50%" }}>Cập nhật</button>
                                     </div>
                                     <Modal show={showFaci} onHide={handleCloseFaci}
                                         size="lg"
                                         aria-labelledby="contained-modal-title-vcenter"
                                         centered >
-                                        <form >
+                                        <form onSubmit={handleUpdateFacilitySave}>
                                             <Modal.Header><h4>Chỉnh sửa thông tin cơ sở</h4></Modal.Header>
                                             <Modal.Body>
                                                 <div className="row">
                                                     <div className="col-md-6 ">
-                                                        <label className="form-label">Tên<FontAwesomeIcon className="star" icon={faStarOfLife} /></label>
-                                                        <input type="text" className="form-control"
-                                                            required />
+                                                        <p>Tên cơ sở<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                                     </div>
-                                                    <div className="col-md-6">
-                                                        <label className="form-label">Số nhà<FontAwesomeIcon className="star" icon={faStarOfLife} /></label>
-                                                        <input type="text" className="form-control"
-                                                            required />
+                                                    <div className="col-md-6 ">
+                                                        <input type="text" className="form-control" name="username" id="updateFacilityName"
+                                                            ref={userRef} onChange={e => handleUpdateFacility(e, "facilityName")}
+                                                            value={updateFacilityDTO.facilityName} required />
                                                     </div>
                                                 </div>
                                                 <div className="row">
                                                     <div className="col-md-6 ">
-                                                        <label className="form-label">Ngày thành lập<FontAwesomeIcon className="star" icon={faStarOfLife} /></label>
-                                                        <input type="date" className="form-control"
-                                                            required />
+                                                        <p>Ngày thành lập<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                                     </div>
-                                                    <div className="col-md-6">
-                                                        <label className="form-label">Thành phố<FontAwesomeIcon className="star" icon={faStarOfLife} /></label>
-                                                        <input type="text" className="form-control"
-                                                            required />
+                                                    <div className="col-md-6 ">
+                                                        <input type="text" className="form-control" name="foundDate" id="updateFoundDate"
+                                                            ref={userRef} onChange={e => handleUpdateFacility(e, "foundDate")}
+                                                            value={updateFacilityDTO.foundDate} required />
                                                     </div>
                                                 </div>
                                                 <div className="row">
                                                     <div className="col-md-6 ">
-                                                        <label className="form-label">Mã đăng ký kinh doanh<FontAwesomeIcon className="star" icon={faStarOfLife} /></label>
-                                                        <input type="date" className="form-control"
-                                                            required />
+                                                        <p>Mã đăng kí kinh doanh<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                                     </div>
-                                                    <div className="col-md-6">
-                                                        <label className="form-label">Quận/Huyện<FontAwesomeIcon className="star" icon={faStarOfLife} /></label>
-                                                        <input type="text" className="form-control"
-                                                            required />
+                                                    <div className="col-md-6 ">
+                                                        <input type="text" className="form-control" name="businessLicenseNumber" id="updateBusinessLicenseNumber"
+                                                            ref={userRef} onChange={e => handleUpdateFacility(e, "businessLicenseNumber")}
+                                                            value={updateFacilityDTO.businessLicenseNumber} required />
                                                     </div>
                                                 </div>
                                                 <div className="row">
                                                     <div className="col-md-6 ">
-                                                        <label className="form-label">Hotline<FontAwesomeIcon className="star" icon={faStarOfLife} /></label>
-                                                        <input type="text" className="form-control"
-                                                            required />
+                                                        <p>Hotline<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
+                                                    </div>
+                                                    <div className="col-md-6 ">
+                                                        <input type="text" className="form-control" name="Hotline" id="updateHotline"
+                                                            ref={userRef} onChange={e => handleUpdateFacility(e, "hotline")}
+                                                            value={updateFacilityDTO.hotline} required />
+                                                    </div>
+                                                </div>
+                                                {/*City*/}
+                                                <div className="row">
+                                                    <div className="col-md-6 ">
+                                                        <p>Thành phố<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                                     </div>
                                                     <div className="col-md-6">
-                                                        <label className="form-label">Phường<FontAwesomeIcon className="star" icon={faStarOfLife} /></label>
-                                                        <input type="text" className="form-control"
-                                                            required />
+                                                        <select className="form-control mt-1" id="uprovince"
+                                                            ref={userRef}
+                                                            autoComplete="off"
+                                                            onChange={(e) => loadDistrict(e.target.value)}
+                                                            value={cityIndex}
+                                                            required>
+                                                            <option value="" disabled>Chọn Tỉnh/Thành phố</option>
+                                                            {city &&
+                                                                city.map((item, index) => (
+                                                                    <>
+                                                                        {item.label === addressJson.city
+                                                                            ? <option value={index} selected>{item.label}</option>
+                                                                            : <option value={index}>{item.label}</option>
+                                                                        }
+                                                                    </>
+                                                                ))
+                                                            }
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                {/*District*/}
+                                                <div className="row">
+                                                    <div className="col-md-6 ">
+                                                        <p>Quận/Huyện<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
+                                                    </div>
+                                                    <div className="col-md-6">
+                                                        <select className="form-control mt-1" id="udistrict"
+                                                            ref={userRef}
+                                                            autoComplete="off"
+                                                            onChange={(e) => loadWard(e.target.value, -1)}
+                                                            value={districtIndex}
+                                                            required>
+                                                            <option value="" disabled>Chọn Quận/Huyện</option>
+                                                            {district &&
+                                                                district.map((item, index) => (
+                                                                    <>
+                                                                        {item.label === addressJson.district
+                                                                            ? <option value={index} selected>{item.label}</option>
+                                                                            : <option value={index}>{item.label}</option>
+                                                                        }
+                                                                    </>
+                                                                ))
+                                                            }
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                {/*Ward*/}
+                                                <div className="row">
+                                                    <div className="col-md-6 ">
+                                                        <p>Phường xã<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
+                                                    </div>
+                                                    <div className="col-md-6">
+                                                        <select className="form-control mt-1" id="uward"
+                                                            ref={userRef}
+                                                            autoComplete="off"
+                                                            onChange={(e) => saveWard(e.target.value)}
+                                                            value={wardIndex}
+                                                            required>
+                                                            <option value="" disabled>Chọn Phường/Xã</option>
+                                                            {ward &&
+                                                                ward.map((item, index) => (
+                                                                    <>
+                                                                        {item.label === addressJson.ward
+                                                                            ? <option value={index} selected>{item.label}</option>
+                                                                            : <option value={index}>{item.label}</option>
+                                                                        }
+                                                                    </>
+                                                                ))
+                                                            }
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                {/*Street*/}
+                                                <div className="row">
+                                                    <div className="col-md-6 ">
+                                                        <p>Số nhà<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
+                                                    </div>
+                                                    <div className="col-md-6">
+                                                        <input type="text" id="uhomenum"
+                                                            ref={userRef}
+                                                            autoComplete="off"
+                                                            onChange={(e) => saveAddressJsonFacility(e.target.value)}
+                                                            required
+                                                            className="form-control"
+                                                            value={addressJson.street} />
                                                     </div>
                                                 </div>
                                             </Modal.Body>

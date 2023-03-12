@@ -36,6 +36,7 @@ import java.sql.Date;
                         @ColumnResult(name = "facilityName", type = String.class),
                         @ColumnResult(name = "facilityAddress", type = String.class),
                         @ColumnResult(name = "facilityFoundDate", type = Date.class),
+                        @ColumnResult(name = "businessLicenseNumber", type = String.class),
                         @ColumnResult(name = "hotline", type = String.class),
                         @ColumnResult(name = "facilityStatus", type = Boolean.class),
                         @ColumnResult(name = "subscriptionExpirationDate", type = Date.class),
@@ -94,6 +95,9 @@ public class UserDetailDTO {
     @Column(name = "facility_found_date")
     @DateTimeFormat(pattern="dd/MM/yyyy")
     private Date facilityFoundDate;
+    @Column(name = "business_license_number")
+    private String businessLicenseNumber;
+    @Column(name = "hotline")
     private String hotline;
     @Column(name = "FACILITY_STATUS")
     private Boolean facilityStatus;
