@@ -70,7 +70,7 @@ public class AuthController {
      */
     @GetMapping("/forgotPassword/sendOTP")
     public ResponseEntity<?> sendOTPForgotPassword(@RequestParam String phone) {
-        return authService.sendOTP(phone);
+        return authService.sendOTPResetPass(phone);
     }
 
     /**
@@ -81,7 +81,7 @@ public class AuthController {
      */
     @PostMapping("/forgotPassword/verifyOTP")
     public ResponseEntity<?> verifyOTPForgotPassword(@RequestBody VerifyOtpDTO verifyOtpDTO) {
-        return authService.verifyOTP(verifyOtpDTO);
+        return authService.verifyOTPResetPass(verifyOtpDTO);
     }
 
     /**
@@ -91,7 +91,7 @@ public class AuthController {
      */
     @GetMapping("/forgotPassword/resendOTP")
     public ResponseEntity<?> resendOTPForgotPassword(@RequestParam String phone) {
-        return authService.resendOTP(phone);
+        return authService.resendOTPResetPass(phone);
     }
 
     /**

@@ -298,7 +298,7 @@ public class AuthServiceImpl implements IAuthService {
      * @return
      */
     @Override
-    public ResponseEntity<?> sendOTP(String phone) {
+    public ResponseEntity<?> sendOTPResetPass(String phone) {
         // Check credentials, if not valid then return Bad request (403)
         Optional<User> userOptional = userRepository.findByPhone(phone);
         if (!userOptional.isPresent()) { /* No user found */
@@ -325,7 +325,7 @@ public class AuthServiceImpl implements IAuthService {
      * @return
      */
     @Override
-    public ResponseEntity<?> verifyOTP(VerifyOtpDTO verifyOtpDTO) {
+    public ResponseEntity<?> verifyOTPResetPass(VerifyOtpDTO verifyOtpDTO) {
         // Check if the OTP match
         String phone = verifyOtpDTO.getPhone();
         String otpSend = verifyOtpDTO.getOTP();
@@ -346,7 +346,7 @@ public class AuthServiceImpl implements IAuthService {
      * @return
      */
     @Override
-    public ResponseEntity<?> resendOTP(String phone) {
+    public ResponseEntity<?> resendOTPResetPass(String phone) {
         // Check credentials, if not valid then return Bad request (403)
         Optional<Otp> otpOptional = otpRepository.findByPhoneNumber(phone);
         if (!otpOptional.isPresent()) {

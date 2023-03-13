@@ -45,7 +45,7 @@ public interface IAuthService {
      * @param phone the phone number of the account
      * @return
      */
-    public ResponseEntity<?> sendOTP(String phone);
+    public ResponseEntity<?> sendOTPResetPass(String phone);
 
     /**
      * Verify OTP forgot password.
@@ -53,14 +53,14 @@ public interface IAuthService {
      * @param verifyOtpDTO
      * @return
      */
-    public ResponseEntity<?> verifyOTP(VerifyOtpDTO verifyOtpDTO);
+    public ResponseEntity<?> verifyOTPResetPass(VerifyOtpDTO verifyOtpDTO);
 
     /**
      * Re-send OTP forgot password.
      *
      * @return
      */
-    public ResponseEntity<?> resendOTP(String phone);
+    public ResponseEntity<?> resendOTPResetPass(String phone);
 
     /**
      * Change password after verify OTP.

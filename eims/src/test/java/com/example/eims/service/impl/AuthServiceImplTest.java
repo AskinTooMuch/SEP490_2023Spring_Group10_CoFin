@@ -132,7 +132,7 @@
          when(userRepository.findByPhone(phone)).thenReturn(Optional.of(user));
 
          // Run service method
-         ResponseEntity<?> responseEntity = authService.sendOTP(phone);
+         ResponseEntity<?> responseEntity = authService.sendOTPResetPass(phone);
          System.out.println(responseEntity.toString());
          // Assert
          assertEquals("Đã gửi mã OTP", responseEntity.getBody());
@@ -151,7 +151,7 @@
          when(otpRepository.findByPhoneNumber(phone)).thenReturn(Optional.of(otp));
 
          // Run service method
-         ResponseEntity<?> responseEntity = authService.verifyOTP(verifyOtpDTO);
+         ResponseEntity<?> responseEntity = authService.verifyOTPResetPass(verifyOtpDTO);
          System.out.println(responseEntity.toString());
          // Assert
          assertEquals("Mã OTP đã đúng", responseEntity.getBody());
@@ -167,7 +167,7 @@
          when(otpRepository.findByPhoneNumber(phone)).thenReturn(Optional.of(otp));
 
          // Run service method
-         ResponseEntity<?> responseEntity = authService.resendOTP(phone);
+         ResponseEntity<?> responseEntity = authService.resendOTPResetPass(phone);
          System.out.println(responseEntity.toString());
          // Assert
          assertEquals("Đã gửi lại mã OTP", responseEntity.getBody());
