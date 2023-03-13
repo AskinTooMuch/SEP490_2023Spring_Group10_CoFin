@@ -39,7 +39,7 @@ const Breed = () => {
             averageWeightFemale: "",
             commonDisease: "",
             growthTime: "",
-            image: "",
+            image: null
         }
     );
     //Get specie list
@@ -121,7 +121,7 @@ const Breed = () => {
         formData.append('averageWeightFemale', newBreedDTO.averageWeightFemale);
         formData.append('commonDisease', newBreedDTO.commonDisease);
         formData.append('growthTime', newBreedDTO.growthTime);
-        formData.append("image", newBreedDTO.image);
+        formData.append('image', newBreedDTO.image);
         console.log(formData);
         try {
             const response = await axios.post(NEW_BREED,
@@ -201,7 +201,7 @@ const Breed = () => {
                                     </div>
                                     <div className="col-md-6">
                                         <input id="createBreedMaleAvg" required style={{ width: "100%" }}
-                                        placeholder="Số ngày"
+                                        placeholder="kg"
                                         type='number'
                                         min='0'
                                         step='0.01'
@@ -214,6 +214,7 @@ const Breed = () => {
                                     </div>
                                     <div className="col-md-6">
                                         <input id="createBreedFemaleAvg" required style={{ width: "100%" }}
+                                        placeholder="kg"
                                         type='number'
                                         min='0'
                                         step='0.01'
@@ -226,6 +227,7 @@ const Breed = () => {
                                     </div>
                                     <div className="col-md-6">
                                         <input id="createBreedGrownTime" required style={{ width: "100%" }}
+                                        placeholder="ngày"
                                         type='number'
                                         min='0'
                                         step='1'
@@ -238,7 +240,9 @@ const Breed = () => {
                                     </div>
                                     <div className="col-md-6">
                                         <textarea id="createBreedCommondisease" style={{ width: "100%" }}
-                                            onChange={e => handleChange(e, "commonDisease")} />
+                                            onChange={e => handleChange(e, "commonDisease")} 
+                                            placeholder="Đậu gà, cúm gà, khô chân, giun sán,..."
+                                        />
                                     </div>
                                 </div>
                                 <div className="row">

@@ -84,7 +84,7 @@ export default function BasicTabs() {
             commonDisease: "",
             growthTime: "",
             image: "",
-            status: ""
+            status: false
         }
     );
 
@@ -176,6 +176,7 @@ export default function BasicTabs() {
     const onImageChange = async (e) => {
         const file = e.target.files[0];
         editBreedDTO.image = file;
+        editBreedDTO.status = true;
         console.log(editBreedDTO.image);
         setImages([...e.target.files]);
     }
@@ -322,10 +323,9 @@ export default function BasicTabs() {
                                                 value={editBreedDTO.averageWeightMale}
                                                 placeholder="(kg)"
                                                 type='number'
-                                                step="0.01"
                                                 min='0'
-                                                max='100'
-                                                onChange={e => handleChange(e, "averageWeightMale")} />
+                                                step='0.01'
+                                                onChange={e => handleEditChange(e, "averageWeightMale")} />
                                         </div>
                                     </div>
                                     <div className="row">
@@ -337,10 +337,9 @@ export default function BasicTabs() {
                                                 value={editBreedDTO.averageWeightFemale}
                                                 placeholder="(kg)"
                                                 type='number'
-                                                step="0.01"
                                                 min='0'
-                                                max='100'
-                                                onChange={e => handleChange(e, "averageWeightFemale")} />
+                                                step='0.01'
+                                                onChange={e => handleEditChange(e, "averageWeightFemale")} />
                                         </div>
                                     </div>
                                     <div className="row">
