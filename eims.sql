@@ -1,3 +1,4 @@
+-- V0.7.0: Import data on tables: User, Facility, Specie, incubation phase, supplier, customer, subscription user, 
 -- V0.6.3: Minor audijustment at customer table (NOT NULL field and size)
 -- V0.6.2: Minor audijustment at facility table and add data into machine table
 -- V0.6.1: Fix stored procedure to work with user_id
@@ -439,16 +440,29 @@ VALUES 	(1,	2, 'Nguyễn Chức', '2001-12-16', '0969044714',	'ownerchuc@gmail.c
 
 -- facility
 INSERT INTO facility(facility_id, user_id, facility_name, facility_address, facility_found_date, subscription_expiration_date, hotline, business_license_number, status)
-VALUES 	(1, 2, 'Test name', '{"city":"Tỉnh Hải Dương","district":"Huyện Gia Lộc","ward":"Xã Hoàng Diệu","street":"Thôn Nghĩa Hy"}', '2019-02-17', '2023-5-31', '0987654322', '4103012754', 1),
+VALUES 	(1, 2, 'Lò trứng Tester', '{"city":"Tỉnh Hải Dương","district":"Huyện Gia Lộc","ward":"Xã Hoàng Diệu","street":"Thôn Nghĩa Hy"}', '1998-09-16', '2024-02-02', '0987654322', 'BE41030754', 1),
 		(2, 1, 'Chu Xuong Trung', '{"city":"Tỉnh Hải Dương","district":"Huyện Gia Lộc","ward":"Xã Hoàng Diệu","street":"Thôn Nghĩa Hy"}', '2019-02-17', '2023-5-31', '0969044714', '4103012753', 1),
 		(3, 5, 'ZTrung09', '{"city":"Tỉnh Hải Dương","district":"Huyện Gia Lộc","ward":"Xã Hoàng Diệu","street":"Thôn Nghĩa Hy"}', '2011-05-09', '2021-10-22', '0852274855', '7243012533', 0);
+        
+-- work_in
+INSERT INTO work_in(user_id, facility_id, status)
+VALUES (3, 1, 1);
+
+-- supplier
+INSERT INTO supplier(user_id, supplier_name, facility_name, supplier_phone, supplier_address, supplier_mail, status)
+VALUES (2, 'Vũ Hồng Nam', 'Trang trại gà hòa phát', '0978456331', '{"city":"Tỉnh Hà Giang","district":"Huyện Quản Bạ","ward":"Xã Thái An","street":"Thôn 1"}', 'vunamhong@gmail.com', 1),
+	   (2, 'Phạm Quang Việt', 'Gia cầm Việt Hương', '0978456332', '{"city":"Tỉnh Hà Giang","district":"Huyện Quản Bạ","ward":"Xã Thái An","street":"Thôn 7"}', 'viethuongeggsie@gmail.com', 1);
+       
+-- customer
+INSERT INTO customer(user_id, customer_name, customer_phone, customer_address, customer_mail, status)
+VALUES (2, 'Anh Tiến', '0978456341', '{"city":"Tỉnh Hà Giang","district":"Huyện Quản Bạ","ward":"Xã Thái An","street":"Thôn 3"}', 'tienchinngon@gmail.com', 1),
+	   (2, 'Chị Hương Giang', '0978456342', '{"city":"Tỉnh Hà Giang","district":"Huyện Quản Bạ","ward":"Xã Thái An","street":"Thôn 5"}', 'huongchaykhongmui@gmail.com', 1);
         
         
 -- specie
 INSERT INTO specie(specie_id, user_id, specie_name, incubation_period, status)
-VALUES 	(1, 1, 'Gà', 22, 1),
-		(2, 1, 'Vịt', 31, 1),
-		(3, 1, 'Ngan', 36, 1);
+VALUES 	(1, 1, 'Gà', 22, 1), (2, 1, 'Vịt', 31, 1), (3, 1, 'Ngan', 36, 1),
+		(4, 2, 'Gà', 22, 1), (5, 2, 'Vịt', 31, 1), (6, 2, 'Ngan', 36, 1);
 
 -- incubation_phase
 INSERT INTO incubation_phase(specie_id, phase_number, phase_period, phase_description, status)
@@ -481,7 +495,37 @@ VALUES 	(1, 0, 0,'Trứng vỡ/dập', 1),
 		(3, 6, 35,'Trứng tắc', 1),
 		(3, 7, 35,'Con nở', 1),
 		(3, 8, 35,'Con đực', 1),
-		(3, 9, 35,'Con cái', 1);
+		(3, 9, 35,'Con cái', 1),
+        (4, 0, 0,'Trứng vỡ/dập', 1),
+		(4, 1, 0,'Trứng đang ấp', 1),
+		(4, 2, 3,'Trứng trắng/tròn, trứng không có phôi', 1),
+		(4, 3, 13,'Trứng loãng/tàu, phôi chết non', 1),
+		(4, 4, 14,'Trứng lộn', 1),
+		(4, 5, 19,'Trứng đang nở', 1),
+		(4, 6, 21,'Trứng tắc', 1),
+		(4, 7, 21,'Con nở', 1),
+		(4, 8, 21,'Con đực', 1),
+		(4, 9, 21,'Con cái', 1),
+		(5, 0, 0,'Trứng vỡ/dập', 1),
+        (5, 1, 0,'Trứng đang ấp', 1),
+		(5, 2, 3,'Trứng trắng/tròn, trứng không có phôi', 1),
+		(5, 3, 17,'Trứng loãng/tàu, phôi chết non', 1),
+		(5, 4, 18,'Trứng lộn', 1),
+		(5, 5, 28,'Trứng đang nở', 1),
+		(5, 6, 30,'Trứng tắc', 1),
+		(5, 7, 30,'Con nở', 1),
+		(5, 8, 30,'Con đực', 1),
+		(5, 9, 30,'Con cái', 1),
+		(6, 0, 0,'Trứng vỡ/dập', 1),
+        (6, 1, 0,'Trứng đang ấp', 1),
+		(6, 2, 3,'Trứng trắng/tròn, trứng không có phôi', 1),
+		(6, 3, 17,'Trứng loãng/tàu, phôi chết non', 1),
+		(6, 4, 18,'Trứng lộn', 1),
+		(6, 5, 32,'Trứng đang nở', 1),
+		(6, 6, 35,'Trứng tắc', 1),
+		(6, 7, 35,'Con nở', 1),
+		(6, 8, 35,'Con đực', 1),
+		(6, 9, 35,'Con cái', 1);
 -- machine_type
 INSERT INTO machine_type(machine_type_id, machine_type_name, description, status)
 VALUES 	(1, 'Máy ấp', 'Máy dùng cho giai đoạn vừa mới ấp cho tới khi sắp nở, nhiệt cao, sức chứa cao', 1),
@@ -503,14 +547,11 @@ VALUES 	(1, 0, 30, 5, 1),
         
 -- user_subscription
 INSERT INTO user_subsription(facility_id, subscription_id, subscribe_date, status)
-VALUES	('1', '5', '2022-05-31', 1),
+VALUES	('1', '3', '2022-05-31', 0),
+		('1', '5', '2023-02-02', 1),
 		('2', '4', '2021-04-25', 0);
        
 -- registration
 INSERT INTO registration(registration_id, user_id, register_date, status)
 VALUES 	(1, 2, '2022-05-31', 2),
 		(2, 5, '2022-05-31', 0);
-       
--- work_in
-INSERT INTO work_in(user_id, facility_id, status)
-VALUES (3, 1, 1);
