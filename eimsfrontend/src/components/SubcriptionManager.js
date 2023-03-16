@@ -12,7 +12,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import { Modal } from 'react-bootstrap'
 import { faStarOfLife } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-function Employee(props) {
+function SubcriptionManager(props) {
     const { children, value, index, ...other } = props;
     return (
         <div
@@ -31,7 +31,7 @@ function Employee(props) {
     );
 }
 
-Employee.propTypes = {
+SubcriptionManager.propTypes = {
     children: PropTypes.node,
     index: PropTypes.number.isRequired,
     value: PropTypes.number.isRequired,
@@ -65,10 +65,10 @@ export default function BasicTabs() {
                     '& .MuiTabs-indicator': { backgroundColor: "#d25d19" },
                     '& .Mui-selected': { color: "#d25d19" },
                 }} value={value} onChange={handleChange} aria-label="basic tabs example">
-                    <Tab style={{ textTransform: "capitalize" }} label="Nhân viên" {...a11yProps(0)} />
+                    <Tab style={{ textTransform: "capitalize" }} label="Danh sách gói" {...a11yProps(0)} />
                 </Tabs>
             </Box>
-            <Employee value={value} index={0}>
+            <SubcriptionManager value={value} index={0}>
                 <nav className="navbar justify-content-between">
                     <button className='btn btn-light' onClick={handleShow}>+ Thêm</button>
                     <Modal show={show} onHide={handleClose}
@@ -77,51 +77,38 @@ export default function BasicTabs() {
                         centered >
                         <form>
                             <Modal.Header closeButton onClick={handleClose}>
-                                <Modal.Title>Thêm nhân viên</Modal.Title>
+                                <Modal.Title>Tạo gói đăng ký</Modal.Title>
                             </Modal.Header>
                             <Modal.Body>
                                 <div className="row">
                                     <div className="col-md-6">
-                                        <p>Tên nhân viên<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
+                                        <p>Tên gói<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                     </div>
                                     <div className="col-md-6">
-                                        <input required style={{ width: "100%" }}  />
+                                        <input required style={{ width: "100%" }} className="form-control " />
                                     </div>
                                     <div className="col-md-6">
-                                        <p>Số điện thoại<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
+                                        <p>Giá gói<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                     </div>
                                     <div className="col-md-6">
-                                        <input required style={{ width: "100%" }} placeholder="0" />
+                                        <input required style={{ width: "100%" }} placeholder="0" className="form-control " />
                                     </div>
                                 </div>
                                 <div className="row">
                                     <div className="col-md-6">
-                                        <p>Mật khẩu<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
+                                        <p>Thời gian hiệu lực<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                     </div>
                                     <div className="col-md-6">
-                                        <input required style={{ width: "100%" }} placeholder="0" />
+                                        <input required style={{ width: "100%" }} placeholder="0" className="form-control " />
                                     </div>
                                     <div className="col-md-6">
-                                        <p>Địa chỉ</p>
+                                        <p>Nội dung chi tiết</p>
                                     </div>
                                     <div className="col-md-6">
-                                        <textarea style={{ width: "100%" }} />
+                                        <textarea style={{ width: "100%" }} className="form-control " />
                                     </div>
                                 </div>
-                                <div className="row">
-                                    <div className="col-md-6">
-                                        <p>Email</p>
-                                    </div>
-                                    <div className="col-md-6">
-                                        <input style={{ width: "100%" }} />
-                                    </div>
-                                    <div className="col-md-6">
-                                        <p>Lương<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
-                                    </div>
-                                    <div className="col-md-6">
-                                        <input required style={{ width: "100%" }} placeholder="0" />
-                                    </div>
-                                </div>
+
                             </Modal.Body>
                             <div className='model-footer'>
                                 <button style={{ width: "30%" }} className="col-md-6 btn-light" onClick={handleClose}>
@@ -154,30 +141,38 @@ export default function BasicTabs() {
                                 <table className="u-table-entity u-table-entity-1">
                                     <colgroup>
                                         <col width="5%" />
-                                        <col width="35%" />
-                                        <col width="30%" />
-                                        <col width="30%" />
+                                        <col width="19%" />
+                                        <col width="19%" />
+                                        <col width="19%" />
+                                        <col width="19%" />
+                                        <col width="19%" />
                                     </colgroup>
                                     <thead className="u-palette-4-base u-table-header u-table-header-1">
                                         <tr style={{ height: "21px" }}>
                                             <th className="u-border-1 u-border-custom-color-1 u-palette-2-base u-table-cell u-table-cell-1">STT</th>
-                                            <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-2">Tên nhân viên</th>
-                                            <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-3">Số điện thoại</th>
-                                            <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-5">Trạng thái</th>
+                                            <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-2">Tên gói</th>
+                                            <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-3">Ngày tạo</th>
+                                            <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-4">Giá gói</th>
+                                            <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-5">Thời gian hiệu lực</th>
+                                            <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-6">Trạng thái</th>
                                         </tr>
                                     </thead>
                                     <tbody className="u-table-body">
                                         <tr style={{ height: "76px" }} onClick={routeChange}>
                                             <td className="u-border-1 u-border-grey-30 u-first-column u-grey-5 u-table-cell u-table-cell-5">1</td>
-                                            <td className="u-border-1 u-border-grey-30 u-table-cell">Nguyễn Hoàng Dương</td>
-                                            <td className="u-border-1 u-border-grey-30 u-table-cell">09124719471</td>
-                                            <td className="u-border-1 u-border-grey-30 u-table-cell text-green">Đang hoạt động</td>
+                                            <td className="u-border-1 u-border-grey-30 u-table-cell">Gói 1 tháng</td>
+                                            <td className="u-border-1 u-border-grey-30 u-table-cell">12/12/2022</td>
+                                            <td className="u-border-1 u-border-grey-30 u-table-cell">100.000 VNĐ</td>
+                                            <td className="u-border-1 u-border-grey-30 u-table-cell">30 Ngày</td>
+                                            <td className="u-border-1 u-border-grey-30 u-table-cell text-green">Có hiệu lực</td>
                                         </tr>
                                         <tr style={{ height: "76px" }}>
-                                            <td className="u-border-1 u-border-grey-30 u-first-column u-grey-5 u-table-cell u-table-cell-9">2</td>
-                                            <td className="u-border-1 u-border-grey-30 u-table-cell">Nguyễn Văn Đức</td>
-                                            <td className="u-border-1 u-border-grey-30 u-table-cell">09124719471</td>
-                                            <td className="u-border-1 u-border-grey-30 u-table-cell text-red">Nghỉ việc</td>
+                                            <td className="u-border-1 u-border-grey-30 u-first-column u-grey-5 u-table-cell u-table-cell-5">1</td>
+                                            <td className="u-border-1 u-border-grey-30 u-table-cell">Gói 1 năm</td>
+                                            <td className="u-border-1 u-border-grey-30 u-table-cell">12/12/2022</td>
+                                            <td className="u-border-1 u-border-grey-30 u-table-cell">1.000.000 VNĐ</td>
+                                            <td className="u-border-1 u-border-grey-30 u-table-cell">365 Ngày</td>
+                                            <td className="u-border-1 u-border-grey-30 u-table-cell text-red">Vô hiệu lực</td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -185,7 +180,7 @@ export default function BasicTabs() {
                         </div>
                     </section>
                 </div>
-            </Employee>
+            </SubcriptionManager>
 
 
         </Box>

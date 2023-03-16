@@ -4,10 +4,8 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
-import Supplier from './Supplier'
-import Customer from './Customer'
-import ImportBill from './ImportBill';
-function Order(props) {
+import Registrators from './Registrators';
+function AccountManager(props) {
   const { children, value, index, ...other } = props;
 
   return (
@@ -27,7 +25,7 @@ function Order(props) {
   );
 }
 
-Order.propTypes = {
+AccountManager.propTypes = {
   children: PropTypes.node,
   index: PropTypes.number.isRequired,
   value: PropTypes.number.isRequired,
@@ -46,32 +44,23 @@ export default function BasicTabs() {
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
- 
+
   return (
     <Box sx={{ width: '100%' }}>
       <Box sx={{ borderBottom: 1, borderColor: 'black' }}>
         <Tabs sx={{
-            '& .MuiTabs-indicator': { backgroundColor: "#d25d19" },
-            '& .Mui-selected': { color: "#d25d19" },
-          }}value={value} onChange={handleChange} aria-label="basic tabs example">
-          <Tab id = "importBillTab" style={{ textTransform: "capitalize" }} label="Hoá đơn nhập" {...a11yProps(0)} />
-          <Tab id = "exportBillTab" style={{ textTransform: "capitalize" }} label="Hoá đơn xuất" {...a11yProps(1)} />
-          <Tab id = "supplierTab" style={{ textTransform: "capitalize" }} label="Nhà cung cấp" {...a11yProps(2)} />
-          <Tab id = "customerTab" style={{ textTransform: "capitalize" }} label="Khách hàng" {...a11yProps(3)} />
+          '& .MuiTabs-indicator': { backgroundColor: "#d25d19" },
+          '& .Mui-selected': { color: "#d25d19" },
+        }} value={value} onChange={handleChange} aria-label="basic tabs example">
+          <Tab id="accountListTab" style={{ textTransform: "capitalize" }} label="Danh sách tài khoản" {...a11yProps(0)} />
+          <Tab id="accountTab" style={{ textTransform: "capitalize" }} label="Danh sách chờ duyệt" {...a11yProps(1)} />
         </Tabs>
       </Box>
-      <Order value={value} index={0}>
-        <ImportBill/>
-      </Order>
-      <Order value={value} index={1}>
-        Item Two
-      </Order>
-      <Order value={value} index={2}>
-        <Supplier/>
-      </Order>
-      <Order value={value} index={3}>
-        <Customer/>
-      </Order>
+      <AccountManager value={value} index={0}>
+      </AccountManager>
+      <AccountManager value={value} index={1}>
+        <Registrators />
+      </AccountManager>
     </Box>
   );
 }

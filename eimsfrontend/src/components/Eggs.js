@@ -7,6 +7,7 @@ import Box from '@mui/material/Box';
 import Species from './Species';
 import Breed from './Breed';
 import EggBatch from './EggBatch';
+import WithPermission from '../utils.js/WithPermission';
 function Egg(props) {
   const { children, value, index, ...other } = props;
 
@@ -48,6 +49,7 @@ export default function BasicTabs() {
   };
  
   return (
+    <WithPermission roleRequired='2'>
     <Box sx={{ width: '100%' }}>
       <Box sx={{ borderBottom: 1, borderColor: 'black' }}>
         <Tabs sx={{
@@ -75,5 +77,6 @@ export default function BasicTabs() {
       <Egg value={value} index={4}>
       </Egg>
     </Box>
+    </WithPermission>
   );
 }

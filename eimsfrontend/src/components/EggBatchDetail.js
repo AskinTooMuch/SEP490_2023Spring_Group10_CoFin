@@ -206,12 +206,11 @@ export default function BasicTabs() {
                             </tr>
                         </tbody>
                     </table>
-
                 </div>
-                <button className='btn btn-success' style={{ width: "20%", float: "right" }} id="startUpdateEggBatch">Cập nhật</button>
+                <div  style={{ textAlign: "center" }}>
+                    <button className='btn btn-light' id="startUpdateEggBatch">Cập nhật</button>
+                </div>
             </EggBatchDetail>
-
-
         </Box>
 
     );

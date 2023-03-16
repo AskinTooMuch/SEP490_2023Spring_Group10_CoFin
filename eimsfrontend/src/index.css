@@ -5,7 +5,10 @@
   background-color: white;
   font-weight: bold;
 }
-
+.modal-90w{
+  width: 90%;
+  max-width: none!important;
+}
 #primary-search-account-menu li:hover {
   background-color: #f46110;
   color: white;

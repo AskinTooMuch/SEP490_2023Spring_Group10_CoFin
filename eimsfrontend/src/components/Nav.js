@@ -18,12 +18,16 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import "../css/navbar.css"
 import logo from '../pics/EIMSlogo.png'
+import WithPermission from '../utils.js/WithPermission';
 const Nav = () => {
     const auth = sessionStorage.getItem("curPhone");
     const navigate = useNavigate();
-    
+
     const dashboard = () => {
         navigate("/dashboard")
+    }
+    const account = () => {
+        navigate("/accountmanage")
     }
     const [anchorEl, setAnchorEl] = React.useState(null);
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
@@ -69,10 +73,10 @@ const Nav = () => {
             open={isMenuOpen}
             onClose={handleMenuClose}
         >
-            <Link to="/profile" ><MenuItem style={{fontSize:"medium"}} onClick={handleMenuClose} id="profile"><AccountCircle fontSize="small"/> Thông tin cá nhân</MenuItem></Link>
-            <MenuItem style={{fontSize:"medium"}} onClick={handleMenuClose} id="setting"><SettingsIcon fontSize="small"/> Cài đặt</MenuItem>
-            <MenuItem style={{fontSize:"medium"}} onClick={handleMenuClose} id="help"><HelpIcon fontSize="small"/> Trợ giúp & hỗ trợ</MenuItem>
-            <MenuItem style={{fontSize:"medium"}} onClick={logout} id="logout"><LogoutIcon fontSize="small"/> Đăng xuất</MenuItem>
+            <Link to="/profile" ><MenuItem style={{ fontSize: "medium" }} onClick={handleMenuClose} id="profile"><AccountCircle fontSize="small" /> Thông tin cá nhân</MenuItem></Link>
+            <MenuItem style={{ fontSize: "medium" }} onClick={handleMenuClose} id="setting"><SettingsIcon fontSize="small" /> Cài đặt</MenuItem>
+            <MenuItem style={{ fontSize: "medium" }} onClick={handleMenuClose} id="help"><HelpIcon fontSize="small" /> Trợ giúp & hỗ trợ</MenuItem>
+            <MenuItem style={{ fontSize: "medium" }} onClick={logout} id="logout"><LogoutIcon fontSize="small" /> Đăng xuất</MenuItem>
         </Menu>
     );
 
@@ -93,12 +97,22 @@ const Nav = () => {
             open={isMobileMenuOpen}
             onClose={handleMobileMenuClose}
         >
-            <MenuItem onClick={dashboard}>
-                <IconButton size="large" aria-label="show 4 new mails" color="inherit">
+            <WithPermission roleRequired="2">
+                <MenuItem onClick={dashboard}>
+                    <IconButton size="large" aria-label="show 4 new mails" color="inherit">
                         <DashboardIcon />
-                </IconButton>
-                <p>Dashboard</p>
-            </MenuItem>
+                    </IconButton>
+                    <p>Dashboard</p>
+                </MenuItem>
+            </WithPermission>
+            <WithPermission roleRequired="4">
+                <MenuItem onClick={account}>
+                    <IconButton size="large" aria-label="show 4 new mails" color="inherit">
+                        <DashboardIcon />
+                    </IconButton>
+                    <p>Quản lý tài khoản</p>
+                </MenuItem>
+            </WithPermission>
             <MenuItem>
                 <IconButton
                     size="large"
@@ -139,7 +153,7 @@ const Nav = () => {
                             component="div"
                             sx={{ display: { xs: 'none', sm: 'block' } }}
                         >
-                            
+
                             <Link className='title' to="/"><img src={logo} alt="logo" height={70}></img>EIMS</Link>
                         </Typography>
                         {
@@ -148,11 +162,20 @@ const Nav = () => {
                                 <>
                                     <Box sx={{ flexGrow: 1 }} />
                                     <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-                                        <IconButton size="large"color="inherit" onClick={dashboard}>
-                                            <Badge  color="error">
-                                                <DashboardIcon />
-                                            </Badge>
-                                        </IconButton>
+                                        <WithPermission roleRequired="2">
+                                            <IconButton size="large" color="inherit" onClick={dashboard}>
+                                                <Badge color="error">
+                                                    <DashboardIcon />
+                                                </Badge>
+                                            </IconButton>
+                                        </WithPermission>
+                                        <WithPermission roleRequired="4">
+                                            <IconButton size="large" color="inherit" onClick={account}>
+                                                <Badge color="error">
+                                                    <DashboardIcon />
+                                                </Badge>
+                                            </IconButton>
+                                        </WithPermission>
                                         <IconButton
                                             size="large"
                                             aria-label="show 17 new notifications"
@@ -202,7 +225,7 @@ const Nav = () => {
                 {renderMenu}
             </Box>
         </div>
-        
+
     )
 }
 

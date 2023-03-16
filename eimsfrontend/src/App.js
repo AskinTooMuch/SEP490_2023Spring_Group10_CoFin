@@ -24,21 +24,27 @@ import EmployeeDetails from './components/EmployeeDetails';
 import CustomerDetails from './components/CustomerDetails';
 import ChangePassword from './components/ChangePassword';
 import RegisterOTP from './components/RegisterOTP'
+import ImportBill from './components/ImportBill';
+import AccountManager from './components/AccountManager';
+import SubcriptionManager from './components/SubcriptionManager';
+import CreateImportBill from './components/CreateImportBill';
 function App() {
   return (
     <>
       <Nav />
       <Routes>
-        <Route element={<PrivateRoute />} >
+        {/*Owner pages */}
+        <Route element={<PrivateRoute roleRequired="2" />} >
           <Route path="/subcribe" element={<Subscription />} />
           <Route path="/egg" element={<Egg />} />
           <Route path="/machine" element={<Machine />} />
           <Route path="/order" element={<Order />} />
           <Route path="/dashboard" element={<DashBoard />} />
-          <Route path="/profile" element={<Profile />} />
           <Route path="/eggbatch" element={<EggBatch />} />
           <Route path="/finance" element={<FinanManage />} />
           <Route path="/employee" element={<Employee />} />
+          <Route path="/importbill" element={<ImportBill />} />
+          <Route path="/createimportbill" element={<CreateImportBill />} />
           {/*Details pages */}
           <Route path="/employeedetail" element={<EmployeeDetails />} />
           <Route path="/eggbatchdetail" element={<EggBatchDetail />} />
@@ -48,13 +54,25 @@ function App() {
           <Route path="/customerdetail" element={<CustomerDetails />} />
         </Route>
 
-        {/* public routes */}
+        {/*Moderator pages */}
+        <Route element={<PrivateRoute roleRequired="4" />} >
+          <Route path='/accountmanage' element={<AccountManager />} />
+          <Route path='/subcribemanage' element={<SubcriptionManager />} />
+        </Route>
+
+        <Route element={<PrivateRoute />} >
+          <Route path="/profile" element={<Profile />} />
+        </Route>
+        
+        {/* Public routes */}
         <Route path="/" element={<HomePage />} />
         <Route path="login" element={<Login />} />
         <Route path="register" element={<Register />} />
         <Route path="registerotp" element={<RegisterOTP />} />
         <Route path="forgotpassword" element={<ForgotPassword />} />
         <Route path="changepassword" element={<ChangePassword />} />
+
+        {/* Permission denied route */}
         <Route path="unauthorized" element={<Unauthorized />} />
       </Routes>
 

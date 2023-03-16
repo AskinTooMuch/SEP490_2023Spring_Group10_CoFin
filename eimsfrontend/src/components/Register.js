@@ -8,7 +8,7 @@ import "../css/register.css";
 import { Link, useNavigate } from "react-router-dom";
 //import  '../api/provinces.js';
 const EMAIL_REGEX = /^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/;
-const PHONE_REGEX = /(((\+|)84)|0)(3|5|7|8|9)+([0-9]{8})\b/;
+const PHONE_REGEX = /(0)(3|5|7|8|9)+([0-9]{8})\b/;
 const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,20}$/;
 const REGISTER_URL = '/api/auth/signup';
 
@@ -323,7 +323,7 @@ const Register = () => {
                                                                         <FontAwesomeIcon icon={faCheck} className={validPhone ? "valid" : "hide"} />
                                                                         <FontAwesomeIcon icon={faTimes} className={validPhone || !signUpDTO.userPhone ? "hide" : "invalid"} />
                                                                     </label>
-                                                                    <span id="phonenote" data-text="Số điện thoại Việt Nam, bắt đầu bằng +84 hoặc 03|5|7|8|9"
+                                                                    <span id="phonenote" data-text="Số điện thoại Việt Nam, bắt đầu bằng 03|5|7|8|9"
                                                                         className="tip invalid" ><FontAwesomeIcon icon={faInfoCircle} /></span>
                                                                     <input type="text" id="userPhone"
                                                                         ref={userRef}
@@ -496,7 +496,7 @@ const Register = () => {
                                                                     <label htmlFor="hotline" className="text-white">Hotline <FontAwesomeIcon className="star" icon={faStarOfLife} /></label>
                                                                     <FontAwesomeIcon icon={faCheck} className={validHotline ? "valid" : "hide"} />
                                                                     <FontAwesomeIcon icon={faTimes} className={validHotline || !signUpDTO.facilityHotline ? "hide" : "invalid"} />
-                                                                    <span id="phonenote" data-text="Số điện thoại Việt Nam, bắt đầu bằng +84 hoặc 03|5|7|8|9"
+                                                                    <span id="phonenote" data-text="Số điện thoại Việt Nam, bắt đầu bằng 03|5|7|8|9"
                                                                         className="tip invalid" ><FontAwesomeIcon icon={faInfoCircle} /></span>
                                                                     <input type="text" id="hotline" ref={userRef}
                                                                         autoComplete="off"

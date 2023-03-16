@@ -1,4 +1,4 @@
-const SidebarItems = [
+const SidebarItemsOwner = [
     
     {
         id:1,
@@ -34,7 +34,8 @@ const SidebarItems = [
         id:7,
         name: "Đăng ký gói",
         route: '/subcribe'
-    },
+    }
+   
 ];
 
-export default SidebarItems;
+export default SidebarItemsOwner;
