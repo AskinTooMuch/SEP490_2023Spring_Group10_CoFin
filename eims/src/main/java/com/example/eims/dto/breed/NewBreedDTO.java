@@ -10,6 +10,7 @@
  */
 package com.example.eims.dto.breed;
 
+import jakarta.annotation.Nullable;
 import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -21,5 +22,6 @@ public class NewBreedDTO {
     private Float averageWeightFemale;
     private String commonDisease;
     private int growthTime;
+    @Nullable
     private MultipartFile image;
 }

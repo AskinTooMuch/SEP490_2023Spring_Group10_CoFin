@@ -69,7 +69,10 @@ public class BreedServiceImpl implements IBreedService {
             Specie specie = specieOpt.get();
             //Create file attributes
             //Save image
-            String filename = fileStorageServiceImpl.storeFile(newBreedDTO.getImage()).trim();
+            String filename = "";
+            if (newBreedDTO.getImage() != null && !newBreedDTO.getImage().isEmpty()) {
+                filename = fileStorageServiceImpl.storeFile(newBreedDTO.getImage()).trim();
+            }
             //Set other attributes
             Breed breed = new Breed();
             breed.setUserId(specie.getUserId());
@@ -79,7 +82,7 @@ public class BreedServiceImpl implements IBreedService {
             } else {
                 return new ResponseEntity<>("Không tìm thấy tên loài.", HttpStatus.NOT_FOUND);
             }
-            if (userRepository.findById(specie.getSpecieId()).isPresent()) {
+            if (userRepository.findById(specie.getUserId()).isPresent()) {
                 breed.setUserId(specie.getUserId());
             } else {
                 return new ResponseEntity<>("Không tìm thấy người dùng.", HttpStatus.NOT_FOUND);

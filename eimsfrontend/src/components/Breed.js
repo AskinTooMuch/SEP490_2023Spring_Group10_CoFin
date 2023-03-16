@@ -121,8 +121,13 @@ const Breed = () => {
         formData.append('averageWeightFemale', newBreedDTO.averageWeightFemale);
         formData.append('commonDisease', newBreedDTO.commonDisease);
         formData.append('growthTime', newBreedDTO.growthTime);
-        formData.append('image', newBreedDTO.image);
-        console.log(formData);
+        const fileInput = document.querySelector('input[type="file"]');
+        if (newBreedDTO.image !== null) {
+            console.log("a");
+            formData.append('image', fileInput.files[0]);
+        }
+        //formData.append('image', newBreedDTO.image);
+        console.log(formData.getAll('image'));
         try {
             const response = await axios.post(NEW_BREED,
                 formData,
