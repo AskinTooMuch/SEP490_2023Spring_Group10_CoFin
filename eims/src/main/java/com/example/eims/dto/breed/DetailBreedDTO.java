@@ -27,7 +27,7 @@ public class DetailBreedDTO {
     private Float averageWeightFemale;
     private String commonDisease;
     private int growthTime;
-    //private Resource image;
+    private Resource image;
     private boolean status;
 
     public DetailBreedDTO(Breed breed) {

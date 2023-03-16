@@ -229,7 +229,9 @@ export default function BasicTabs() {
         formData.append('averageWeightFemale', editBreedDTO.averageWeightFemale);
         formData.append('commonDisease', editBreedDTO.commonDisease);
         formData.append('growthTime', editBreedDTO.growthTime);
-        formData.append("image", editBreedDTO.image);
+        if (editBreedDTO.image !== null && editBreedDTO.image !== "") {
+            formData.append("image", editBreedDTO.image);
+        }
         console.log(formData);
         try {
             const response = await axios.post(BREED_EDIT,

@@ -121,13 +121,9 @@ const Breed = () => {
         formData.append('averageWeightFemale', newBreedDTO.averageWeightFemale);
         formData.append('commonDisease', newBreedDTO.commonDisease);
         formData.append('growthTime', newBreedDTO.growthTime);
-        const fileInput = document.querySelector('input[type="file"]');
         if (newBreedDTO.image !== null) {
-            console.log("a");
-            formData.append('image', fileInput.files[0]);
+            formData.append('image', newBreedDTO.image);
         }
-        //formData.append('image', newBreedDTO.image);
-        console.log(formData.getAll('image'));
         try {
             const response = await axios.post(NEW_BREED,
                 formData,
@@ -179,7 +175,7 @@ const Breed = () => {
                                         <select className="form-control mt-1" aria-label="Default select example"
                                         required
                                             onChange={e => handleChange(e, "specieId")}>
-                                            <option disabled value="">Open this select menu</option>
+                                            <option disabled value="" selected>Open this select menu</option>
                                             { /**JSX to load options */}
                                             { specieList &&
                                                 specieList.map((item, index) => (

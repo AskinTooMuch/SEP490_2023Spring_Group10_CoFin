@@ -133,7 +133,11 @@ public class BreedServiceImpl implements IBreedService {
         }
         Breed breed = breedOpt.get();
         //Create file attributes
-        String filename = fileStorageServiceImpl.storeFile(editBreedDTO.getImage());
+        String filename = "";
+        if (editBreedDTO.getImage() != null && !editBreedDTO.getImage().isEmpty()) {
+            filename = fileStorageServiceImpl.storeFile(editBreedDTO.getImage()).trim();
+            breed.setImageSrc(filename);
+        }
         //Set other attributes
         breed.setSpecieId(editBreedDTO.getSpecieId());
         // Name
@@ -149,7 +153,6 @@ public class BreedServiceImpl implements IBreedService {
         breed.setGrowthTime(editBreedDTO.getGrowthTime());
 
         breed.setCommonDisease(stringDealer.trimMax(editBreedDTO.getCommonDisease()));
-        breed.setImageSrc(filename);
         //The user not allowed to deactivate a breed in this form, only through delete tab
         breed.setStatus(true);
         try {
