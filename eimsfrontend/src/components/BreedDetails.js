@@ -11,7 +11,6 @@ import '../css/machine.css'
 import { faStarOfLife } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Modal } from 'react-bootstrap'
-import chicpic from '../pics/gari.png'
 function BreedDetails(props) {
     const { children, value, index, ...other } = props;
 

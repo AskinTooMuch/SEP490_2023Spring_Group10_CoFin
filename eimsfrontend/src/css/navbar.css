@@ -19,3 +19,49 @@
 .css-i9gxme button a{
   color: white;
 }
+
+.notifi-box{
+  width: 300px;
+  position: absolute;
+  top: 40px;
+  right: 5px;
+  background: white;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.notifi-box h2{
+  font-size: 14px;
+  padding: 10px;
+  border-bottom: 1px solid #eee;
+  color: #999;
+}
+
+.notifi-box h2 span{
+  color: #f00;
+}
+
+.notifi-item {
+  display: flex;
+  border-bottom: 1px solid #eee;
+  padding: 15px 5px;
+  margin-bottom: 15px;
+  cursor: pointer;
+}
+
+.notifi-item img{
+  display: block;
+  width: 50px;
+  margin-right: 10px;
+  border-radius: 50%;
+}
+
+.notifi-item .text h4{
+  color: #777;
+  font-size: 16px;
+  margin-top: 10px;
+}
+
+.notifi-item .text p{
+  color: #aaa;
+  font-size: 12px;
+}

@@ -630,7 +630,7 @@ const Profile = () => {
                                                         <div className="col-md-6 ">
                                                             <p>Mật khẩu cũ</p>
                                                         </div>
-                                                        <div className="col-md-6 pass-wrapper ">
+                                                        <div className="col-md-6 login-wrapper ">
                                                             <input ref={userRef} id="oldPassword" onChange={e => handleChange(e, "password")}
                                                                 value={changePasswordDTO.password} required
                                                                 type={passwordShown ? "text" : "password"}
@@ -646,7 +646,7 @@ const Profile = () => {
                                                                 <FontAwesomeIcon icon={faTimes} className={validPwd || !changePasswordDTO.newPassword ? "hide" : "invalid"} />
                                                             </p>
                                                         </div>
-                                                        <div className="col-md-6 pass-wrapper">
+                                                        <div className="col-md-6 login-wrapper">
 
                                                             <input ref={userRef} onChange={e => handleChange(e, "newPassword")}
                                                                 value={changePasswordDTO.newPassword} required

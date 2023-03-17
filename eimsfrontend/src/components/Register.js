@@ -6,14 +6,23 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import "../css/register.css";
 import { Link, useNavigate } from "react-router-dom";
+import { faEye } from "@fortawesome/free-solid-svg-icons";
 //import  '../api/provinces.js';
 const EMAIL_REGEX = /^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/;
 const PHONE_REGEX = /(0)(3|5|7|8|9)+([0-9]{8})\b/;
 const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,20}$/;
 const REGISTER_URL = '/api/auth/signup';
-
+const eye = <FontAwesomeIcon icon={faEye} />;
 const Register = () => {
-    const navigate = useNavigate();
+    //show-hide password 
+    const [passwordShown, setPasswordShown] = useState(false);
+    const [passwordShown2, setPasswordShown2] = useState(false);
+    const togglePasswordVisiblity = () => {
+        setPasswordShown(passwordShown ? false : true);
+    };
+    const togglePasswordVisiblity2 = () => {
+        setPasswordShown2(passwordShown2 ? false : true);
+    };
     const userRef = useRef();
     const [dataLoaded, setDataLoaded] = useState(false);
     //Full Json addresses
@@ -52,17 +61,13 @@ const Register = () => {
     //Mật khẩu
     const [password, setPwd] = useState('');
     const [validPwd, setValidPwd] = useState(false);
-    const [pwdFocus, setPwdFocus] = useState(false);
 
     const [matchPwd, setMatchPwd] = useState('');
     const [validMatch, setValidMatch] = useState(false);
-    const [matchFocus, setMatchFocus] = useState(false);
 
-    const [phoneFocus, setPhoneFocus] = useState(false);
     const [validPhone, setValidPhone] = useState(false);
 
     const [validEmail, setValidEmail] = useState(false);
-    const [emailFocus, setEmailFocus] = useState(false);
 
     const [validHotline, setValidHotline] = useState(false);
     //Register DTO
@@ -273,7 +278,7 @@ const Register = () => {
                         <div className="u-container-layout u-valign-middle-xs u-container-layout-1">
                             <h2 className="u-text u-text-custom-color-1 u-text-default u-text-1">Đăng kí thành công</h2>
                             <h3>Vui lòng đợi xác thực</h3>
-                            <Link to="/login"><button className="btn btn-light" style={{width:"30%"}}>Đăng nhập</button></Link>
+                            <Link to="/login"><button className="btn btn-light" style={{ width: "30%" }}>Đăng nhập</button></Link>
                         </div>
                     </div>
                 </section>
@@ -306,7 +311,7 @@ const Register = () => {
                                                             {/*Date of birth*/}
                                                             <div className="mb-4 ">
                                                                 <div className="form-outline">
-                                                                    <label htmlFor="userDob">Ngày sinh <FontAwesomeIcon className="star" icon={faStarOfLife} /></label>
+                                                                    <label htmlFor="userDob">Ngày sinh (Tháng/Ngày/Năm) <FontAwesomeIcon className="star" icon={faStarOfLife} /></label>
                                                                     <input type="date" id="userDob"
                                                                         ref={userRef}
                                                                         autoComplete="off"
@@ -333,8 +338,6 @@ const Register = () => {
                                                                         required
                                                                         aria-invalid={validPhone ? "false" : "true"}
                                                                         aria-describedby="phonenote"
-                                                                        onFocus={() => setPhoneFocus(true)}
-                                                                        onBlur={() => setPhoneFocus(false)}
                                                                         className="form-control " />
                                                                 </div>
                                                             </div>
@@ -353,9 +356,7 @@ const Register = () => {
                                                                         value={signUpDTO.userEmail}
                                                                         required
                                                                         aria-invalid={validEmail ? "false" : "true"}
-                                                                        aria-describedby="emailnote"
-                                                                        onFocus={() => setEmailFocus(true)}
-                                                                        onBlur={() => setEmailFocus(false)} className="form-control " />
+                                                                        aria-describedby="emailnote" className="form-control " />
                                                                 </div>
                                                             </div>
                                                             {/*User city*/}
@@ -428,37 +429,35 @@ const Register = () => {
                                                                 </div>
                                                             </div>
                                                             <div className="mb-4">
-                                                                <div className="form-outline">
+                                                                <div className="form-outline login-wrapper">
                                                                     <label htmlFor="password">Mật khẩu <FontAwesomeIcon className="star" icon={faStarOfLife} /></label>
                                                                     <FontAwesomeIcon icon={faCheck} className={validPwd ? "valid" : "hide"} />
                                                                     <FontAwesomeIcon icon={faTimes} className={validPwd || !signUpDTO.userPassword ? "hide" : "invalid"} />
                                                                     <span id="pwdnote" data-text=" 8 - 20 kí tự. Bao gồm 1 chữ cái viết hoa, 1 số và 1 kí tự đặc biệt (!,@,#,$,%)"
                                                                         className="tip invalid" ><FontAwesomeIcon icon={faInfoCircle} /></span>
-                                                                    <input type="password" id="password"
+                                                                    <input type={passwordShown ? "text" : "password"} id="password"
                                                                         onChange={(e) => setPwd(e.target.value)}
                                                                         value={password}
                                                                         required
                                                                         aria-invalid={validPwd ? "false" : "true"}
                                                                         aria-describedby="pwdnote"
-                                                                        onFocus={() => setPwdFocus(true)}
-                                                                        onBlur={() => setPwdFocus(false)}
                                                                         className="form-control " />
+                                                                    <i onClick={togglePasswordVisiblity}>{eye}</i>
                                                                 </div>
                                                             </div>
                                                             <div className="mb-4 ">
-                                                                <div className="form-outline">
+                                                                <div className="form-outline login-wrapper">
                                                                     <label htmlFor="confirm_pwd">Xác nhận lại mật khẩu <FontAwesomeIcon className="star" icon={faStarOfLife} /></label>
                                                                     <FontAwesomeIcon icon={faCheck} className={validMatch ? "valid" : "hide"} />
                                                                     <FontAwesomeIcon icon={faTimes} className={validMatch || signUpDTO.userPassword ? "hide" : "invalid"} />
                                                                     <span id="confirmnote" data-text="Mật khẩu phải trùng với mẩt khẩu đã nhập ở trên"
                                                                         className="tip invalid" ><FontAwesomeIcon icon={faInfoCircle} /></span>
-                                                                    <input type="password" id="confirm_pwd"
+                                                                    <input type={passwordShown2 ? "text" : "password"} id="confirm_pwd"
                                                                         onChange={(e) => setMatchPwd(e.target.value)}
                                                                         required
                                                                         aria-invalid={validMatch ? "false" : "true"}
-                                                                        aria-describedby="confirmnote"
-                                                                        onFocus={() => setMatchFocus(true)}
-                                                                        onBlur={() => setMatchFocus(false)} className="form-control " />
+                                                                        aria-describedby="confirmnote" className="form-control " />
+                                                                    <i onClick={togglePasswordVisiblity2}>{eye}</i>
                                                                 </div>
                                                             </div>
                                                         </div>

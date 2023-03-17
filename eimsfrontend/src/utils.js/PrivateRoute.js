@@ -2,12 +2,7 @@ import React from 'react'
 import { Outlet, Navigate } from 'react-router-dom'
 import Layout from '../components/Layout';
 
-{/**
-1	ROLE_USER
-2	ROLE_OWNER
-3	ROLE_EMPLOYEE
-4	ROLE_MODERATOR
-5	ROLE_ADMIN */}
+
 const useAuth = () => {
     const user = sessionStorage.getItem("curUserId");
     const userRole = sessionStorage.getItem("roleId")
@@ -23,9 +18,14 @@ const useAuth = () => {
         }
     }
 }
-
+/**
+1	ROLE_USER
+2	ROLE_OWNER
+3	ROLE_EMPLOYEE
+4	ROLE_MODERATOR
+5	ROLE_ADMIN */
 type ProtectedRouteType = {
-    roleRequired?: 1 | 2 | 3 | 4 | 5
+    roleRequired?: 1 | 2 | 3 | 4 | 5 
 }
 
 const PrivateRoute = (props: ProtectedRouteType) => {
