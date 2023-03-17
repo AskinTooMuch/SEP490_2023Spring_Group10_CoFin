@@ -80,30 +80,30 @@ public class AuthServiceImpl implements IAuthService {
             return new ResponseEntity<>("Mật khẩu không được để trống", HttpStatus.BAD_REQUEST);
         }
         User user = userRepository.findByPhone(loginDTO.getPhone()).get();
-        // Check status of Account
-        if (user.getStatus() == 0) {
-            return new ResponseEntity<>("Tài khoản đã bị vô hiệu hóa", HttpStatus.BAD_REQUEST);
-        }
-        /*        if (user.getRoleId() == 2L) { *//*role is OWNER (have Facility)*//*
+        if (user.getRoleId() == 2L) { // role is OWNER (have Facility)
             // Check status of registration
             // 0 - considering
             // 1 - rejected
             // 2 - approved
             Registration registration = registrationRepository.findByUserId(user.getUserId()).get();
-            if (registration.getStatus() == 0L) { *//* status = 0 (considering) *//*
+            if (registration.getStatus() == 0L) { // status = 0 (considering)
                 return new ResponseEntity<>("Đơn đăng ký chưa được chấp thuận", HttpStatus.BAD_REQUEST);
             }
-            if (registration.getStatus() == 1L) { *//* status = 1 (rejected) *//*
+            if (registration.getStatus() == 1L) { /* status = 1 (rejected) */
                 return new ResponseEntity<>("Đơn đăng ký bị từ chối ", HttpStatus.BAD_REQUEST);
             }
         }
-        if (user.getRoleId() == 3L) { *//*role is EMPLOYEE (work in Facility)*//*
+        // Check status of Account
+        if (user.getStatus() == 0) {
+            return new ResponseEntity<>("Tài khoản đã bị vô hiệu hóa", HttpStatus.BAD_REQUEST);
+        }
+        if (user.getRoleId() == 3L) { //*role is EMPLOYEE (work in Facility)
             WorkIn workIn = workInRepository.findByUserId(user.getUserId()).get();
             Long facilityId = workIn.getFacilityId();
-            if (facilityRepository.getStatusById(facilityId) == 0) { *//* status = 0 (facility stopped running) *//*
+            if (!facilityRepository.getStatusById(facilityId)) { // status = 0 (facility stopped running)
                 return new ResponseEntity<>("Cơ sở đã dừng hoạt động", HttpStatus.BAD_REQUEST);
             }
-        }*/
+        }
 
         Authentication auth = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(phone, password));
@@ -387,7 +387,7 @@ public class AuthServiceImpl implements IAuthService {
     public ResponseEntity<?> resetPassword(ForgotPasswordDTO forgotPasswordDTO) {
         String phone = stringDealer.trimMax(forgotPasswordDTO.getPhone());
         String newPassword = stringDealer.trimMax(forgotPasswordDTO.getNewPassword());
-        String confirmPassword = stringDealer.trimMax(forgotPasswordDTO.getNewPassword());
+        String confirmPassword = stringDealer.trimMax(forgotPasswordDTO.getConfirmPassword());
         if (newPassword.equals("")) { /* Password is empty */
             return new ResponseEntity<>("Mật khẩu không được để trống", HttpStatus.BAD_REQUEST);
         }

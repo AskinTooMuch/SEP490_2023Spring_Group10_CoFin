@@ -130,7 +130,6 @@ const Customer = () => {
         createCustomerDTO.customerAddress = JSON.stringify(addressJson);
     }
 
-
     //Handle Submit functions
     //Handle submit new Customer
     const handleCreateCustomerSubmit = async (event) => {
@@ -157,6 +156,7 @@ const Customer = () => {
             });
             console.log(response);
             loadCustomerList();
+            setAddressJson('');
             toast.success("Tạo thành công");
             setShow(false);
         } catch (err) {
@@ -168,14 +168,11 @@ const Customer = () => {
         }
     }
 
-
     // Get list of Customer and show
     // Get Customer list
     useEffect(() => {
         loadCustomerList();
     }, []);
-
-
 
     // Request Customer list and load the customer list into the table rows
     const loadCustomerList = async () => {
@@ -244,7 +241,7 @@ const Customer = () => {
                                         <p>Số điện thoại<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                     </div>
                                     <div className="col-md-3">
-                                        <input  required  id="createCustomerPhone"  className="form-control mt-1" style={{ width: "100%" }} onChange={e => handleCreateCustomerChange(e, "customerPhone")} />
+                                        <input required id="createCustomerPhone" className="form-control mt-1" style={{ width: "100%" }} onChange={e => handleCreateCustomerChange(e, "customerPhone")} />
                                     </div>
                                     {/*District*/}
                                     <div className="col-md-3">
@@ -312,10 +309,10 @@ const Customer = () => {
                             </div>
                         </Modal.Body>
                         <div className='model-footer'>
-                            <button id = "confirmCreateCustomer" style={{ width: "20%" }} type="submit" className="col-md-6 btn-light" >
+                            <button id="confirmCreateCustomer" style={{ width: "20%" }} type="submit" className="col-md-6 btn-light" >
                                 Tạo
                             </button>
-                            <button id = "cancelCreateCustomer" className='btn btn-light' style={{ width: "20%" }} onClick={handleClose} type='button'>
+                            <button id="cancelCreateCustomer" className='btn btn-light' style={{ width: "20%" }} onClick={handleClose} type='button'>
                                 Huỷ
                             </button>
                         </div>

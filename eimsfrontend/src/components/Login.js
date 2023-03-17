@@ -67,12 +67,8 @@ const Login = () => {
     } catch (err) {
       if (!err?.response) {
         toast.error('Server không phản hồi');
-      } else if (err.response?.status === 400) {
-        toast.error('Chưa nhập tài khoản/ mật khẩu');
-      } else if (err.response?.status === 401) {
-        toast.error('Không có quyền truy cập');
       } else {
-        toast.error('Sai tài khoản/ mật khẩu');
+        toast.error(err.response.data);
       }
     }
 

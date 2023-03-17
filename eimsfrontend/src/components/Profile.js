@@ -22,8 +22,17 @@ const Profile = () => {
 
     // Dependency
     const [addressLoaded, setAddressLoaded] = useState(false);
+    const [addressLoaded1, setAddressLoaded1] = useState(false);
     const [userDetailLoaded, setUserDetailLoaded] = useState(false);
     const [addressJson, setAddressJson] = useState({
+        city: "",
+        district: "",
+        ward: "",
+        street: ""
+    });
+
+
+    const [addressJson1, setAddressJson1] = useState({
         city: "",
         district: "",
         ward: "",
@@ -119,6 +128,7 @@ const Profile = () => {
 
 
     //Full Json addresses
+    // User
     const [fullAddresses, setFullAddresses] = useState('');
     const [city, setCity] = useState([
         { value: '', label: 'Chọn Tỉnh/Thành phố' }
@@ -130,6 +140,17 @@ const Profile = () => {
     const [wardIndex, setWardIndex] = useState();
     const [street, setStreet] = useState();
 
+    // Faci
+    const [fullAddresses1, setFullAddresses1] = useState('');
+    const [city1, setCity1] = useState([
+        { value: '', label: 'Chọn Tỉnh/Thành phố' }
+    ]);
+    const [district1, setDistrict1] = useState(''); //For populate dropdowns
+    const [ward1, setWard1] = useState('');
+    const [cityIndex1, setCityIndex1] = useState(); //Save the index of selected dropdowns
+    const [districtIndex1, setDistrictIndex1] = useState();
+    const [wardIndex1, setWardIndex1] = useState();
+    const [street1, setStreet1] = useState();
     //address
     const [userAddress, setUserAddress] = useState(
         {
@@ -171,6 +192,7 @@ const Profile = () => {
         const result = await axios.get("https://raw.githubusercontent.com/kenzouno1/DiaGioiHanhChinhVN/master/data.json",
             {});
         setFullAddresses(result.data);
+        setFullAddresses1(result.data);
         console.log("Full address");
         console.log(fullAddresses);
         // Set inf
@@ -179,7 +201,9 @@ const Profile = () => {
             cityList[i] = { value: cityList[i].Id, label: cityList[i].Name }
         }
         setCity(cityList);
+        setCity1(cityList);
         setAddressLoaded(true);
+        setAddressLoaded1(true);
     }
 
     const loadUserDetails = async () => {
@@ -195,6 +219,7 @@ const Profile = () => {
         const responseJson = result.data;
         console.log(responseJson);
         setAddressJson(JSON.parse(responseJson.userAddress));
+        setAddressJson1(JSON.parse(responseJson.facilityAddress));
         //Set account information
         setAccountInformation({
             userId: responseJson.userId,
@@ -206,8 +231,8 @@ const Profile = () => {
             userAddress: responseJson.userAddress,
             userStatus: responseJson.userStatus
         })
-
         setUserAddress(JSON.parse(responseJson.userAddress))
+
         //Set facility information
         setFacilityInformation({
             facilityId: responseJson.facilityId,
@@ -236,6 +261,16 @@ const Profile = () => {
         setDistrict(districtList);
     }
 
+    function loadDistrict1(index) {
+        console.log("City " + index);
+        setCityIndex1(index);
+        const districtOnIndex1 = fullAddresses1[index].Districts;
+        const districtList1 = districtOnIndex1.slice();
+        for (let i in districtList1) {
+            districtList1[i] = { value: districtList1[i].Id, label: districtList1[i].Name }
+        }
+        setDistrict1(districtList1);
+    }
     //Load user ward list
     function loadWard(districtIndex, cIndex) {
         if (cIndex === -1) {
@@ -251,11 +286,27 @@ const Profile = () => {
         setWard(wardList);
     }
 
+    function loadWard1(districtIndex, cIndex) {
+        if (cIndex === -1) {
+            cIndex = cityIndex1;
+        }
+        console.log("District " + districtIndex);
+        setDistrictIndex1(districtIndex);
+        const wardOnIndex1 = fullAddresses1[cIndex].Districts[districtIndex].Wards;
+        const wardList1 = wardOnIndex1.slice();
+        for (let i in wardList1) {
+            wardList1[i] = { value: wardList1[i].Id, label: wardList1[i].Name }
+        }
+        setWard1(wardList1);
+    }
     function saveWard(index) {
         console.log("Ward " + index);
         setWardIndex(index);
     }
-
+    function saveWard1(index) {
+        console.log("Ward " + index);
+        setWardIndex1(index);
+    }
     function saveAddressJsonUser(s) {
         console.log("ward " + wardIndex);
         setStreet(s);
@@ -267,13 +318,13 @@ const Profile = () => {
     }
 
     function saveAddressJsonFacility(s) {
-        console.log("ward " + wardIndex);
-        setStreet(s);
-        addressJson.city = fullAddresses[cityIndex].Name;
-        addressJson.district = fullAddresses[cityIndex].Districts[districtIndex].Name;
-        addressJson.ward = fullAddresses[cityIndex].Districts[districtIndex].Wards[wardIndex].Name;
-        addressJson.street = street;
-        updateFacilityDTO.facilityAddress = JSON.stringify(addressJson);
+        console.log("ward " + wardIndex1);
+        setStreet1(s);
+        addressJson1.city = fullAddresses1[cityIndex1].Name;
+        addressJson1.district = fullAddresses1[cityIndex1].Districts[districtIndex1].Name;
+        addressJson1.ward = fullAddresses1[cityIndex1].Districts[districtIndex1].Wards[wardIndex1].Name;
+        addressJson1.street = street1;
+        updateFacilityDTO.facilityAddress = JSON.stringify(addressJson1);
     }
 
     // Get user's information to update
@@ -385,38 +436,38 @@ const Profile = () => {
 
             // Get index of dropdowns
             console.log("load values");
-            console.log(fullAddresses);
-            console.log(addressJson);
+            console.log(fullAddresses1);
+            console.log(addressJson1);
             for (let i in city) {
                 console.log(i);
-                if (addressJson.city === city[i].label) {
-                    setCityIndex(i);
-                    addressJson.city = fullAddresses[i].Name;
+                if (addressJson1.city === city[i].label) {
+                    setCityIndex1(i);
+                    addressJson1.city = fullAddresses1[i].Name;
                     console.log("City " + i);
-                    setCityIndex(i);
-                    const districtOnIndex = fullAddresses[i].Districts;
+                    setCityIndex1(i);
+                    const districtOnIndex = fullAddresses1[i].Districts;
                     const districtList = districtOnIndex.slice();
                     for (let i in districtList) {
                         districtList[i] = { value: districtList[i].Id, label: districtList[i].Name }
                     }
-                    setDistrict(districtList);
+                    setDistrict1(districtList);
                     for (let j in districtList) {
-                        if (addressJson.district === districtList[j].label) {
-                            setDistrictIndex(j);
+                        if (addressJson1.district === districtList[j].label) {
+                            setDistrictIndex1(j);
                             console.log(j);
-                            addressJson.district = fullAddresses[i].Districts[j].Name;
+                            addressJson1.district = fullAddresses1[i].Districts[j].Name;
                             console.log("District " + j);
-                            setDistrictIndex(j);
-                            const wardOnIndex = fullAddresses[i].Districts[j].Wards;
+                            setDistrictIndex1(j);
+                            const wardOnIndex = fullAddresses1[i].Districts[j].Wards;
                             const wardList = wardOnIndex.slice();
                             for (let i in wardList) {
                                 wardList[i] = { value: wardList[i].Id, label: wardList[i].Name }
                             }
-                            setWard(wardList);
+                            setWard1(wardList);
                             for (let k in wardList) {
-                                if (addressJson.ward === wardList[k].label) {
-                                    setWardIndex(k);
-                                    addressJson.ward = fullAddresses[i].Districts[j].Wards[k].Name;
+                                if (addressJson1.ward === wardList[k].label) {
+                                    setWardIndex1(k);
+                                    addressJson1.ward = fullAddresses1[i].Districts[j].Wards[k].Name;
                                     break;
                                 }
                             }
@@ -426,9 +477,10 @@ const Profile = () => {
                     break;
                 }
             }
-            setStreet(addressJson.street);
-            console.log(addressJson);
+            setStreet(addressJson1.street);
+            console.log(addressJson1);
             setUserDetailLoaded(true);
+            setAddressJson(JSON.parse(responseJson.facilityAddress));
         } catch (err) {
             if (!err?.response) {
                 toast.error('Server không phản hồi');
@@ -1005,14 +1057,14 @@ const Profile = () => {
                                                         <select className="form-control mt-1" id="uprovince"
                                                             ref={userRef}
                                                             autoComplete="off"
-                                                            onChange={(e) => loadDistrict(e.target.value)}
-                                                            value={cityIndex}
+                                                            onChange={(e) => loadDistrict1(e.target.value)}
+                                                            value={cityIndex1}
                                                             required>
                                                             <option value="" disabled>Chọn Tỉnh/Thành phố</option>
-                                                            {city &&
-                                                                city.map((item, index) => (
+                                                            {city1 &&
+                                                                city1.map((item, index) => (
                                                                     <>
-                                                                        {item.label === addressJson.city
+                                                                        {item.label === addressJson1.city
                                                                             ? <option value={index} selected>{item.label}</option>
                                                                             : <option value={index}>{item.label}</option>
                                                                         }
@@ -1031,14 +1083,14 @@ const Profile = () => {
                                                         <select className="form-control mt-1" id="udistrict"
                                                             ref={userRef}
                                                             autoComplete="off"
-                                                            onChange={(e) => loadWard(e.target.value, -1)}
-                                                            value={districtIndex}
+                                                            onChange={(e) => loadWard1(e.target.value, -1)}
+                                                            value={districtIndex1}
                                                             required>
                                                             <option value="" disabled>Chọn Quận/Huyện</option>
-                                                            {district &&
-                                                                district.map((item, index) => (
+                                                            {district1 &&
+                                                                district1.map((item, index) => (
                                                                     <>
-                                                                        {item.label === addressJson.district
+                                                                        {item.label === addressJson1.district
                                                                             ? <option value={index} selected>{item.label}</option>
                                                                             : <option value={index}>{item.label}</option>
                                                                         }
@@ -1057,14 +1109,14 @@ const Profile = () => {
                                                         <select className="form-control mt-1" id="uward"
                                                             ref={userRef}
                                                             autoComplete="off"
-                                                            onChange={(e) => saveWard(e.target.value)}
-                                                            value={wardIndex}
+                                                            onChange={(e) => saveWard1(e.target.value)}
+                                                            value={wardIndex1}
                                                             required>
                                                             <option value="" disabled>Chọn Phường/Xã</option>
-                                                            {ward &&
-                                                                ward.map((item, index) => (
+                                                            {ward1 &&
+                                                                ward1.map((item, index) => (
                                                                     <>
-                                                                        {item.label === addressJson.ward
+                                                                        {item.label === addressJson1.ward
                                                                             ? <option value={index} selected>{item.label}</option>
                                                                             : <option value={index}>{item.label}</option>
                                                                         }
@@ -1086,7 +1138,7 @@ const Profile = () => {
                                                             onChange={(e) => saveAddressJsonFacility(e.target.value)}
                                                             required
                                                             className="form-control"
-                                                            value={addressJson.street} />
+                                                            value={addressJson1.street} />
                                                     </div>
                                                 </div>
                                             </Modal.Body>
