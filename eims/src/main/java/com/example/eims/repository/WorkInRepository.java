@@ -14,8 +14,10 @@ package com.example.eims.repository;
 import com.example.eims.entity.WorkIn;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface WorkInRepository extends JpaRepository<WorkIn, Long> {
     Optional<WorkIn> findByUserId(Long userId);
+    Optional<List<WorkIn>> findAllByFacilityId(Long facilityId);
 }

@@ -34,7 +34,7 @@ public class MachineController {
      * @param facilityId the id of current logged-in user's selected facility.
      * @return list of Machines
      */
-    @Secured({"ROLE_OWNER"})
+    @Secured({"ROLE_OWNER", "ROLE_EMPLOYEE"})
     @GetMapping("/all")
     public ResponseEntity<?> getAllMachine(@RequestParam Long facilityId) {
         return machineService.getAllMachine(facilityId);
@@ -46,7 +46,7 @@ public class MachineController {
      * @param machineId the id of the machine
      * @return
      */
-    @Secured({"ROLE_OWNER"})
+    @Secured({"ROLE_OWNER", "ROLE_EMPLOYEE"})
     @GetMapping("/get")
     public ResponseEntity<?> getMachine(@RequestParam Long machineId) {
         return machineService.getMachine(machineId);

@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState, useRef } from 'react';
+import { useNavigate, useParams, useLocation } from "react-router-dom";
 import PropTypes from 'prop-types';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
@@ -8,7 +8,13 @@ import Box from '@mui/material/Box';
 import '../css/machine.css'
 import { faStarOfLife } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import ConfirmBox from './ConfirmBox';
 import { Modal } from 'react-bootstrap'
+import axios from 'axios';
+
+//Toast
+import { ToastContainer, toast } from 'react-toastify';
+
 function EmployeeDetails(props) {
     const { children, value, index, ...other } = props;
 
@@ -44,8 +50,23 @@ function a11yProps(index) {
 }
 
 export default function BasicTabs() {
-    const [value, setValue] = React.useState(0);
+    //Dependency
+    const [employeeLoaded, setEmployeeLoaded] = useState(false);
+    const [addressLoaded, setAddressLoaded] = useState(false);
+    //URL
+    const EMPLOYEE_UPDATE_SAVE = "/api/employee/update/save";
+    const EMPLOYEE_GET = "/api/employee/get";
+    const EMPLOYEE_DELETE = "/api/employee/delete";
 
+    //ConfirmBox
+    function openDelete() {
+        setOpen(true);
+    }
+    const [open, setOpen] = useState(false);
+    const userRef = useRef();
+
+    //Show and hide popup
+    const [value, setValue] = React.useState(0);
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
@@ -53,6 +74,300 @@ export default function BasicTabs() {
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
     const navigate = useNavigate();
+
+    //address
+    const [employeeAddress, setEmployeeAddress] = useState(
+        {
+            street: "",
+            ward: "",
+            district: "",
+            city: ""
+        }
+    );
+
+    // DTO for display employee detail
+    const [employeeDetailDTO, setEmployeeDetailDTO] = useState({
+        employeeId: "",
+        employeeName: "",
+        employeeDob: "",
+        employeePhone: "",
+        employeeAddress: "",
+        email: "",
+        salary: "",
+        status: ""
+    })
+
+    //updateaddress
+    const [updateAddress, setUpdateAddress] = useState(
+        {
+            city: "",
+            district: "",
+            ward: "",
+            street: ""
+        }
+    );
+
+    // DTO for update employee
+    const [updateEmployeeDTO, setUpdateEmployeeDTO] = useState({
+        employeeId: "",
+        employeeName: "",
+        employeeDob: "",
+        employeePhone: "",
+        employeeAddress: "",
+        email: "",
+        salary: "",
+        status: "",
+        facilityId: sessionStorage.getItem("facilityId")
+    })
+
+
+    //Address consts
+    //Full Json addresses
+    const [fullAddresses, setFullAddresses] = useState('');
+    const [city, setCity] = useState([
+        { value: '', label: 'Chọn Tỉnh/Thành phố' }
+    ]);
+    const [district, setDistrict] = useState(''); //For populate dropdowns
+    const [ward, setWard] = useState('');
+    const [cityIndex, setCityIndex] = useState(); //Save the index of selected dropdowns
+    const [districtIndex, setDistrictIndex] = useState();
+    const [wardIndex, setWardIndex] = useState();
+    const [street, setStreet] = useState();
+
+    // Set value for address fields
+    useEffect(() => {
+        console.log("Load address");
+        loadAddress();
+        console.log(fullAddresses);
+    }, [addressLoaded]);
+
+    const loadAddress = async () => {
+        const result = await axios.get("https://raw.githubusercontent.com/kenzouno1/DiaGioiHanhChinhVN/master/data.json",
+            {});
+        setFullAddresses(result.data);
+        console.log("Full address");
+        console.log(fullAddresses);
+        // Set inf
+        const cityList = fullAddresses.slice();
+        for (let i in cityList) {
+            cityList[i] = { value: cityList[i].Id, label: cityList[i].Name }
+        }
+        setCity(cityList);
+        setAddressLoaded(true);
+    }
+
+    //Get sent param
+    const { state } = useLocation();
+    const { id } = state;
+
+    //Get employee details
+    useEffect(() => {
+        console.log("Get employee");
+        loadEmployee();
+    }, [setEmployeeLoaded]);
+
+    const loadEmployee = async () => {
+        const result = await axios.get(EMPLOYEE_GET,
+            { params: { employeeId: id } },
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Access-Control-Allow-Origin': '*'
+                },
+                withCredentials: false
+            });
+        console.log(result);
+        const responseJson = result.data;
+
+        employeeDetailDTO.employeeId = responseJson.employeeId;
+        employeeDetailDTO.employeeName = responseJson.employeeName;
+        employeeDetailDTO.employeeDob = responseJson.employeeDob;
+        employeeDetailDTO.employeePhone = responseJson.employeePhone;
+        employeeDetailDTO.employeeAddress = responseJson.employeeAddress;
+        employeeDetailDTO.email = responseJson.email;
+        employeeDetailDTO.salary = responseJson.salary;
+        employeeDetailDTO.status = responseJson.status;
+        setEmployeeAddress(JSON.parse(employeeDetailDTO.employeeAddress));
+
+        updateEmployeeDTO.employeeId = employeeDetailDTO.employeeId;
+        updateEmployeeDTO.employeeName = employeeDetailDTO.employeeName;
+        updateEmployeeDTO.employeeDob = employeeDetailDTO.employeeDob;
+        updateEmployeeDTO.employeePhone = employeeDetailDTO.employeePhone;
+        updateEmployeeDTO.employeeAddress = employeeDetailDTO.employeeAddress;
+        updateEmployeeDTO.email = employeeDetailDTO.email;
+        updateEmployeeDTO.salary = employeeDetailDTO.salary;
+        updateEmployeeDTO.status = employeeDetailDTO.status;
+
+        console.log("duong1")
+        console.log(updateEmployeeDTO);
+        setUpdateAddress(JSON.parse(employeeDetailDTO.employeeAddress))
+        // Get index of dropdowns
+        console.log("load values");
+        console.log(fullAddresses);
+        console.log(updateAddress);
+        for (let i in city) {
+            console.log(i);
+            if (updateAddress.city === city[i].label) {
+                setCityIndex(i);
+                updateAddress.city = fullAddresses[i].Name;
+                console.log("City " + i);
+                setCityIndex(i);
+                const districtOnIndex = fullAddresses[i].Districts;
+                const districtList = districtOnIndex.slice();
+                for (let i in districtList) {
+                    districtList[i] = { value: districtList[i].Id, label: districtList[i].Name }
+                }
+                setDistrict(districtList);
+                for (let j in districtList) {
+                    if (updateAddress.district === districtList[j].label) {
+                        setDistrictIndex(j);
+                        console.log(j);
+                        updateAddress.district = fullAddresses[i].Districts[j].Name;
+                        console.log("District " + j);
+                        setDistrictIndex(j);
+                        const wardOnIndex = fullAddresses[i].Districts[j].Wards;
+                        const wardList = wardOnIndex.slice();
+                        for (let i in wardList) {
+                            wardList[i] = { value: wardList[i].Id, label: wardList[i].Name }
+                        }
+                        setWard(wardList);
+                        for (let k in wardList) {
+                            if (updateAddress.ward === wardList[k].label) {
+                                setWardIndex(k);
+                                updateAddress.ward = fullAddresses[i].Districts[j].Wards[k].Name;
+                                break;
+                            }
+                        }
+                        break;
+                    }
+                }
+                break;
+            }
+        }
+        setStreet(updateAddress.street);
+        console.log(employeeAddress);
+        setEmployeeLoaded(true);
+    }
+
+    //Function for populating dropdowns
+    function loadDistrict(index) {
+        console.log("City " + index);
+        setCityIndex(index);
+        const districtOnIndex = fullAddresses[index].Districts;
+        const districtList = districtOnIndex.slice();
+        for (let i in districtList) {
+            districtList[i] = { value: districtList[i].Id, label: districtList[i].Name }
+        }
+        setDistrict(districtList);
+    }
+
+
+    //Load user ward list
+    function loadWard(districtIndex, cIndex) {
+        if (cIndex === -1) {
+            cIndex = cityIndex;
+        }
+        console.log("District " + districtIndex);
+        setDistrictIndex(districtIndex);
+        const wardOnIndex = fullAddresses[cIndex].Districts[districtIndex].Wards;
+        const wardList = wardOnIndex.slice();
+        for (let i in wardList) {
+            wardList[i] = { value: wardList[i].Id, label: wardList[i].Name }
+        }
+        setWard(wardList);
+    }
+
+    function saveWard(index) {
+        console.log("Ward " + index);
+        setWardIndex(index);
+    }
+
+    function saveEmployeeAddress(s) {
+        console.log("ward " + wardIndex);
+        setStreet(s);
+        employeeAddress.city = fullAddresses[cityIndex].Name;
+        employeeAddress.district = fullAddresses[cityIndex].Districts[districtIndex].Name;
+        employeeAddress.ward = fullAddresses[cityIndex].Districts[districtIndex].Wards[wardIndex].Name;
+        employeeAddress.street = street;
+        updateEmployeeDTO.employeeAddress = JSON.stringify(employeeAddress);
+    }
+
+    //Handle Change functions:
+    //Update Employee
+    const handleUpdateEmployeeChange = (event, field) => {
+        let actualValue = event.target.value
+        setUpdateEmployeeDTO({
+            ...updateEmployeeDTO,
+            [field]: actualValue
+        })
+    }
+
+    //Handle Submit functions
+    //Handle submit update Employee
+    const handleUpdateEmployeeSubmit = async (event) => {
+        event.preventDefault();
+        saveEmployeeAddress(street);
+        let response;
+        try {
+            response = await axios.post(EMPLOYEE_UPDATE_SAVE,
+                updateEmployeeDTO,
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Access-Control-Allow-Origin': '*'
+                    },
+                    withCredentials: false
+                }
+            );
+            setUpdateEmployeeDTO({
+                employeeId: "",
+                employeeName: "",
+                employeeDob: "",
+                employeePhone: "",
+                employeeAddress: "",
+                email: "",
+                salary: "",
+                status: "",
+                facilityId: sessionStorage.getItem("facilityId")
+            })
+            loadEmployee();
+            console.log(response);
+            toast.success("Cập nhật thành công");
+            setShow(false);
+        } catch (err) {
+            if (!err?.response) {
+                toast.error('Server không phản hồi');
+            } else {
+                toast.error(err.response.data);
+            }
+        }
+    }
+
+    // Handle dalete employee
+    const hanldeDeleteEmployee = async (event) => {
+        let response;
+        try {
+            response = await axios.delete(EMPLOYEE_DELETE,
+                { params: { employeeId: id } },
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Access-Control-Allow-Origin': '*'
+                    },
+                    withCredentials: false
+                }
+            );
+            console.log(response);
+            navigate("/employee", { state: "Xóa thành công" });
+        } catch (err) {
+            if (!err?.response) {
+                toast.error('Server không phản hồi');
+            } else {
+                toast.error(response);
+            }
+        }
+    }
+
     return (
 
         <Box sx={{ width: '100%' }}>
@@ -83,31 +398,136 @@ export default function BasicTabs() {
                                             <p>Họ và tên<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                         </div>
                                         <div className="col-md-6">
-                                            <input style={{ width: "100%" }} required />
+                                            <input style={{ width: "100%" }} required
+                                                value={updateEmployeeDTO.employeeName}
+                                                onChange={(e) => handleUpdateEmployeeChange(e, "employeeName")} />
                                         </div>
                                     </div>
+                                    {/*Date of birth*/}
+                                    <div className="row">
+                                        <div className="col-md-6">
+                                            <p htmlFor="employeeDob">Ngày sinh (Ngày/Tháng/Năm) <FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
+                                        </div>
+                                        <div className="col-md-6">
+                                            <input type="date" id="employeeDob" style={{ width: "100%" }}
+                                                ref={userRef}
+                                                autoComplete="off"
+                                                onChange={(e) => handleUpdateEmployeeChange(e, "employeeDob")}
+                                                value={updateEmployeeDTO.employeeDob}
+                                                required />
+                                        </div></div>
                                     <div className="row">
                                         <div className="col-md-6">
                                             <p>Số điện thoại<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                         </div>
                                         <div className="col-md-6">
-                                            <input style={{ width: "100%" }} required />
+                                            <input style={{ width: "100%" }} required
+                                                onChange={(e) => handleUpdateEmployeeChange(e, "employeePhone")}
+                                                value={updateEmployeeDTO.employeePhone} />
                                         </div>
                                     </div>
+                                    {/*City*/}
                                     <div className="row">
-                                        <div className="col-md-6">
-                                            <p>Địa chỉ</p>
+                                        <div className="col-md-6 ">
+                                            <p>Thành phố<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                         </div>
                                         <div className="col-md-6">
-                                            <textarea style={{ width: "100%" }} />
+                                            <select className="form-control mt-1" id="uprovince"
+                                                ref={userRef}
+                                                autoComplete="off"
+                                                onChange={(e) => loadDistrict(e.target.value)}
+                                                value={cityIndex}
+                                                required>
+                                                <option value="" disabled>Chọn Tỉnh/Thành phố</option>
+                                                {city &&
+                                                    city.map((item, index) => (
+                                                        <>
+                                                            {item.label === employeeAddress.city
+                                                                ? <option value={index} selected>{item.label}</option>
+                                                                : <option value={index}>{item.label}</option>
+                                                            }
+                                                        </>
+                                                    ))
+                                                }
+                                            </select>
                                         </div>
                                     </div>
+                                    {/*District*/}
+                                    <div className="row">
+                                        <div className="col-md-6 ">
+                                            <p>Quận/Huyện<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
+                                        </div>
+                                        <div className="col-md-6">
+                                            <select className="form-control mt-1" id="udistrict"
+                                                ref={userRef}
+                                                autoComplete="off"
+                                                onChange={(e) => loadWard(e.target.value, -1)}
+                                                value={districtIndex}
+                                                required>
+                                                <option value="" disabled>Chọn Quận/Huyện</option>
+                                                {district &&
+                                                    district.map((item, index) => (
+                                                        <>
+                                                            {item.label === employeeAddress.district
+                                                                ? <option value={index} selected>{item.label}</option>
+                                                                : <option value={index}>{item.label}</option>
+                                                            }
+                                                        </>
+                                                    ))
+                                                }
+                                            </select>
+                                        </div>
+                                    </div>
+                                    {/*Ward*/}
+                                    <div className="row">
+                                        <div className="col-md-6 ">
+                                            <p>Phường xã<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
+                                        </div>
+                                        <div className="col-md-6">
+                                            <select className="form-control mt-1" id="uward"
+                                                ref={userRef}
+                                                autoComplete="off"
+                                                onChange={(e) => saveWard(e.target.value)}
+                                                value={wardIndex}
+                                                required>
+                                                <option value="" disabled>Chọn Phường/Xã</option>
+                                                {ward &&
+                                                    ward.map((item, index) => (
+                                                        <>
+                                                            {item.label === employeeAddress.ward
+                                                                ? <option value={index} selected>{item.label}</option>
+                                                                : <option value={index}>{item.label}</option>
+                                                            }
+                                                        </>
+                                                    ))
+                                                }
+                                            </select>
+                                        </div>
+                                    </div>
+                                    {/*Street*/}
+                                    <div className="row">
+                                        <div className="col-md-6 ">
+                                            <p>Số nhà<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
+                                        </div>
+                                        <div className="col-md-6">
+                                            <input type="text" id="uhomenum"
+                                                ref={userRef}
+                                                autoComplete="off"
+                                                onChange={(e) => saveEmployeeAddress(e.target.value)}
+                                                required
+                                                className="form-control"
+                                                value={employeeAddress.street} />
+                                        </div>
+                                    </div>
+
                                     <div className="row">
                                         <div className="col-md-6">
                                             <p>Email</p>
                                         </div>
                                         <div className="col-md-6">
-                                            <input style={{ width: "100%" }} />
+                                            <input style={{ width: "100%" }}
+                                                onChange={(e) => handleUpdateEmployeeChange(e, "email")}
+                                                value={updateEmployeeDTO.email} />
                                         </div>
                                     </div>
                                     <div className="row">
@@ -115,7 +535,9 @@ export default function BasicTabs() {
                                             <p>Tiền lương<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                         </div>
                                         <div className="col-md-6">
-                                            <input style={{ width: "100%" }} required />
+                                            <input style={{ width: "100%" }} required
+                                                onChange={(e) => handleUpdateEmployeeChange(e, "salary")}
+                                                value={updateEmployeeDTO.salary} />
                                         </div>
                                     </div>
                                     <div className="row">
@@ -123,11 +545,13 @@ export default function BasicTabs() {
                                             <p>Trạng thái<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                         </div>
                                         <div className="col-md-6">
-                                            <select className="form-select" aria-label="Default select example">
-                                                <option selected>Chọn trạng thái hoạt động</option>
-                                                <option value="1" className='text-green'>Đang hoạt động </option>
-                                                <option value="2" className='text-red'>Nghỉ việc</option>
-                                                <option value="3">Three</option>
+                                            <select className="form-select" aria-label="Default select example" required
+                                                onChange={(e) => handleUpdateEmployeeChange(e, "status")}>
+                                                <option disabled>Chọn trạng thái hoạt động</option>
+                                                {updateEmployeeDTO.status === 1
+                                                    ? <><option value="1" className='text-green' selected>Đang hoạt động </option><option value="0" className='text-red'>Nghỉ việc</option></>
+                                                    : <><option value="1" className='text-green'>Đang hoạt động </option><option value="0" className='text-red' selected>Nghỉ việc</option></>
+                                                }
                                             </select>
                                         </div>
                                     </div>
@@ -135,7 +559,7 @@ export default function BasicTabs() {
 
                             </Modal.Body>
                             <div className='model-footer'>
-                                <button style={{ width: "30%" }} className="col-md-6 btn-light" onClick={handleClose}>
+                                <button style={{ width: "30%" }} className="col-md-6 btn-light" onClick={handleUpdateEmployeeSubmit}>
                                     Cập nhật
                                 </button>
                                 <button style={{ width: "20%" }} onClick={handleClose} className="btn btn-light">
@@ -150,21 +574,23 @@ export default function BasicTabs() {
                                 <p>Họ và tên</p>
                             </div>
                             <div className="col-md-4">
-                                <p>Nguyễn Hoàng Dương</p>
+                                <p>{employeeDetailDTO.employeeName}</p>
                             </div>
                             <div className="col-md-4 ">
                                 <div className='button'>
                                     <button className='btn btn-light ' onClick={handleShow}>Sửa</button>
-                                    <button className='btn btn-light '>Xoá</button>
+                                    <button className='btn btn-light ' onClick={openDelete}>Xoá</button>
                                 </div>
                             </div>
                         </div>
+                        <ConfirmBox open={open} closeDialog={() => setOpen(false)} title={employeeDetailDTO.employeeName} deleteFunction={() => hanldeDeleteEmployee(employeeDetailDTO.employeeId)}
+                        />
                         <div className="row">
                             <div className="col-md-4">
                                 <p>Số điện thoại</p>
                             </div>
                             <div className="col-md-4">
-                                <p>09124719471</p>
+                                <p>{employeeDetailDTO.employeePhone}</p>
                             </div>
                         </div>
                         <div className="row">
@@ -172,7 +598,7 @@ export default function BasicTabs() {
                                 <p>Địa chỉ</p>
                             </div>
                             <div className="col-md-4">
-                                <p>Hà Nội</p>
+                                <p>{employeeAddress.street + ", " + employeeAddress.ward + ", " + employeeAddress.district + ", " + employeeAddress.city}</p>
                             </div>
                         </div>
                         <div className="row">
@@ -180,7 +606,7 @@ export default function BasicTabs() {
                                 <p>Email</p>
                             </div>
                             <div className="col-md-4">
-                                <p>abc@gmail.com</p>
+                                <p>{employeeDetailDTO.email}</p>
                             </div>
                         </div>
                         <div className="row">
@@ -188,7 +614,7 @@ export default function BasicTabs() {
                                 <p>Tiền lương</p>
                             </div>
                             <div className="col-md-4">
-                                <p>5.000.000 VNĐ/tháng</p>
+                                <p>{employeeDetailDTO.salary} VNĐ/tháng</p>
                             </div>
                         </div>
                         <div className="row">
@@ -196,13 +622,26 @@ export default function BasicTabs() {
                                 <p>Trạng thái</p>
                             </div>
                             <div className="col-md-4">
-                                <p className="text-green">Hoạt động </p>
+                                {employeeDetailDTO.status === 1
+                                    ? <p className="text-green">Hoạt động </p>
+                                    : <p className="text-red">Nghỉ </p>
+                                }
                             </div>
                         </div>
                     </div>
 
                 </div>
             </EmployeeDetails>
+            <ToastContainer position="top-left"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="colored" />
         </Box>
 
     );
