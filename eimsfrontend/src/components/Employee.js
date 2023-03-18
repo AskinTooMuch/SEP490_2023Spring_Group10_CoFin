@@ -434,18 +434,6 @@ export default function BasicTabs() {
                                         </tr>
                                     </thead>
                                     <tbody className="u-table-body">
-                                        <tr style={{ height: "76px" }} onClick={routeChange}>
-                                            <td className="u-border-1 u-border-grey-30 u-first-column u-grey-5 u-table-cell u-table-cell-5">1</td>
-                                            <td className="u-border-1 u-border-grey-30 u-table-cell">Nguyễn Hoàng Dương</td>
-                                            <td className="u-border-1 u-border-grey-30 u-table-cell">09124719471</td>
-                                            <td className="u-border-1 u-border-grey-30 u-table-cell text-green">Đang hoạt động</td>
-                                        </tr>
-                                        <tr style={{ height: "76px" }}>
-                                            <td className="u-border-1 u-border-grey-30 u-first-column u-grey-5 u-table-cell u-table-cell-9">2</td>
-                                            <td className="u-border-1 u-border-grey-30 u-table-cell">Nguyễn Văn Đức</td>
-                                            <td className="u-border-1 u-border-grey-30 u-table-cell">09124719471</td>
-                                            <td className="u-border-1 u-border-grey-30 u-table-cell text-red">Nghỉ việc</td>
-                                        </tr>
                                         {
                                             employeeList && employeeList.length > 0 ?
                                                 employeeList.map((item, index) =>

@@ -205,6 +205,16 @@ export default function BasicTabs() {
         console.log("load values");
         console.log(fullAddresses);
         console.log(updateAddress);
+        console.log(employeeAddress);
+        setEmployeeLoaded(true);
+    }
+
+    const handleUpdateEmployeeGet = async () => {
+        handleShow();
+        // Get index of dropdowns
+        console.log("load values");
+        console.log(fullAddresses);
+        console.log(updateAddress);
         for (let i in city) {
             console.log(i);
             if (updateAddress.city === city[i].label) {
@@ -578,7 +588,7 @@ export default function BasicTabs() {
                             </div>
                             <div className="col-md-4 ">
                                 <div className='button'>
-                                    <button className='btn btn-light ' onClick={handleShow}>Sửa</button>
+                                    <button className='btn btn-light ' onClick={handleUpdateEmployeeGet}>Sửa</button>
                                     <button className='btn btn-light ' onClick={openDelete}>Xoá</button>
                                 </div>
                             </div>
