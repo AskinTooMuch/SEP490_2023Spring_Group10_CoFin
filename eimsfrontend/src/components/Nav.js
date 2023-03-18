@@ -20,7 +20,7 @@ import "../css/navbar.css"
 import logo from '../pics/EIMSlogo.png'
 import WithPermission from '../utils.js/WithPermission';
 const Nav = () => {
-    const auth = sessionStorage.getItem("curPhone");
+    const auth = sessionStorage.getItem("curUserId");
     const navigate = useNavigate();
 
     const dashboard = () => {
@@ -215,8 +215,6 @@ const Nav = () => {
                                     <Button className="signupbutton" color="inherit"><Link style={{ textDecoration: "none" }} to="/registerotp">Đăng ký</Link></Button>
                                     <Button className="loginbutton" color="inherit"><Link style={{ textDecoration: "none" }} to="/login">Đăng nhập</Link></Button>
                                 </Box>
-
-
                         }
 
                     </Toolbar>

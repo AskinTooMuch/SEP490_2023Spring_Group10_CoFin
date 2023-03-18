@@ -61,7 +61,7 @@ const Login = () => {
       if (responseJson.roleId === 2) {
         navigate("/egg");
       } else if (responseJson.roleId === 4) {
-        navigate("/accountmanager");
+        navigate("/accountmanage");
       }
 
     } catch (err) {

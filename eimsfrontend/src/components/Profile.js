@@ -782,7 +782,7 @@ const Profile = () => {
                                                         <div className="col-md-6">
                                                             <input type="date" className="form-control" name="dob" id="updateDob"
                                                                 ref={userRef} onChange={e => handleUpdateUser(e, "dob")}
-                                                                value={updateUserDTO.dob} required />
+                                                                value={updateUserDTO.dob} required   pattern="\d{4}-\d{2}-\d{2}" />
                                                         </div>
                                                     </div>
 

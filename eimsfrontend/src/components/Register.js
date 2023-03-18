@@ -311,14 +311,14 @@ const Register = () => {
                                                             {/*Date of birth*/}
                                                             <div className="mb-4 ">
                                                                 <div className="form-outline">
-                                                                    <label htmlFor="userDob">Ngày sinh (Tháng/Ngày/Năm) <FontAwesomeIcon className="star" icon={faStarOfLife} /></label>
+                                                                    <label htmlFor="userDob">Ngày sinh (Ngày/Tháng/Năm) <FontAwesomeIcon className="star" icon={faStarOfLife} /></label>
                                                                     <input type="date" id="userDob"
                                                                         ref={userRef}
                                                                         autoComplete="off"
                                                                         onChange={(e) => handleSignUpChange(e, "userDob")}
                                                                         value={signUpDTO.userDob}
                                                                         required
-                                                                        className="form-control " />
+                                                                        className="form-control " pattern="\d{4}-\d{2}-\d{2}" />
                                                                 </div>
                                                             </div>
                                                             {/*Phone*/}
@@ -338,7 +338,7 @@ const Register = () => {
                                                                         required
                                                                         aria-invalid={validPhone ? "false" : "true"}
                                                                         aria-describedby="phonenote"
-                                                                        className="form-control " />
+                                                                        className="form-control " disabled />
                                                                 </div>
                                                             </div>
                                                             {/*userEmail*/}
@@ -487,7 +487,7 @@ const Register = () => {
                                                                         onChange={(e) => handleSignUpChange(e, "facilityFoundDate")}
                                                                         value={signUpDTO.facilityFoundDate}
                                                                         required
-                                                                        className="form-control " />
+                                                                        className="form-control "  pattern="\d{4}-\d{2}-\d{2}"  />
                                                                 </div>
                                                             </div>
                                                             <div className="mb-4 ">
