@@ -56,7 +56,7 @@
      // Create demo entity
      LoginDTO loginDTO = new LoginDTO("0987654321", "@User123");
      // User
-     User user = new User(6L, 2L, "0987654321", "@User123", 1);
+     User user = new User(6L, 2L, "0987654321", "$2a$10$oqiLElPhIymUCkPwBQlBrOBIgZRIko8kwjWJSFFOK9LpGhxWnobj.", 1);
      // Facility
      Facility facility = new Facility(4L, user.getUserId(), 1);
      //Registration
@@ -485,7 +485,7 @@
          when(userRepository.findByPhone(user.getPhone())).thenReturn(Optional.of(user));
          when(facilityRepository.findByUserId(user.getUserId())).thenReturn(Optional.of(facility));
          when(registrationRepository.findByUserId(user.getUserId())).thenReturn(Optional.of(registration));
-
+         when(passwordEncoder.matches("@User123", "$2a$10$oqiLElPhIymUCkPwBQlBrOBIgZRIko8kwjWJSFFOK9LpGhxWnobj.")).thenReturn(true);
          // Run service method
          ResponseEntity<?> responseEntity = authService.authenticateUser(loginDTO);
          System.out.println(responseEntity.toString());
@@ -530,14 +530,14 @@
          LoginDTO loginDTO = new LoginDTO("0987654321", "eimslogin");
          // Define behaviour of repository
          when(userRepository.findByPhone(user.getPhone())).thenReturn(Optional.of(user));
-         when(facilityRepository.findByUserId(user.getUserId())).thenReturn(Optional.of(facility));
+         //when(facilityRepository.findByUserId(user.getUserId())).thenReturn(Optional.of(facility));
          when(registrationRepository.findByUserId(user.getUserId())).thenReturn(Optional.of(registration));
 
          // Run service method
          ResponseEntity<?> responseEntity = authService.authenticateUser(loginDTO);
          System.out.println(responseEntity.toString());
          // Assert
-         assertEquals(null,responseEntity.getBody());
+         assertEquals("Mật khẩu hoặc tài khoản sai",responseEntity.getBody());
          //assertEquals(sessionDTO.getUserId(), 3L);
      }
 
