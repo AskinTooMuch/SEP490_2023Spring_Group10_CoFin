@@ -54,12 +54,13 @@ public class RegistrationController {
      * Approve or Decline owner's registration.
      *
      * @param userId id of the user
-     * @param approval is the decision of approval (3-decline, 1-approve)
+     * @param approval is the decision of approval  (0 decline, 1 approve)
      * @return
      */
     @PostMapping("/approve")
     //@Secured({"ROLE_MANAGER"})
-    public ResponseEntity<?> registrationApproval(@RequestParam Long userId, @RequestParam Long facilityId, @RequestParam boolean approval) {
+    public ResponseEntity<?> registrationApproval(@RequestParam Long userId, @RequestParam Long facilityId,
+                                                  @RequestParam boolean approval) {
         return registrationService.registrationApproval(userId, facilityId, approval);
     }
 }

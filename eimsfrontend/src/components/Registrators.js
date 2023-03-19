@@ -1,12 +1,169 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Modal } from 'react-bootstrap';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import ImportExportIcon from '@mui/icons-material/ImportExport';
 import SearchIcon from '@mui/icons-material/Search';
+import axios from 'axios';
+import { ToastContainer, toast } from 'react-toastify';
 const Registrators = () => {
+    // API url
+    const REGISTRATION_GET_LIST = '/api/registration/list';
+    const REGISTRATION_GET = '/api/registration/get';
+    const REGISTRATION_APPROVE = '/api/registration/approve';
+
+    // Dependency
+    const [registrationLoaded, setRegistrationLoaded] = useState(false);
+    // Show-hide popup
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
+
+    // Data holding objects
+    const [registrationList, setRegistrationList] = useState([]);
+    const [registrationDetail, setRegistrationDetail] = useState({
+        registrationId: "",
+        userId: "",
+        facilityId: "",
+        username: "",
+        phone: "",
+        dob: "",
+        email: "",
+        address: "",
+        facilityName: "",
+        facilityFoundDate: "",
+        businessLicenseNumber: "",
+        facilityAddress: "",
+        hotline: "",
+        registerDate: "",
+        status: ""
+    });
+    //address
+    const [userAddress, setUserAddress] = useState(
+        {
+            street: "",
+            ward: "",
+            district: "",
+            city: ""
+        }
+    );
+    const [faciAddress, setFaciAddress] = useState(
+        {
+            street: "",
+            ward: "",
+            district: "",
+            city: ""
+        }
+    );
+    // Get list of Registration and show
+    // Get Registration list
+    useEffect(() => {
+        loadRegistrationList();
+    }, [registrationLoaded]);
+
+    // Request Registration list and load the Registration list into the table rows
+    const loadRegistrationList = async () => {
+        const result = await axios.get(REGISTRATION_GET_LIST,
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Access-Control-Allow-Origin': '*'
+                },
+                withCredentials: false
+            });
+        setRegistrationList(result.data);
+        setRegistrationLoaded(true);
+    }
+
+    // Handle get Registration detail
+    const getRegistrationDetail = async (userId) => {
+        setShow(true);
+        const result = await axios.get(REGISTRATION_GET,
+            { params: { userId: userId } },
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Access-Control-Allow-Origin': '*'
+                },
+                withCredentials: false
+            });
+        setRegistrationDetail(result.data);
+        setUserAddress(JSON.parse(result.data.address));
+        setFaciAddress(JSON.parse(result.data.facilityAddress));
+    }
+
+    // Handle Approve or Decline registration
+    // Approve
+    const handleApprove = async (event) => {
+        event.preventDefault();
+        let response;
+        try {
+            response = await axios.post(REGISTRATION_APPROVE,{},
+                {
+                    params: {
+                        userId: registrationDetail.userId,
+                        facilityId: registrationDetail.facilityId,
+                        approval: true
+                    }
+                },
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Access-Control-Allow-Origin': '*'
+                    },
+                    withCredentials: false
+                }
+            );
+
+            console.log(response);
+            toast.success("Đã phê duyệt đơn đăng ký của " + registrationDetail.username);
+            setRegistrationDetail('');
+            loadRegistrationList();
+            setShow(false);
+        } catch (err) {
+            if (!err?.response) {
+                toast.error('Server không phản hồi');
+            } else {
+                toast.error(err.response.data);
+            }
+        }
+    }
+
+    // Decline
+    const handleDecline = async (event) => {
+        event.preventDefault();
+        let response;
+        try {
+            response = await axios.post(REGISTRATION_APPROVE,{},
+                {
+                    params: {
+                        userId: registrationDetail.userId,
+                        facilityId: registrationDetail.facilityId,
+                        approval: false
+                    }
+                },
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Access-Control-Allow-Origin': '*'
+                    },
+                    withCredentials: false
+                }
+            );
+
+            console.log(response);
+            toast.success("Đã từ chối đơn đăng ký của " + registrationDetail.username);
+            setRegistrationDetail('');
+            loadRegistrationList();
+            setShow(false);
+        } catch (err) {
+            if (!err?.response) {
+                toast.error('Server không phản hồi');
+            } else {
+                toast.error(err.response.data);
+            }
+        }
+    }
+
     return (
         <>
             <nav className="navbar justify-content-between">
@@ -24,13 +181,13 @@ const Registrators = () => {
                                     <p>Chủ cơ sở</p>
                                 </div>
                                 <div className="col-md-3">
-                                    <p>Nguyễn Văn A</p>
+                                    <p>{registrationDetail.username}</p>
                                 </div>
                                 <div className="col-md-3">
-                                    <p>Tên</p>
+                                    <p>Tên cơ sở</p>
                                 </div>
                                 <div className="col-md-3">
-                                    <p>Công ty TNHH Hảo Hán</p>
+                                    <p>{registrationDetail.facilityName}</p>
                                 </div>
                             </div>
                             <div className="row">
@@ -38,13 +195,13 @@ const Registrators = () => {
                                     <p>Số điện thoại</p>
                                 </div>
                                 <div className="col-md-3">
-                                    <p>09124719471</p>
+                                    <p>{registrationDetail.phone}</p>
                                 </div>
                                 <div className="col-md-3">
                                     <p>Ngày thành lập</p>
                                 </div>
                                 <div className="col-md-3">
-                                    <p>31/03/2010</p>
+                                    <p>{registrationDetail.facilityFoundDate}</p>
                                 </div>
                             </div>
                             <div className="row">
@@ -52,13 +209,13 @@ const Registrators = () => {
                                     <p>Ngày sinh</p>
                                 </div>
                                 <div className="col-md-3">
-                                    <p>....</p>
+                                    <p>{registrationDetail.dob}</p>
                                 </div>
                                 <div className="col-md-3">
                                     <p>Mã đăng ký kinh doanh</p>
                                 </div>
                                 <div className="col-md-3">
-                                    <p>0314537155</p>
+                                    <p>{registrationDetail.businessLicenseNumber}</p>
                                 </div>
                             </div>
                             <div className="row">
@@ -66,13 +223,13 @@ const Registrators = () => {
                                     <p>Email</p>
                                 </div>
                                 <div className="col-md-3">
-                                    <p>....</p>
+                                    <p>{registrationDetail.email}</p>
                                 </div>
                                 <div className="col-md-3">
-                                    <p>Số nhà</p>
+                                    <p>Hotline</p>
                                 </div>
                                 <div className="col-md-3">
-                                    <p>123</p>
+                                    <p>{registrationDetail.hotline}</p>
                                 </div>
                             </div>
                             <div className="row">
@@ -80,50 +237,22 @@ const Registrators = () => {
                                     <p>Địa chỉ thường trú</p>
                                 </div>
                                 <div className="col-md-3">
-                                    <p>25 Đại lộ Hồ Chí Minh, P.Nguyễn Trãi, Thành phố Hải Dương, Hải Dương</p>
+                                    <p>{userAddress.ward + " " + userAddress.street + " " +  userAddress.district + " " +  userAddress.city}</p>
                                 </div>
                                 <div className="col-md-3">
-                                    <p>Thành phố</p>
+                                    <p>Địa chỉ cơ sở</p>
                                 </div>
                                 <div className="col-md-3">
-                                    <p>Hải Dương</p>
+                                    <p>{faciAddress.ward + " " +  faciAddress.street + " " +  faciAddress.district + " " +  faciAddress.city}</p>
                                 </div>
                             </div>
-                            <div className="row">
-                                <div className="col-md-6">
-                                </div>
-                                <div className="col-md-3">
-                                    <p>Quận/Huyện</p>
-                                </div>
-                                <div className="col-md-3">
-                                    <p>Thôn Hưng Long Xã</p>
-                                </div>
-                            </div>
-                            <div className="row">
-                                <div className="col-md-6">
-                                </div>
-                                <div className="col-md-3">
-                                    <p>Phường</p>
-                                </div>
-                                <div className="col-md-3">
-                                    <p>...</p>
-                                </div>
-                            </div> <div className="row">
-                                <div className="col-md-6">
-                                </div>
-                                <div className="col-md-3">
-                                    <p>Hotline</p>
-                                </div>
-                                <div className="col-md-3">
-                                    <p>09123781245</p>
-                                </div>
-                            </div>
+
                         </Modal.Body>
                         <div className='model-footer'>
-                            <button style={{ width: "20%" }} className="col-md-6 btn-light" onClick={handleClose}>
+                            <button style={{ width: "20%" }} className="col-md-6 btn-light" onClick={handleApprove}>
                                 Duyệt
                             </button>
-                            <button style={{ width: "20%" }} onClick={handleClose} className="btn btn-light">
+                            <button style={{ width: "20%" }} onClick={handleDecline} className="btn btn-light">
                                 Từ chối
                             </button>
                         </div>
@@ -145,7 +274,6 @@ const Registrators = () => {
             <div>
                 <section className="u-align-center u-clearfix u-section-1" id="sec-b42b">
                     <div className="u-clearfix u-sheet u-sheet-1">
-
                         <div className="u-expanded-width u-table u-table-responsive u-table-1">
                             <table className="u-table-entity u-table-entity-1">
                                 <colgroup>
@@ -169,31 +297,38 @@ const Registrators = () => {
                                     </tr>
                                 </thead>
                                 <tbody className="u-table-body">
-                                    <tr style={{ height: "76px" }} onClick={handleShow} >
-                                        <td className="u-border-1 u-border-grey-30 u-first-column u-grey-5 u-table-cell u-table-cell-5">1</td>
-                                        <td className="u-border-1 u-border-grey-30 u-table-cell">Nguyễn Hoàng Dương</td>
-                                        <td className="u-border-1 u-border-grey-30 u-table-cell">09124719471</td>
-                                        <td className="u-border-1 u-border-grey-30 u-table-cell">Công ty TNHH Hảo Hán</td>
-                                        <td className="u-border-1 u-border-grey-30 u-table-cell">31/03/2010</td>
-                                        <td className="u-border-1 u-border-grey-30 u-table-cell">0314537155</td>
-                                        <td className="u-border-1 u-border-grey-30 u-table-cell">2/2/2023</td>
-                                    </tr>
-                                    <tr style={{ height: "76px" }}>
-                                        <td className="u-border-1 u-border-grey-30 u-first-column u-grey-5 u-table-cell u-table-cell-5">2</td>
-                                        <td className="u-border-1 u-border-grey-30 u-table-cell">Bùi Thanh Vừng</td>
-                                        <td className="u-border-1 u-border-grey-30 u-table-cell">09124719471</td>
-                                        <td className="u-border-1 u-border-grey-30 u-table-cell">Công ty TNHH Xuân Mai</td>
-                                        <td className="u-border-1 u-border-grey-30 u-table-cell">24/03/2015</td>
-                                        <td className="u-border-1 u-border-grey-30 u-table-cell">0716391951</td>
-                                        <td className="u-border-1 u-border-grey-30 u-table-cell">3/2/2023</td>
-                                    </tr>
+                                    {
+                                        registrationList && registrationList.length > 0 ?
+                                            registrationList.map((item, index) =>
+                                                <tr style={{ height: "76px" }} onClick={() => getRegistrationDetail(item.userId)} >
+                                                    <td className="u-border-1 u-border-grey-30 u-first-column u-grey-5 u-table-cell u-table-cell-5">1</td>
+                                                    <td className="u-border-1 u-border-grey-30 u-table-cell">{item.username}</td>
+                                                    <td className="u-border-1 u-border-grey-30 u-table-cell">{item.phone}</td>
+                                                    <td className="u-border-1 u-border-grey-30 u-table-cell">{item.facilityName}</td>
+                                                    <td className="u-border-1 u-border-grey-30 u-table-cell">{item.facilityFoundDate}</td>
+                                                    <td className="u-border-1 u-border-grey-30 u-table-cell">{item.businessLicenseNumber}</td>
+                                                    <td className="u-border-1 u-border-grey-30 u-table-cell">{item.registerDate}</td>
+                                                </tr>
+                                            ) : ''
+                                    }
                                 </tbody>
                             </table>
                         </div>
                     </div>
                 </section>
             </div>
+            <ToastContainer position="top-left"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="colored" />
         </>
+
     );
 }
 

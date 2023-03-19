@@ -35,7 +35,7 @@ public interface IRegistrationService {
      *
      * @param userId     id of the user
      * @param facilityId id of the user's facility
-     * @param approval   is the decision of approval
+     * @param approval   is the decision of approval (0 decline, 1 approve)
      * @return
      */
     public ResponseEntity<?> registrationApproval(Long userId, Long facilityId, boolean approval);
