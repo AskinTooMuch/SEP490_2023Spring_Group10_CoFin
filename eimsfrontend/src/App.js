@@ -28,6 +28,7 @@ import ImportBill from './components/ImportBill';
 import AccountManager from './components/AccountManager';
 import SubcriptionManager from './components/SubcriptionManager';
 import CreateImportBill from './components/CreateImportBill';
+import ImportBillDetail from './components/ImportBillDetail';
 function App() {
   return (
     <>
@@ -46,12 +47,13 @@ function App() {
           <Route path="/importbill" element={<ImportBill />} />
           <Route path="/createimportbill" element={<CreateImportBill />} />
           {/*Details pages */}
-          <Route path="/employeedetail" element={<EmployeeDetails />} />
-          <Route path="/eggbatchdetail" element={<EggBatchDetail />} />
-          <Route path="/breeddetail" element={<BreedDetails />} />
-          <Route path="/machinedetail" element={<MachineDetails />} />
-          <Route path="/supplierdetail" element={<SupplierDetails />} />
-          <Route path="/customerdetail" element={<CustomerDetails />} />
+          <Route path="/employeedetail" element={<EmployeeDetails/>} />
+          <Route path="/eggbatchdetail" element={<EggBatchDetail/>} />
+          <Route path="/breeddetail" element={<BreedDetails/>} />
+          <Route path="/machinedetail" element={<MachineDetails/>} />
+          <Route path="/supplierdetail" element={<SupplierDetails/>} />
+          <Route path="/customerdetail" element={<CustomerDetails/>} />
+          <Route path="/importbilldetail" element={<ImportBillDetail/>}/>
         </Route>
 
         {/*Moderator pages */}
