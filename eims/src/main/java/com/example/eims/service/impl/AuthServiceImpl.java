@@ -109,6 +109,9 @@ public class AuthServiceImpl implements IAuthService {
             }
         }
 
+        if(!passwordEncoder.matches(password,user.getPassword())){
+            return new ResponseEntity<>("Mật khẩu hoặc tài khoản sai", HttpStatus.BAD_REQUEST);
+        }
         Authentication auth = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(phone, password));
         SecurityContextHolder.getContext().setAuthentication(auth);
@@ -273,14 +276,15 @@ public class AuthServiceImpl implements IAuthService {
     @Override
     public ResponseEntity<?> changePassword(ChangePasswordDTO changePasswordDTO) {
         // Check blank input
-        String password = stringDealer.trimMax(changePasswordDTO.getPassword());
-        if (password.equals("")) { /* Password is empty */
+
+        if (changePasswordDTO.getPassword() == null || stringDealer.trimMax(changePasswordDTO.getPassword()).equals("")) { /* Password is empty */
             return new ResponseEntity<>("Mật khẩu không được để trống", HttpStatus.BAD_REQUEST);
         }
-        String newPassword = stringDealer.trimMax(changePasswordDTO.getNewPassword());
-        if (newPassword.equals("")) { /* New password is empty */
+        String password = stringDealer.trimMax(changePasswordDTO.getPassword());
+        if (changePasswordDTO.getNewPassword() == null || stringDealer.trimMax(changePasswordDTO.getNewPassword()).equals("")) { /* New password is empty */
             return new ResponseEntity<>("Mật khẩu mới không được để trống", HttpStatus.BAD_REQUEST);
         }
+        String newPassword = stringDealer.trimMax(changePasswordDTO.getNewPassword());
         if (!stringDealer.checkPasswordRegex(newPassword)) { /* New password is not valid */
             return new ResponseEntity<>("Mật khẩu mới không đúng định dạng", HttpStatus.BAD_REQUEST);
         }
