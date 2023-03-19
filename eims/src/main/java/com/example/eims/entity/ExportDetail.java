@@ -17,7 +17,7 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "exportDetail")
+@Table(name = "export_detail")
 public class ExportDetail {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

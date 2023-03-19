@@ -16,16 +16,18 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.sql.Date;
+import java.time.LocalDateTime;
 
 @Data
 @Entity
-@Table(name = "eggProduct")
+@Table(name = "egg_product")
 public class EggProduct {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long productId;
     private Long eggBatchId;
     private Long incubationPhaseId;
-    private Date incubationDate;
+    private LocalDateTime incubationDate;
     private int amount;
     private int curAmount;
     private boolean status;

@@ -20,9 +20,11 @@ import java.util.Optional;
 public interface BreedRepository extends JpaRepository<Breed, Long> {
     Optional<List<Breed>> findBySpecieId(Long specieId);
     Optional<List<Breed>> findByUserId(Long userId);
+    Optional<Breed> findByBreedId(Long breedId);
     @Query(value = "SELECT b.* FROM eims.egg_product ep " +
             "JOIN eims.egg_batch eb ON ep.egg_batch_id = eb.egg_batch_id " +
             "JOIN eims.breed b ON eb.breed_id = b.breed_id " +
             "WHERE ep.product_id = ?1", nativeQuery = true)
     Breed getBreedOfProduct(Long productId);
+
 }

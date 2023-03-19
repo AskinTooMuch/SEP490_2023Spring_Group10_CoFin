@@ -19,7 +19,7 @@ import java.sql.Date;
 
 @Data
 @Entity
-@Table(name = "exportReceipt")
+@Table(name = "export_receipt")
 public class ExportReceipt {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

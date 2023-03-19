@@ -18,7 +18,7 @@ import java.sql.Date;
 
 @Data
 @Entity
-@Table(name = "userSubscription")
+@Table(name = "user_subscription")
 public class UserSubscription {
     @Id
     private Long facilityId;

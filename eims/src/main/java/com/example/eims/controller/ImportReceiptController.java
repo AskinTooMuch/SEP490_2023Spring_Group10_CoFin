@@ -13,11 +13,18 @@
  */
 
 package com.example.eims.controller;
+import com.example.eims.dto.importReceipt.CreateImportDTO;
+import com.example.eims.entity.EggBatch;
+import com.example.eims.entity.ImportReceipt;
 import com.example.eims.service.interfaces.IImportReceiptService;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
@@ -96,5 +103,43 @@ public class ImportReceiptController {
     @GetMapping("/statistic")
     public ResponseEntity<?> viewImportStatistic(@RequestParam Long userId) {
         return importReceiptService.viewImportStatistic(userId);
+    }
+
+    /**
+     * Create an import.
+     *
+     * @param createImportDTO contains supplier's id, user's id who create the import, facility's id, import date,
+     *                        total, paid, status, list of import items.
+     * @return
+     */
+    @Secured({"ROLE_OWNER","ROLE_EMPLOYEE"})
+    @PostMapping("/create")
+    public ResponseEntity<?> createImport(@RequestBody CreateImportDTO createImportDTO) {
+        return importReceiptService.createImport(createImportDTO);
+    }
+
+    /**
+     * View detail of an import.
+     *
+     * @param importId the id of import receipt.
+     * @return
+     */
+    @Secured({"ROLE_OWNER","ROLE_EMPLOYEE"})
+    @GetMapping("/get")
+    public ResponseEntity<?> getImport(@RequestParam Long importId) {
+        return importReceiptService.getImport(importId);
+    }
+
+    /**
+     * Update paid amount of import receipt.
+     *
+     * @param importId the id of import receipt.
+     * @param paid
+     * @return
+     */
+    @Secured({"ROLE_OWNER","ROLE_EMPLOYEE"})
+    @PutMapping("/updatePaid")
+    public ResponseEntity<?> updatePaidOfImport(@RequestParam Long importId, @RequestParam Float paid) {
+        return  importReceiptService.updatePaidOfImport(importId, paid);
     }
 }

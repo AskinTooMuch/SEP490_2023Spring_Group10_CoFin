@@ -19,5 +19,7 @@ import java.util.Optional;
 
 public interface EggLocationRepository extends JpaRepository<EggLocation, Long> {
     boolean existsByMachineId(Long machineId);
+    Optional<EggLocation> findByEggLocationId(Long eggLocationId);
     Optional<List<EggLocation>> getAllByMachineId(Long machineId);
+    Optional<List<EggLocation>> findByProductId(Long productId);
 }

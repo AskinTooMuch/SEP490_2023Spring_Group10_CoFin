@@ -6,28 +6,21 @@
  *
  * Record of change:<br>
  * DATE          Version    Author           DESCRIPTION<br>
- * 16/02/2023    1.0        DuongVV          First Deploy<br>
- * 19/02/2023    2.0        DuongVV          Fix notation, id filed
+ * 15/03/2023    1.0        DuongVV          First Deploy<br>
  */
 
-package com.example.eims.entity;
+package com.example.eims.dto.importReceipt;
 
-import jakarta.persistence.*;
 import lombok.Data;
 
 import java.sql.Date;
 import java.time.LocalDateTime;
 
 @Data
-@Entity
-@Table(name = "import_receipt")
-public class ImportReceipt {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class ImportReceiptListItemDTO {
     private Long importId;
     private Long supplierId;
-    private Long userId;
-    private Long facilityId;
+    private String supplierName;
     private LocalDateTime importDate;
     private Float total;
     private Float paid;

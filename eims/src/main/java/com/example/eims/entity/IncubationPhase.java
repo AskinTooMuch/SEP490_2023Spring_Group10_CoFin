@@ -17,7 +17,7 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "incubationPhase")
+@Table(name = "incubation_phase")
 public class IncubationPhase {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

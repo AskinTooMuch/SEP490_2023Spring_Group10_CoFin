@@ -11,6 +11,7 @@
 
 package com.example.eims.service.interfaces;
 
+import com.example.eims.dto.importReceipt.CreateImportDTO;
 import org.springframework.http.ResponseEntity;
 
 public interface IImportReceiptService {
@@ -59,4 +60,29 @@ public interface IImportReceiptService {
      * @return list of import receipts
      */
     public ResponseEntity<?> viewImportStatistic(Long userId);
+
+    /**
+     * Create an import.
+     *
+     * @param createImportDTO contains supplier's id, user's id who create the import, facility's id, import date,
+     *                        total, paid, status, list of import items.
+     * @return
+     */
+    public ResponseEntity<?> createImport(CreateImportDTO createImportDTO);
+
+    /**
+     * View detail of an import.
+     *
+     * @param importId the id of import receipt.
+     * @return
+     */
+    public ResponseEntity<?> getImport(Long importId);
+
+    /**
+     * Update paid amount of import receipt.
+     *
+     * @param importId the id of import receipt.
+     * @return
+     */
+    public ResponseEntity<?> updatePaidOfImport(Long importId, Float paid);
 }

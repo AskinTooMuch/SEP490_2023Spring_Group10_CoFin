@@ -6,24 +6,18 @@
  *
  * Record of change:<br>
  * DATE          Version    Author           DESCRIPTION<br>
- * 16/02/2023    1.0        DuongVV          First Deploy<br>
- * 19/02/2023    2.0        DuongVV          Fix notation, id filed
+ * 15/03/2023    1.0        DuongVV          First Deploy<br>
  */
 
-package com.example.eims.entity;
+package com.example.eims.dto.eggLocation;
 
-import jakarta.persistence.*;
 import lombok.Data;
 
 @Data
-@Entity
-@Table(name = "egg_location")
-public class EggLocation {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class EggLocationEggBatchDetailDTO {
     private Long eggLocationId;
     private Long productId;
     private Long machineId;
+    private String machineName;
     private int amount;
-    private int status;
 }

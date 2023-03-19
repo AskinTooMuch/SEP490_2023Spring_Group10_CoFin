@@ -29,7 +29,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -114,8 +117,11 @@ public class MachineServiceImpl implements IMachineService {
                 EggLocationMachineDetailDTO eggLocationMachineDetailDTO = new EggLocationMachineDetailDTO();
                 eggLocationMachineDetailDTO.getFromEntity(eggLocation);
                 EggProduct eggProduct = eggProductRepository.getByProductId(eggLocation.getProductId()).get();
-                Date startDate = eggProduct.getIncubationDate();
+
+                LocalDateTime dateTime = eggProduct.getIncubationDate();
+                Date startDate = Date.valueOf(dateTime.toLocalDate());
                 Date endDate = Date.valueOf(LocalDate.now());
+
                 Breed breed = breedRepository.getBreedOfProduct(eggProduct.getProductId());
                 int growthTime = breed.getGrowthTime();
                 String breedName = breed.getBreedName();

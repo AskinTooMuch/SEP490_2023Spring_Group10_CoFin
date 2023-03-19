@@ -135,7 +135,8 @@ CREATE TABLE egg_batch(
 	import_id		integer			NOT NULL,
 	breed_id		integer			NOT NULL,
     amount			integer 		NOT NULL,
-    price			decimal(15,2)	NOT NULL
+    price			decimal(15,2)	NOT NULL,
+    status			boolean 		NOT NULL
 );
 
 CREATE TABLE export_receipt(
@@ -539,7 +540,8 @@ VALUES 	(1, 'Máy ấp', 'Máy dùng cho giai đoạn vừa mới ấp cho tới
         
 -- machine
 INSERT INTO machine(machine_type_id, facility_id, machine_name, max_capacity, cur_capacity, added_date, active, status)
-VALUES (1, 1, 'Máy ấp kho', '6000', '0', '2019-02-17', 0, 1),
+VALUES 	(1, 1, 'Máy ấp kho', '6000', '0', '2019-02-17', 0, 1),
+		(1, 1, 'Máy ấp 2', '4000', '0', '2019-02-17', 0, 1),
 		(2, 1, 'Máy nở nhỏ', '2000', '0', '2019-02-17', 0, 1),
         (2, 1, 'Máy nở to', '4000', '0', '2019-02-17', 0, 1);
 
@@ -561,3 +563,8 @@ VALUES	('1', '3', '2022-05-31', 0),
 INSERT INTO registration(registration_id, user_id, register_date, status)
 VALUES 	(1, 2, '2022-05-31', 2),
 		(2, 5, '2022-05-31', 0);
+   
+-- breed
+INSERT INTO breed(breed_id, specie_id, user_id, breed_name, average_weight_male, average_weight_female, common_disease, growth_time, image_src, status) 
+VALUES	(1, 1, 2, "Gà ri", 4.5, 4.0, "Marek","50","",1),
+		(2, 1, 2, "Gà lai chọi", 4.5, 4.0, "Marek","50","",1);

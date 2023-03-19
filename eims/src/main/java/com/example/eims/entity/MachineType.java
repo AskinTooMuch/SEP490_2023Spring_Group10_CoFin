@@ -17,7 +17,7 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "machineType")
+@Table(name = "machine_type")
 public class MachineType {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -115,7 +115,10 @@ public class RegistrationServiceImpl implements IRegistrationService {
             } else {
                 return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
             }
-            return new ResponseEntity<>("Owner's registration approved", HttpStatus.OK);
+            //  Send message to Owner
+            String mess = "Đơn đăng ký của bạn đã được chấp thuận! Chào mừng đến với EIMS.";
+            //
+            return new ResponseEntity<>("Đã chấp thuận đơn đăng ký", HttpStatus.OK);
         } else { /* Decline registration */
             // Change status of registration
             if (registrationOptional.isPresent()){
@@ -125,7 +128,10 @@ public class RegistrationServiceImpl implements IRegistrationService {
             } else {
                 return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
             }
-            return new ResponseEntity<>("Owner's registration declined", HttpStatus.OK);
+            //  Send mess to Owner
+            String mess = "Đơn đăng ký của bạn đã bị từ chối! Vui lòng liên hệ eims.contact để biết thêm thông tin chi tiết.";
+            //
+            return new ResponseEntity<>("Đã từ chối đơn đăng ký", HttpStatus.OK);
         }
     }
 }
