@@ -71,15 +71,19 @@ public class AuthServiceImpl implements IAuthService {
      */
     @Override
     public ResponseEntity<?> authenticateUser(LoginDTO loginDTO) {
-        String phone = stringDealer.trimMax(loginDTO.getPhone());
-        if (phone.equals("")) { /* Phone number is empty */
+        if (loginDTO.getPhone() == null || stringDealer.trimMax(loginDTO.getPhone()).equals("")) { /* Phone number is empty */
             return new ResponseEntity<>("Số điện thoại không được để trống", HttpStatus.BAD_REQUEST);
         }
-        String password = stringDealer.trimMax(loginDTO.getPassword());
-        if (password.equals("")) { /* Password is empty */
+        String phone = stringDealer.trimMax(loginDTO.getPhone());
+        if (loginDTO.getPassword() == null || stringDealer.trimMax(loginDTO.getPassword()).equals("")) { /* Password is empty */
             return new ResponseEntity<>("Mật khẩu không được để trống", HttpStatus.BAD_REQUEST);
         }
-        User user = userRepository.findByPhone(loginDTO.getPhone()).get();
+        String password = stringDealer.trimMax(loginDTO.getPassword());
+        Optional<User> userOpt = userRepository.findByPhone(phone);
+        if(userOpt.isEmpty()){
+            return new ResponseEntity<>("Tài khoản hoặc mật khẩu sai", HttpStatus.BAD_REQUEST);
+        }
+        User user = userOpt.get();
         if (user.getRoleId() == 2L) { // role is OWNER (have Facility)
             // Check status of registration
             // 0 - considering
@@ -146,6 +150,9 @@ public class AuthServiceImpl implements IAuthService {
             return new ResponseEntity<>("Tên không được để trống", HttpStatus.BAD_REQUEST);
         }
         // Date of birth
+        if (signUpDTO.getUserDob()== null) { /* Date of birth is empty */
+            return new ResponseEntity<>("Ngày sinh không được để trống", HttpStatus.BAD_REQUEST);
+        }
         String sDate = stringDealer.trimMax(signUpDTO.getUserDob());
         if (sDate.equals("")) { /* Date of birth is empty */
             return new ResponseEntity<>("Ngày sinh không được để trống", HttpStatus.BAD_REQUEST);
@@ -162,6 +169,9 @@ public class AuthServiceImpl implements IAuthService {
             return new ResponseEntity<>("Số điện thoại đã được sử dụng", HttpStatus.BAD_REQUEST);
         }
         // Email
+        if(signUpDTO.getUserEmail() == null || signUpDTO.getUserEmail().equals("")){
+            return new ResponseEntity<>("Email không được để trống", HttpStatus.BAD_REQUEST);
+        }
         String email = stringDealer.trimMax(signUpDTO.getUserEmail());
         if ((!email.equals("")) && !stringDealer.checkEmailRegex(email)) { /* Email is not valid */
             return new ResponseEntity<>("Email không đúng định dạng", HttpStatus.BAD_REQUEST);

@@ -54,14 +54,523 @@
      AuthServiceImpl authService;
 
      // Create demo entity
-     LoginDTO loginDTO = new LoginDTO("0987654321", "123456Aa@");
+     LoginDTO loginDTO = new LoginDTO("0987654321", "@User123");
      // User
-     User user = new User(1L, 2L, "0987654321", "123456Aa@", 1);
+     User user = new User(6L, 2L, "0987654321", "@User123", 1);
      // Facility
-     Facility facility = new Facility(1L, user.getUserId(), 1);
+     Facility facility = new Facility(4L, user.getUserId(), 1);
      //Registration
      Registration registration = new Registration(user.getUserId(), 2);
 
+
+     @Test
+     @DisplayName("RegisterUTCID02")
+     void registerUTCID02() {
+         // Set up Dto
+         SignUpDTO signUpDTO = new SignUpDTO();
+         signUpDTO.setUsername("Bùi Thanh T");
+         signUpDTO.setUserDob("");
+         signUpDTO.setUserPhone("0987654321");
+         signUpDTO.setUserEmail("tungduong71@gmail.com"	);
+         signUpDTO.setUserAddress("So 27 duong Truong Trinh");
+         signUpDTO.setUserPassword("@User123");
+         signUpDTO.setFacilityName("BùiThanhT");
+         signUpDTO.setFacilityFoundDate("");
+         signUpDTO.setFacilityHotline("0987654321");
+         signUpDTO.setFacilityAddress("So 27 duong Truong Trinh");
+         signUpDTO.setBusinessLicenseNumber("12345678");
+         // Define behaviour of repository
+         when(userRepository.existsByPhone(signUpDTO.getUserPhone())).thenReturn(false);
+         when(userRepository.save(any(User.class))).thenReturn(user);
+         // Run service method
+         ResponseEntity<?> responseEntity = authService.registerUser(signUpDTO);
+         System.out.println(responseEntity.toString());
+         // Assert
+         assertEquals("Ngày thành lập không được để trống", responseEntity.getBody());
+     }
+
+     @Test
+     @DisplayName("RegisterUTCID03")
+     void registerUTCID03() {
+         // Set up Dto
+         SignUpDTO signUpDTO = new SignUpDTO();
+         signUpDTO.setUsername("& HCm");
+         signUpDTO.setUserDob("2000-02-03");
+         signUpDTO.setUserPhone("0987654321");
+         signUpDTO.setUserEmail("tungduong71@gmail.com"	);
+         signUpDTO.setUserAddress("So 27 duong Truong Trinh");
+         signUpDTO.setUserPassword("@User123");
+         signUpDTO.setFacilityName("BùiThanhT");
+         signUpDTO.setFacilityFoundDate("2000-02-03");
+         signUpDTO.setFacilityHotline("0987654321");
+         signUpDTO.setFacilityAddress("So 27 duong Truong Trinh");
+         signUpDTO.setBusinessLicenseNumber("12345678");
+         // Define behaviour of repository
+         when(userRepository.existsByPhone(signUpDTO.getUserPhone())).thenReturn(false);
+         when(userRepository.save(any(User.class))).thenReturn(user);
+         // Run service method
+         ResponseEntity<?> responseEntity = authService.registerUser(signUpDTO);
+         System.out.println(responseEntity.toString());
+         // Assert
+         assertEquals("Tên không đúng định dạng", responseEntity.getBody());
+     }
+
+     @Test
+     @DisplayName("RegisterUTCID04")
+     void registerUTCID04() {
+         // Set up Dto
+         SignUpDTO signUpDTO = new SignUpDTO();
+         signUpDTO.setUsername("BùiThanhT");
+         signUpDTO.setUserDob("2000-02-03");
+         signUpDTO.setUserPhone("0987654321");
+         signUpDTO.setUserEmail("a@b_c@gmail.com");
+         signUpDTO.setUserAddress("Hà Nội, Việt Nam");
+         signUpDTO.setUserPassword("@User123");
+         signUpDTO.setFacilityName("BùiThanhT");
+         signUpDTO.setFacilityFoundDate("2000-02-03");
+         signUpDTO.setFacilityHotline("0987654321");
+         signUpDTO.setFacilityAddress("Hà Nội, Việt Nam");
+         signUpDTO.setBusinessLicenseNumber("12345678");
+         // Define behaviour of repository
+         //when(userRepository.existsByPhone(signUpDTO.getUserPhone())).thenReturn(false);
+         //when(userRepository.save(any(User.class))).thenReturn(user);
+         // Run service method
+         ResponseEntity<?> responseEntity = authService.registerUser(signUpDTO);
+         System.out.println(responseEntity.toString());
+         // Assert
+         assertEquals("Email không đúng định dạng", responseEntity.getBody());
+     }
+
+     @Test
+     @DisplayName("RegisterUTCID05")
+     void registerUTCID05() {
+         // Set up Dto
+         SignUpDTO signUpDTO = new SignUpDTO();
+         signUpDTO.setUsername("Lê Văn Đ");
+         signUpDTO.setUserDob("2000-02-03");
+         signUpDTO.setUserPhone("0987654321");
+         signUpDTO.setUserEmail("tungduong71@gmail.com"	);
+         signUpDTO.setUserAddress("So 27 duong Truong Trinh");
+         signUpDTO.setUserPassword("eims");
+         signUpDTO.setFacilityName("BùiThanhT");
+         signUpDTO.setFacilityFoundDate("2000-02-03");
+         signUpDTO.setFacilityHotline("0987654321");
+         signUpDTO.setFacilityAddress("So 27 duong Truong Trinh");
+         signUpDTO.setBusinessLicenseNumber("12345678");
+         // Define behaviour of repository
+//         when(userRepository.existsByPhone(signUpDTO.getUserPhone())).thenReturn(false);
+//         when(userRepository.save(any(User.class))).thenReturn(user);
+         // Run service method
+         ResponseEntity<?> responseEntity = authService.registerUser(signUpDTO);
+         System.out.println(responseEntity.toString());
+         // Assert
+         assertEquals("Mật khẩu không đúng định dạng", responseEntity.getBody());
+     }
+
+     @Test
+     @DisplayName("RegisterUTCID06")
+     void registerUTCID06() {
+         // Set up Dto
+         SignUpDTO signUpDTO = new SignUpDTO();
+         signUpDTO.setUsername("BùiThanhT");
+         signUpDTO.setUserDob("2000-02-03");
+         signUpDTO.setUserPhone("abcdefgh");
+         signUpDTO.setUserEmail("tungduong71@gmail.com"	);
+         signUpDTO.setUserAddress("Hà Nội, Việt Nam");
+         signUpDTO.setUserPassword("@User123");
+         signUpDTO.setFacilityName("BùiThanhT");
+         signUpDTO.setFacilityFoundDate("2000-02-03");
+         signUpDTO.setFacilityHotline("abcdefgh");
+         signUpDTO.setFacilityAddress("Hà Nội, Việt Nam");
+         signUpDTO.setBusinessLicenseNumber("12345678");
+         // Define behaviour of repository
+//         when(userRepository.existsByPhone(signUpDTO.getUserPhone())).thenReturn(false);
+//         when(userRepository.save(any(User.class))).thenReturn(user);
+         // Run service method
+         ResponseEntity<?> responseEntity = authService.registerUser(signUpDTO);
+         System.out.println(responseEntity.toString());
+         // Assert
+         assertEquals("Số điện thoại không đúng đinh dạng", responseEntity.getBody());
+     }
+
+     @Test
+     @DisplayName("RegisterUTCID07")
+     void registerUTCID07() {
+         // Set up Dto
+         SignUpDTO signUpDTO = new SignUpDTO();
+         signUpDTO.setUsername("BùiThanhT");
+         signUpDTO.setUserDob("2000-02-03");
+         signUpDTO.setUserPhone("0987654321");
+         signUpDTO.setUserEmail("tungduong71@gmail.com"	);
+         signUpDTO.setUserAddress("");
+         signUpDTO.setUserPassword("@User123");
+         signUpDTO.setFacilityName("BùiThanhT");
+         signUpDTO.setFacilityFoundDate("2000-02-03");
+         signUpDTO.setFacilityHotline("0987654321");
+         signUpDTO.setFacilityAddress("");
+         signUpDTO.setBusinessLicenseNumber("12345678");
+         // Define behaviour of repository
+//         when(userRepository.existsByPhone(signUpDTO.getUserPhone())).thenReturn(false);
+//         when(userRepository.save(any(User.class))).thenReturn(user);
+         // Run service method
+         ResponseEntity<?> responseEntity = authService.registerUser(signUpDTO);
+         System.out.println(responseEntity.toString());
+         // Assert
+         assertEquals("Địa chỉ không được để trống", responseEntity.getBody());
+     }
+
+     @Test
+     @DisplayName("RegisterUTCID08")
+     void registerUTCID08() {
+         // Set up Dto
+         SignUpDTO signUpDTO = new SignUpDTO();
+         signUpDTO.setUsername("BùiThanhT");
+         signUpDTO.setUserDob("2000-02-03");
+         signUpDTO.setUserPhone("0987654321");
+         signUpDTO.setUserEmail("tungduong71@gmail.com"	);
+         signUpDTO.setUserAddress("So 27 duong Truong Trinh");
+         signUpDTO.setUserPassword("@User123");
+         signUpDTO.setFacilityName("BùiThanhT");
+         signUpDTO.setFacilityFoundDate("2000-02-03");
+         signUpDTO.setFacilityHotline("0987654321");
+         signUpDTO.setFacilityAddress("So 27 duong Truong Trinh");
+         signUpDTO.setBusinessLicenseNumber("");
+         // Define behaviour of repository
+         when(userRepository.existsByPhone(signUpDTO.getUserPhone())).thenReturn(false);
+         when(userRepository.save(any(User.class))).thenReturn(user);
+         // Run service method
+         ResponseEntity<?> responseEntity = authService.registerUser(signUpDTO);
+         System.out.println(responseEntity.toString());
+         // Assert
+         assertEquals("Số đăng kí kinh doanh không được để trống", responseEntity.getBody());
+     }
+
+     @Test
+     @DisplayName("RegisterUTCID09")
+     void registerUTCID09() {
+         // Set up Dto
+         SignUpDTO signUpDTO = new SignUpDTO();
+         signUpDTO.setUsername("Lê Văn Đ");
+         signUpDTO.setUserDob("2000-02-03");
+         signUpDTO.setUserPhone("0987654321");
+         signUpDTO.setUserEmail("12@3tungdt@gmail.com");
+         signUpDTO.setUserAddress("So 27 duong Truong Trinh");
+         signUpDTO.setUserPassword("@User123");
+         signUpDTO.setFacilityName("Lê Văn Đ");
+         signUpDTO.setFacilityFoundDate("2000-02-03");
+         signUpDTO.setFacilityHotline("0987654321");
+         signUpDTO.setFacilityAddress("So 27 duong Truong Trinh");
+         signUpDTO.setBusinessLicenseNumber("12345678");
+         // Define behaviour of repository
+         //when(userRepository.existsByPhone(signUpDTO.getUserPhone())).thenReturn(false);
+         //when(userRepository.save(any(User.class))).thenReturn(user);
+         // Run service method
+         ResponseEntity<?> responseEntity = authService.registerUser(signUpDTO);
+         System.out.println(responseEntity.toString());
+         // Assert
+         assertEquals("Email không đúng định dạng", responseEntity.getBody());
+     }
+
+     @Test
+     @DisplayName("RegisterUTCID10")
+     void registerUTCID10() {
+         // Set up Dto
+         SignUpDTO signUpDTO = new SignUpDTO();
+         signUpDTO.setUsername("");
+         signUpDTO.setUserDob("2000-02-03");
+         signUpDTO.setUserPhone("0987654321");
+         signUpDTO.setUserEmail("tungduong71@gmail.com"	);
+         signUpDTO.setUserAddress("So 27 duong Truong Trinh");
+         signUpDTO.setUserPassword("@User123");
+         signUpDTO.setFacilityName("");
+         signUpDTO.setFacilityFoundDate("2000-02-03");
+         signUpDTO.setFacilityHotline("0987654321");
+         signUpDTO.setFacilityAddress("So 27 duong Truong Trinh");
+         signUpDTO.setBusinessLicenseNumber("12345678");
+         // Define behaviour of repository
+         //when(userRepository.existsByPhone(signUpDTO.getUserPhone())).thenReturn(false);
+         //when(userRepository.save(any(User.class))).thenReturn(user);
+         // Run service method
+         ResponseEntity<?> responseEntity = authService.registerUser(signUpDTO);
+         System.out.println(responseEntity.toString());
+         // Assert
+         assertEquals("Tên không được để trống", responseEntity.getBody());
+     }
+
+     @Test
+     @DisplayName("RegisterUTCID11")
+     void registerUTCID11() {
+         // Set up Dto
+         SignUpDTO signUpDTO = new SignUpDTO();
+         signUpDTO.setUsername("BùiThanhT");
+         signUpDTO.setUserDob(null);
+         signUpDTO.setUserPhone("0987654321");
+         signUpDTO.setUserEmail("tungduong71@gmail.com"	);
+         signUpDTO.setUserAddress("So 27 duong Truong Trinh");
+         signUpDTO.setUserPassword("@User123");
+         signUpDTO.setFacilityName("BùiThanhT");
+         signUpDTO.setFacilityFoundDate(null);
+         signUpDTO.setFacilityHotline("0987654321");
+         signUpDTO.setFacilityAddress("So 27 duong Truong Trinh");
+         signUpDTO.setBusinessLicenseNumber("12345678");
+         // Define behaviour of repository
+         //when(userRepository.existsByPhone(signUpDTO.getUserPhone())).thenReturn(false);
+         //when(userRepository.save(any(User.class))).thenReturn(user);
+         // Run service method
+         ResponseEntity<?> responseEntity = authService.registerUser(signUpDTO);
+         System.out.println(responseEntity.toString());
+         // Assert
+         assertEquals("Ngày sinh không được để trống", responseEntity.getBody());
+     }
+
+     @Test
+     @DisplayName("RegisterUTCID12")
+     void registerUTCID12() {
+         // Set up Dto
+         SignUpDTO signUpDTO = new SignUpDTO();
+         signUpDTO.setUsername("BùiThanhT");
+         signUpDTO.setUserDob("2000-02-03");
+         signUpDTO.setUserPhone("098765432");
+         signUpDTO.setUserEmail("tungduong71@gmail.com"	);
+         signUpDTO.setUserAddress("So 27 duong Truong Trinh");
+         signUpDTO.setUserPassword("@User123");
+         signUpDTO.setFacilityName("BùiThanhT");
+         signUpDTO.setFacilityFoundDate("2000-02-03");
+         signUpDTO.setFacilityHotline("098765432");
+         signUpDTO.setFacilityAddress("So 27 duong Truong Trinh");
+         signUpDTO.setBusinessLicenseNumber("12345678");
+         // Define behaviour of repository
+         //when(userRepository.existsByPhone(signUpDTO.getUserPhone())).thenReturn(false);
+         //when(userRepository.save(any(User.class))).thenReturn(user);
+         // Run service method
+         ResponseEntity<?> responseEntity = authService.registerUser(signUpDTO);
+         System.out.println(responseEntity.toString());
+         // Assert
+         assertEquals("Số điện thoại không đúng đinh dạng", responseEntity.getBody());
+     }
+
+     @Test
+     @DisplayName("RegisterUTCID13")
+     void registerUTCID13() {
+         // Set up Dto
+         SignUpDTO signUpDTO = new SignUpDTO();
+         signUpDTO.setUsername("Lê Văn Đ");
+         signUpDTO.setUserDob("2000-02-03");
+         signUpDTO.setUserPhone("");
+         signUpDTO.setUserEmail("tungduong71@gmail.com"	);
+         signUpDTO.setUserAddress("So 27 duong Truong Trinh");
+         signUpDTO.setUserPassword("@User123");
+         signUpDTO.setFacilityName("Lê Văn Đ");
+         signUpDTO.setFacilityFoundDate("2000-02-03");
+         signUpDTO.setFacilityHotline("");
+         signUpDTO.setFacilityAddress("So 27 duong Truong Trinh");
+         signUpDTO.setBusinessLicenseNumber("12345678");
+         // Define behaviour of repository
+         //when(userRepository.existsByPhone(signUpDTO.getUserPhone())).thenReturn(false);
+         //when(userRepository.save(any(User.class))).thenReturn(user);
+         // Run service method
+         ResponseEntity<?> responseEntity = authService.registerUser(signUpDTO);
+         System.out.println(responseEntity.toString());
+         // Assert
+         assertEquals("Số điện thoại không được để trống", responseEntity.getBody());
+     }
+
+     @Test
+     @DisplayName("RegisterUTCID14")
+     void registerUTCID14() {
+         // Set up Dto
+         SignUpDTO signUpDTO = new SignUpDTO();
+         signUpDTO.setUsername("Lê Văn Đ");
+         signUpDTO.setUserDob("2000-02-03");
+         signUpDTO.setUserPhone("0987654321");
+         signUpDTO.setUserEmail(null);
+         signUpDTO.setUserAddress("Hà Nội, Việt Nam");
+         signUpDTO.setUserPassword("@User123");
+         signUpDTO.setFacilityName("Lê Văn Đ");
+         signUpDTO.setFacilityFoundDate("2000-02-03");
+         signUpDTO.setFacilityHotline("0987654321");
+         signUpDTO.setFacilityAddress("Hà Nội, Việt Nam");
+         signUpDTO.setBusinessLicenseNumber("12345678");
+         // Define behaviour of repository
+         //when(userRepository.existsByPhone(signUpDTO.getUserPhone())).thenReturn(false);
+         //when(userRepository.save(any(User.class))).thenReturn(user);
+         // Run service method
+         ResponseEntity<?> responseEntity = authService.registerUser(signUpDTO);
+         System.out.println(responseEntity.toString());
+         // Assert
+         assertEquals("Email không được để trống", responseEntity.getBody());
+     }
+
+     @Test
+     @DisplayName("RegisterUTCID15")
+     void registerUTCID15() {
+         // Set up Dto
+         SignUpDTO signUpDTO = new SignUpDTO();
+         signUpDTO.setUsername("Lê Văn Đ");
+         signUpDTO.setUserDob("2000-02-03");
+         signUpDTO.setUserPhone("0987654321");
+         signUpDTO.setUserEmail("tungduong71@gmail.com"	);
+         signUpDTO.setUserAddress("Hà Nội, Việt Nam");
+         signUpDTO.setUserPassword("123456789");
+         signUpDTO.setFacilityName("Lê Văn Đ");
+         signUpDTO.setFacilityFoundDate("2000-02-03");
+         signUpDTO.setFacilityHotline("0987654321");
+         signUpDTO.setFacilityAddress("Hà Nội, Việt Nam");
+         signUpDTO.setBusinessLicenseNumber("12345678");
+         // Define behaviour of repository
+         //when(userRepository.existsByPhone(signUpDTO.getUserPhone())).thenReturn(false);
+         //when(userRepository.save(any(User.class))).thenReturn(user);
+         // Run service method
+         ResponseEntity<?> responseEntity = authService.registerUser(signUpDTO);
+         System.out.println(responseEntity.toString());
+         // Assert
+         assertEquals("Mật khẩu không đúng định dạng", responseEntity.getBody());
+     }
+
+     @Test
+     @DisplayName("RegisterUTCID16")
+     void registerUTCID16() {
+         // Set up Dto
+         SignUpDTO signUpDTO = new SignUpDTO();
+         signUpDTO.setUsername("BùiThanhT");
+         signUpDTO.setUserDob("2000-02-03");
+         signUpDTO.setUserPhone("0987654321");
+         signUpDTO.setUserEmail("tungduong71@gmail.com"	);
+         signUpDTO.setUserAddress("So 27 duong Truong Trinh");
+         signUpDTO.setUserPassword("");
+         signUpDTO.setFacilityName("BùiThanhT");
+         signUpDTO.setFacilityFoundDate("2000-02-03");
+         signUpDTO.setFacilityHotline("0987654321");
+         signUpDTO.setFacilityAddress("So 27 duong Truong Trinh");
+         signUpDTO.setBusinessLicenseNumber("12345678");
+         // Define behaviour of repository
+         //when(userRepository.existsByPhone(signUpDTO.getUserPhone())).thenReturn(false);
+         //when(userRepository.save(any(User.class))).thenReturn(user);
+         // Run service method
+         ResponseEntity<?> responseEntity = authService.registerUser(signUpDTO);
+         System.out.println(responseEntity.toString());
+         // Assert
+         assertEquals("Mật khẩu không được để trống", responseEntity.getBody());
+     }
+
+     @Test
+     @DisplayName("RegisterUTCID01")
+     void registerUTCID01() {
+         // Set up Dto
+         SignUpDTO signUpDTO = new SignUpDTO();
+         signUpDTO.setUsername("Lê Văn Đ");
+         signUpDTO.setUserDob("2000-02-03");
+         signUpDTO.setUserPhone("0987654321");
+         signUpDTO.setUserEmail("tungduong71@gmail.com"	);
+         signUpDTO.setUserAddress("Hà Nội, Việt Nam");
+         signUpDTO.setUserPassword("@User123");
+         signUpDTO.setFacilityName("BùiThanhT");
+         signUpDTO.setFacilityFoundDate("2000-02-03");
+         signUpDTO.setFacilityHotline("0987654321");
+         signUpDTO.setFacilityAddress("Hà Nội, Việt Nam");
+         signUpDTO.setBusinessLicenseNumber("12345678");
+         // Define behaviour of repository
+         when(userRepository.existsByPhone(signUpDTO.getUserPhone())).thenReturn(false);
+         when(userRepository.save(any(User.class))).thenReturn(user);
+         // Run service method
+         ResponseEntity<?> responseEntity = authService.registerUser(signUpDTO);
+         System.out.println(responseEntity.toString());
+         // Assert
+         assertEquals("Đăng kí thành công, vui lòng đợi xác nhận tài khoản", responseEntity.getBody());
+     }
+
+     @Test
+     @DisplayName("authenticateUserUTCID01")
+     void authenticateUserUTC01() {
+         // Set up
+         LoginDTO loginDTO = new LoginDTO("0987654321", "@User123");
+         // Define behaviour of repository
+         when(userRepository.findByPhone(user.getPhone())).thenReturn(Optional.of(user));
+         when(facilityRepository.findByUserId(user.getUserId())).thenReturn(Optional.of(facility));
+         when(registrationRepository.findByUserId(user.getUserId())).thenReturn(Optional.of(registration));
+
+         // Run service method
+         ResponseEntity<?> responseEntity = authService.authenticateUser(loginDTO);
+         System.out.println(responseEntity.toString());
+         SessionDTO sessionDTO = (SessionDTO) responseEntity.getBody();
+         // Assert
+         assertEquals(sessionDTO.getUserId(), user.getUserId());
+         //assertEquals(sessionDTO.getUserId(), 3L);
+     }
+
+     @Test
+     @DisplayName("authenticateUserUTCID02")
+     void authenticateUserUTC02() {
+         // Set up
+         LoginDTO loginDTO = new LoginDTO("", "@User123");
+
+         // Run service method
+         ResponseEntity<?> responseEntity = authService.authenticateUser(loginDTO);
+         System.out.println(responseEntity.toString());
+         // Assert
+         assertEquals("Số điện thoại không được để trống", responseEntity.getBody());
+         //assertEquals(sessionDTO.getUserId(), 3L);
+     }
+
+     @Test
+     @DisplayName("authenticateUserUTCID03")
+     void authenticateUserUTC03() {
+         // Set up
+         LoginDTO loginDTO = new LoginDTO(null, "@User123");
+
+         // Run service method
+         ResponseEntity<?> responseEntity = authService.authenticateUser(loginDTO);
+         System.out.println(responseEntity.toString());
+         // Assert
+         assertEquals("Số điện thoại không được để trống", responseEntity.getBody());
+         //assertEquals(sessionDTO.getUserId(), 3L);
+     }
+
+     @Test
+     @DisplayName("authenticateUserUTCID04")
+     void authenticateUserUTC04() {
+         // Set up
+         LoginDTO loginDTO = new LoginDTO("0987654321", "eimslogin");
+         // Define behaviour of repository
+         when(userRepository.findByPhone(user.getPhone())).thenReturn(Optional.of(user));
+         when(facilityRepository.findByUserId(user.getUserId())).thenReturn(Optional.of(facility));
+         when(registrationRepository.findByUserId(user.getUserId())).thenReturn(Optional.of(registration));
+
+         // Run service method
+         ResponseEntity<?> responseEntity = authService.authenticateUser(loginDTO);
+         System.out.println(responseEntity.toString());
+         // Assert
+         assertEquals(null,responseEntity.getBody());
+         //assertEquals(sessionDTO.getUserId(), 3L);
+     }
+
+     @Test
+     @DisplayName("authenticateUserUTCID05")
+     void authenticateUserUTC05() {
+         // Set up
+         LoginDTO loginDTO = new LoginDTO("0987654321", "");
+
+         // Run service method
+         ResponseEntity<?> responseEntity = authService.authenticateUser(loginDTO);
+         System.out.println(responseEntity.toString());
+         // Assert
+         assertEquals("Mật khẩu không được để trống", responseEntity.getBody());
+         //assertEquals(sessionDTO.getUserId(), 3L);
+     }
+
+     @Test
+     @DisplayName("authenticateUserUTCID06")
+     void authenticateUserUTC06() {
+         // Set up
+         LoginDTO loginDTO = new LoginDTO("0987654321", null);
+
+         // Run service method
+         ResponseEntity<?> responseEntity = authService.authenticateUser(loginDTO);
+         System.out.println(responseEntity.toString());
+         // Assert
+         assertEquals("Mật khẩu không được để trống", responseEntity.getBody());
+         //assertEquals(sessionDTO.getUserId(), 3L);
+     }
 
      @Test
      void authenticateUser() {
@@ -80,31 +589,6 @@
          //assertEquals(sessionDTO.getUserId(), 3L);
      }
 
-     @Test
-     @DisplayName("Register")
-     void registerUser() {
-         // Set up Dto
-         SignUpDTO signUpDTO = new SignUpDTO();
-         signUpDTO.setUsername("Name");
-         signUpDTO.setUserDob("2000-01-01");
-         signUpDTO.setUserPhone("0999999999");
-         signUpDTO.setUserEmail("test@test.com");
-         signUpDTO.setUserAddress("Address");
-         signUpDTO.setUserPassword("123456Aa@");
-         signUpDTO.setFacilityName("F name");
-         signUpDTO.setFacilityFoundDate("2000-01-01");
-         signUpDTO.setFacilityHotline("0999999999");
-         signUpDTO.setFacilityAddress("F address");
-         signUpDTO.setBusinessLicenseNumber("11111");
-         // Define behaviour of repository
-         when(userRepository.existsByPhone(signUpDTO.getUserPhone())).thenReturn(false);
-         when(userRepository.save(any(User.class))).thenReturn(user);
-         // Run service method
-         ResponseEntity<?> responseEntity = authService.registerUser(signUpDTO);
-         System.out.println(responseEntity.toString());
-         // Assert
-         assertEquals("Đăng kí thành công, vui lòng đợi xác nhận tài khoản", responseEntity.getBody());
-     }
 
      @Test
      void changePassword() {
