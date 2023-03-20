@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import PropTypes from 'prop-types';
 import Tabs from '@mui/material/Tabs';
@@ -6,14 +6,10 @@ import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import '../css/machine.css'
-import { faStarOfLife } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Modal, Button } from 'react-bootstrap'
-import chicpic from '../pics/gari.png'
+import { Modal } from 'react-bootstrap';
+import ClearIcon from '@mui/icons-material/Clear';
 function EggBatchDetail(props) {
     const { children, value, index, ...other } = props;
-
-
     return (
         <div
             role="tabpanel"
@@ -50,9 +46,34 @@ export default function BasicTabs() {
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
+    const [rowsData, setRowsData] = useState([]);
+    const addTableRows = () => {
+        const rowsInput = {
+            fullName: '',
+            emailAddress: '',
+            salary: ''
+        }
+        setRowsData([...rowsData, rowsInput])
+        setShow2(false)
+    }
+    const deleteTableRows = (index) => {
+        const rows = [...rowsData];
+        rows.splice(index, 1);
+        setRowsData(rows);
+    }
+    const handleChangeRow = (index, evnt) => {
+        const { name, value } = evnt.target;
+        const rowsInput = [...rowsData];
+        rowsInput[index][name] = value;
+        setRowsData(rowsInput);
+    }
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
+
+    const [show2, setShow2] = useState(false);
+    const handleClose2 = () => setShow2(false);
+    const handleShow2 = () => setShow2(true);
     return (
 
         <Box sx={{ width: '100%' }}>
@@ -207,11 +228,173 @@ export default function BasicTabs() {
                         </tbody>
                     </table>
                 </div>
-                <div  style={{ textAlign: "center" }}>
-                    <button className='btn btn-light' id="startUpdateEggBatch">Cập nhật</button>
+                <div style={{ textAlign: "center" }}>
+                    <button className='btn btn-light' id="startUpdateEggBatch" onClick={handleShow}>Cập nhật</button>
+                    <Modal show={show} onHide={handleClose}
+                        aria-labelledby="contained-modal-title-vcenter"
+                        centered
+                        dialogClassName="modal-90w">
+                        <form >
+                            <Modal.Header closeButton onClick={handleClose}>
+                                <Modal.Title>Cập nhật Thông tin lô trứng</Modal.Title>
+                            </Modal.Header>
+                            <Modal.Body>
+                                <form>
+                                    <div className='container'>
+                                        <div className='detailbody'>
+                                            <div className="row">
+                                                <div className="col-md-3" >
+                                                    <label>Số lượng trứng hư tổn</label>
+                                                </div>
+                                                <div className="col-md-3">
+                                                    <input className='form-control' required />
+                                                </div>
+                                                <div className="col-md-3 ">
+                                                    <label>Số lượng trứng loại</label>
+                                                </div>
+                                                <div className="col-md-3">
+                                                    <input className='form-control' required />
+                                                </div>
+                                            </div>
+                                            <br />
+                                            <div className="row">
+                                                <div className="col-md-3" >
+                                                    <label>Số lượng trứng bị vỡ</label>
+                                                </div>
+                                                <div className="col-md-3">
+                                                    <input className='form-control' required />
+                                                </div>
+                                                <div className="col-md-3 ">
+                                                    <label>Số lượng trứng còn lại</label>
+                                                </div>
+                                                <div className="col-md-3">
+                                                    <p>2000</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <br />
+                                        <div className='clear'>
+                                            <table className="table table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th scope="col">Vị trí máy</th>
+                                                        <th scope="col">Số lượng vị trí trống</th>
+                                                        <th scope="col">Số lượng trứng hiện tại</th>
+                                                        <th scope="col">Cập nhật số trứng</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody >
+                                                    <tr>
+                                                        <td>Máy 13</td>
+                                                        <td>0</td>
+                                                        <td>1000</td>
+                                                        <td>0</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Máy 17</td>
+                                                        <td>0</td>
+                                                        <td>1000</td>
+                                                        <td>0</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Máy 23</td>
+                                                        <td>500</td>
+                                                        <td>500</td>
+                                                        <td>0</td>
+                                                    </tr>
+                                                    <TableRows rowsData={rowsData} deleteTableRows={deleteTableRows} handleChange={handleChangeRow} />
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div style={{ textAlign: "center" }}>
+                                            <button className="btn btn-light" type='button' onClick={handleShow2} >+</button>
+                                            <Modal show={show2} onHide={handleClose2}
+                                                size="lg"
+                                                aria-labelledby="contained-modal-title-vcenter"
+                                                centered >
+                                                <Modal.Header closeButton onClick={handleClose2}>
+                                                    <Modal.Title>Những máy nở còn trống</Modal.Title>
+                                                </Modal.Header>
+                                                <Modal.Body>
+                                                <div class="table-wrapper-scroll-y my-custom-scrollbar">
+                                                    <table style={{overflowY:"scroll"}} className="table table-bordered">
+                                                        <thead>
+                                                            <tr>
+                                                                <th scope="col">Vị trí máy</th>
+                                                                <th scope="col">Số lượng vị trí trống</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody >
+                                                            <tr>
+                                                                <td>Máy 24</td>
+                                                                <td>1000</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Máy 25</td>
+                                                                <td>1000</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Máy 26</td>
+                                                                <td>1000</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Máy 26</td>
+                                                                <td>1000</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Máy 26</td>
+                                                                <td>1000</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Máy 26</td>
+                                                                <td>1000</td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                    </div>
+                                                </Modal.Body>
+                                                <div className='model-footer'>
+                                                    <button style={{ width: "30%" }} className="col-md-6 btn-light" onClick={addTableRows}>
+                                                        Xác nhận
+                                                    </button>
+                                                    <button style={{ width: "20%" }} onClick={handleClose2} className="btn btn-light">
+                                                        Huỷ
+                                                    </button>
+                                                </div>
+                                            </Modal>
+                                        </div>
+                                    </div>
+                                </form>
+                            </Modal.Body>
+                            <div className='model-footer'>
+                                <button style={{ width: "30%" }} className="col-md-6 btn-light">
+                                    Xác nhận
+                                </button>
+                                <button style={{ width: "20%" }} onClick={handleClose} className="btn btn-light">
+                                    Huỷ
+                                </button>
+                            </div>
+                        </form>
+                    </Modal>
                 </div>
             </EggBatchDetail>
         </Box>
 
     );
+}
+function TableRows({ rowsData, deleteTableRows, handleChangeRow }) {
+    return (
+        rowsData.map((data, index) => {
+            const { species, breed, number, price } = data;
+            return (
+                <tr key={index}>
+                    <td><input type="text" value={species} onChange={(evnt) => (handleChangeRow(index, evnt))} name="" className="form-control" /> </td>
+                    <td><input type="text" value={breed} onChange={(evnt) => (handleChangeRow(index, evnt))} name="" className="form-control" /> </td>
+                    <td><input type="text" value={number} onChange={(evnt) => (handleChangeRow(index, evnt))} name="" className="form-control" /> </td>
+                    <td><input type="text" value={price} onChange={(evnt) => (handleChangeRow(index, evnt))} name="" className="form-control" /> </td>
+                    <td className='td' ><button className="btn btn-outline-danger" onClick={() => (deleteTableRows(index))}><ClearIcon /></button></td>
+                </tr>
+            )
+        })
+    )
 }

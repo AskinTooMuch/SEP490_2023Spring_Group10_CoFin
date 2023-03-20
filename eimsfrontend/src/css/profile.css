@@ -59,12 +59,6 @@ h6 {
   display: flex;
 }
 
-.pass-wrapper i {
-  position: absolute;
-  top: 6%;
-  right: 6%;
-}
-
 i:hover {
   color: #F46110;
   cursor: pointer;
@@ -73,4 +67,9 @@ i:hover {
   width: 100%;
   height: fit-content;
   border-radius: 5px;
+}
+.pass-wrapper i {
+  position: absolute;
+  top: 20%;
+  right: 10%;
 }

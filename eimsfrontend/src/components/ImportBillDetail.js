@@ -1,17 +1,66 @@
 import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom";
-import FilterAltIcon from '@mui/icons-material/FilterAlt';
-import ImportExportIcon from '@mui/icons-material/ImportExport';
-import SearchIcon from '@mui/icons-material/Search';
 import { Modal } from 'react-bootstrap';
+import PropTypes from 'prop-types';
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
+import Typography from '@mui/material/Typography';
+import Box from '@mui/material/Box';
+function ImportBillDetail(props) {
+    const { children, value, index, ...other } = props;
+    return (
+        <div
+            role="tabpanel"
+            hidden={value !== index}
+            id={`simple-tabpanel-${index}`}
+            aria-labelledby={`simple-tab-${index}`}
+            {...other}
+        >
+            {value === index && (
+                <Box sx={{ p: 3 }}>
+                    <Typography>{children}</Typography>
+                </Box>
+            )}
+        </div>
+    );
+}
 
-const ImportBillDetail = () => {
-    let navigate = useNavigate();
+ImportBillDetail.propTypes = {
+    children: PropTypes.node,
+    index: PropTypes.number.isRequired,
+    value: PropTypes.number.isRequired,
+};
+
+function a11yProps(index) {
+    return {
+        id: `simple-tab-${index}`,
+        'aria-controls': `simple-tabpanel-${index}`,
+    };
+}
+
+export default function BasicTabs() {
+    //Show-hide Popup
+    const [value, setValue] = React.useState(0);
+    const navigate = useNavigate();
+    const handleChange = (event, newValue) => {
+        setValue(newValue);
+    };
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
+
     return (
-        <>
+        <Box sx={{ width: '100%' }}>
+            <Box sx={{ borderBottom: 1, borderColor: 'black' }}>
+                <Tabs sx={{
+                    '& .MuiTabs-indicator': { backgroundColor: "#d25d19" },
+                    '& .Mui-selected': { color: "#d25d19" },
+                }} value={value} onChange={handleChange} aria-label="basic tabs example">
+                    <Tab style={{ textTransform: "capitalize" }} label="Chi tiết hoá đơn" {...a11yProps(0)} />
+                    <Tab style={{ textTransform: "capitalize" }} label="Trở về Đơn hàng" {...a11yProps(1)} onClick={() => navigate("/order")} />
+                </Tabs>
+            </Box>
+            <ImportBillDetail value={value} index={0}>
             <h2>Thông tin chi tiết hoá đơn</h2>
                 <div className='container'>
                     <div className='detailbody'>
@@ -129,8 +178,8 @@ const ImportBillDetail = () => {
                     </Modal>
                 </div>
                 </div>
-        </>
+            </ImportBillDetail>
+        </Box>
+
     );
 }
-
-export default ImportBillDetail;

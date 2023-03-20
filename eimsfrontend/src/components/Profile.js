@@ -682,7 +682,7 @@ const Profile = () => {
                                                         <div className="col-md-6 ">
                                                             <p>Mật khẩu cũ</p>
                                                         </div>
-                                                        <div className="col-md-6 login-wrapper ">
+                                                        <div className="col-md-6 pass-wrapper ">
                                                             <input ref={userRef} id="oldPassword" onChange={e => handleChange(e, "password")}
                                                                 value={changePasswordDTO.password} required
                                                                 type={passwordShown ? "text" : "password"}
@@ -691,14 +691,14 @@ const Profile = () => {
                                                             <i onClick={togglePasswordVisiblity}>{eye}</i>
                                                         </div>
                                                     </div>
-                                                    <div className="row">
+                                                    <div className="row " >
                                                         <div className="col-md-6">
                                                             <p>Mật khẩu mới <FontAwesomeIcon className="star" icon={faStarOfLife} />
                                                                 <FontAwesomeIcon icon={faCheck} className={validPwd ? "valid" : "hide"} />
                                                                 <FontAwesomeIcon icon={faTimes} className={validPwd || !changePasswordDTO.newPassword ? "hide" : "invalid"} />
                                                             </p>
                                                         </div>
-                                                        <div className="col-md-6 login-wrapper">
+                                                        <div className="col-md-6 pass-wrapper">
 
                                                             <input ref={userRef} onChange={e => handleChange(e, "newPassword")}
                                                                 value={changePasswordDTO.newPassword} required

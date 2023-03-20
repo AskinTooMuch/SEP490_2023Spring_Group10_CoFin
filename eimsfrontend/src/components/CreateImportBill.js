@@ -4,21 +4,16 @@ const CreateImportBill = () => {
     let navigate = useNavigate();
     const [rowsData, setRowsData] = useState([]);
     const addTableRows = () => {
-
         const rowsInput = {
-            fullName: '',
-            emailAddress: '',
-            salary: ''
+            species:'', breed:'', number:'', price:'', total:''
         }
         setRowsData([...rowsData, rowsInput])
-
     }
     const deleteTableRows = (index) => {
         const rows = [...rowsData];
         rows.splice(index, 1);
         setRowsData(rows);
     }
-
     const handleChangeRow = (index, evnt) => {
         const { name, value } = evnt.target;
         const rowsInput = [...rowsData];
@@ -86,7 +81,7 @@ const CreateImportBill = () => {
                                 <td>7000</td>
                                 <td>35.000.000</td>
                             </tr>
-                            <TableRows rowsData={rowsData} handleChange={handleChangeRow} />
+                            <TableRows rowsData={rowsData} deleteTableRows={deleteTableRows} handleChangeRow={handleChangeRow} />
                         </tbody>
                     </table>
                     <div style={{ textAlign: "center" }}>
@@ -112,7 +107,6 @@ const CreateImportBill = () => {
 
 function TableRows({ rowsData, deleteTableRows, handleChangeRow }) {
     return (
-
         rowsData.map((data, index) => {
             const {species, breed, number, price, total  } = data;
             return (
