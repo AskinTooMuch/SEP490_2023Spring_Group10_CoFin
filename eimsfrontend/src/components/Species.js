@@ -484,7 +484,7 @@ const Species = () => {
                         <button style={{ width: "30%" }} type='submit' className="col-md-6 btn-light">
                           Cập nhật
                         </button>
-                        <button style={{ width: "20%" }} onClick={handleClose2} className="btn btn-light">
+                        <button style={{ width: "20%" }} onClick={handleClose2} type='button' className="btn btn-light">
                           Huỷ
                         </button>
                       </div>
