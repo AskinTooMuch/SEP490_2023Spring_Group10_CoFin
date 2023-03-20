@@ -116,7 +116,7 @@ function TableRows({ rowsData, deleteTableRows, handleChangeRow }) {
                     <td><input type="text" value={number} onChange={(evnt) => (handleChangeRow(index, evnt))} name="" className="form-control" /> </td>
                     <td><input type="text" value={price} onChange={(evnt) => (handleChangeRow(index, evnt))} name="" className="form-control" /> </td>
                     <td><input type="text" value={total} onChange={(evnt) => (handleChangeRow(index, evnt))} name="" className="form-control" /> </td>
-                    <button className="btn btn-outline-danger"  onClick={() => (deleteTableRows(index))}>x</button>
+                    <button className="btn btn-outline-danger" type='button' onClick={() => (deleteTableRows(index))}>x</button>
                 </tr>
             )
         })

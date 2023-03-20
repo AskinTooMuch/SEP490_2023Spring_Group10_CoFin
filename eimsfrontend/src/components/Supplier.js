@@ -295,7 +295,7 @@ const Supplier = () => {
                   <p>Tên cơ sở<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                 </div>
                 <div className="col-md-3">
-                  <input id="supplierFacilityName" className="form-control mt-1" style={{ width: "100%" }} onChange={e => handleNewSupplierChange(e, "facilityName")} />
+                  <input id="supplierFacilityName" className="form-control mt-1" style={{ width: "100%" }} onChange={e => handleNewSupplierChange(e, "facilityName")} required/>
                 </div>
                 {/*User Street*/}
                 <div className="col-md-3">
