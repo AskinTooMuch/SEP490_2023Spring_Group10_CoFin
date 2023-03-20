@@ -178,10 +178,10 @@ public class CustomerServiceImpl implements ICustomerService {
             return new ResponseEntity<>("Tên khách hàng không được để trống", HttpStatus.BAD_REQUEST);
         }
         // Phone number
-        String newPhone = stringDealer.trimMax(updateCustomerDTO.getCustomerPhone());
-        if (newPhone.equals("")) { /* Phone number is empty */
+        if (updateCustomerDTO.getCustomerPhone() == null || stringDealer.trimMax(updateCustomerDTO.getCustomerPhone()).equals("")) { /* Phone number is empty */
             return new ResponseEntity<>("Số điện thoại không được để trống", HttpStatus.BAD_REQUEST);
         }
+        String newPhone = stringDealer.trimMax(updateCustomerDTO.getCustomerPhone());
         if (!stringDealer.checkPhoneRegex(newPhone)) { /* Phone number is not valid */
             return new ResponseEntity<>("Số điện thoại không hợp lệ", HttpStatus.BAD_REQUEST);
         }
@@ -204,6 +204,9 @@ public class CustomerServiceImpl implements ICustomerService {
         }
         // Status
         int status = updateCustomerDTO.getStatus();
+        if(!(status == 1 || status == 0)){
+            return new ResponseEntity<>("Trạng thái không hợp lệ", HttpStatus.BAD_REQUEST);
+        }
         Optional<Customer> customerOptional = customerRepository.findByCustomerId(updateCustomerDTO.getCustomerId());
         if (customerOptional.isPresent()) {
             // Retrieve customer's new information

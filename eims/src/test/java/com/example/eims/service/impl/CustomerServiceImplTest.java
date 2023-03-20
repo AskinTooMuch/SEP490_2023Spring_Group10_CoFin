@@ -448,8 +448,8 @@ class CustomerServiceImplTest {
         dto.setCustomerId(1L);
         dto.setCustomerName("Nguyen Van C");
         dto.setCustomerPhone("0932321198");
-        dto.setCustomerAddress("address");
-        dto.setCustomerMail("a@a.com");
+        dto.setCustomerAddress("{\"city\":\"Tỉnh Hải Dương\",\"district\":\"Huyện Gia Lộc\",\"ward\":\"Xã Hoàng Diệu\",\"street\":\"Thôn Nghĩa Hy\"}");
+        dto.setCustomerMail("BNV71@gmail.com");
         dto.setStatus(1);
         String oldPhone = "0987654320";
         // Define behaviour of repository
@@ -462,6 +462,266 @@ class CustomerServiceImplTest {
         System.out.println(responseEntity.toString());
         // Assert
         assertEquals("Cập nhật thông tin khách hàng thành công", responseEntity.getBody());
+    }
+
+    @Test
+    @DisplayName("updateCustomerUTCID02")
+    void updateCustomerUTCID02() {
+        // Set up
+        UpdateCustomerDTO dto = new UpdateCustomerDTO();
+        Customer customer = new Customer();
+        dto.setUserId(1L);
+        dto.setCustomerId(1L);
+        dto.setCustomerName("Nguyen Van C");
+        dto.setCustomerPhone("abcdefgh");
+        dto.setCustomerAddress("{\"city\":\"Tỉnh Hải Dương\",\"district\":\"Huyện Gia Lộc\",\"ward\":\"Xã Hoàng Diệu\",\"street\":\"Thôn Nghĩa Hy\"}");
+        dto.setCustomerMail("BNV71@gmail.com");
+        dto.setStatus(0);
+        String oldPhone = "0987654320";
+        // Define behaviour of repository
+        //when(customerRepository.findCustomerPhoneById(1L)).thenReturn(oldPhone);
+        //when(customerRepository.existsByCustomerPhoneAndUserId(dto.getCustomerPhone(), dto.getUserId()))
+        //        .thenReturn(false);
+        //when(customerRepository.findByCustomerId(dto.getCustomerId())).thenReturn(Optional.of(customer));
+        // Run service method
+        ResponseEntity<?> responseEntity = customerService.updateCustomer(dto);
+        System.out.println(responseEntity.toString());
+        // Assert
+        assertEquals("Số điện thoại không hợp lệ", responseEntity.getBody());
+    }
+
+    @Test
+    @DisplayName("updateCustomerUTCID03")
+    void updateCustomerUTCID03() {
+        // Set up
+        UpdateCustomerDTO dto = new UpdateCustomerDTO();
+        Customer customer = new Customer();
+        dto.setUserId(1L);
+        dto.setCustomerId(1L);
+        dto.setCustomerName("Nguyen Van C");
+        dto.setCustomerPhone("0932321198");
+        dto.setCustomerAddress("{\"city\":\"Tỉnh Hải Dương\",\"district\":\"Huyện Gia Lộc\",\"ward\":\"Xã Hoàng Diệu\",\"street\":\"Thôn Nghĩa Hy\"}");
+        dto.setCustomerMail("12@3tungdt@gmail.com"	);
+        dto.setStatus(0);
+        String oldPhone = "0987654320";
+        // Define behaviour of repository
+        //when(customerRepository.findCustomerPhoneById(1L)).thenReturn(oldPhone);
+        //when(customerRepository.existsByCustomerPhoneAndUserId(dto.getCustomerPhone(), dto.getUserId()))
+        //        .thenReturn(false);
+        //when(customerRepository.findByCustomerId(dto.getCustomerId())).thenReturn(Optional.of(customer));
+        // Run service method
+        ResponseEntity<?> responseEntity = customerService.updateCustomer(dto);
+        System.out.println(responseEntity.toString());
+        // Assert
+        assertEquals("Email không hợp lệ", responseEntity.getBody());
+    }
+
+    @Test
+    @DisplayName("updateCustomerUTCID04")
+    void updateCustomerUTCID04() {
+        // Set up
+        UpdateCustomerDTO dto = new UpdateCustomerDTO();
+        Customer customer = new Customer();
+        dto.setUserId(1L);
+        dto.setCustomerId(1L);
+        dto.setCustomerName("");
+        dto.setCustomerPhone("0932321198");
+        dto.setCustomerAddress("{\"city\":\"Tỉnh Hải Dương\",\"district\":\"Huyện Gia Lộc\",\"ward\":\"Xã Hoàng Diệu\",\"street\":\"Thôn Nghĩa Hy\"}");
+        dto.setCustomerMail("BNV71@gmail.com");
+        dto.setStatus(1);
+        String oldPhone = "0987654320";
+        // Define behaviour of repository
+        //when(customerRepository.findCustomerPhoneById(1L)).thenReturn(oldPhone);
+        //when(customerRepository.existsByCustomerPhoneAndUserId(dto.getCustomerPhone(), dto.getUserId()))
+        //        .thenReturn(false);
+        //when(customerRepository.findByCustomerId(dto.getCustomerId())).thenReturn(Optional.of(customer));
+        // Run service method
+        ResponseEntity<?> responseEntity = customerService.updateCustomer(dto);
+        System.out.println(responseEntity.toString());
+        // Assert
+        assertEquals("Tên khách hàng không được để trống", responseEntity.getBody());
+    }
+
+    @Test
+    @DisplayName("updateCustomerUTCID05")
+    void updateCustomerUTCID05() {
+        // Set up
+        UpdateCustomerDTO dto = new UpdateCustomerDTO();
+        Customer customer = new Customer();
+        dto.setUserId(1L);
+        dto.setCustomerId(1L);
+        dto.setCustomerName("Nguyen Van C");
+        dto.setCustomerPhone(null);
+        dto.setCustomerAddress("{\"city\":\"Tỉnh Hải Dương\",\"district\":\"Huyện Gia Lộc\",\"ward\":\"Xã Hoàng Diệu\",\"street\":\"Thôn Nghĩa Hy\"}");
+        dto.setCustomerMail("BNV71@gmail.com");
+        dto.setStatus(0);
+        String oldPhone = "0987654320";
+        // Define behaviour of repository
+        //when(customerRepository.findCustomerPhoneById(1L)).thenReturn(oldPhone);
+        //when(customerRepository.existsByCustomerPhoneAndUserId(dto.getCustomerPhone(), dto.getUserId()))
+        //        .thenReturn(false);
+        //when(customerRepository.findByCustomerId(dto.getCustomerId())).thenReturn(Optional.of(customer));
+        // Run service method
+        ResponseEntity<?> responseEntity = customerService.updateCustomer(dto);
+        System.out.println(responseEntity.toString());
+        // Assert
+        assertEquals("Số điện thoại không được để trống", responseEntity.getBody());
+    }
+
+    @Test
+    @DisplayName("updateCustomerUTCID06")
+    void updateCustomerUTCID06() {
+        // Set up
+        UpdateCustomerDTO dto = new UpdateCustomerDTO();
+        Customer customer = new Customer();
+        dto.setUserId(1L);
+        dto.setCustomerId(1L);
+        dto.setCustomerName("Nguyen Van C");
+        dto.setCustomerPhone("0932321198");
+        dto.setCustomerAddress("{\"city\":\"Tỉnh Hải Dương\",\"district\":\"Huyện Gia Lộc\",\"ward\":\"Xã Hoàng Diệu\",\"street\":\"Thôn Nghĩa Hy\"}");
+        dto.setCustomerMail("a_b_c@gmail.com"	);
+        dto.setStatus(1);
+        String oldPhone = "0987654320";
+        // Define behaviour of repository
+        when(customerRepository.findCustomerPhoneById(1L)).thenReturn(oldPhone);
+        when(customerRepository.existsByCustomerPhoneAndUserId(dto.getCustomerPhone(), dto.getUserId()))
+                .thenReturn(false);
+        when(customerRepository.findByCustomerId(dto.getCustomerId())).thenReturn(Optional.of(customer));
+        // Run service method
+        ResponseEntity<?> responseEntity = customerService.updateCustomer(dto);
+        System.out.println(responseEntity.toString());
+        // Assert
+        assertEquals("Email không hợp lệ", responseEntity.getBody());
+    }
+
+    @Test
+    @DisplayName("updateCustomerUTCID07")
+    void updateCustomerUTCID07() {
+        // Set up
+        UpdateCustomerDTO dto = new UpdateCustomerDTO();
+        Customer customer = new Customer();
+        dto.setUserId(1L);
+        dto.setCustomerId(1L);
+        dto.setCustomerName("Nguyen Van C");
+        dto.setCustomerPhone("12345");
+        dto.setCustomerAddress("{\"city\":\"Tỉnh Hải Dương\",\"district\":\"Huyện Gia Lộc\",\"ward\":\"Xã Hoàng Diệu\",\"street\":\"Thôn Nghĩa Hy\"}");
+        dto.setCustomerMail("BNV71@gmail.com"	);
+        dto.setStatus(1);
+        String oldPhone = "0987654320";
+        // Define behaviour of repository
+        /*when(customerRepository.findCustomerPhoneById(1L)).thenReturn(oldPhone);
+        when(customerRepository.existsByCustomerPhoneAndUserId(dto.getCustomerPhone(), dto.getUserId()))
+                .thenReturn(false);
+        when(customerRepository.findByCustomerId(dto.getCustomerId())).thenReturn(Optional.of(customer));*/
+        // Run service method
+        ResponseEntity<?> responseEntity = customerService.updateCustomer(dto);
+        System.out.println(responseEntity.toString());
+        // Assert
+        assertEquals("Số điện thoại không hợp lệ", responseEntity.getBody());
+    }
+
+    @Test
+    @DisplayName("updateCustomerUTCID08")
+    void updateCustomerUTCID08() {
+        // Set up
+        UpdateCustomerDTO dto = new UpdateCustomerDTO();
+        Customer customer = new Customer();
+        dto.setUserId(1L);
+        dto.setCustomerId(1L);
+        dto.setCustomerName("Nguyen Van C");
+        dto.setCustomerPhone("0932321198");
+        dto.setCustomerAddress("");
+        dto.setCustomerMail("BNV71@gmail.com"	);
+        dto.setStatus(1);
+        String oldPhone = "0987654320";
+        // Define behaviour of repository
+        /*when(customerRepository.findCustomerPhoneById(1L)).thenReturn(oldPhone);
+        when(customerRepository.existsByCustomerPhoneAndUserId(dto.getCustomerPhone(), dto.getUserId()))
+                .thenReturn(false);
+        when(customerRepository.findByCustomerId(dto.getCustomerId())).thenReturn(Optional.of(customer));*/
+        // Run service method
+        ResponseEntity<?> responseEntity = customerService.updateCustomer(dto);
+        System.out.println(responseEntity.toString());
+        // Assert
+        assertEquals("Địa chỉ không được để trống", responseEntity.getBody());
+    }
+
+    @Test
+    @DisplayName("updateCustomerUTCID09")
+    void updateCustomerUTCID09() {
+        // Set up
+        UpdateCustomerDTO dto = new UpdateCustomerDTO();
+        Customer customer = new Customer();
+        dto.setUserId(1L);
+        dto.setCustomerId(1L);
+        dto.setCustomerName("Nguyen Van C");
+        dto.setCustomerPhone("0932321198");
+        dto.setCustomerAddress("{\"city\":\"Tỉnh Hải Dương\",\"district\":\"Huyện Gia Lộc\",\"ward\":\"Xã Hoàng Diệu\",\"street\":\"Thôn Nghĩa Hy\"}");
+        dto.setCustomerMail("BNV71@gmail.com"	);
+        dto.setStatus(0);
+        String oldPhone = "0987654320";
+        // Define behaviour of repository
+        when(customerRepository.findCustomerPhoneById(1L)).thenReturn(oldPhone);
+        when(customerRepository.existsByCustomerPhoneAndUserId(dto.getCustomerPhone(), dto.getUserId()))
+                .thenReturn(false);
+        when(customerRepository.findByCustomerId(dto.getCustomerId())).thenReturn(Optional.of(customer));
+        // Run service method
+        ResponseEntity<?> responseEntity = customerService.updateCustomer(dto);
+        System.out.println(responseEntity.toString());
+        // Assert
+        assertEquals("Cập nhật thông tin khách hàng thành công", responseEntity.getBody());
+    }
+
+    @Test
+    @DisplayName("updateCustomerUTCID10")
+    void updateCustomerUTCID10() {
+        // Set up
+        UpdateCustomerDTO dto = new UpdateCustomerDTO();
+        Customer customer = new Customer();
+        dto.setUserId(1L);
+        dto.setCustomerId(1L);
+        dto.setCustomerName("Nguyen Van C");
+        dto.setCustomerPhone("0932321198");
+        dto.setCustomerAddress("{\"city\":\"Tỉnh Hải Dương\",\"district\":\"Huyện Gia Lộc\",\"ward\":\"Xã Hoàng Diệu\",\"street\":\"Thôn Nghĩa Hy\"}");
+        dto.setCustomerMail("BNV71@gmail.com"	);
+        dto.setStatus(2);
+        String oldPhone = "0987654320";
+        // Define behaviour of repository
+        when(customerRepository.findCustomerPhoneById(1L)).thenReturn(oldPhone);
+        when(customerRepository.existsByCustomerPhoneAndUserId(dto.getCustomerPhone(), dto.getUserId()))
+                .thenReturn(false);
+        //when(customerRepository.findByCustomerId(dto.getCustomerId())).thenReturn(Optional.of(customer));
+        // Run service method
+        ResponseEntity<?> responseEntity = customerService.updateCustomer(dto);
+        System.out.println(responseEntity.toString());
+        // Assert
+        assertEquals("Trạng thái không hợp lệ", responseEntity.getBody());
+    }
+
+    @Test
+    @DisplayName("updateCustomerUTCID11")
+    void updateCustomerUTCID11() {
+        // Set up
+        UpdateCustomerDTO dto = new UpdateCustomerDTO();
+        Customer customer = new Customer();
+        dto.setUserId(1L);
+        dto.setCustomerId(1L);
+        dto.setCustomerName("Nguyen Van C");
+        dto.setCustomerPhone("0932321198");
+        dto.setCustomerAddress("{\"city\":\"Tỉnh Hải Dương\",\"district\":\"Huyện Gia Lộc\",\"ward\":\"Xã Hoàng Diệu\",\"street\":\"So 27@ duong Truong Trinh\"}");
+        dto.setCustomerMail("BNV71@gmail.com"	);
+        dto.setStatus(1);
+        String oldPhone = "0987654320";
+        // Define behaviour of repository
+        when(customerRepository.findCustomerPhoneById(1L)).thenReturn(oldPhone);
+        when(customerRepository.existsByCustomerPhoneAndUserId(dto.getCustomerPhone(), dto.getUserId()))
+                .thenReturn(false);
+        when(customerRepository.findByCustomerId(dto.getCustomerId())).thenReturn(Optional.of(customer));
+        // Run service method
+        ResponseEntity<?> responseEntity = customerService.updateCustomer(dto);
+        System.out.println(responseEntity.toString());
+        // Assert
+        assertEquals("Số nhà sai định dạng", responseEntity.getBody());
     }
 
     @Test
