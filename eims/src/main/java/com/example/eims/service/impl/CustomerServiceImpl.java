@@ -19,6 +19,8 @@ import com.example.eims.repository.UserRepository;
 import com.example.eims.service.interfaces.ICustomerService;
 import com.example.eims.utils.StringDealer;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.configurationprocessor.json.JSONException;
+import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -92,10 +94,11 @@ public class CustomerServiceImpl implements ICustomerService {
         }
         // Check blank input
         // Name
-        String name = stringDealer.trimMax(createCustomerDTO.getCustomerName());
-        if (name.equals("")) { /* Supplier name is empty */
+
+        if (createCustomerDTO.getCustomerName() == null || stringDealer.trimMax(createCustomerDTO.getCustomerName()).equals("")) { /* Supplier name is empty */
             return new ResponseEntity<>("Tên không được để trống", HttpStatus.BAD_REQUEST);
         }
+        String name = stringDealer.trimMax(createCustomerDTO.getCustomerName());
         // Phone number
         String phone = stringDealer.trimMax(createCustomerDTO.getCustomerPhone());
         if (phone.equals("")) { /* Phone number is empty */
@@ -115,11 +118,21 @@ public class CustomerServiceImpl implements ICustomerService {
             return new ResponseEntity<>("Email không hợp lệ", HttpStatus.BAD_REQUEST);
         }
         // Address
-        String address = stringDealer.trimMax(createCustomerDTO.getCustomerAddress());
-        if (address.equals("")) { /* Address is empty */
+        if (createCustomerDTO.getCustomerAddress() == null || stringDealer.trimMax(createCustomerDTO.getCustomerAddress()).equals("")) { /* Address is empty */
             return new ResponseEntity<>("Địa chỉ không được để trống", HttpStatus.BAD_REQUEST);
         }
-
+        String address = stringDealer.trimMax(createCustomerDTO.getCustomerAddress());
+        JSONObject addressObj = null;
+        try {
+            addressObj = new JSONObject(address);
+            String street = (String) addressObj.get("street");
+            System.out.println(street);
+            if (street == null || stringDealer.trimMax(street).equals("") || stringDealer.chechValidStreetString(street)){
+                return new ResponseEntity<>("Số nhà sai định dạng", HttpStatus.BAD_REQUEST);
+            }
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
         // Retrieve customer information and create new customer
         Customer customer = new Customer();
         customer.setUserId(createCustomerDTO.getUserId());

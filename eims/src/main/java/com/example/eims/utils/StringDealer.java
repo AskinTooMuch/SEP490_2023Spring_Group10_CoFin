@@ -15,6 +15,8 @@ import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class StringDealer {
     public StringDealer() {
@@ -99,5 +101,13 @@ public class StringDealer {
             e.printStackTrace();
         }
         return daysDiff;
+    }
+
+    public boolean chechValidStreetString(String street){
+//        Pattern p = Pattern.compile("/[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>\\/?]+/");
+//        String pattern = "/[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>\\/?]/";
+//        // boolean b = m.matches();
+//        boolean check = pattern.matches(street);
+        return false;
     }
 }
