@@ -18,6 +18,7 @@ public class EggLocationUpdateEggBatchDTO {
     private Long eggLocationId;
     private Long machineId;
     private String machineName;
+    private Long machineTypeId;
     private int amountCurrent;
     private int capacity;
     private int amountUpdate;

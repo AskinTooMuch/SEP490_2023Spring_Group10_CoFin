@@ -14,6 +14,8 @@ package com.example.eims.service.interfaces;
 import com.example.eims.dto.auth.*;
 import org.springframework.http.ResponseEntity;
 
+import java.io.IOException;
+
 public interface IAuthService {
     /**
      * Sign in .
@@ -45,7 +47,7 @@ public interface IAuthService {
      * @param phone the phone number of the account
      * @return
      */
-    public ResponseEntity<?> sendOTPResetPass(String phone);
+    public ResponseEntity<?> sendOTPResetPass(String phone) throws IOException;
 
     /**
      * Verify OTP forgot password.
@@ -60,7 +62,7 @@ public interface IAuthService {
      *
      * @return
      */
-    public ResponseEntity<?> resendOTPResetPass(String phone);
+    public ResponseEntity<?> resendOTPResetPass(String phone) throws IOException;
 
     /**
      * Change password after verify OTP.
@@ -76,7 +78,7 @@ public interface IAuthService {
      * @param phone the phone number of the account
      * @return
      */
-    public ResponseEntity<?> sendOTPRegister(String phone);
+    public ResponseEntity<?> sendOTPRegister(String phone) throws IOException;
 
     /**
      * Verify OTP to register owner.
@@ -91,5 +93,5 @@ public interface IAuthService {
      *
      * @return
      */
-    public ResponseEntity<?> resendOTPRegister(String phone);
+    public ResponseEntity<?> resendOTPRegister(String phone) throws IOException;
 }

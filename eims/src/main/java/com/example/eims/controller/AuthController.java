@@ -20,6 +20,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/api/auth")
@@ -69,7 +71,7 @@ public class AuthController {
      * @return
      */
     @GetMapping("/forgotPassword/sendOTP")
-    public ResponseEntity<?> sendOTPForgotPassword(@RequestParam String phone) {
+    public ResponseEntity<?> sendOTPForgotPassword(@RequestParam String phone) throws IOException{
         return authService.sendOTPResetPass(phone);
     }
 
@@ -90,7 +92,7 @@ public class AuthController {
      * @return
      */
     @GetMapping("/forgotPassword/resendOTP")
-    public ResponseEntity<?> resendOTPForgotPassword(@RequestParam String phone) {
+    public ResponseEntity<?> resendOTPForgotPassword(@RequestParam String phone) throws IOException{
         return authService.resendOTPResetPass(phone);
     }
 
@@ -101,7 +103,7 @@ public class AuthController {
      * @return
      */
     @GetMapping("/register/sendOTP")
-    public ResponseEntity<?> sendOTPRegisterOwner(@RequestParam String phone) {
+    public ResponseEntity<?> sendOTPRegisterOwner(@RequestParam String phone) throws IOException{
         return authService.sendOTPRegister(phone);
     }
 
@@ -123,7 +125,7 @@ public class AuthController {
      * @return
      */
     @GetMapping("/register/resendOTP")
-    public ResponseEntity<?> resendOTPRegisterOwner(@RequestParam String phone) {
+    public ResponseEntity<?> resendOTPRegisterOwner(@RequestParam String phone) throws IOException {
         return authService.resendOTPRegister(phone);
     }
 

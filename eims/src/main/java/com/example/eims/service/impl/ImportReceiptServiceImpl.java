@@ -205,11 +205,11 @@ public class ImportReceiptServiceImpl implements IImportReceiptService {
             return new ResponseEntity<>("Hãy chọn nhà cung cấp", HttpStatus.BAD_REQUEST);
         }
         // Import date
-        if (createImportDTO.getImportDate() == null) { // Import date empty
+        if (createImportDTO.getImportDate() == null || createImportDTO.getImportDate().equals("")) { // Import date empty
             return new ResponseEntity<>("Hãy nhập ngày nhập đơn hàng", HttpStatus.BAD_REQUEST);
         }
         // Amount and Price
-        Float total = 0F;
+        float total = 0F;
         for (CreateEggBatchDTO eggBatch : createImportDTO.getEggBatchList()) {
             if (eggBatch.getAmount() < 0) { // Amount negative
                 return new ResponseEntity<>("Số lượng phải lớn hơn 0", HttpStatus.BAD_REQUEST);
@@ -311,3 +311,4 @@ public class ImportReceiptServiceImpl implements IImportReceiptService {
         }
     }
 }
+

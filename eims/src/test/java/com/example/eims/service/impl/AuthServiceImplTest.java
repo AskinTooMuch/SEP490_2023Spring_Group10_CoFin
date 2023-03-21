@@ -28,6 +28,7 @@
  import org.springframework.security.authentication.AuthenticationManager;
  import org.springframework.security.crypto.password.PasswordEncoder;
 
+ import java.io.IOException;
  import java.util.Optional;
 
  import static org.junit.jupiter.api.Assertions.*;
@@ -697,7 +698,7 @@
      }
 
      @Test
-     void sendOTP() {
+     void sendOTP() throws IOException{
          // Set up
          String phone = "0987654321";
          // Define behaviour of repository
@@ -730,7 +731,7 @@
      }
 
      @Test
-     void resendOTP() {
+     void resendOTP() throws IOException {
          // Set up
          String phone = "0987654321";
          Otp otp = new Otp();

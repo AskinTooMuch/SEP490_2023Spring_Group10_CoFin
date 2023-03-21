@@ -19,7 +19,7 @@ import java.util.List;
 @Data
 public class UpdateEggBatchDTO {
     private Long eggBatchId;
-    private int phase;
+    private int phaseNumber;
     private int eggWasted;
     private int amount;
     private List<EggLocationUpdateEggBatchDTO> eggLocationUpdateEggBatchDTOS;
