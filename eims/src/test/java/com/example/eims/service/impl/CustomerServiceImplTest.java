@@ -368,30 +368,6 @@ class CustomerServiceImplTest {
     }
 
     @Test
-    void createCustomer() {
-        // Set up
-        CreateCustomerDTO dto = new CreateCustomerDTO();
-        User user = new User();
-        user.setUserId(1L);
-        user.setStatus(1);
-        dto.setUserId(1L);
-        dto.setCustomerName("name");
-        dto.setCustomerPhone("0987654321");
-        dto.setCustomerMail("a@a.com");
-        dto.setCustomerAddress("address");
-        // Define behaviour of repository
-        when(userRepository.getStatusByUserId(user.getUserId())).thenReturn(user.getStatus() == 1);
-        when(customerRepository.existsByCustomerPhoneAndUserId(dto.getCustomerPhone(), user.getUserId()))
-                .thenReturn(false);
-
-        // Run service method
-        ResponseEntity<?> responseEntity = customerService.createCustomer(dto);
-        System.out.println(responseEntity.toString());
-        // Assert
-        assertEquals("Thêm khách hàng mới thành công", responseEntity.getBody());
-    }
-
-    @Test
     @DisplayName("showFormUpdateUTCID01")
     void showFormUpdateUTCID01() {
         // Set up
@@ -422,20 +398,6 @@ class CustomerServiceImplTest {
         System.out.println(responseEntity.toString());
         // Assert
         assertNotEquals(null, responseEntity.getBody());
-    }
-
-    @Test
-    void showFormUpdate() {
-        // Set up
-        Customer customer = new Customer();
-        // Define behaviour of repository
-        when(customerRepository.findByCustomerId(1L)).thenReturn(Optional.of(customer));
-
-        // Run service method
-        ResponseEntity<?> responseEntity = customerService.showFormUpdate(1L);
-        System.out.println(responseEntity.toString());
-        // Assert
-        assertEquals(customer, responseEntity.getBody());
     }
 
     @Test
@@ -725,28 +687,81 @@ class CustomerServiceImplTest {
     }
 
     @Test
-    void updateCustomer() {
+    @DisplayName("searchCustomerUTCID01")
+    void searchCustomerUTCID01() {
         // Set up
-        UpdateCustomerDTO dto = new UpdateCustomerDTO();
-        Customer customer = new Customer();
-        dto.setUserId(1L);
-        dto.setCustomerId(1L);
-        dto.setCustomerName("name");
-        dto.setCustomerPhone("0987654321");
-        dto.setCustomerAddress("address");
-        dto.setCustomerMail("a@a.com");
-        dto.setStatus(1);
-        String oldPhone = "0987654320";
+        Long ownerId = 1L;
+        String customerKey = "Nguyễn Văn A";
+        Customer customer1 = new Customer();
+        Customer customer2 = new Customer();
+        List<Customer> customerList = new ArrayList<>();
+        customerList.add(customer1);
+        customerList.add(customer2);
         // Define behaviour of repository
-        when(customerRepository.findCustomerPhoneById(1L)).thenReturn(oldPhone);
-        when(customerRepository.existsByCustomerPhoneAndUserId(dto.getCustomerPhone(), dto.getUserId()))
-                .thenReturn(false);
-        when(customerRepository.findByCustomerId(dto.getCustomerId())).thenReturn(Optional.of(customer));
+        when(customerRepository.searchByUsernameOrPhone(ownerId, customerKey)).thenReturn(Optional.of(customerList));
         // Run service method
-        ResponseEntity<?> responseEntity = customerService.updateCustomer(dto);
+        ResponseEntity<?> responseEntity = customerService.searchCustomer(ownerId, customerKey);
         System.out.println(responseEntity.toString());
         // Assert
-        assertEquals("Cập nhật thông tin khách hàng thành công", responseEntity.getBody());
+        assertNotEquals(null, responseEntity.getBody());
+    }
+
+    @Test
+    @DisplayName("searchCustomerUTCID02")
+    void searchCustomerUTCID02() {
+        // Set up
+        Long ownerId = 1L;
+        String customerKey = "09876";
+        Customer customer1 = new Customer();
+        Customer customer2 = new Customer();
+        List<Customer> customerList = new ArrayList<>();
+        customerList.add(customer1);
+        customerList.add(customer2);
+        // Define behaviour of repository
+        when(customerRepository.searchByUsernameOrPhone(ownerId, customerKey)).thenReturn(Optional.of(customerList));
+        // Run service method
+        ResponseEntity<?> responseEntity = customerService.searchCustomer(ownerId, customerKey);
+        System.out.println(responseEntity.toString());
+        // Assert
+        assertNotEquals(null, responseEntity.getBody());
+    }
+
+    @Test
+    @DisplayName("searchCustomerUTCID03")
+    void searchCustomerUTCID03() {
+        // Set up
+        Long ownerId = 1L;
+        String customerKey = "@ucnxnfr";
+        Customer customer1 = new Customer();
+        Customer customer2 = new Customer();
+        List<Customer> customerList = new ArrayList<>();
+        customerList.add(customer1);
+        customerList.add(customer2);
+        // Define behaviour of repository
+        when(customerRepository.searchByUsernameOrPhone(ownerId, customerKey)).thenReturn(Optional.empty());
+        // Run service method
+        ResponseEntity<?> responseEntity = customerService.searchCustomer(ownerId, customerKey);
+        System.out.println(responseEntity.toString());
+        // Assert
+        assertEquals(null, responseEntity.getBody());
+    }
+
+    @Test
+    @DisplayName("searchCustomerUTCID04")
+    void searchCustomerUTCID04() {
+        // Set up
+        Long ownerId = 1L;
+        String customerKey = "";
+        Customer customer1 = new Customer();
+        Customer customer2 = new Customer();
+        List<Customer> customerList = new ArrayList<>();
+        customerList.add(customer1);
+        customerList.add(customer2);
+        // Run service method
+        ResponseEntity<?> responseEntity = customerService.searchCustomer(ownerId, customerKey);
+        System.out.println(responseEntity.toString());
+        // Assert
+        assertEquals("Nhập tên hoặc số điện thoại để tìm kiếm", responseEntity.getBody());
     }
 
     @Test
@@ -767,6 +782,30 @@ class CustomerServiceImplTest {
         System.out.println(responseEntity.toString());
         // Assert
         assertEquals(customerList, responseEntity.getBody());
+    }
+
+    @Test
+    @DisplayName("getAllCustomerPagingUTCID01")
+    void getAllCustomerPagingUTCID01() {
+        // Set up
+        Long ownerId = 1L;
+        Customer customer1 = new Customer();
+        Customer customer2 = new Customer();
+        List<Customer> customerList = new ArrayList<>();
+        customerList.add(customer1);
+        customerList.add(customer2);
+        int page = 1;
+        int size = 2;
+        String sort = "ASC";
+        Sort sortable = Sort.by("customerId").ascending();
+        Pageable pageable = PageRequest.of(page, size, sortable);
+        // Define behaviour of repository
+        when(customerRepository.findAllByUserId(ownerId, pageable)).thenReturn(customerPage);
+        // Run service method
+        ResponseEntity<?> responseEntity = customerService.getAllCustomerPaging(ownerId, page, size, "ASC");
+        System.out.println(responseEntity.toString());
+        // Assert
+        assertEquals(customerPage, responseEntity.getBody());
     }
 
     @Test

@@ -333,12 +333,12 @@ public class EmployeeServiceImpl implements IEmployeeService {
     /**
      * Find employee by name or phone number
      *
-     * @param employeeName  employee name
-     * @param employeePhone employee phone number
+     * @param facilityId  facility id
+     * @param employeePhone employee phone number or name
      * @return employee list
      */
     @Override
-    public ResponseEntity<?> searchEmployeeByNameOrPhone(String employeeName, String employeePhone) {
+    public ResponseEntity<?> searchEmployeeByNameOrPhone(Long facilityId, String employeePhone) {
         return null;
     }
 

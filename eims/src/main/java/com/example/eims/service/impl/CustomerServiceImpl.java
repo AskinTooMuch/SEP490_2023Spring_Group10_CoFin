@@ -173,10 +173,10 @@ public class CustomerServiceImpl implements ICustomerService {
     public ResponseEntity<?> updateCustomer(UpdateCustomerDTO updateCustomerDTO) {
         Long userId = updateCustomerDTO.getUserId();
         // Name
-        String name = stringDealer.trimMax(updateCustomerDTO.getCustomerName());
-        if (name.equals("")) { /* Supplier name is empty */
+        if (updateCustomerDTO.getCustomerName() == null || stringDealer.trimMax(updateCustomerDTO.getCustomerName()).equals("")) { /* Supplier name is empty */
             return new ResponseEntity<>("Tên khách hàng không được để trống", HttpStatus.BAD_REQUEST);
         }
+        String name = stringDealer.trimMax(updateCustomerDTO.getCustomerName());
         // Phone number
         if (updateCustomerDTO.getCustomerPhone() == null || stringDealer.trimMax(updateCustomerDTO.getCustomerPhone()).equals("")) { /* Phone number is empty */
             return new ResponseEntity<>("Số điện thoại không được để trống", HttpStatus.BAD_REQUEST);
@@ -198,9 +198,20 @@ public class CustomerServiceImpl implements ICustomerService {
             return new ResponseEntity<>("Email không hợp lệ", HttpStatus.BAD_REQUEST);
         }
         // Address
-        String address = stringDealer.trimMax(updateCustomerDTO.getCustomerAddress());
-        if (address.equals("")) { /* Address is empty */
+        if (updateCustomerDTO.getCustomerAddress() == null || stringDealer.trimMax(updateCustomerDTO.getCustomerAddress()).equals("")) { /* Address is empty */
             return new ResponseEntity<>("Địa chỉ không được để trống", HttpStatus.BAD_REQUEST);
+        }
+        String address = stringDealer.trimMax(updateCustomerDTO.getCustomerAddress());
+        JSONObject addressObj = null;
+        try {
+            addressObj = new JSONObject(address);
+            String street = (String) addressObj.get("street");
+            System.out.println(street);
+            if (street == null || stringDealer.trimMax(street).equals("") || stringDealer.chechValidStreetString(street)){
+                return new ResponseEntity<>("Số nhà sai định dạng", HttpStatus.BAD_REQUEST);
+            }
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
         }
         // Status
         int status = updateCustomerDTO.getStatus();
@@ -233,8 +244,10 @@ public class CustomerServiceImpl implements ICustomerService {
      */
     @Override
     public ResponseEntity<?> searchCustomer(Long userId, String key) {
+        if(key == null || stringDealer.trimMax(key).equals("")){
+            return new ResponseEntity<>("Nhập tên hoặc số điện thoại để tìm kiếm", HttpStatus.BAD_REQUEST);
+        }
         // Trim spaces
-        StringDealer stringDealer = new StringDealer();
         key = stringDealer.trimMax(key);
         // Search
         Optional<List<Customer>> customerList = customerRepository.searchByUsernameOrPhone(userId, key);
