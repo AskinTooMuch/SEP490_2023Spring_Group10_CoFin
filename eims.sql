@@ -240,9 +240,10 @@ CREATE TABLE notification(
 );
 
 CREATE TABLE otp(
-	otp_id		integer			AUTO_INCREMENT PRIMARY KEY,
+	otp_id			integer			AUTO_INCREMENT PRIMARY KEY,
     phone_number	varchar(15)		NOT NULL,
     otp				varchar(10) 	DEFAULT "",
+    time 			datetime,
     status				boolean
 );
 

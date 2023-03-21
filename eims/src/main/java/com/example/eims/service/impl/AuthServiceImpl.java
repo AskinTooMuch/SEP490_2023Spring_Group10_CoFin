@@ -30,7 +30,10 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.sql.Date;
+import java.time.Duration;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 
 @Service
@@ -318,26 +321,44 @@ public class AuthServiceImpl implements IAuthService {
      */
     @Override
     public ResponseEntity<?> sendOTPResetPass(String phone) throws IOException {
-        // Check credentials, if not valid then return Bad request (403)
+        Otp otp;
+        String content = "Mã xác nhận số điệm thoại của bạn là: ";
+        // Check
         Optional<User> userOptional = userRepository.findByPhone(phone);
         if (!userOptional.isPresent()) { /* No user found */
             return new ResponseEntity<>("Không tìm thấy số điện thoại", HttpStatus.BAD_REQUEST);
-        } else {
-            // Create OTP
-            String OTP = stringDealer.generateOTP();
-            String content = "Mã xác nhận số điệm thoại của bạn là: " + OTP;
-            Otp otp = new Otp();
-            otp.setPhoneNumber(phone);
-            otp.setOtp(OTP);
-            otpRepository.save(otp);
-
-            // Send OTP
-            String userInfo = speedSMS.getUserInfo();
-            String response = speedSMS.sendSMS(phone, content, 5, SENDER);
-            //
-            return new ResponseEntity<>("Đã gửi mã OTP", HttpStatus.OK);
         }
+        Optional<Otp> otpOptional = otpRepository.findByPhoneNumber(phone);
+        if (otpOptional.isPresent()) {
+            Otp otpReal = otpOptional.get();
+            LocalDateTime now = LocalDateTime.now();
+            LocalDateTime timeCreated = otpReal.getTime();
+            long minutes = ChronoUnit.MINUTES.between(timeCreated, now);
+            if (minutes < 5) {
+                return new ResponseEntity<>("Mã OTP đã được gửi trong vòng 5 phút gần đây, vui lòng " +
+                        "đợi để gửi lại", HttpStatus.BAD_REQUEST);
+            } else {
+                otpRepository.delete(otpReal);
+            }
+        }
+
+        // Create OTP
+        String OTP = stringDealer.generateOTP();
+        content += OTP;
+        otp = new Otp();
+        otp.setPhoneNumber(phone);
+        otp.setOtp(OTP);
+        otp.setTime(LocalDateTime.now());
+        otp.setStatus(true);
+        otpRepository.save(otp);
+
+        // Send OTP
+        String userInfo = speedSMS.getUserInfo();
+        String response = speedSMS.sendSMS(phone, content, 5, SENDER);
+        //
+        return new ResponseEntity<>("Đã gửi mã OTP", HttpStatus.OK);
     }
+
 
     /**
      * Verify OTP forgot password.
@@ -350,14 +371,26 @@ public class AuthServiceImpl implements IAuthService {
         // Check if the OTP match
         String phone = verifyOtpDTO.getPhone();
         String otpSend = verifyOtpDTO.getOTP();
-        Otp otpReal = otpRepository.findByPhoneNumber(phone).get();
-        if (otpSend.equals(otpReal.getOtp())) {      /* OTP match*/
-            // Reset otp
+        Optional<Otp> otpOptional = otpRepository.findByPhoneNumber(phone);
+        if (otpOptional.isEmpty()) {
+            return new ResponseEntity<>("Mã OTP đã hết hạn, vui lòng nhấn gửi lại", HttpStatus.BAD_REQUEST);
+        }
+        Otp otpReal = otpOptional.get();
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime timeCreated = otpReal.getTime();
+        long minutes = ChronoUnit.MINUTES.between(timeCreated, now);
+        if (minutes > 5) {
             otpRepository.delete(otpReal);
-            return new ResponseEntity<>("Mã OTP đã đúng", HttpStatus.OK);
-        } else {                        /* OTP not match*/
+            return new ResponseEntity<>("Mã OTP đã hết hạn, vui lòng nhấn gửi lại", HttpStatus.BAD_REQUEST);
+        } else {
+            if (otpSend.equals(otpReal.getOtp())) {      /* OTP match*/
+                // Reset otp
+                otpRepository.delete(otpReal);
+                return new ResponseEntity<>("Mã OTP đã đúng", HttpStatus.OK);
+            } else {                        /* OTP not match*/
 
-            return new ResponseEntity<>("Mã OTP sai", HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>("Mã OTP sai", HttpStatus.BAD_REQUEST);
+            }
         }
     }
 
@@ -368,39 +401,40 @@ public class AuthServiceImpl implements IAuthService {
      */
     @Override
     public ResponseEntity<?> resendOTPResetPass(String phone) throws IOException {
-        // Check credentials, if not valid then return Bad request (403)
+        Otp otp;
+        String content = "Mã xác nhận số điệm thoại của bạn là: ";
+        // Check
         Optional<Otp> otpOptional = otpRepository.findByPhoneNumber(phone);
-        if (!otpOptional.isPresent()) {
-            // Create OTP
-            String OTP = stringDealer.generateOTP();
-            String content = "Mã xác nhận số điệm thoại của bạn là: " + OTP;
-            Otp otp = new Otp();
-            otp.setPhoneNumber(phone);
-            otp.setOtp(OTP);
-            otpRepository.save(otp);
-            // Send OTP
-            String userInfo = speedSMS.getUserInfo();
-            String response = speedSMS.sendSMS(phone, content, 5, SENDER);
-            //
-
-        } else {
-            // Create OTP
-            // Create OTP
-            String OTP = stringDealer.generateOTP();
-            String content = "Mã xác nhận số điệm thoại của bạn là: " + OTP;
-            Otp otp = otpRepository.findByPhoneNumber(phone).get();
-            otp.setPhoneNumber(phone);
-            otp.setOtp(OTP);
-            otpRepository.save(otp);
-            // Send OTP
-            String userInfo = speedSMS.getUserInfo();
-            String response = speedSMS.sendSMS(phone, content, 5, SENDER);
-            //
+        if (otpOptional.isPresent()) {
+            Otp otpReal = otpOptional.get();
+            LocalDateTime now = LocalDateTime.now();
+            LocalDateTime timeCreated = otpReal.getTime();
+            long minutes = ChronoUnit.MINUTES.between(timeCreated, now);
+            if (minutes < 5) {
+                return new ResponseEntity<>("Mã OTP đã được gửi trong vòng 5 phút gần đây, vui lòng " +
+                        "đợi để gửi lại", HttpStatus.BAD_REQUEST);
+            } else {
+                otpRepository.delete(otpReal);
+            }
         }
+
+        // Create OTP
+        String OTP = stringDealer.generateOTP();
+        content += OTP;
+        otp = new Otp();
+        otp.setPhoneNumber(phone);
+        otp.setOtp(OTP);
+        otp.setTime(LocalDateTime.now());
+        otp.setStatus(true);
+        otpRepository.save(otp);
+
+        // Send OTP
+        String userInfo = speedSMS.getUserInfo();
+        String response = speedSMS.sendSMS(phone, content, 5, SENDER);
+        //
         return new ResponseEntity<>("Đã gửi lại mã OTP", HttpStatus.OK);
 
     }
-
 
     /**
      * Change password after verify OTP.
@@ -445,23 +479,42 @@ public class AuthServiceImpl implements IAuthService {
      */
     @Override
     public ResponseEntity<?> sendOTPRegister(String phone) throws IOException {
-        // Check used phone number
+        Otp otp;
+        String content = "Mã xác nhận số điệm thoại của bạn là: ";
+        // Check
         Optional<User> userOptional = userRepository.findByPhone(phone);
-        if (userOptional.isPresent()) { /* User found (phone number used) */
+        if (userOptional.isPresent()) { /* Phone number used */
             return new ResponseEntity<>("Số điện thoại đã được sử dụng", HttpStatus.BAD_REQUEST);
-        } else {
-            // Create OTP
-            String OTP = stringDealer.generateOTP();
-            String content = "Mã xác nhận số điệm thoại của bạn là: " + OTP;
-            Otp otp = new Otp();
-            otp.setPhoneNumber(phone);
-            otp.setOtp(OTP);
-            otpRepository.save(otp);
-            // Send OTP
-            String userInfo = speedSMS.getUserInfo();
-            String response = speedSMS.sendSMS(phone, content, 5, SENDER);
-            return new ResponseEntity<>(OTP, HttpStatus.OK);
         }
+        Optional<Otp> otpOptional = otpRepository.findByPhoneNumber(phone);
+        if (otpOptional.isPresent()) {
+            Otp otpReal = otpOptional.get();
+            LocalDateTime now = LocalDateTime.now();
+            LocalDateTime timeCreated = otpReal.getTime();
+            long minutes = ChronoUnit.MINUTES.between(timeCreated, now);
+            if (minutes < 5) {
+                return new ResponseEntity<>("Mã OTP đã được gửi trong vòng 5 phút gần đây, vui lòng " +
+                        "đợi để gửi lại", HttpStatus.BAD_REQUEST);
+            } else {
+                otpRepository.delete(otpReal);
+            }
+        }
+
+        // Create OTP
+        String OTP = stringDealer.generateOTP();
+        content += OTP;
+        otp = new Otp();
+        otp.setPhoneNumber(phone);
+        otp.setOtp(OTP);
+        otp.setTime(LocalDateTime.now());
+        otp.setStatus(true);
+        otpRepository.save(otp);
+
+        // Send OTP
+        String userInfo = speedSMS.getUserInfo();
+        String response = speedSMS.sendSMS(phone, content, 5, SENDER);
+        //
+        return new ResponseEntity<>("Đã gửi mã OTP", HttpStatus.OK);
     }
 
     /**
@@ -475,12 +528,25 @@ public class AuthServiceImpl implements IAuthService {
         // Check if the OTP match
         String phone = verifyOtpDTO.getPhone();
         String otpSend = verifyOtpDTO.getOTP();
-        Otp otp = otpRepository.findByPhoneNumber(phone).get();
-        if (otpSend.equals(otp.getOtp())) {      /* OTP match*/
-            otpRepository.delete(otp);
-            return new ResponseEntity<>("Mã OTP đã đúng", HttpStatus.OK);
-        } else {                        /* OTP not match*/
-            return new ResponseEntity<>("Mã OTP sai", HttpStatus.BAD_REQUEST);
+        Optional<Otp> otpOptional = otpRepository.findByPhoneNumber(phone);
+        if (otpOptional.isEmpty()) {
+            return new ResponseEntity<>("Mã OTP đã hết hạn, vui lòng nhấn gửi lại", HttpStatus.BAD_REQUEST);
+        }
+        Otp otpReal = otpOptional.get();
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime timeCreated = otpReal.getTime();
+        long minutes = ChronoUnit.MINUTES.between(timeCreated, now);
+        if (minutes > 5) {
+            otpRepository.delete(otpReal);
+            return new ResponseEntity<>("Mã OTP đã hết hạn, vui lòng nhấn gửi lại", HttpStatus.BAD_REQUEST);
+        } else {
+            if (otpSend.equals(otpReal.getOtp())) {      /* OTP match*/
+                // Reset otp
+                otpRepository.delete(otpReal);
+                return new ResponseEntity<>("Mã OTP đã đúng", HttpStatus.OK);
+            } else {                        /* OTP not match*/
+                return new ResponseEntity<>("Mã OTP sai", HttpStatus.BAD_REQUEST);
+            }
         }
     }
 
@@ -492,32 +558,41 @@ public class AuthServiceImpl implements IAuthService {
      */
     @Override
     public ResponseEntity<?> resendOTPRegister(String phone) throws IOException {
-        Optional<Otp> otpOptional = otpRepository.findByPhoneNumber(phone);
-        if (!otpOptional.isPresent()) { /* Not exist in database */
-            // Create OTP
-            String OTP = stringDealer.generateOTP();
-            String content = "Mã xác nhận số điệm thoại của bạn là: " + OTP;
-            Otp otp = new Otp();
-            otp.setPhoneNumber(phone);
-            otp.setOtp(OTP);
-            otpRepository.save(otp);
-            // Send OTP
-            String userInfo = speedSMS.getUserInfo();
-            String response = speedSMS.sendSMS(phone, content, 5, SENDER);
-            //
-        } else { /* Exist in database, registering */
-            // Create OTP
-            String OTP = stringDealer.generateOTP();
-            String content = "Mã xác nhận số điệm thoại của bạn là: " + OTP;
-            Otp otp = otpOptional.get();
-            otp.setPhoneNumber(phone);
-            otp.setOtp(OTP);
-            otpRepository.save(otp);
-            // Send OTP
-            String userInfo = speedSMS.getUserInfo();
-            String response = speedSMS.sendSMS(phone, content, 5, SENDER);
-            //
+        Otp otp;
+        String content = "Mã xác nhận số điệm thoại của bạn là: ";
+        // Check
+        Optional<User> userOptional = userRepository.findByPhone(phone);
+        if (userOptional.isPresent()) { /* Phone number used */
+            return new ResponseEntity<>("Số điện thoại đã được sử dụng", HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>("Đã gửi lại mã OTP", HttpStatus.OK);
+        Optional<Otp> otpOptional = otpRepository.findByPhoneNumber(phone);
+        if (otpOptional.isPresent()) {
+            Otp otpReal = otpOptional.get();
+            LocalDateTime now = LocalDateTime.now();
+            LocalDateTime timeCreated = otpReal.getTime();
+            long minutes = ChronoUnit.MINUTES.between(timeCreated, now);
+            if (minutes < 5) {
+                return new ResponseEntity<>("Mã OTP đã được gửi trong vòng 5 phút gần đây, vui lòng " +
+                        "đợi để gửi lại", HttpStatus.BAD_REQUEST);
+            } else {
+                otpRepository.delete(otpReal);
+            }
+        }
+
+        // Create OTP
+        String OTP = stringDealer.generateOTP();
+        content += OTP;
+        otp = new Otp();
+        otp.setPhoneNumber(phone);
+        otp.setOtp(OTP);
+        otp.setTime(LocalDateTime.now());
+        otp.setStatus(true);
+        otpRepository.save(otp);
+
+        // Send OTP
+        String userInfo = speedSMS.getUserInfo();
+        String response = speedSMS.sendSMS(phone, content, 5, SENDER);
+        //
+        return new ResponseEntity<>("Đã gửi mã OTP", HttpStatus.OK);
     }
 }

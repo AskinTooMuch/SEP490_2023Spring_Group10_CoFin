@@ -110,4 +110,19 @@ public class StringDealer {
 //        boolean check = pattern.matches(street);
         return false;
     }
+
+    /**
+     * Generate OTP code.
+     *
+     * @param
+     * @return
+     */
+    public String generateOTP(){
+        String OTP = "";
+        String random = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz01234567890123456789";
+        for (int i = 0; i < 6; i++) {
+            OTP+= (random.charAt(0 + (int)(Math.random() * random.length())));
+        }
+        return OTP;
+    }
 }
