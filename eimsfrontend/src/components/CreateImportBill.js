@@ -1,20 +1,44 @@
 import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom";
+function TableRows({ rowsData, deleteTableRows, handleChange }) {
+    return (
+        rowsData.map((data, index) => {
+            const { species, breed, number, price, total } = data;
+            return (
+                <tr key={index}>
+                    <td><input type="text" value={species} onChange={(evnt) => (handleChange(index, evnt))} name="species" className="form-control" /></td>
+                    <td><input type="text" value={breed} onChange={(evnt) => (handleChange(index, evnt))} name="breed" className="form-control" /> </td>
+                    <td><input type="text" value={number} onChange={(evnt) => (handleChange(index, evnt))} name="number" className="form-control" /> </td>
+                    <td><input type="text" value={price} onChange={(evnt) => (handleChange(index, evnt))} name="price" className="form-control" /> </td>
+                    <td><input type="text" value={total} onChange={(evnt) => (handleChange(index, evnt))} name="total" className="form-control" /> </td>
+                    <td><button className="btn btn-outline-danger" type='button' onClick={() => (deleteTableRows(index))}>x</button></td>
+                </tr>
+            )
+        })
+    )
+}
 const CreateImportBill = () => {
     let navigate = useNavigate();
     const [rowsData, setRowsData] = useState([]);
+//Add table rows
     const addTableRows = () => {
         const rowsInput = {
-            species:'', breed:'', number:'', price:'', total:''
+            species: '',
+            breed: '',
+            number: '',
+            price: '',
+            total: ''
         }
         setRowsData([...rowsData, rowsInput])
     }
+    //Delete table rows
     const deleteTableRows = (index) => {
         const rows = [...rowsData];
         rows.splice(index, 1);
         setRowsData(rows);
     }
-    const handleChangeRow = (index, evnt) => {
+    //On Change data input
+    const handleChange = (index, evnt) => {
         const { name, value } = evnt.target;
         const rowsInput = [...rowsData];
         rowsInput[index][name] = value;
@@ -22,7 +46,7 @@ const CreateImportBill = () => {
     }
     return (
         <>
-        <h2>Tạo hoá đơn nhập</h2>
+            <h2>Tạo hoá đơn nhập</h2>
             <form>
                 <div className='container'>
                     <div className='detailbody'>
@@ -67,31 +91,14 @@ const CreateImportBill = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>Gà</td>
-                                <td>Gà ri</td>
-                                <td>4000</td>
-                                <td>3500</td>
-                                <td>14.000.000</td>
-                            </tr>
-                            <tr>
-                                <td>Gà</td>
-                                <td>Gà tre</td>
-                                <td>5000</td>
-                                <td>7000</td>
-                                <td>35.000.000</td>
-                            </tr>
-                            <TableRows rowsData={rowsData} deleteTableRows={deleteTableRows} handleChangeRow={handleChangeRow} />
+                            <TableRows rowsData={rowsData} deleteTableRows={deleteTableRows} handleChange={handleChange} />
                         </tbody>
                     </table>
                     <div style={{ textAlign: "center" }}>
                         <button className="btn btn-light" type='button' onClick={addTableRows} >+</button>
                     </div>
-                    <div style={{float:"right"}}>
-                       
-                    </div>
                     <div className='model-footer'>
-                    <label>Tổng giá trị: 49.000.000 VNĐ</label>
+                        <label>Tổng giá trị: 49.000.000 VNĐ</label>
                         <button style={{ width: "10%" }} className="col-md-6 btn-light" type='submit'>
                             Tạo
                         </button>
@@ -105,23 +112,5 @@ const CreateImportBill = () => {
     );
 }
 
-function TableRows({ rowsData, deleteTableRows, handleChangeRow }) {
-    return (
-        rowsData.map((data, index) => {
-            const {species, breed, number, price, total  } = data;
-            return (
-                <tr key={index}>
-                    <td><input type="text" value={species} onChange={(evnt) => (handleChangeRow(index, evnt))} name="" className="form-control" /> </td>
-                    <td><input type="text" value={breed} onChange={(evnt) => (handleChangeRow(index, evnt))} name="" className="form-control" /> </td>
-                    <td><input type="text" value={number} onChange={(evnt) => (handleChangeRow(index, evnt))} name="" className="form-control" /> </td>
-                    <td><input type="text" value={price} onChange={(evnt) => (handleChangeRow(index, evnt))} name="" className="form-control" /> </td>
-                    <td><input type="text" value={total} onChange={(evnt) => (handleChangeRow(index, evnt))} name="" className="form-control" /> </td>
-                    <button className="btn btn-outline-danger" type='button' onClick={() => (deleteTableRows(index))}>x</button>
-                </tr>
-            )
-        })
 
-    )
-
-}
 export default CreateImportBill;

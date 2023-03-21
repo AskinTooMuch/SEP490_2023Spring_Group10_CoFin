@@ -49,9 +49,10 @@ export default function BasicTabs() {
     const [rowsData, setRowsData] = useState([]);
     const addTableRows = () => {
         const rowsInput = {
-            fullName: '',
-            emailAddress: '',
-            salary: ''
+            machineLocation: '',
+            vacantPosition: '',
+            currEgg: '',
+            updateEgg: ''
         }
         setRowsData([...rowsData, rowsInput])
         setShow2(false)
@@ -61,7 +62,7 @@ export default function BasicTabs() {
         rows.splice(index, 1);
         setRowsData(rows);
     }
-    const handleChangeRow = (index, evnt) => {
+    const handleChangeData = (index, evnt) => {
         const { name, value } = evnt.target;
         const rowsInput = [...rowsData];
         rowsInput[index][name] = value;
@@ -302,7 +303,7 @@ export default function BasicTabs() {
                                                         <td>500</td>
                                                         <td>0</td>
                                                     </tr>
-                                                    <TableRows rowsData={rowsData} deleteTableRows={deleteTableRows} handleChange={handleChangeRow} />
+                                                    <TableRows rowsData={rowsData} deleteTableRows={deleteTableRows} handleChangeData={handleChangeData} />
                                                 </tbody>
                                             </table>
                                         </div>
@@ -316,41 +317,41 @@ export default function BasicTabs() {
                                                     <Modal.Title>Những máy nở còn trống</Modal.Title>
                                                 </Modal.Header>
                                                 <Modal.Body>
-                                                <div class="table-wrapper-scroll-y my-custom-scrollbar">
-                                                    <table style={{overflowY:"scroll"}} className="table table-bordered">
-                                                        <thead>
-                                                            <tr>
-                                                                <th scope="col">Vị trí máy</th>
-                                                                <th scope="col">Số lượng vị trí trống</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody >
-                                                            <tr>
-                                                                <td>Máy 24</td>
-                                                                <td>1000</td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td>Máy 25</td>
-                                                                <td>1000</td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td>Máy 26</td>
-                                                                <td>1000</td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td>Máy 26</td>
-                                                                <td>1000</td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td>Máy 26</td>
-                                                                <td>1000</td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td>Máy 26</td>
-                                                                <td>1000</td>
-                                                            </tr>
-                                                        </tbody>
-                                                    </table>
+                                                    <div className="table-wrapper-scroll-y my-custom-scrollbar">
+                                                        <table style={{ overflowY: "scroll" }} className="table table-bordered">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th scope="col">Vị trí máy</th>
+                                                                    <th scope="col">Số lượng vị trí trống</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody >
+                                                                <tr>
+                                                                    <td>Máy 24</td>
+                                                                    <td>1000</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>Máy 25</td>
+                                                                    <td>1000</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>Máy 26</td>
+                                                                    <td>1000</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>Máy 26</td>
+                                                                    <td>1000</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>Máy 26</td>
+                                                                    <td>1000</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>Máy 26</td>
+                                                                    <td>1000</td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
                                                     </div>
                                                 </Modal.Body>
                                                 <div className='model-footer'>
@@ -367,10 +368,10 @@ export default function BasicTabs() {
                                 </form>
                             </Modal.Body>
                             <div className='model-footer'>
-                                <button style={{ width: "30%" }} className="col-md-6 btn-light">
+                                <button style={{ width: "20%" }} className="col-md-6 btn-light">
                                     Xác nhận
                                 </button>
-                                <button style={{ width: "20%" }} onClick={handleClose} className="btn btn-light">
+                                <button style={{ width: "10%" }} onClick={handleClose} type='button' className="btn btn-light">
                                     Huỷ
                                 </button>
                             </div>
@@ -382,17 +383,18 @@ export default function BasicTabs() {
 
     );
 }
-function TableRows({ rowsData, deleteTableRows, handleChangeRow }) {
+
+function TableRows({ rowsData, deleteTableRows, handleChangeData }) {
     return (
         rowsData.map((data, index) => {
-            const { species, breed, number, price } = data;
+            const { machineLocation, vacantPosition, currEgg, updateEgg } = data;
             return (
                 <tr key={index}>
-                    <td><input type="text" value={species} onChange={(evnt) => (handleChangeRow(index, evnt))} name="" className="form-control" /> </td>
-                    <td><input type="text" value={breed} onChange={(evnt) => (handleChangeRow(index, evnt))} name="" className="form-control" /> </td>
-                    <td><input type="text" value={number} onChange={(evnt) => (handleChangeRow(index, evnt))} name="" className="form-control" /> </td>
-                    <td><input type="text" value={price} onChange={(evnt) => (handleChangeRow(index, evnt))} name="" className="form-control" /> </td>
-                    <td className='td' ><button className="btn btn-outline-danger" onClick={() => (deleteTableRows(index))}><ClearIcon /></button></td>
+                    <td><input type="text" value={machineLocation} onChange={(evnt) => (handleChangeData(index, evnt))} name="machineLocation" className="form-control" /></td>
+                    <td><input type="text" value={vacantPosition} onChange={(evnt) => (handleChangeData(index, evnt))} name="vacantPosition" className="form-control" /> </td>
+                    <td><input type="text" value={currEgg} onChange={(evnt) => (handleChangeData(index, evnt))} name="currEgg" className="form-control" /> </td>
+                    <td><input type="text" value={updateEgg} onChange={(evnt) => (handleChangeData(index, evnt))} name="updateEgg" className="form-control" /> </td>
+                    <td className='td'><button className="btn btn-outline-danger" type='button' onClick={() => (deleteTableRows(index))}><ClearIcon/></button></td>
                 </tr>
             )
         })
