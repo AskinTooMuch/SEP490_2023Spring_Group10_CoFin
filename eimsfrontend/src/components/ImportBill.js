@@ -1,19 +1,48 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from "react-router-dom";
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import ImportExportIcon from '@mui/icons-material/ImportExport';
 import SearchIcon from '@mui/icons-material/Search';
+import axios from 'axios';
+import { ToastContainer, toast } from 'react-toastify';
 
 const ImportBill = () => {
-    let navigate = useNavigate();
-    const routeChange = () => {
-        let path = '/importbilldetail';
-        navigate(path);
+    const userRef = useRef();
+    const [dataLoaded, setDataLoaded] = useState(false);
+    //API URLs
+    const IMPORT_ALL = '/api/import/allByOwner'
+
+    //Data holding objects
+    const [importList, setImportList] = useState([]);
+
+    useEffect(() => {
+        loadImportList();
+    }, [dataLoaded]);
+
+    // Get import list
+    const loadImportList = async () => {
+        const result = await axios.get(IMPORT_ALL,
+            { params: { userId: sessionStorage.getItem("curUserId") } },
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Access-Control-Allow-Origin': '*'
+                },
+                withCredentials: false
+            });
+        setImportList(result.data);
+        setDataLoaded(true);
     }
+
+    let navigate = useNavigate();
+    const routeChange = (iid) => {
+        navigate('/importbilldetail', { state: { id: iid } });
+    }
+
     return (
         <>
             <nav className="navbar justify-content-between">
-                <button className='btn btn-light' onClick={()=>navigate("/createimportbill")}>+ Thêm</button>
+                <button className='btn btn-light' onClick={() => navigate("/createimportbill")}>+ Thêm</button>
                 <div className='filter my-2 my-lg-0'>
                     <p><FilterAltIcon />Lọc</p>
                     <p><ImportExportIcon />Sắp xếp</p>
@@ -30,17 +59,16 @@ const ImportBill = () => {
             <div>
                 <section className="u-align-center u-clearfix u-section-1" id="sec-b42b">
                     <div className="u-clearfix u-sheet u-sheet-1">
-
                         <div className="u-expanded-width u-table u-table-responsive u-table-1">
                             <table className="u-table-entity u-table-entity-1">
                                 <colgroup>
                                     <col width="5%" />
-                                    <col width="15%" />
+                                    <col width="10%" />
                                     <col width="20%" />
-                                    <col width="15%" />
-                                    <col width="15%" />
-                                    <col width="15%" />
-                                    <col width="15%" />
+                                    <col width="22%" />
+                                    <col width="13%" />
+                                    <col width="13%" />
+                                    <col width="17%" />
                                 </colgroup>
                                 <thead className="u-palette-4-base u-table-header u-table-header-1">
                                     <tr style={{ height: "21px" }}>
@@ -48,37 +76,52 @@ const ImportBill = () => {
                                         <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-2">Mã hoá đơn</th>
                                         <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-3">Nhà cung cấp</th>
                                         <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-4">Ngày nhập</th>
-                                        <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-5">Tổng giá</th>
+                                        <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-5">Tổng</th>
                                         <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-6">Đã thanh toán</th>
                                         <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-7">Trạng thái</th>
                                     </tr>
                                 </thead>
                                 <tbody className="u-table-body">
-                                    <tr style={{ height: "76px" }} onClick={routeChange}>
-                                        <td className="u-border-1 u-border-grey-30 u-first-column u-grey-5 u-table-cell u-table-cell-5">1</td>
-                                        <td className="u-border-1 u-border-grey-30 u-table-cell">AGD14-12-53</td>
-                                        <td className="u-border-1 u-border-grey-30 u-table-cell">Phạm Anh B</td>
-                                        <td className="u-border-1 u-border-grey-30 u-table-cell">24/01/2023</td>
-                                        <td className="u-border-1 u-border-grey-30 u-table-cell">10.000.000 VNĐ</td>
-                                        <td className="u-border-1 u-border-grey-30 u-table-cell">10.000.000 VNĐ</td>
-                                        <td className="u-border-1 u-border-grey-30 u-table-cell text-green">Đã thanh toán đủ</td>
-                                    </tr>
-                                    <tr style={{ height: "76px" }}>
-                                        <td className="u-border-1 u-border-grey-30 u-first-column u-grey-5 u-table-cell u-table-cell-9">2</td>
-                                        <td className="u-border-1 u-border-grey-30 u-table-cell">SJA81-02-85</td>
-                                        <td className="u-border-1 u-border-grey-30 u-table-cell">Bùi Thanh C</td>
-                                        <td className="u-border-1 u-border-grey-30 u-table-cell">21/01/2023</td>
-                                        <td className="u-border-1 u-border-grey-30 u-table-cell">14.000.000 VNĐ</td>
-                                        <td className="u-border-1 u-border-grey-30 u-table-cell">10.000.000 VNĐ</td>
-                                        <td className="u-border-1 u-border-grey-30 u-table-cell text-red">Chưa thanh toán đủ</td>
-                                    </tr>
+                                    {
+                                        importList && importList.length > 0 ?
+                                            importList.map((item, index) =>
+                                                <tr className='trclick' style={{ height: "76px" }} onClick={() => routeChange(item.importId)}>
+                                                    <td className="u-border-1 u-border-grey-30 u-first-column u-grey-5 u-table-cell u-table-cell-5">{index + 1}</td>
+                                                    <td className="u-border-1 u-border-grey-30 u-table-cell">{item.importId}</td>
+                                                    <td className="u-border-1 u-border-grey-30 u-table-cell">{item.supplierName}</td>
+                                                    <td className="u-border-1 u-border-grey-30 u-table-cell">{item.importDate}</td>
+                                                    <td className="u-border-1 u-border-grey-30 u-table-cell">{item.total}</td>
+                                                    <td className="u-border-1 u-border-grey-30 u-table-cell">{item.paid}</td>
+                                                    {
+                                                        item.total == item.paid
+                                                            ?
+                                                            <td className="u-border-1 u-border-grey-30 u-table-cell text-green">
+                                                                Đã thanh toán đủ</td>
+                                                            :
+                                                            <td className="u-border-1 u-border-grey-30 u-table-cell text-green">
+                                                                Chưa thanh toán đủ</td>
+                                                    }
+                                                </tr>
+                                            ) : 'Nothing'
+                                    }
                                 </tbody>
                             </table>
                         </div>
                     </div>
                 </section>
             </div>
+            <ToastContainer position="top-left"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="colored" />
         </>
+        
     );
 }
 export default ImportBill;

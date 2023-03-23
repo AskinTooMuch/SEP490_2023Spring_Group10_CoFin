@@ -33,6 +33,14 @@ public interface IMachineService {
     public ResponseEntity<?> getMachine(Long machineId);
 
     /**
+     * Get machines not full.
+     *
+     * @param facilityId the id of current logged-in user's selected facility.
+     * @return
+     */
+    public ResponseEntity<?> getMachinesNotFull(Long facilityId);
+
+    /**
      * Create a machine of a facility.
      *
      * @param createMachineDTO contains the facility id, machine type id, name, max and current capacity

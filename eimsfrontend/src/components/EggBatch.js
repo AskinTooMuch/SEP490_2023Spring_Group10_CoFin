@@ -7,12 +7,38 @@ import SearchIcon from '@mui/icons-material/Search';
 import ImportExportIcon from '@mui/icons-material/ImportExport';
 import { useNavigate } from 'react-router-dom';
 const EggBatch = () => {
-    let navigate = useNavigate();
-    const routeChange = () => {
-        let path = '/eggbatchdetail';
-        navigate(path);
+    const userRef = useRef();
+    const [dataLoaded, setDataLoaded] = useState(false);
+    //API URLs
+    const EGGBATCH_ALL = '/api/eggBatch/all'
+
+    //Data holding objects
+    const [eggBatchList, setEggBatchList] = useState([]);
+
+    useEffect(() => {
+        loadEggBatchList();
+    }, [dataLoaded]);
+
+    // Get import list
+    const loadEggBatchList = async () => {
+        const result = await axios.get(EGGBATCH_ALL,
+            { params: { facilityId: sessionStorage.getItem("facilityId") } },
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Access-Control-Allow-Origin': '*'
+                },
+                withCredentials: false
+            });
+        setEggBatchList(result.data);
+        setDataLoaded(true);
     }
-    
+
+    let navigate = useNavigate();
+    const routeChange = (ebid) => {
+        navigate('/eggbatchdetail', { state: { id: ebid } });
+    }
+
     return (
         <div>
             <nav className="navbar justify-content-between">
@@ -44,37 +70,38 @@ const EggBatch = () => {
                         </tr>
                     </thead>
                     <tbody id="specie_list_table_body">
-
-                        <tr onClick={routeChange}>
-                            <th scope="row">1</th>
-                            <td>GFJ816</td>
-                            <td>Trứng gà ri</td>
-                            <td>HDJ71-71-25</td>
-                            <td>Phạm Anh B</td>
-                            <td>3000 quả</td>
-                            <td>24/01/2023</td>
-                            <td className='text-blue'>Đang ấp</td>
-                        </tr>
-                        <tr >
-                            <th scope="row">2</th>
-                            <td>HGD826</td>
-                            <td>Trứng gà ri</td>
-                            <td>HDJ71-71-25</td>
-                            <td>Phạm Anh B</td>
-                            <td>3000 quả</td>
-                            <td>24/01/2023</td>
-                            <td className='text-green'>Hoàn thành</td>
-                        </tr>
-                        <tr >
-                            <th scope="row">3</th>
-                            <td>NCH124</td>
-                            <td>Trứng gà ri</td>
-                            <td>HDJ71-71-25</td>
-                            <td>Phạm Anh B</td>
-                            <td>3000 quả</td>
-                            <td>24/01/2023</td>
-                            <td className='text-red'>Đang chờ</td>
-                        </tr>
+                        {
+                            eggBatchList && eggBatchList.length > 0 ?
+                                eggBatchList.map((item, index) =>
+                                    <tr className='trclick' style={{ height: "76px" }} onClick={() => routeChange(item.eggBatchId)}>
+                                        <th scope="row">{index + 1}</th>
+                                        <td>{item.eggBatchId}</td>
+                                        <td>{item.breedName}</td>
+                                        <td>{item.importId}</td>
+                                        <td>{item.supplierName}</td>
+                                        <td>{item.amount}</td>
+                                        <td>{item.importDate}</td>
+                                        <td> 
+                                        {
+                                            item.progress == 0
+                                            ?'Chưa ấp'
+                                            :''
+                                        }
+                                        {
+                                            item.progress <5 && item.progress != 0
+                                            ?'Đang ấp'
+                                            :''
+                                        }
+                                        {
+                                            item.progress > 5
+                                            ?'Đang nở'
+                                            :''
+                                        }
+                                        </td>
+                                        
+                                    </tr>
+                                ) : 'Nothing'
+                        }
 
                     </tbody>
                 </table>

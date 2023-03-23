@@ -13,6 +13,8 @@ package com.example.eims.service.interfaces;
 
 import org.springframework.http.ResponseEntity;
 
+import java.io.IOException;
+
 public interface IRegistrationService {
 
     /**
@@ -38,5 +40,5 @@ public interface IRegistrationService {
      * @param approval   is the decision of approval (0 decline, 1 approve)
      * @return
      */
-    public ResponseEntity<?> registrationApproval(Long userId, Long facilityId, boolean approval);
+    public ResponseEntity<?> registrationApproval(Long userId, Long facilityId, boolean approval) throws IOException;
 }

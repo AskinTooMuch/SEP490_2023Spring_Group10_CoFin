@@ -166,7 +166,7 @@ export default function BasicTabs() {
             if (!err?.response) {
                 toast.error('Server không phản hồi');
             } else {
-                toast.error(response);
+                toast.error(err.response.data);
             }
         }
     }
@@ -337,7 +337,8 @@ export default function BasicTabs() {
                             </tr>
                         </thead>
                         <tbody>
-                            {listEggLocation && listEggLocation.length > 0 ?
+                            {
+                            listEggLocation && listEggLocation.length > 0 ?
                                 listEggLocation.map((item, index) =>
                                     <tr>
                                         <th scope="row">{item.eggBatchId}</th>

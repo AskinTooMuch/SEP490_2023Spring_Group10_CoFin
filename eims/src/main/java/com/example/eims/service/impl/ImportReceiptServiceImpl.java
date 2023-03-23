@@ -73,7 +73,7 @@ public class ImportReceiptServiceImpl implements IImportReceiptService {
      * @return list of import receipts
      */
     @Override
-    public ResponseEntity<?> viewImportsByUser(Long userId) {
+    public ResponseEntity<?> viewImportsByOwner(Long userId) {
         Optional<List<ImportReceipt>> importReceiptListOptional = importReceiptRepository.findByUserId(userId);
         if (importReceiptListOptional.isPresent()) {
             List<ImportReceipt> importReceiptList = importReceiptListOptional.get();
@@ -106,7 +106,7 @@ public class ImportReceiptServiceImpl implements IImportReceiptService {
      * @return list of import receipts
      */
     @Override
-    public ResponseEntity<?> viewImportsByUserPaging(Long userId, Integer page, Integer size, String sort) {
+    public ResponseEntity<?> viewImportsByOwnerPaging(Long userId, Integer page, Integer size, String sort) {
         // Get sorting type
         Sort sortable = null;
         if (sort.equals("ASC")) {
@@ -209,12 +209,12 @@ public class ImportReceiptServiceImpl implements IImportReceiptService {
             return new ResponseEntity<>("Hãy nhập ngày nhập đơn hàng", HttpStatus.BAD_REQUEST);
         }
         // Amount and Price
-        float total = 0F;
+        float total = 0;
         for (CreateEggBatchDTO eggBatch : createImportDTO.getEggBatchList()) {
-            if (eggBatch.getAmount() < 0) { // Amount negative
-                return new ResponseEntity<>("Số lượng phải lớn hơn 0", HttpStatus.BAD_REQUEST);
+            if (eggBatch.getAmount() <= 0) { // Amount negative
+                return new ResponseEntity<>("Số lượng trứng phải lớn hơn 0", HttpStatus.BAD_REQUEST);
             }
-            if (eggBatch.getPrice() < 0F) { // Price negative
+            if (eggBatch.getPrice() <= 0) { // Price negative
                 return new ResponseEntity<>("Đơn giá phải lớn hơn 0", HttpStatus.BAD_REQUEST);
             }
             total += eggBatch.getPrice() * eggBatch.getAmount();

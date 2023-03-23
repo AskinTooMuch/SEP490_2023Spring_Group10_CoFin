@@ -39,7 +39,6 @@ import java.util.Optional;
 
 @Service
 public class MachineServiceImpl implements IMachineService {
-
     @Autowired
     private final MachineRepository machineRepository;
     @Autowired
@@ -133,6 +132,33 @@ public class MachineServiceImpl implements IMachineService {
             }
             machineDetailDTO.setEggs(eggLocations);
             return new ResponseEntity<>(machineDetailDTO, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    /**
+     * Get machines not full.
+     *
+     * @param facilityId the id of current logged-in user's selected facility.
+     * @return
+     */
+    @Override
+    public ResponseEntity<?> getMachinesNotFull(Long facilityId) {
+        // Get all machines of the current facility
+        Optional<List<Machine>> machineListOptional = machineRepository.findAllNotFull(facilityId);
+        List<MachineListItemDTO> machineList = new ArrayList<>();
+        if (machineListOptional.isPresent()) {
+            for (Machine machine : machineListOptional.get()) {
+                // Get and set attribute to DTO
+                MachineType machineType = machineTypeRepository.findByMachineTypeId(machine.getMachineTypeId());
+                String machineTypeName = machineType.getMachineTypeName();
+                MachineListItemDTO machineListItemDTO = new MachineListItemDTO();
+                machineListItemDTO.setMachineTypeName(machineTypeName);
+                machineListItemDTO.getFromEntity(machine);
+                machineList.add(machineListItemDTO);
+            }
+            return new ResponseEntity<>(machineList, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }

@@ -58,7 +58,7 @@ class ImportReceiptServiceImplTest {
         // Define behaviour of repository
         when(importReceiptRepository.findByUserId(1L)).thenReturn(Optional.of(importReceiptList));
         // Run service method
-        ResponseEntity<?> responseEntity = importReceiptService.viewImportsByUser(1L);
+        ResponseEntity<?> responseEntity = importReceiptService.viewImportsByOwner(1L);
         System.out.println(responseEntity.toString());
         // Assert
         assertEquals(importReceiptList, responseEntity.getBody());
@@ -80,7 +80,7 @@ class ImportReceiptServiceImplTest {
         // Define behaviour of repository
         when(importReceiptRepository.findAllByUserId(1L, pageable)).thenReturn(importsPage);
         // Run service method
-        ResponseEntity<?> responseEntity = importReceiptService.viewImportsByUserPaging(1L, page, size, sort);
+        ResponseEntity<?> responseEntity = importReceiptService.viewImportsByOwnerPaging(1L, page, size, sort);
         System.out.println(responseEntity.toString());
         // Assert
         assertEquals(importsPage, responseEntity.getBody());

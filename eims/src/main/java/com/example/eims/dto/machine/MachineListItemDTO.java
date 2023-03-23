@@ -28,6 +28,7 @@ import lombok.Data;
 public class MachineListItemDTO {
     private Long machineId;
     private String machineName;
+    private Long machineTypeId;
     private String machineTypeName;
     private int curCapacity;
     private int maxCapacity;
@@ -36,6 +37,7 @@ public class MachineListItemDTO {
     public void getFromEntity(Machine machine){
         this.machineId = machine.getMachineId();
         this.machineName = machine.getMachineName();
+        this.machineTypeId = machine.getMachineTypeId();
         this.curCapacity = machine.getCurCapacity();
         this.maxCapacity = machine.getMaxCapacity();
         this.status = machine.getStatus();

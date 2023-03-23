@@ -21,7 +21,7 @@ public interface IImportReceiptService {
      * @param userId the id of supplier
      * @return list of import receipts
      */
-    public ResponseEntity<?> viewImportsByUser(Long userId);
+    public ResponseEntity<?> viewImportsByOwner(Long userId);
 
     /**
      * Get all import bill from suppliers of an Owner with paging.
@@ -32,7 +32,7 @@ public interface IImportReceiptService {
      * @param sort sorting type
      * @return list of import receipts
      */
-    public ResponseEntity<?> viewImportsByUserPaging(Long userId, Integer page, Integer size, String sort);
+    public ResponseEntity<?> viewImportsByOwnerPaging(Long userId, Integer page, Integer size, String sort);
 
     /**
      * Get all import bill from a supplier of an owner.

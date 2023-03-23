@@ -28,6 +28,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.ResponseEntity;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -88,7 +89,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void registrationApproval() {
+    void registrationApproval() throws IOException {
         // Set up
         Long userId = 1L;
         Long facilityId = 1L;

@@ -16,7 +16,9 @@ import com.example.eims.entity.Machine;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
+import javax.crypto.Mac;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,4 +27,10 @@ public interface MachineRepository extends JpaRepository<Machine, Long> {
     Optional<Machine> findByMachineId(Long machineId);
     boolean existsByMachineId(Long machineId);
     Page<Machine> findAllByFacilityId(Long facilityId, Pageable pageable);
+    @Query(value = "SELECT * FROM eims.machine WHERE max_capacity > cur_capacity AND facility_id = ?1",
+            nativeQuery = true)
+    Optional<List<Machine>> findAllNotFull(Long facilityId);
+    @Query(value = "SELECT IFNULL(SUM(amount), 0) FROM eims.egg_location WHERE machine = ?1  GROUP BY machine_id",
+            nativeQuery = true)
+    int getCurrentAmount(Long machineId);
 }

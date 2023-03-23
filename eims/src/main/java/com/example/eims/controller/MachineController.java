@@ -53,6 +53,17 @@ public class MachineController {
     }
 
     /**
+     * Get machines not full.
+     *
+     * @param
+     * @return
+     */
+    @Secured({"ROLE_OWNER", "ROLE_EMPLOYEE"})
+    @GetMapping("/notFull")
+    public ResponseEntity<?> getMachinesNotFull(@RequestParam Long facilityId) {
+        return machineService.getMachinesNotFull(facilityId);
+    }
+    /**
      * Create a machine of a facility.
      *
      * @param createMachineDTO contains the facility id, machine type id, name, max and current capacity

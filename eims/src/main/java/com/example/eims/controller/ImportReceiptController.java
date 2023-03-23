@@ -40,9 +40,9 @@ public class ImportReceiptController {
      * @return list of import receipts
      */
     @Secured({"ROLE_OWNER"})
-    @GetMapping("/allByUser")
-    public ResponseEntity<?> viewImportsByUser(@RequestParam Long userId) {
-        return importReceiptService.viewImportsByUser(userId);
+    @GetMapping("/allByOwner")
+    public ResponseEntity<?> viewImportsByOwner(@RequestParam Long userId) {
+        return importReceiptService.viewImportsByOwner(userId);
     }
 
     /**
@@ -60,7 +60,7 @@ public class ImportReceiptController {
                                                   @RequestParam(name = "page", required = false, defaultValue = "0") Integer page,
                                                   @RequestParam(name = "size", required = false, defaultValue = "5") Integer size,
                                                   @RequestParam(name = "sort", required = false, defaultValue = "ASC") String sort) {
-        return importReceiptService.viewImportsByUserPaging(userId, page, size, sort);
+        return importReceiptService.viewImportsByOwnerPaging(userId, page, size, sort);
     }
 
     /**

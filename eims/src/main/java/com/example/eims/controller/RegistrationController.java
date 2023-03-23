@@ -18,6 +18,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/api/registration")
@@ -32,7 +34,7 @@ public class RegistrationController {
      *
      * @return
      */
-    @GetMapping("/list")
+    @GetMapping("/all")
     //@Secured({"ROLE_MANAGER"})
     public ResponseEntity<?> viewListRegistration() {
         return registrationService.viewListRegistration();
@@ -60,7 +62,7 @@ public class RegistrationController {
     @PostMapping("/approve")
     //@Secured({"ROLE_MANAGER"})
     public ResponseEntity<?> registrationApproval(@RequestParam Long userId, @RequestParam Long facilityId,
-                                                  @RequestParam boolean approval) {
+                                                  @RequestParam boolean approval) throws IOException {
         return registrationService.registrationApproval(userId, facilityId, approval);
     }
 }

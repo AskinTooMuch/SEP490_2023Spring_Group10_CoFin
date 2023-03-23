@@ -20,6 +20,7 @@ import com.example.eims.repository.FacilityRepository;
 import com.example.eims.repository.RegistrationRepository;
 import com.example.eims.repository.UserRepository;
 import com.example.eims.service.interfaces.IRegistrationService;
+import com.example.eims.utils.SpeedSMS;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;
@@ -28,6 +29,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -40,6 +42,8 @@ public class RegistrationServiceImpl implements IRegistrationService {
     private final RegistrationRepository registrationRepository;
     @Autowired
     private final FacilityRepository facilityRepository;
+    private final SpeedSMS speedSMS;
+    private final String SENDER = "61522b07d22251db";
     @PersistenceContext
     private EntityManager em;
 
@@ -47,6 +51,7 @@ public class RegistrationServiceImpl implements IRegistrationService {
         this.userRepository = userRepository;
         this.registrationRepository = registrationRepository;
         this.facilityRepository = facilityRepository;
+        this.speedSMS = new SpeedSMS();
         this.em = em;
     }
 
@@ -85,8 +90,9 @@ public class RegistrationServiceImpl implements IRegistrationService {
      * @return
      */
     @Override
-    public ResponseEntity<?> registrationApproval(Long userId, Long facilityId, boolean approval) {
+    public ResponseEntity<?> registrationApproval(Long userId, Long facilityId, boolean approval) throws IOException {
         int status = (approval ? 2:1); /*1-rejected 2-approved */
+        User user;
         Optional<Registration> registrationOptional = registrationRepository.findByUserId(userId);
         if (approval) {  /* Approve registration */
             // Change status of registration
@@ -100,7 +106,7 @@ public class RegistrationServiceImpl implements IRegistrationService {
             // Change status of Owner's account
             Optional<User> userOptional = userRepository.findByUserId(userId);
             if (userOptional.isPresent()){
-                User user = userOptional.get();
+                user = userOptional.get();
                 user.setStatus(1);
                 userRepository.save(user);
             } else {
@@ -116,7 +122,9 @@ public class RegistrationServiceImpl implements IRegistrationService {
                 return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
             }
             //  Send message to Owner
-            String mess = "Đơn đăng ký của bạn đã được chấp thuận! Chào mừng đến với EIMS.";
+            String content = "Đơn đăng ký của bạn đã được chấp thuận! Chào mừng đến với EIMS.";
+            String userInfo = speedSMS.getUserInfo();
+            String response = speedSMS.sendSMS(user.getPhone(), content, 5, SENDER);
             //
             return new ResponseEntity<>("Đã chấp thuận đơn đăng ký", HttpStatus.OK);
         } else { /* Decline registration */
@@ -128,10 +136,20 @@ public class RegistrationServiceImpl implements IRegistrationService {
             } else {
                 return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
             }
-            //  Send mess to Owner
-            String mess = "Đơn đăng ký của bạn đã bị từ chối! Vui lòng liên hệ eims.contact để biết thêm thông tin chi tiết.";
-            //
-            return new ResponseEntity<>("Đã từ chối đơn đăng ký", HttpStatus.OK);
+            // Get user
+            Optional<User> userOptional = userRepository.findByUserId(userId);
+            if (userOptional.isPresent()){
+                user = userOptional.get();
+                //  Send mess to Owner
+                String content = "Đơn đăng ký của bạn đã bị từ chối! Vui lòng liên hệ eims.contact để biết thêm thông tin " +
+                        "chi tiết.";
+                String userInfo = speedSMS.getUserInfo();
+                String response = speedSMS.sendSMS(user.getPhone(), content, 5, SENDER);
+                //
+                return new ResponseEntity<>("Đã từ chối đơn đăng ký", HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            }
         }
     }
 }
