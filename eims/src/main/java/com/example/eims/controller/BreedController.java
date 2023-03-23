@@ -75,7 +75,7 @@ public class BreedController {
      */
     @GetMapping("/detail/specieId")
     public ResponseEntity<?> getBreedDetailBySpecieId(@RequestParam Long specieId){
-        return breedService.viewBreedDetailBySpecie(specieId);
+        return breedService.viewListBreedBySpecie(specieId);
     }
 
     /**
@@ -86,7 +86,7 @@ public class BreedController {
      */
     @GetMapping("/detail/userId")
     public ResponseEntity<?> getBreedDetailByUserId(@RequestParam Long userId){
-        return breedService.viewBreedDetailByUser(userId);
+        return breedService.viewListBreedByUser(userId);
     }
 
     /**

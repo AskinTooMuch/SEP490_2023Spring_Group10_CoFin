@@ -88,18 +88,27 @@ public class BreedServiceImpl implements IBreedService {
                 return new ResponseEntity<>("Không tìm thấy người dùng.", HttpStatus.NOT_FOUND);
             }
             // Name
-            String name = stringDealer.trimMax(newBreedDTO.getBreedName());
-            if (name.equals("")) { /* Supplier name is empty */
+            if (newBreedDTO.getBreedName() == null || stringDealer.trimMax(newBreedDTO.getBreedName()).equals("")) { /* Supplier name is empty */
                 return new ResponseEntity<>("Tên không được để trống", HttpStatus.BAD_REQUEST);
             } else {
+                String name = stringDealer.trimMax(newBreedDTO.getBreedName());
                 breed.setBreedName(name);
             }
             String commonDisease = stringDealer.trimMax(newBreedDTO.getCommonDisease());
             breed.setCommonDisease(commonDisease);
             // Number fields: DTO has automatically caught any error/exceptions
+            if(newBreedDTO.getAverageWeightMale() <= 0F || newBreedDTO.getAverageWeightFemale() <= 0F){
+                return new ResponseEntity<>("Cân nặng trung bình phải lớn hơn 0", HttpStatus.BAD_REQUEST);
+            }
             breed.setAverageWeightMale(newBreedDTO.getAverageWeightMale());
             breed.setAverageWeightFemale(newBreedDTO.getAverageWeightFemale());
+
+            //growth time
+            if (newBreedDTO.getGrowthTime() <= 0){
+                return new ResponseEntity<>("Thời gian lớn lên phải lớn hơn 0", HttpStatus.BAD_REQUEST);
+            }
             breed.setGrowthTime(newBreedDTO.getGrowthTime());
+
             // Saved files name and new breed added as true status for default
             breed.setImageSrc(filename);
             breed.setStatus(true);
@@ -108,9 +117,9 @@ public class BreedServiceImpl implements IBreedService {
             } catch (IllegalArgumentException iae) {
                 return null;
             }
-            return new ResponseEntity<>("Breed added successfully", HttpStatus.OK);
+            return new ResponseEntity<>("Thêm loại thành công", HttpStatus.OK);
         }
-        return new ResponseEntity<>("Specie not found with Id number "+newBreedDTO.getSpecieId(), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>("Không tìm thấy loài", HttpStatus.BAD_REQUEST);
     }
 
     /**
@@ -125,11 +134,11 @@ public class BreedServiceImpl implements IBreedService {
         // Check if the breed or specie exist or not
         Optional<Specie> specieOpt = specieRepository.findById(editBreedDTO.getSpecieId());
         if (specieOpt.isEmpty()) {
-            return new ResponseEntity<>("Không tìm thấy tên loài với id " + editBreedDTO.getSpecieId(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Không tìm thấy loài" , HttpStatus.BAD_REQUEST);
         }
         Optional<Breed> breedOpt = breedRepository.findById(editBreedDTO.getBreedId());
         if (breedOpt.isEmpty()) {
-            return new ResponseEntity<>("Không tìm thấy tên loại với id " + editBreedDTO.getBreedId(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Không tìm thấy loại" , HttpStatus.BAD_REQUEST);
         }
         Breed breed = breedOpt.get();
         //Create file attributes
@@ -148,10 +157,16 @@ public class BreedServiceImpl implements IBreedService {
             breed.setBreedName(name);
         }
         // Number fields: DTO has automatically caught any error/exceptions
+        if(editBreedDTO.getAverageWeightMale() <= 0F || editBreedDTO.getAverageWeightFemale() <= 0F){
+            return new ResponseEntity<>("Cân nặng trung bình phải lớn hơn 0", HttpStatus.BAD_REQUEST);
+        }
         breed.setAverageWeightMale(editBreedDTO.getAverageWeightMale());
         breed.setAverageWeightFemale(editBreedDTO.getAverageWeightFemale());
+        //growth time
+        if (editBreedDTO.getGrowthTime() <= 0){
+            return new ResponseEntity<>("Thời gian lớn lên phải lớn hơn 0", HttpStatus.BAD_REQUEST);
+        }
         breed.setGrowthTime(editBreedDTO.getGrowthTime());
-
         breed.setCommonDisease(stringDealer.trimMax(editBreedDTO.getCommonDisease()));
         //The user not allowed to deactivate a breed in this form, only through delete tab
         breed.setStatus(true);
@@ -160,7 +175,7 @@ public class BreedServiceImpl implements IBreedService {
         } catch (IllegalArgumentException iae) {
             return null;
         }
-        return new ResponseEntity<>("Breed saved successfully", HttpStatus.OK);
+        return new ResponseEntity<>("Thêm loại thành công", HttpStatus.OK);
     }
 
     /**
@@ -176,9 +191,9 @@ public class BreedServiceImpl implements IBreedService {
             Breed breed = breedOpt.get();
             breed.setStatus(false);
             breedRepository.save(breed);
-            return new ResponseEntity<>("Delete breed successfully", HttpStatus.OK);
+            return new ResponseEntity<>("Xóa loại thành công", HttpStatus.OK);
         }
-        return new ResponseEntity<>("Breed not found", HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>("Không tìm thấy loại", HttpStatus.BAD_REQUEST);
     }
 
     /**
@@ -200,7 +215,7 @@ public class BreedServiceImpl implements IBreedService {
                 return new ResponseEntity<>(detailBreedDTO, HttpStatus.OK);
             }
         }
-        return new ResponseEntity<>("Breed not found", HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>("Không tìm thấy loại", HttpStatus.BAD_REQUEST);
     }
 
     /**
@@ -209,12 +224,12 @@ public class BreedServiceImpl implements IBreedService {
      * @return Breed information or response message
      */
     @Override
-    public ResponseEntity<?> viewBreedDetailBySpecie(Long specieId) {
+    public ResponseEntity<?> viewListBreedBySpecie(Long specieId) {
         Optional<List<Breed>> breedOpt = breedRepository.findBySpecieId(specieId);
         if (breedOpt.isPresent()) {
             return new ResponseEntity<>(breedOpt.get(), HttpStatus.OK);
         }
-        return new ResponseEntity<>("Breed not found", HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>("Không tìm thấy loại thuộc loài này", HttpStatus.BAD_REQUEST);
     }
 
     /**
@@ -223,12 +238,12 @@ public class BreedServiceImpl implements IBreedService {
      * @return Breed information or response message
      */
     @Override
-    public ResponseEntity<?> viewBreedDetailByUser(Long userId) {
+    public ResponseEntity<?> viewListBreedByUser(Long userId) {
         Optional<List<Breed>> breedOpt = breedRepository.findByUserId(userId);
         if (breedOpt.isPresent()) {
             return new ResponseEntity<>(breedOpt.get(), HttpStatus.OK);
         }
-        return new ResponseEntity<>("Breed not found", HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>("Không tìm thấy loại", HttpStatus.BAD_REQUEST);
     }
 
     @Override
@@ -242,10 +257,10 @@ public class BreedServiceImpl implements IBreedService {
                 String x64 = fileStorageServiceImpl.resourceToX64(resource);
                 return new ResponseEntity<>(x64, HttpStatus.OK);
             } catch (CustomFileNotFoundException ce) {
-                System.out.println("Could not get file");
+                System.out.println("Tải file lỗi");
             }
         }
-        return new ResponseEntity<>("Breed not found", HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>("Không tìm thấy loại", HttpStatus.BAD_REQUEST);
     }
 
 }

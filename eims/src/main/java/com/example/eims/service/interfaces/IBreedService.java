@@ -52,14 +52,14 @@ public interface IBreedService {
      * @param specieId Specie id to be queried
      * @return Breed information or response message
      */
-    ResponseEntity<?> viewBreedDetailBySpecie (Long specieId);
+    ResponseEntity<?> viewListBreedBySpecie (Long specieId);
 
     /**
      * Service to view breed detail information created by a user
      * @param userId User id to be queried
      * @return Breed information or response message
      */
-    ResponseEntity<?> viewBreedDetailByUser (Long userId);
+    ResponseEntity<?> viewListBreedByUser (Long userId);
 
     /**
      * Service to view breed image
