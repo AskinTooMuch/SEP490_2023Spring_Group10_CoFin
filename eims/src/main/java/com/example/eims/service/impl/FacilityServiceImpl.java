@@ -24,6 +24,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -79,14 +80,14 @@ public class FacilityServiceImpl implements IFacilityService {
      */
     @Override
     public ResponseEntity<?> showFormUpdate(Long facilityId) {
-        // Check if facility is still running
-        int facilityStatus = facilityRepository.getStatusById(facilityId) ? 1 : 0;
-        if (facilityStatus == 0) { /* status = 0 (deactivated) */
-            return new ResponseEntity<>("Cơ sở đã ngừng hoạt động", HttpStatus.BAD_REQUEST);
-        }
         // Get a facility of the current User
         Optional<Facility> facility = facilityRepository.findByFacilityId(facilityId);
         if (facility.isPresent()) {
+            // Check if facility is still running
+            int facilityStatus = facilityRepository.getStatusById(facilityId) ? 1 : 0;
+            if (facilityStatus == 0) { /* status = 0 (deactivated) */
+                return new ResponseEntity<>("Cơ sở đã ngừng hoạt động", HttpStatus.BAD_REQUEST);
+            }
             UpdateFacilityDTO updateFacilityDTO = new UpdateFacilityDTO();
             updateFacilityDTO.getFromEntity(facility.get());
             return new ResponseEntity<>(updateFacilityDTO, HttpStatus.OK);
@@ -103,49 +104,52 @@ public class FacilityServiceImpl implements IFacilityService {
      */
     @Override
     public ResponseEntity<?> updateFacility(UpdateFacilityDTO updateFacilityDTO) {
-        // Check if facility is still running
-        int facilityStatus = facilityRepository.getStatusById(updateFacilityDTO.getFacilityId()) ? 1 : 0;
-        if (facilityStatus == 0) { /* status = 0 (deactivated) */
-            return new ResponseEntity<>("Cơ sở đã ngừng hoạt động", HttpStatus.BAD_REQUEST);
-        }
         // Retrieve facility's new information and create new one
         Optional<Facility> facilityOptional = facilityRepository.findById(updateFacilityDTO.getFacilityId());
         if (facilityOptional.isPresent()) {
+            // Check if facility is still running
+            int facilityStatus = facilityRepository.getStatusById(updateFacilityDTO.getFacilityId()) ? 1 : 0;
+            if (facilityStatus == 0) { /* status = 0 (deactivated) */
+                return new ResponseEntity<>("Cơ sở đã ngừng hoạt động", HttpStatus.BAD_REQUEST);
+            }
             Facility facility = facilityOptional.get();
             // Facility name
-            String name = stringDealer.trimMax(updateFacilityDTO.getFacilityName());
-            if (name.equals("")) { /* Facility name empty */
+            if (updateFacilityDTO.getFacilityName() == null || updateFacilityDTO.getFacilityName().equals("")) { /* Facility name empty */
                 return new ResponseEntity<>("Tên cơ sở không được để trống", HttpStatus.BAD_REQUEST);
             }
+            String name = stringDealer.trimMax(updateFacilityDTO.getFacilityName());
             // Found date
-            String fDate = updateFacilityDTO.getFoundDate();
-            if (fDate.equals("")) { /* Found date is empty */
+            if (updateFacilityDTO.getFoundDate() == null || updateFacilityDTO.getFoundDate().equals("")) { /* Found date is empty */
                 return new ResponseEntity<>("Ngày thành lập không được để trống", HttpStatus.BAD_REQUEST);
             }
+            String fDate = updateFacilityDTO.getFoundDate();
+            Date foundDate = stringDealer.convertToDateAndFormat(fDate);
+            if(foundDate.after(Date.valueOf(LocalDate.now()))){
+                return new ResponseEntity<>("Ngày thành lập không hợp lệ", HttpStatus.BAD_REQUEST);
+            }
             // Hotline
-            String hotline = stringDealer.trimMax(updateFacilityDTO.getHotline());
-            if (hotline.equals("")) { /* Hotline empty */
+            if (updateFacilityDTO.getHotline() == null || stringDealer.trimMax(updateFacilityDTO.getHotline()).equals("")) { /* Hotline empty */
                 return new ResponseEntity<>("Hotline không được để trống", HttpStatus.BAD_REQUEST);
             }
+            String hotline = stringDealer.trimMax(updateFacilityDTO.getHotline());
             if (!stringDealer.checkPhoneRegex(hotline)) { /* Hotline is not valid */
                 return new ResponseEntity<>("Hotline không hợp lệ", HttpStatus.BAD_REQUEST);
             }
             // Facility address
-            String address = stringDealer.trimMax(updateFacilityDTO.getFacilityAddress());
-            if (address.equals("")) { /* Facility address empty */
+            if (updateFacilityDTO.getFacilityAddress() == null || stringDealer.trimMax(updateFacilityDTO.getFacilityAddress()).equals("")) { /* Facility address empty */
                 return new ResponseEntity<>("Địa chỉ cơ sở không được để trống", HttpStatus.BAD_REQUEST);
             }
+            String address = stringDealer.trimMax(updateFacilityDTO.getFacilityAddress());
             // Business license number
-            String licenseNumber = stringDealer.trimMax(updateFacilityDTO.getBusinessLicenseNumber());
-            if (licenseNumber.equals("")) { /* Business License Number empty */
+            if (updateFacilityDTO.getBusinessLicenseNumber() == null || stringDealer.trimMax(updateFacilityDTO.getBusinessLicenseNumber()).equals("")) { /* Business License Number empty */
                 return new ResponseEntity<>("Số đăng kí kinh doanh không được để trống", HttpStatus.BAD_REQUEST);
             }
+            String licenseNumber = stringDealer.trimMax(updateFacilityDTO.getBusinessLicenseNumber());
             // Status
             int status = updateFacilityDTO.getStatus();
 
             // Set attribute
             facility.setFacilityName(name);
-            Date foundDate = stringDealer.convertToDateAndFormat(fDate);
             facility.setFacilityFoundDate(foundDate);
             facility.setHotline(hotline);
             facility.setFacilityAddress(address);

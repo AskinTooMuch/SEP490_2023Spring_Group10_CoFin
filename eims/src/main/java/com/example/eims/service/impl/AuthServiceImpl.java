@@ -168,6 +168,10 @@ public class AuthServiceImpl implements IAuthService {
         if (sDate.equals("")) { /* Date of birth is empty */
             return new ResponseEntity<>("Ngày sinh không được để trống", HttpStatus.BAD_REQUEST);
         }
+        Date date = stringDealer.convertToDateAndFormat(sDate);
+        if( date.after(Date.valueOf(LocalDate.now()))){
+            return new ResponseEntity<>("Ngày sinh không hợp lệ", HttpStatus.BAD_REQUEST);
+        }
         // Phone number
         String phone = stringDealer.trimMax(signUpDTO.getUserPhone());
         if (phone.equals("")) { /* Phone number is empty */
@@ -212,7 +216,6 @@ public class AuthServiceImpl implements IAuthService {
         // Set attribute
         user.setUsername(username);
         user.setEmail(email);
-        Date date = stringDealer.convertToDateAndFormat(sDate);
         user.setDob(date);
         user.setPhone(phone);
         user.setAddress(address);
@@ -232,11 +235,17 @@ public class AuthServiceImpl implements IAuthService {
             }
             facility.setFacilityName(fName);
             // Found date
+            if(sDate == null){
+                return new ResponseEntity<>("Ngày thành lập không được để trống", HttpStatus.BAD_REQUEST);
+            }
             sDate = stringDealer.trimMax(signUpDTO.getFacilityFoundDate());
             if (sDate.equals("")) {  /* Found date is empty */
                 return new ResponseEntity<>("Ngày thành lập không được để trống", HttpStatus.BAD_REQUEST);
             }
             date = stringDealer.convertToDateAndFormat(sDate);
+            if(date.after(Date.valueOf(LocalDate.now()))){
+                return new ResponseEntity<>("Ngày thành lập không hợp lệ", HttpStatus.BAD_REQUEST);
+            }
             facility.setFacilityFoundDate(date);
             // Hotline (Using the same format with cellphone number)
             String hotline = stringDealer.trimMax(signUpDTO.getFacilityHotline());
