@@ -7,7 +7,8 @@
  * Record of change:<br>
  * DATE          Version    Author           DESCRIPTION<br>
  * 16/02/2023    1.0        DuongVV          First Deploy<br>
- * 19/02/2023    2.0        DuongVV          Fix notation, id filed
+ * 19/02/2023    2.0        DuongVV          Fix notation, id filed<br>
+ * 23/03/2023    3.0        ChucNV           Added roles list, change user - role relation to many-many<br>
  */
 
 package com.example.eims.entity;
@@ -17,6 +18,8 @@ import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @Entity
@@ -25,7 +28,6 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
-    private Long roleId;
     private String username;
     @DateTimeFormat(pattern="dd/MM/yyyy")
     private Date dob;
@@ -36,13 +38,16 @@ public class User {
     private String address;
     private int status;
 
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private List<Role> roles = new ArrayList<Role>();
+
     public User() {
     }
 
-    public User(Long userId, Long roleId, String username, Date dob, String phone, String email, Float salary,
+    public User(Long userId, String username, Date dob, String phone, String email, Float salary,
                 String password, String address, int status) {
         this.userId = userId;
-        this.roleId = roleId;
         this.username = username;
         this.dob = dob;
         this.phone = phone;
@@ -53,9 +58,8 @@ public class User {
         this.status = status;
     }
 
-    public User(Long userId, Long roleId, String phone, String password, int status) {
+    public User(Long userId, String phone, String password, int status) {
         this.userId = userId;
-        this.roleId = roleId;
         this.phone = phone;
         this.password = password;
         this.status = status;

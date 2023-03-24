@@ -39,18 +39,18 @@ const RegisterOTP = () => {
     event.preventDefault();
     try {
       const response = await axios.get(SEND_OTP_URL,
-        { params: { phone: verifyOtpDTO.phone } },
         {
+          params: { phone: verifyOtpDTO.phone },
           headers: {
             'Content-Type': 'application/json',
             'Access-Control-Allow-Origin': '*'
           },
-          withCredentials: false
+          withCredentials: true
         }
       );
       console.log(JSON.stringify(response?.data));
       sessionStorage.setItem("curPhone", verifyOtpDTO.phone);
-      console.log("phone===="+sessionStorage.getItem("curPhone"));
+      console.log("phone====" + sessionStorage.getItem("curPhone"));
       setSuccess(true);
       toast.success("OTP đã gửi")
     } catch (err) {
@@ -67,13 +67,13 @@ const RegisterOTP = () => {
     event.preventDefault();
     try {
       const response = await axios.get(RESEND_OTP_URL,
-        { params: { phone: verifyOtpDTO.phone } },
         {
+          params: { phone: verifyOtpDTO.phone },
           headers: {
             'Content-Type': 'application/json',
             'Access-Control-Allow-Origin': '*'
           },
-          withCredentials: false
+          withCredentials: true
         }
       );
       console.log(JSON.stringify(response?.data));
@@ -98,14 +98,14 @@ const RegisterOTP = () => {
             'Content-Type': 'application/json',
             'Access-Control-Allow-Origin': '*'
           },
-          withCredentials: false
+          withCredentials: true
         }
       );
       console.log(JSON.stringify(response?.data));
       toast.success("OTP chính xác")
       setVerifyOtpDTO({
-        phone : "",
-        otp : ""
+        phone: "",
+        otp: ""
       });
       navigate("/register")
     } catch (err) {

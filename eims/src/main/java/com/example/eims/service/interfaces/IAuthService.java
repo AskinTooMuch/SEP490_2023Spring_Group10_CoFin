@@ -7,23 +7,27 @@
  * Record of change:<br>
  * DATE         Version     Author      DESCRIPTION<br>
  * 02/03/2023   1.0         DuongVV     First Deploy<br>
+ * 23/03/2023   1.1        ChucNV       Request parameter for authenticateUser<br>
  */
 
 package com.example.eims.service.interfaces;
 
 import com.example.eims.dto.auth.*;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.http.ResponseEntity;
 
 import java.io.IOException;
 
 public interface IAuthService {
     /**
-     * Sign in .
+     * Sign in.
      *
      * @param loginDTO contains the login phone and password
      * @return
      */
-    public ResponseEntity<?> authenticateUser(LoginDTO loginDTO);
+    public ResponseEntity<?> authenticateUser(HttpServletRequest request, HttpServletResponse response, LoginDTO loginDTO);
 
     /**
      * Sign up.

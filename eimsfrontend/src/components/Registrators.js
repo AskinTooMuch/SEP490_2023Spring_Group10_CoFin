@@ -68,7 +68,7 @@ const Registrators = () => {
                     'Content-Type': 'application/json',
                     'Access-Control-Allow-Origin': '*'
                 },
-                withCredentials: false
+                withCredentials: true
             });
         setRegistrationList(result.data);
         setRegistrationLoaded(true);
@@ -78,13 +78,13 @@ const Registrators = () => {
     const getRegistrationDetail = async (userId) => {
         setShow(true);
         const result = await axios.get(REGISTRATION_GET,
-            { params: { userId: userId } },
             {
+                params: { userId: userId },
                 headers: {
                     'Content-Type': 'application/json',
                     'Access-Control-Allow-Origin': '*'
                 },
-                withCredentials: false
+                withCredentials: true
             });
         setRegistrationDetail(result.data);
         setUserAddress(JSON.parse(result.data.address));
@@ -97,20 +97,18 @@ const Registrators = () => {
         event.preventDefault();
         let response;
         try {
-            response = await axios.post(REGISTRATION_APPROVE,{},
+            response = await axios.post(REGISTRATION_APPROVE, {},
                 {
                     params: {
                         userId: registrationDetail.userId,
                         facilityId: registrationDetail.facilityId,
                         approval: true
-                    }
-                },
-                {
+                    },
                     headers: {
                         'Content-Type': 'application/json',
                         'Access-Control-Allow-Origin': '*'
                     },
-                    withCredentials: false
+                    withCredentials: true
                 }
             );
 
@@ -133,20 +131,19 @@ const Registrators = () => {
         event.preventDefault();
         let response;
         try {
-            response = await axios.post(REGISTRATION_APPROVE,{},
+            response = await axios.post(REGISTRATION_APPROVE, {},
                 {
                     params: {
                         userId: registrationDetail.userId,
                         facilityId: registrationDetail.facilityId,
                         approval: false
                     }
-                },
-                {
+                    ,
                     headers: {
                         'Content-Type': 'application/json',
                         'Access-Control-Allow-Origin': '*'
                     },
-                    withCredentials: false
+                    withCredentials: true
                 }
             );
 
@@ -237,13 +234,13 @@ const Registrators = () => {
                                     <p>Địa chỉ thường trú</p>
                                 </div>
                                 <div className="col-md-3">
-                                    <p>{userAddress.ward + " " + userAddress.street + " " +  userAddress.district + " " +  userAddress.city}</p>
+                                    <p>{userAddress.ward + " " + userAddress.street + " " + userAddress.district + " " + userAddress.city}</p>
                                 </div>
                                 <div className="col-md-3">
                                     <p>Địa chỉ cơ sở</p>
                                 </div>
                                 <div className="col-md-3">
-                                    <p>{faciAddress.ward + " " +  faciAddress.street + " " +  faciAddress.district + " " +  faciAddress.city}</p>
+                                    <p>{faciAddress.ward + " " + faciAddress.street + " " + faciAddress.district + " " + faciAddress.city}</p>
                                 </div>
                             </div>
 

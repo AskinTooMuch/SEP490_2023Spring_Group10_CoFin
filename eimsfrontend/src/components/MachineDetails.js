@@ -104,13 +104,13 @@ export default function BasicTabs() {
 
     const loadMachine = async () => {
         const result = await axios.get(MACHINE_GET,
-            { params: { machineId: id } },
             {
+                params: { machineId: id },
                 headers: {
                     'Content-Type': 'application/json',
                     'Access-Control-Allow-Origin': '*'
                 },
-                withCredentials: false
+                withCredentials: true
             });
         console.log(result);
 
@@ -154,7 +154,7 @@ export default function BasicTabs() {
                         'Content-Type': 'application/json',
                         'Access-Control-Allow-Origin': '*'
                     },
-                    withCredentials: false
+                    withCredentials: true
                 }
             );
 
@@ -180,13 +180,13 @@ export default function BasicTabs() {
             let response;
             try {
                 response = await axios.delete(MACHINE_DELETE,
-                    { params: { machineId: id } },
                     {
+                        params: { machineId: id },
                         headers: {
                             'Content-Type': 'application/json',
                             'Access-Control-Allow-Origin': '*'
                         },
-                        withCredentials: false
+                        withCredentials: true
                     }
                 );
                 console.log(response);
@@ -286,7 +286,7 @@ export default function BasicTabs() {
                             </div>
                         </div>
                         <ConfirmBox open={open} closeDialog={() => setOpen(false)} title={machineDetailDTO.machineName} deleteFunction={() => hanldeDeleteMachine(machineDetailDTO.machineId)}
-                          />
+                        />
                         <div className="row">
                             <div className="col-md-4">
                                 <p>Loại máy</p>

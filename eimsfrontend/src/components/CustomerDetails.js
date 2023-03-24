@@ -129,7 +129,10 @@ export default function BasicTabs() {
 
     const loadCustomer = async () => {
         const result = await axios.get(CUSTOMER_UPDATE_GET,
-            { params: { customerId: id } });
+            {
+                params: { customerId: id },
+                withCredentials: true
+            });
         // Set inf
         setAddressJson(JSON.parse(result.data.customerAddress));
         updateCustomerDTO.userId = sessionStorage.getItem("curUserId");
@@ -254,7 +257,7 @@ export default function BasicTabs() {
                         'Content-Type': 'application/json',
                         'Access-Control-Allow-Origin': '*'
                     },
-                    withCredentials: false
+                    withCredentials: true
                 }
             );
             loadCustomer();

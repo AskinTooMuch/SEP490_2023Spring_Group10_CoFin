@@ -208,13 +208,13 @@ const Profile = () => {
 
     const loadUserDetails = async () => {
         const result = await axios.get(USER_DETAIL_URL,
-            { params: { userId: sessionStorage.getItem("curUserId") } },
             {
+                params: { userId: sessionStorage.getItem("curUserId") },
                 headers: {
                     'Content-Type': 'application/json',
                     'Access-Control-Allow-Origin': '*'
                 },
-                withCredentials: false
+                withCredentials: true
             });
         const responseJson = result.data;
         console.log(responseJson);
@@ -332,13 +332,13 @@ const Profile = () => {
         setShowProfile(true);
         try {
             const response = await axios.get(USER_UPDATE_GET,
-                { params: { userId: sessionStorage.getItem("curUserId") } },
                 {
+                    params: { userId: sessionStorage.getItem("curUserId") },
                     headers: {
                         'Content-Type': 'application/json',
                         'Access-Control-Allow-Origin': '*'
                     },
-                    withCredentials: false
+                    withCredentials: true
                 }
             );
             const responseJson = response.data;
@@ -412,13 +412,13 @@ const Profile = () => {
         setShowFaci(true);
         try {
             const response = await axios.get(FACILITY_UPDATE_GET,
-                { params: { facilityId: sessionStorage.getItem("facilityId") } },
                 {
+                    params: { facilityId: sessionStorage.getItem("facilityId") },
                     headers: {
                         'Content-Type': 'application/json',
                         'Access-Control-Allow-Origin': '*'
                     },
-                    withCredentials: false
+                    withCredentials: true
                 }
             );
             const responseJson = response.data;
@@ -501,7 +501,7 @@ const Profile = () => {
                         'Content-Type': 'application/json',
                         'Access-Control-Allow-Origin': '*'
                     },
-                    withCredentials: false
+                    withCredentials: true
                 }
             );
             const responseJson = response.data;
@@ -531,7 +531,7 @@ const Profile = () => {
                         'Content-Type': 'application/json',
                         'Access-Control-Allow-Origin': '*'
                     },
-                    withCredentials: false
+                    withCredentials: true
                 }
             );
             const responseJson = response.data;
@@ -598,7 +598,7 @@ const Profile = () => {
                         'Content-Type': 'application/json',
                         'Access-Control-Allow-Origin': '*'
                     },
-                    withCredentials: false
+                    withCredentials: true
                 }
             );
             console.log(JSON.stringify(response?.data));
@@ -782,7 +782,7 @@ const Profile = () => {
                                                         <div className="col-md-6">
                                                             <input type="date" className="form-control" name="dob" id="updateDob"
                                                                 ref={userRef} onChange={e => handleUpdateUser(e, "dob")}
-                                                                value={updateUserDTO.dob} required   pattern="\d{4}-\d{2}-\d{2}" />
+                                                                value={updateUserDTO.dob} required pattern="\d{4}-\d{2}-\d{2}" />
                                                         </div>
                                                     </div>
 

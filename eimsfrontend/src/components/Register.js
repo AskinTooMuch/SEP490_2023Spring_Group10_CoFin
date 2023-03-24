@@ -247,7 +247,7 @@ const Register = () => {
                 signUpDTO,
                 {
                     headers: { 'Content-Type': 'application/json' },
-                    withCredentials: false
+                    withCredentials: true
                 }
             );
             console.log(response?.data);

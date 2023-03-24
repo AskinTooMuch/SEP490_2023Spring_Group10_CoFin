@@ -102,13 +102,13 @@ export default function BasicTabs() {
     // Request specie list and load the specie list into the dropdowns
     const loadSpecieList = async () => {
         const result = await axios.get(SPECIE_LIST,
-            { params: { userId: sessionStorage.getItem("curUserId") } },
             {
+                params: { userId: sessionStorage.getItem("curUserId") },
                 headers: {
                     'Content-Type': 'application/json',
                     'Access-Control-Allow-Origin': '*'
                 },
-                withCredentials: false
+                withCredentials: true
             });
         setSpecieList(result.data);
         console.log(specieList);
@@ -122,13 +122,13 @@ export default function BasicTabs() {
 
     const loadBreed = async () => {
         const result = await axios.get(BREED_GET,
-            { params: { breedId: id } },
             {
+                params: { breedId: id },
                 headers: {
                     'Content-Type': 'application/json',
                     'Access-Control-Allow-Origin': '*'
                 },
-                withCredentials: false
+                withCredentials: true
             });
         // Set inf
         editBreedDTO.breedId = result.data.breedId;
@@ -151,13 +151,13 @@ export default function BasicTabs() {
 
     const loadImage = async () => {
         const result = await axios.get(BREED_GET_IMAGE,
-            { params: { breedId: id } },
             {
+                params: { breedId: id },
                 headers: {
                     'Content-Type': 'application/json',
                     'Access-Control-Allow-Origin': '*'
                 },
-                withCredentials: false
+                withCredentials: true
             });
         // Set inf
         setX64image(result.data);
@@ -193,13 +193,13 @@ export default function BasicTabs() {
         console.log("Delete breed " + id);
         try {
             const response = await axios.get(BREED_DELETE,
-                { params: { breedId: editBreedDTO.breedId } },
                 {
+                    params: { breedId: editBreedDTO.breedId },
                     headers: {
                         'Content-Type': 'application/json',
                         'Access-Control-Allow-Origin': '*'
                     },
-                    withCredentials: false
+                    withCredentials: true
                 });
             toast.success("Xóa loại thành công");
             navigate("/egg");
@@ -216,7 +216,7 @@ export default function BasicTabs() {
             }
         }
     }
-    
+
     //Send request new breed through Axios
     const handleEditSubmit = async (event) => {
         event.preventDefault();
@@ -240,7 +240,7 @@ export default function BasicTabs() {
                         'Content-Type': 'multipart/form-data',
                         'Access-Control-Allow-Origin': '*'
                     },
-                    withCredentials: false
+                    withCredentials: true
                 }
             );
             console.log(JSON.stringify(response?.data));

@@ -168,13 +168,13 @@ export default function BasicTabs() {
 
     const loadEmployee = async () => {
         const result = await axios.get(EMPLOYEE_GET,
-            { params: { employeeId: id } },
             {
+                params: { employeeId: id },
                 headers: {
                     'Content-Type': 'application/json',
                     'Access-Control-Allow-Origin': '*'
                 },
-                withCredentials: false
+                withCredentials: true
             });
         console.log(result);
         const responseJson = result.data;
@@ -326,7 +326,7 @@ export default function BasicTabs() {
                         'Content-Type': 'application/json',
                         'Access-Control-Allow-Origin': '*'
                     },
-                    withCredentials: false
+                    withCredentials: true
                 }
             );
             setUpdateEmployeeDTO({
@@ -358,13 +358,13 @@ export default function BasicTabs() {
         let response;
         try {
             response = await axios.delete(EMPLOYEE_DELETE,
-                { params: { employeeId: id } },
                 {
+                    params: { employeeId: id },
                     headers: {
                         'Content-Type': 'application/json',
                         'Access-Control-Allow-Origin': '*'
                     },
-                    withCredentials: false
+                    withCredentials: true
                 }
             );
             console.log(response);

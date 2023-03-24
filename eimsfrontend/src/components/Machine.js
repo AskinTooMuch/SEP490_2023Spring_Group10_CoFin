@@ -98,7 +98,7 @@ export default function BasicTabs() {
                         'Content-Type': 'application/json',
                         'Access-Control-Allow-Origin': '*'
                     },
-                    withCredentials: false
+                    withCredentials: true
                 }
             );
             setCreateMachineDTO({
@@ -129,13 +129,13 @@ export default function BasicTabs() {
     // Request Machine list and load the Machine list into the table rows
     const loadMachineList = async () => {
         const result = await axios.get(MACHINE_ALL,
-            { params: { facilityId: sessionStorage.getItem("facilityId") } },
             {
+                params: { facilityId: sessionStorage.getItem("facilityId") },
                 headers: {
                     'Content-Type': 'application/json',
                     'Access-Control-Allow-Origin': '*'
                 },
-                withCredentials: false
+                withCredentials: true
             });
         setMachineList(result.data);
 

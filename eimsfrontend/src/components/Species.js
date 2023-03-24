@@ -78,7 +78,7 @@ const Species = () => {
             'Content-Type': 'application/json',
             'Access-Control-Allow-Origin': '*'
           },
-          withCredentials: false
+          withCredentials: true
         }
       );
       setEditSpecieDTO({
@@ -98,9 +98,9 @@ const Species = () => {
         toast.error('Server không phản hồi');
       } else if (err.response?.status === 400) {
         toast.error('Yêu cầu không đúng định dạng');
-      } else if (err.response?.status === 401) {
+      } else if (err.response?.status === 401 || err.response?.status === 403) {
         toast.error('Không có quyền thực hiện hành động này');
-      } else {
+      } else  {
         toast.error('Yêu cầu không đúng định dạng');
       }
     }
@@ -132,12 +132,11 @@ const Species = () => {
     try {
       const response = await axios.post(SPECIE_NEW,
         newSpecieDTO,
-        {
-          headers: {
+         { headers: {
             'Content-Type': 'application/json',
             'Access-Control-Allow-Origin': '*'
           },
-          withCredentials: false
+          withCredentials: true
         }
       );
       setNewSpecieDTO({
@@ -170,13 +169,12 @@ const Species = () => {
   const handleDelete = async (index) => {
     try {
       const response = await axios.get(SPECIE_DELETE,
-        { params: { specieId: specieList[index].specieId } },
-        {
+        { params: { specieId: specieList[index].specieId } ,
           headers: {
             'Content-Type': 'application/json',
             'Access-Control-Allow-Origin': '*'
           },
-          withCredentials: false
+          withCredentials: true
         });
       console.clear(response)
       setOpen(false);
@@ -205,13 +203,12 @@ const Species = () => {
   // Request specie list and load the specie list into the table rows
   const loadSpecieList = async () => {
     const result = await axios.get(SPECIE_LIST,
-      { params: { userId: sessionStorage.getItem("curUserId") } },
-      {
+      { params: { userId: sessionStorage.getItem("curUserId") }, 
         headers: {
           'Content-Type': 'application/json',
           'Access-Control-Allow-Origin': '*'
         },
-        withCredentials: false
+        withCredentials: true
       });
     setSpecieList(result.data);
     console.log(specieList);

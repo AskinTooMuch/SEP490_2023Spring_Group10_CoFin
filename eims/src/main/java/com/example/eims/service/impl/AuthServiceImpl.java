@@ -7,7 +7,8 @@
  * Record of change:<br>
  * DATE         Version     Author      DESCRIPTION<br>
  * 02/03/2023   1.0         ChucNV      First Deploy<br>
- * 02/03/2023   2.0         ChucNV      Implement signup service
+ * 02/03/2023   2.0         ChucNV      Implement signup service<br>
+ * 23/03/2023   3.0        ChucNV      Update signin code according to new security feature<br>
  */
 package com.example.eims.service.impl;
 
@@ -17,13 +18,18 @@ import com.example.eims.repository.*;
 import com.example.eims.service.interfaces.IAuthService;
 import com.example.eims.utils.SpeedSMS;
 import com.example.eims.utils.StringDealer;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -34,12 +40,14 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
 public class AuthServiceImpl implements IAuthService {
     @Autowired
-    private final AuthenticationManager authenticationManager;
+    private final AuthenticationProvider authenticationProvider;
     @Autowired
     private final UserRepository userRepository;
     @Autowired
@@ -56,11 +64,11 @@ public class AuthServiceImpl implements IAuthService {
     private final StringDealer stringDealer;
     private final String SENDER = "61522b07d22251db";
 
-    public AuthServiceImpl(AuthenticationManager authenticationManager, UserRepository userRepository,
+    public AuthServiceImpl(AuthenticationProvider authenticationProvider, UserRepository userRepository,
                            FacilityRepository facilityRepository, WorkInRepository workInRepository,
                            RegistrationRepository registrationRepository, OtpRepository otpRepository,
                            PasswordEncoder passwordEncoder) {
-        this.authenticationManager = authenticationManager;
+        this.authenticationProvider = authenticationProvider;
         this.userRepository = userRepository;
         this.facilityRepository = facilityRepository;
         this.workInRepository = workInRepository;
@@ -78,21 +86,23 @@ public class AuthServiceImpl implements IAuthService {
      * @return
      */
     @Override
-    public ResponseEntity<?> authenticateUser(LoginDTO loginDTO) {
+    public ResponseEntity<?> authenticateUser(HttpServletRequest request, HttpServletResponse response, LoginDTO loginDTO) {
+        loginDTO.setPassword(stringDealer.trimMax(loginDTO.getPassword()));
+        loginDTO.setPhone(stringDealer.trimMax(loginDTO.getPhone()));
+        String phone = loginDTO.getPhone();
+        String password = loginDTO.getPassword();
         if (loginDTO.getPhone() == null || stringDealer.trimMax(loginDTO.getPhone()).equals("")) { /* Phone number is empty */
             return new ResponseEntity<>("Số điện thoại không được để trống", HttpStatus.BAD_REQUEST);
         }
-        String phone = stringDealer.trimMax(loginDTO.getPhone());
         if (loginDTO.getPassword() == null || stringDealer.trimMax(loginDTO.getPassword()).equals("")) { /* Password is empty */
             return new ResponseEntity<>("Mật khẩu không được để trống", HttpStatus.BAD_REQUEST);
         }
-        String password = stringDealer.trimMax(loginDTO.getPassword());
         Optional<User> userOpt = userRepository.findByPhone(phone);
         if (userOpt.isEmpty()) {
             return new ResponseEntity<>("Tài khoản hoặc mật khẩu sai", HttpStatus.BAD_REQUEST);
         }
         User user = userOpt.get();
-        if (user.getRoleId() == 2L) { // role is OWNER (have Facility)
+        if (user.getRoles().get(0).getRoleId() == 2L) { // role is OWNER (have Facility)
             // Check status of registration
             // 0 - considering
             // 1 - rejected
@@ -109,25 +119,33 @@ public class AuthServiceImpl implements IAuthService {
         if (user.getStatus() == 0) {
             return new ResponseEntity<>("Tài khoản đã bị vô hiệu hóa", HttpStatus.BAD_REQUEST);
         }
-        if (user.getRoleId() == 3L) { //*role is EMPLOYEE (work in Facility)
+        if (user.getRoles().get(0).getRoleId() == 3L) { //*role is EMPLOYEE (work in Facility)
             WorkIn workIn = workInRepository.findByUserId(user.getUserId()).get();
             Long facilityId = workIn.getFacilityId();
             if (!facilityRepository.getStatusById(facilityId)) { // status = 0 (facility stopped running)
                 return new ResponseEntity<>("Cơ sở đã dừng hoạt động", HttpStatus.BAD_REQUEST);
             }
         }
-
+        //Check password
         if (!passwordEncoder.matches(password, user.getPassword())) {
             return new ResponseEntity<>("Mật khẩu hoặc tài khoản sai", HttpStatus.BAD_REQUEST);
         }
-        Authentication auth = authenticationManager.authenticate(
+
+        //Authenticate the user
+        Authentication auth = authenticationProvider.authenticate(
                 new UsernamePasswordAuthenticationToken(phone, password));
         SecurityContextHolder.getContext().setAuthentication(auth);
-        // System.out.println(SecurityContextHolder.getContext().getAuthentication().getAuthorities());
+        HttpSession session = request.getSession(true);
+        session.setAttribute("key", "value");
+        session.setAttribute("security-session", auth);
+        System.out.println("Login: " + session.getId());
+        System.out.println(SecurityContextHolder.getContext().getAuthentication().getAuthorities());
+
         // Set attribute to sessionDTO
+        user = ((UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
         SessionDTO sessionDTO = new SessionDTO();
         sessionDTO.setUserId(user.getUserId());
-        Long userRole = user.getRoleId();
+        Long userRole = user.getRoles().get(0).getRoleId();
         sessionDTO.setRoleId(userRole);
         if (userRole == 2L) { /*role is OWNER (have Facility)*/
             Facility facility = facilityRepository.findByUserId(user.getUserId()).get();
@@ -219,7 +237,9 @@ public class AuthServiceImpl implements IAuthService {
         user.setDob(date);
         user.setPhone(phone);
         user.setAddress(address);
-        user.setRoleId(2L);     /* Role OWNER */
+        List roleList = new ArrayList<Role>();
+        roleList.add(new Role(2, "ROLE_OWNER", true));
+        user.setRoles(roleList);     /* Role OWNER */
         user.setStatus(0);      /* Inactivated, need registration's approval */
         //Encode password
         user.setPassword(passwordEncoder.encode(password));

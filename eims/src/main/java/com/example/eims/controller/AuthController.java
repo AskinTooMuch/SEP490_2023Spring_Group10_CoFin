@@ -9,12 +9,17 @@
  * 18/01/2023   1.0         ChucNV      First Deploy<br>
  * 28/02/2023   2.0         ChucNV      Enable Security<br>
  * 02/03/2023   2.1         ChucNV      Move Signup service to Service file<br>
+ * 24/03/2023   2.2         ChucNV      Update security for login<br>
  */
 
 package com.example.eims.controller;
 
 import com.example.eims.dto.auth.*;
 import com.example.eims.service.interfaces.IAuthService;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
@@ -22,7 +27,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 
-@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
@@ -36,8 +40,9 @@ public class AuthController {
      * @return
      */
     @PostMapping("/signin")
-    public ResponseEntity<?> authenticateUser(@RequestBody LoginDTO loginDTO) {
-        return authService.authenticateUser(loginDTO);
+    public ResponseEntity<?> authenticateUser(HttpServletRequest request, HttpServletResponse response, @RequestBody LoginDTO loginDTO) {
+        System.out.println("authenticate user" + request.getContextPath());
+        return authService.authenticateUser(request, response, loginDTO);
     }
 
     /**

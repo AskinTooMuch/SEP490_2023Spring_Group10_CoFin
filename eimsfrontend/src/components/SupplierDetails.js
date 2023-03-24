@@ -129,7 +129,10 @@ export default function BasicTabs() {
 
     const loadSupplier = async () => {
         const result = await axios.get(SUPPLIER_GET,
-            { params: { supplierId: id } });
+            {
+                params: { supplierId: id },
+                withCredentials: true
+            });
         // Set inf
         setAddressJson(JSON.parse(result.data.supplierAddress));
         updateSupplierDTO.supplierId = result.data.supplierId;
@@ -256,7 +259,7 @@ export default function BasicTabs() {
                         'Content-Type': 'application/json',
                         'Access-Control-Allow-Origin': '*'
                     },
-                    withCredentials: false
+                    withCredentials: true
                 }
             );
             //loadSupplier(id);
@@ -297,7 +300,7 @@ export default function BasicTabs() {
                                         <p>Họ và tên<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                     </div>
                                     <div className="col-md-6">
-                                        <input required id = "updateSupplierName"
+                                        <input required id="updateSupplierName"
                                             value={updateSupplierDTO.supplierName}
                                             onChange={(e) => handleUpdateSupplierChange(e, "supplierName")}
                                             className="form-control " />

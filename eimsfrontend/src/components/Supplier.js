@@ -77,7 +77,7 @@ const Supplier = () => {
   }, [dataLoaded]);
 
   const loadAddress = async () => {
-    const result = await axios.get( "https://raw.githubusercontent.com/kenzouno1/DiaGioiHanhChinhVN/master/data.json",
+    const result = await axios.get("https://raw.githubusercontent.com/kenzouno1/DiaGioiHanhChinhVN/master/data.json",
       {});
     setFullAddresses(result.data);
     console.log("Full address");
@@ -145,7 +145,7 @@ const Supplier = () => {
             'Content-Type': 'application/json',
             'Access-Control-Allow-Origin': '*'
           },
-          withCredentials: false
+          withCredentials: true
         }
       );
       setNewSupplierDTO({
@@ -178,13 +178,13 @@ const Supplier = () => {
   // Request supplier list and load the supplier list into the table rows
   const loadSupplerList = async () => {
     const result = await axios.get(SUPPLIER_ALL,
-      { params: { userId: sessionStorage.getItem("curUserId") } },
       {
+        params: { userId: sessionStorage.getItem("curUserId") },
         headers: {
           'Content-Type': 'application/json',
           'Access-Control-Allow-Origin': '*'
         },
-        withCredentials: false
+        withCredentials: true
       });
     setSupplierList(result.data);
     console.log(supplierList);
@@ -203,116 +203,116 @@ const Supplier = () => {
         {/* Start: form to add new supplier */}
         <Modal show={show} onHide={handleClose}
           size="lg" aria-labelledby="contained-modal-title-vcenter" centered >
-            <form onSubmit={handleNewSupplierSubmit}>
-          <Modal.Header closeButton onClick={handleClose}>
-            <Modal.Title>Thêm thông tin nhà cung cấp</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <div className="changepass">
-              <div className="row">
-                <div className="col-md-3">
-                  <p>Họ và tên<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
+          <form onSubmit={handleNewSupplierSubmit}>
+            <Modal.Header closeButton onClick={handleClose}>
+              <Modal.Title>Thêm thông tin nhà cung cấp</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <div className="changepass">
+                <div className="row">
+                  <div className="col-md-3">
+                    <p>Họ và tên<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
+                  </div>
+                  <div className="col-md-3">
+                    <input id="supplierName" className="form-control mt-1" style={{ width: "100%" }} onChange={e => handleNewSupplierChange(e, "supplierName")} />
+                  </div>
+                  {/*City*/}
+                  <div className="col-md-3">
+                    <label htmlFor="uprovince" >Tỉnh/Thành Phố <FontAwesomeIcon className="star" icon={faStarOfLife} /></label>
+                  </div>
+                  <div className="col-md-3">
+                    <select className="form-control mt-1" id="uprovince"
+                      ref={userRef}
+                      autoComplete="off"
+                      onChange={(e) => loadDistrict(e.target.value)}
+                      value={cityIndex}
+                      required>
+                      <option value="" disabled>Chọn Tỉnh/Thành phố</option>
+                      {city &&
+                        city.map((item, index) => (
+                          <option value={index}>{item.label}</option>
+                        ))
+                      }
+                    </select>
+                  </div>
                 </div>
-                <div className="col-md-3">
-                  <input id = "supplierName" className="form-control mt-1" style={{ width: "100%" }} onChange={e => handleNewSupplierChange(e, "supplierName")} />
+                <div className="row">
+                  <div className="col-md-3">
+                    <p>Số điện thoại<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
+                  </div>
+                  <div className="col-md-3">
+                    <input id="supplierPhoneNumber" className="form-control mt-1" style={{ width: "100%" }} onChange={e => handleNewSupplierChange(e, "supplierPhone")} />
+                  </div>
+                  {/*District*/}
+                  <div className="col-md-3">
+                    <label htmlFor="udistrict" >Quận/Huyện <FontAwesomeIcon className="star" icon={faStarOfLife} /></label>
+                  </div>
+                  <div className="col-md-3">
+                    <select className="form-control mt-1" id="udistrict" name="supplierDistrict"
+                      ref={userRef}
+                      autoComplete="off"
+                      onChange={(e) => loadWard(e.target.value)}
+                      value={districtIndex}
+                      required>
+                      <option value="" disabled>Chọn Quận/Huyện</option>
+                      {district &&
+                        district.map((item, index) => (
+                          <option value={index}>{item.label}</option>
+                        ))
+                      }
+                    </select>
+                  </div>
                 </div>
-                {/*City*/}
-                <div className="col-md-3">
-                  <label htmlFor="uprovince" >Tỉnh/Thành Phố <FontAwesomeIcon className="star" icon={faStarOfLife} /></label>
+                <div className="row">
+                  <div className="col-md-3">
+                    <p>Email</p>
+                  </div>
+                  <div className="col-md-3">
+                    <input id="supplierEmail" className="form-control mt-1" style={{ width: "100%" }} onChange={e => handleNewSupplierChange(e, "supplierMail")} />
+                  </div>
+                  {/*User ward*/}
+                  <div className="col-md-3">
+                    <label htmlFor="uward" >Phường/Xã <FontAwesomeIcon className="star" icon={faStarOfLife} /></label>
+                  </div>
+                  <div className="col-md-3">
+                    <select className="form-control mt-1" id="uward" name="supplierWard"
+                      ref={userRef}
+                      autoComplete="off"
+                      onChange={(e) => saveWard(e.target.value)}
+                      value={wardIndex}
+                      required>
+                      <option value="" disabled>Chọn Phường/Xã</option>
+                      {ward &&
+                        ward.map((item, index) => (
+                          <option value={index}>{item.label}</option>
+                        ))
+                      }
+                    </select>
+                  </div>
                 </div>
-                <div className="col-md-3">
-                  <select className="form-control mt-1" id="uprovince" 
-                    ref={userRef}
-                    autoComplete="off"
-                    onChange={(e) => loadDistrict(e.target.value)}
-                    value={cityIndex}
-                    required>
-                    <option value="" disabled>Chọn Tỉnh/Thành phố</option>
-                    {city &&
-                      city.map((item, index) => (
-                        <option value={index}>{item.label}</option>
-                      ))
-                    }
-                  </select>
+                <div className="row">
+                  <div className="col-md-3">
+                    <p>Tên cơ sở<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
+                  </div>
+                  <div className="col-md-3">
+                    <input id="supplierFacilityName" className="form-control mt-1" style={{ width: "100%" }} onChange={e => handleNewSupplierChange(e, "facilityName")} required />
+                  </div>
+                  {/*User Street*/}
+                  <div className="col-md-3">
+                    <label htmlFor="uhomenum">Số nhà <FontAwesomeIcon className="star" icon={faStarOfLife} /></label>
+                  </div>
+                  <div className="col-md-3">
+                    <input type="text" id="uhomenum"
+                      ref={userRef}
+                      autoComplete="off"
+                      onChange={(e) => saveAddressJson(e.target.value)}
+                      required
+                      className="form-control " />
+                  </div>
                 </div>
               </div>
-              <div className="row">
-                <div className="col-md-3">
-                  <p>Số điện thoại<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
-                </div>
-                <div className="col-md-3">
-                  <input id="supplierPhoneNumber" className="form-control mt-1" style={{ width: "100%" }} onChange={e => handleNewSupplierChange(e, "supplierPhone")} />
-                </div>
-                {/*District*/}
-                <div className="col-md-3">
-                  <label htmlFor="udistrict" >Quận/Huyện <FontAwesomeIcon className="star" icon={faStarOfLife} /></label>
-                </div>
-                <div className="col-md-3">
-                  <select className="form-control mt-1" id="udistrict" name="supplierDistrict"
-                    ref={userRef}
-                    autoComplete="off"
-                    onChange={(e) => loadWard(e.target.value)}
-                    value={districtIndex}
-                    required>
-                    <option value="" disabled>Chọn Quận/Huyện</option>
-                    {district &&
-                      district.map((item, index) => (
-                        <option value={index}>{item.label}</option>
-                      ))
-                    }
-                  </select>
-                </div>
-              </div>
-              <div className="row">
-                <div className="col-md-3">
-                  <p>Email</p>
-                </div>
-                <div className="col-md-3">
-                  <input id="supplierEmail" className="form-control mt-1" style={{ width: "100%" }} onChange={e => handleNewSupplierChange(e, "supplierMail")} />
-                </div>
-                {/*User ward*/}
-                <div className="col-md-3">
-                  <label htmlFor="uward" >Phường/Xã <FontAwesomeIcon className="star" icon={faStarOfLife} /></label>
-                </div>
-                <div className="col-md-3">
-                  <select className="form-control mt-1" id="uward" name="supplierWard"
-                    ref={userRef}
-                    autoComplete="off"
-                    onChange={(e) => saveWard(e.target.value)}
-                    value={wardIndex}
-                    required>
-                    <option value="" disabled>Chọn Phường/Xã</option>
-                    {ward &&
-                      ward.map((item, index) => (
-                        <option value={index}>{item.label}</option>
-                      ))
-                    }
-                  </select>
-                </div>
-              </div>
-              <div className="row">
-              <div className="col-md-3">
-                  <p>Tên cơ sở<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
-                </div>
-                <div className="col-md-3">
-                  <input id="supplierFacilityName" className="form-control mt-1" style={{ width: "100%" }} onChange={e => handleNewSupplierChange(e, "facilityName")} required/>
-                </div>
-                {/*User Street*/}
-                <div className="col-md-3">
-                  <label htmlFor="uhomenum">Số nhà <FontAwesomeIcon className="star" icon={faStarOfLife} /></label>
-                </div>
-                <div className="col-md-3">
-                  <input type="text" id="uhomenum"
-                    ref={userRef}
-                    autoComplete="off"
-                    onChange={(e) => saveAddressJson(e.target.value)}
-                    required
-                    className="form-control " />
-                </div>
-              </div>
-            </div>
-          </Modal.Body>
-          <div className='model-footer'>
+            </Modal.Body>
+            <div className='model-footer'>
               <button style={{ width: "20%" }} type="submit" className="col-md-6 btn-light" id="confirmCreateSupplier">
                 Tạo
               </button>
@@ -322,7 +322,7 @@ const Supplier = () => {
             </div>
           </form>
         </Modal>
-        
+
         {/* End: form to add new supplier */}
         {/* Start: Filter and sort table */}
         <div className='filter my-2 my-lg-0'>
@@ -354,17 +354,17 @@ const Supplier = () => {
           <tbody>
             {
               supplierList && supplierList.length > 0 ?
-                supplierList.map((item, index) => 
+                supplierList.map((item, index) =>
                   <tr className='trclick' onClick={() => routeChange(item.supplierId)} key={item.userId}>
-                    <th scope="row">{index+1}</th>
+                    <th scope="row">{index + 1}</th>
                     <td>{item.supplierName}</td>
                     <td>{item.supplierPhone}</td>
                     <td>100.000.000 VNĐ</td>
                     {item.status === 1
-                      ?<td className='text-green'>
+                      ? <td className='text-green'>
                         Đang hoạt động
                       </td>
-                      :<td className='text-red'>
+                      : <td className='text-red'>
                         Ngừng hoạt động
                       </td>
                     }
@@ -376,15 +376,15 @@ const Supplier = () => {
       </div>
       {/* End: Table for supplier list */}
       <ToastContainer position="top-left"
-                autoClose={5000}
-                hideProgressBar={false}
-                newestOnTop={false}
-                closeOnClick
-                rtl={false}
-                pauseOnFocusLoss
-                draggable
-                pauseOnHover
-                theme="colored" />
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="colored" />
     </div>
   );
 }

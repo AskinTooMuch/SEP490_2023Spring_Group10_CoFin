@@ -7,6 +7,7 @@
  * Record of change:<br>
  * DATE         Version     Author      DESCRIPTION<br>
  * 15/03/2023   1.0         DuongVV     First Deploy<br>
+ * 23/03/2023   1.1         ChucNV      Update code according to new relations<br>
  */
 package com.example.eims.service.impl;
 
@@ -14,10 +15,7 @@ import com.example.eims.dto.employee.CreateEmployeeDTO;
 import com.example.eims.dto.employee.EmployeeDetailDTO;
 import com.example.eims.dto.employee.EmployeeListItemDTO;
 import com.example.eims.dto.employee.UpdateEmployeeDTO;
-import com.example.eims.entity.Facility;
-import com.example.eims.entity.SalaryHistory;
-import com.example.eims.entity.User;
-import com.example.eims.entity.WorkIn;
+import com.example.eims.entity.*;
 import com.example.eims.repository.FacilityRepository;
 import com.example.eims.repository.SalaryHistoryRepository;
 import com.example.eims.repository.UserRepository;
@@ -125,7 +123,9 @@ public class EmployeeServiceImpl implements IEmployeeService {
         employeeInformation.setDob(date);
         employeeInformation.setPhone(phone);
         employeeInformation.setAddress(address);
-        employeeInformation.setRoleId(3L);     /* Role EMPLOYEE */
+        List roleList = new ArrayList<Role>();
+        roleList.add(new Role(3, "ROLE_EMPLOYEE", true));
+        employeeInformation.setRoles(roleList);     /* Role EMPLOYEE */
         employeeInformation.setStatus(1);
         employeeInformation.setPassword(passwordEncoder.encode(password));
         employeeInformation.setSalary(salary);
@@ -227,7 +227,9 @@ public class EmployeeServiceImpl implements IEmployeeService {
             employeeNewInformation.setDob(date);
             employeeNewInformation.setPhone(phone);
             employeeNewInformation.setAddress(address);
-            employeeNewInformation.setRoleId(3L);     /* Role EMPLOYEE */
+            List roleList = new ArrayList<Role>();
+            roleList.add(new Role(3, "ROLE_EMPLOYEE", true));
+            employeeNewInformation.setRoles(roleList);     /* Role EMPLOYEE */
             employeeNewInformation.setStatus(updateEmployeeDTO.getStatus());
             employeeNewInformation.setPassword(oldEmployeInfor.getPassword());
             employeeNewInformation.setSalary(salary);

@@ -144,7 +144,7 @@ const Customer = () => {
                         'Content-Type': 'application/json',
                         'Access-Control-Allow-Origin': '*'
                     },
-                    withCredentials: false
+                    withCredentials: true
                 }
             );
             setCreateCustomerDTO({
@@ -177,13 +177,13 @@ const Customer = () => {
     // Request Customer list and load the customer list into the table rows
     const loadCustomerList = async () => {
         const result = await axios.get(CUSTOMER_ALL,
-            { params: { userId: sessionStorage.getItem("curUserId") } },
             {
+                params: { userId: sessionStorage.getItem("curUserId") },
                 headers: {
                     'Content-Type': 'application/json',
                     'Access-Control-Allow-Origin': '*'
                 },
-                withCredentials: false
+                withCredentials: true
             });
         setCustomerList(result.data);
         console.log(customerList);

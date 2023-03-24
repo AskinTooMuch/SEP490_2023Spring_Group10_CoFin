@@ -1,3 +1,4 @@
+-- V0.8.0: Modify the user - role relationship from many-one to many-many
 -- V0.7.0: Import data on tables: User, Facility, Specie, incubation phase, supplier, customer, subscription user, 
 -- V0.6.3: Minor audijustment at customer table (NOT NULL field and size)
 -- V0.6.2: Minor audijustment at facility table and add data into machine table
@@ -9,7 +10,7 @@
 -- V0.2.0: Add foreign key constraint
 -- V0.2.1: Change attribute _name, re-route foreign key constraint
 -- V0.2.2: Add CHECK constraint
--- Last up_date: 26/02/2023
+-- Last update: 22/03/2023
 -- Script for generating EIMS - Eggs Incubating Management System.
 -- Check if database already exist. If yes then drop the database to ensure the script runs successfully with no variations.
 DROP DATABASE IF EXISTS eims;
@@ -17,7 +18,7 @@ CREATE DATABASE eims;
 USE eims;
 
 -- Create all tables with no foreign keys.
-CREATE TABLE user_role(
+CREATE TABLE role(
 	role_id 	integer 	AUTO_INCREMENT PRIMARY KEY,
     role_name 	varchar(63) NOT NULL,
     status		boolean		NOT NULL
@@ -37,7 +38,6 @@ CREATE TABLE facility(
 
 CREATE TABLE user(
 	user_id		integer 		AUTO_INCREMENT PRIMARY KEY,
-    role_id		integer			NOT NULL,
     username	varchar(63)		NOT NULL,
     dob			date			NOT NULL,
     phone		varchar(15)		NOT NULL,
@@ -46,6 +46,12 @@ CREATE TABLE user(
     password	varchar(127)	NOT NULL,
     address		varchar(511),
 	status		boolean			NOT NULL
+);
+
+CREATE TABLE user_role(
+	user_id		integer		NOT NULL,
+    role_id		integer		NOT NULL,
+    status		boolean		NOT NULL
 );
 
 CREATE TABLE work_in(
@@ -253,8 +259,11 @@ ALTER TABLE facility
 ADD FOREIGN KEY (user_id) 		REFERENCES user(user_id);
 
 ALTER TABLE user
-ADD FOREIGN KEY (role_id) 		REFERENCES user_role(role_id),
 ADD CHECK (salary >= 0);
+
+ALTER TABLE user_role
+ADD FOREIGN KEY (user_id)		REFERENCES user(user_id),
+ADD FOREIGN KEY (role_id)		REFERENCES role(role_id);
 
 ALTER TABLE work_in
 ADD FOREIGN KEY (user_id)		REFERENCES user(user_id),
@@ -356,14 +365,16 @@ ADD FOREIGN KEY (product_id)REFERENCES egg_product(product_id);
 DELIMITER //
 CREATE PROCEDURE user_and_facility(uid integer) 
 BEGIN
-SELECT U.user_id, UR.role_name, U.username, U.dob, U.email, U.salary, U.address, U.status AS USER_STATUS, 
+SELECT U.user_id, R.role_name, U.username, U.dob, U.email, U.salary, U.address, U.status AS USER_STATUS, 
 		F.facility_id, F.facility_name, F.facility_address, F.facility_found_date, F.business_license_number,
         F.hotline, F.status AS FACILITY_STATUS, F.subscription_expiration_date, US.subscription_id
-
-FROM user U JOIN user_role UR ON U.role_id = UR.role_id
+FROM user U JOIN user_role UR ON U.user_id = UR.user_id
+		LEFT JOIN role R ON UR.role_id = R.role_id
 		LEFT JOIN facility F ON U.user_id = F.user_id
         LEFT JOIN user_subsription US ON F.facility_id = US.facility_id
-WHERE U.user_id = uid;
+WHERE U.user_id = uid AND US.status = 1
+ORDER BY US.subscribe_date DESC
+LIMIT 1;
 END //
 DELIMITER ;
 
@@ -424,21 +435,27 @@ END //
 DELIMITER ;
 
 -- Insert Data into tables
--- user_role
-INSERT INTO user_role (role_id, role_name, status)
+-- role
+INSERT INTO role (role_id, role_name, status)
 VALUES 	(1, 'ROLE_USER', 1),
 		(2, 'ROLE_OWNER', 1),
 		(3, 'ROLE_EMPLOYEE', 1),
 		(4, 'ROLE_MODERATOR', 1),
 		(5, 'ROLE_ADMIN', 0);
 -- user
-INSERT INTO user(user_id, role_id, username, dob, phone, email, salary, password, address, status)
-VALUES 	(1,	2, 'Nguyễn Chức', '2001-12-16', '0969044714',	'ownerchuc@gmail.com', 0, '$2a$10$Vp3h.q0WVd4LCt.jY4gbHe5bs2OKdQIa88oIFe7xR83m5UNRDaGPq',	'{"city":"Tỉnh Hải Dương","district":"Huyện Gia Lộc","ward":"Xã Hoàng Diệu","street":"Thôn Nghĩa Hy"}', 1),
-		(2,	2, 'Test Owner', '2001-01-01', '0987654322', 'owner@gmail.com', 0, '$2a$10$NpyM9vyE2zQ7bTdEA7nYAeoirBlK5SqI/7v23kVQd7nCZq9nI.oUu', '{"city":"Tỉnh Hải Dương","district":"Huyện Gia Lộc","ward":"Xã Hoàng Diệu","street":"Thôn Nghĩa Hy"}', 1),
-		(3,	3, 'Test Employee', '2001-01-01', '0978654323', 'employee@gmail.com', 0, '$2a$10$uRRgBmQCWBLgBsB4lImrguTBcHkx96MErC2fhvxmgUPDacoHPPr6W', '{"city":"Tỉnh Hải Dương","district":"Huyện Gia Lộc","ward":"Xã Hoàng Diệu","street":"Thôn Nghĩa Hy"}', 1),
-		(4, 4, 'Test Moderator', '2001-01-01', '0987654324', 'moderator@gmail.com', 0, '$2a$10$FNOLtGaY4coy0.CAHUxLpuBj9PIEO5J3/nqbORI8UmZuZd4eqARw2', '{"city":"Tỉnh Hải Dương","district":"Huyện Gia Lộc","ward":"Xã Hoàng Diệu","street":"Thôn Nghĩa Hy"}', 1),
-        (5,	2, 'Nguyễn Dương', '2001-01-01', '0852274855', 'ownerduong@gmail.com', 0, '$2a$10$UOEamoIHKWrb7BVNTOtZHebHBp6zPZ03STsKXDCZFD0BJusC9xFlO', '{"city":"Tỉnh Hải Dương","district":"Huyện Gia Lộc","ward":"Xã Hoàng Diệu","street":"Thôn Nghĩa Hy"}', 0);
+INSERT INTO user(user_id, username, dob, phone, email, salary, password, address, status)
+VALUES 	(1,	'Nguyễn Chức', '2001-12-16', '0969044714',	'ownerchuc@gmail.com', 0, '$2a$10$Vp3h.q0WVd4LCt.jY4gbHe5bs2OKdQIa88oIFe7xR83m5UNRDaGPq',	'{"city":"Tỉnh Hải Dương","district":"Huyện Gia Lộc","ward":"Xã Hoàng Diệu","street":"Thôn Nghĩa Hy"}', 2),
+		(2,	'Test Owner', '2001-01-01', '0987654322', 'owner@gmail.com', 0, '$2a$10$NpyM9vyE2zQ7bTdEA7nYAeoirBlK5SqI/7v23kVQd7nCZq9nI.oUu', '{"city":"Tỉnh Hải Dương","district":"Huyện Gia Lộc","ward":"Xã Hoàng Diệu","street":"Thôn Nghĩa Hy"}', 2),
+		(3,	'Test Employee', '2001-01-01', '0978654323', 'employee@gmail.com', 0, '$2a$10$uRRgBmQCWBLgBsB4lImrguTBcHkx96MErC2fhvxmgUPDacoHPPr6W', '{"city":"Tỉnh Hải Dương","district":"Huyện Gia Lộc","ward":"Xã Hoàng Diệu","street":"Thôn Nghĩa Hy"}', 2),
+		(4, 'Test Moderator', '2001-01-01', '0987654324', 'moderator@gmail.com', 0, '$2a$10$FNOLtGaY4coy0.CAHUxLpuBj9PIEO5J3/nqbORI8UmZuZd4eqARw2', '{"city":"Tỉnh Hải Dương","district":"Huyện Gia Lộc","ward":"Xã Hoàng Diệu","street":"Thôn Nghĩa Hy"}', 2),
+        (5,	'Nguyễn Dương', '2001-01-01', '0852274855', 'ownerduong@gmail.com', 0, '$2a$10$UOEamoIHKWrb7BVNTOtZHebHBp6zPZ03STsKXDCZFD0BJusC9xFlO', '{"city":"Tỉnh Hải Dương","district":"Huyện Gia Lộc","ward":"Xã Hoàng Diệu","street":"Thôn Nghĩa Hy"}', 0);
 		
+INSERT INTO user_role (user_id, role_id, status) 
+VALUES 	(1, 2, 1),
+		(2, 2, 1),
+		(3, 3, 1),
+		(4, 4, 1),
+		(5, 2, 1);
 
 -- facility
 INSERT INTO facility(facility_id, user_id, facility_name, facility_address, facility_found_date, subscription_expiration_date, hotline, business_license_number, status)

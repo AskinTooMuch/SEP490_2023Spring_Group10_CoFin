@@ -18,8 +18,10 @@ package com.example.eims.controller;
 import com.example.eims.dto.specie.EditSpecieDTO;
 import com.example.eims.dto.specie.NewSpecieDTO;
 import com.example.eims.service.interfaces.ISpecieService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -49,7 +51,7 @@ public class SpecieController {
      * @return
      */
     @GetMapping("/list")
-    public ResponseEntity<?> listSpecie(@RequestParam Long userId){
+    public ResponseEntity<?> listSpecie(HttpServletRequest request, @RequestParam Long userId){
         return specieService.listSpecie(userId);
     }
 

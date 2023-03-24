@@ -19,7 +19,7 @@ const ForgotPassword = () => {
   // Data holding object
   const [verifyOtpDTO, setVerifyOtpDTO] = useState({
     phone: "",
-    otp : ""
+    otp: ""
   })
 
   // Handle change input
@@ -37,18 +37,18 @@ const ForgotPassword = () => {
     event.preventDefault();
     try {
       const response = await axios.get(SEND_OTP_URL,
-        { params: { phone: verifyOtpDTO.phone } },
         {
+          params: { phone: verifyOtpDTO.phone },
           headers: {
             'Content-Type': 'application/json',
             'Access-Control-Allow-Origin': '*'
           },
-          withCredentials: false
+          withCredentials: true
         }
       );
       console.log(JSON.stringify(response?.data));
       sessionStorage.setItem("phone", verifyOtpDTO.phone);
-      console.log("phone===="+sessionStorage.getItem("phone"));
+      console.log("phone====" + sessionStorage.getItem("phone"));
       setSuccess(true);
       toast.success("OTP đã gửi");
     } catch (err) {
@@ -65,13 +65,13 @@ const ForgotPassword = () => {
     event.preventDefault();
     try {
       const response = await axios.get(RESEND_OTP_URL,
-        { params: { phone: verifyOtpDTO.phone } },
         {
+          params: { phone: verifyOtpDTO.phone },
           headers: {
             'Content-Type': 'application/json',
             'Access-Control-Allow-Origin': '*'
           },
-          withCredentials: false
+          withCredentials: true
         }
       );
       console.log(JSON.stringify(response?.data));
@@ -96,14 +96,14 @@ const ForgotPassword = () => {
             'Content-Type': 'application/json',
             'Access-Control-Allow-Origin': '*'
           },
-          withCredentials: false
+          withCredentials: true
         }
       );
       console.log(JSON.stringify(response?.data));
       toast.success("OTP chính xác");
       setVerifyOtpDTO({
-        phone : "",
-        otp : ""
+        phone: "",
+        otp: ""
       });
       navigate("/changePassword")
     } catch (err) {

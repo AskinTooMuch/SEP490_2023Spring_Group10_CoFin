@@ -191,7 +191,7 @@ export default function BasicTabs() {
                         'Content-Type': 'application/json',
                         'Access-Control-Allow-Origin': '*'
                     },
-                    withCredentials: false
+                    withCredentials: true
                 }
             );
             setCreateEmployeeDTO({
@@ -226,13 +226,13 @@ export default function BasicTabs() {
     // Request Machine list and load the Employee list into the table rows
     const loadEmployeeList = async () => {
         const result = await axios.get(MACHINE_ALL,
-            { params: { facilityId: sessionStorage.getItem("facilityId") } },
             {
+                params: { facilityId: sessionStorage.getItem("facilityId") },
                 headers: {
                     'Content-Type': 'application/json',
                     'Access-Control-Allow-Origin': '*'
                 },
-                withCredentials: false
+                withCredentials: true
             });
         setEmployeeList(result.data);
 
@@ -282,7 +282,7 @@ export default function BasicTabs() {
                                             ref={userRef}
                                             autoComplete="off"
                                             onChange={(e) => handleCreateEmployeeChange(e, "employeeDob")}
-                                            required/>
+                                            required />
                                     </div>
                                     <div className="col-md-6">
                                         <p>Số điện thoại<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
@@ -369,7 +369,7 @@ export default function BasicTabs() {
                                             ref={userRef}
                                             autoComplete="off"
                                             onChange={(e) => saveAddressJson(e.target.value)}
-                                            required/>
+                                            required />
                                     </div>
 
                                 </div>

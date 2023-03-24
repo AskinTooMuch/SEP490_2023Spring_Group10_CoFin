@@ -52,13 +52,13 @@ const Breed = () => {
     // Request specie list and load the specie list into the dropdowns
     const loadSpecieList = async () => {
         const result = await axios.get(SPECIE_LIST,
-            { params: { userId: sessionStorage.getItem("curUserId") } },
             {
+                params: { userId: sessionStorage.getItem("curUserId") },
                 headers: {
                     'Content-Type': 'application/json',
                     'Access-Control-Allow-Origin': '*'
                 },
-                withCredentials: false
+                withCredentials: true
             });
         setSpecieList(result.data);
         console.log(specieList);
@@ -74,13 +74,13 @@ const Breed = () => {
     // Request breed list and load the breed list into the table rows
     const loadBreedList = async () => {
         const result = await axios.get(BREED_LIST,
-            { params: { userId: sessionStorage.getItem("curUserId") } },
             {
+                params: { userId: sessionStorage.getItem("curUserId") },
                 headers: {
                     'Content-Type': 'application/json',
                     'Access-Control-Allow-Origin': '*'
                 },
-                withCredentials: false
+                withCredentials: true
             });
         setBreedList(result.data);
         console.log(breedList);
@@ -132,7 +132,7 @@ const Breed = () => {
                         'Content-Type': 'multipart/form-data',
                         'Access-Control-Allow-Origin': '*'
                     },
-                    withCredentials: false
+                    withCredentials: true
                 }
             );
             console.log(JSON.stringify(response?.data));
@@ -173,11 +173,11 @@ const Breed = () => {
                                     </div>
                                     <div className="col-md-6">
                                         <select className="form-control mt-1" aria-label="Default select example"
-                                        required
+                                            required
                                             onChange={e => handleChange(e, "specieId")}>
                                             <option disabled value="" selected>Open this select menu</option>
                                             { /**JSX to load options */}
-                                            { specieList &&
+                                            {specieList &&
                                                 specieList.map((item, index) => (
                                                     item.status &&
                                                     <option value={item.specieId}>{item.specieName}</option>
@@ -191,7 +191,7 @@ const Breed = () => {
                                         <p>Tên loại<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                     </div>
                                     <div className="col-md-6">
-                                        <input required id = "createSpecieName"
+                                        <input required id="createSpecieName"
                                             style={{ width: "100%" }}
                                             onChange={e => handleChange(e, "breedName")} />
                                     </div>
@@ -202,10 +202,10 @@ const Breed = () => {
                                     </div>
                                     <div className="col-md-6">
                                         <input id="createBreedMaleAvg" required style={{ width: "100%" }}
-                                        placeholder="kg"
-                                        type='number'
-                                        min='0'
-                                        step='0.01'
+                                            placeholder="kg"
+                                            type='number'
+                                            min='0'
+                                            step='0.01'
                                             onChange={e => handleChange(e, "averageWeightMale")} />
                                     </div>
                                 </div>
@@ -215,10 +215,10 @@ const Breed = () => {
                                     </div>
                                     <div className="col-md-6">
                                         <input id="createBreedFemaleAvg" required style={{ width: "100%" }}
-                                        placeholder="kg"
-                                        type='number'
-                                        min='0'
-                                        step='0.01'
+                                            placeholder="kg"
+                                            type='number'
+                                            min='0'
+                                            step='0.01'
                                             onChange={e => handleChange(e, "averageWeightFemale")} />
                                     </div>
                                 </div>
@@ -228,10 +228,10 @@ const Breed = () => {
                                     </div>
                                     <div className="col-md-6">
                                         <input id="createBreedGrownTime" required style={{ width: "100%" }}
-                                        placeholder="ngày"
-                                        type='number'
-                                        min='0'
-                                        step='1'
+                                            placeholder="ngày"
+                                            type='number'
+                                            min='0'
+                                            step='1'
                                             onChange={e => handleChange(e, "growthTime")} />
                                     </div>
                                 </div>
@@ -241,7 +241,7 @@ const Breed = () => {
                                     </div>
                                     <div className="col-md-6">
                                         <textarea id="createBreedCommondisease" style={{ width: "100%" }}
-                                            onChange={e => handleChange(e, "commonDisease")} 
+                                            onChange={e => handleChange(e, "commonDisease")}
                                             placeholder="Đậu gà, cúm gà, khô chân, giun sán,..."
                                         />
                                     </div>
@@ -276,7 +276,7 @@ const Breed = () => {
                             <div className="input-group-prepend">
                                 <button ><span className="input-group-text" ><SearchIcon /></span></button>
                             </div>
-                            <input id = "searchBreed" type="text" className="form-control" placeholder="Tìm kiếm" aria-label="Username" aria-describedby="basic-addon1" />
+                            <input id="searchBreed" type="text" className="form-control" placeholder="Tìm kiếm" aria-label="Username" aria-describedby="basic-addon1" />
                         </div>
                     </form>
                 </div>
@@ -294,11 +294,11 @@ const Breed = () => {
                     </thead>
                     <tbody>
                         { /**JSX to load breed list */}
-                        { breedList &&
+                        {breedList &&
                             breedList.map((item, index) => (
                                 item.status &&
                                 <tr className='trclick' onClick={() => routeChange(item.breedId)} key={item.breedId}>
-                                    <th scope="row">{index+1}</th>
+                                    <th scope="row">{index + 1}</th>
                                     <td>{item.breedName}</td>
                                     <td>{item.averageWeightMale}</td>
                                     <td>{item.averageWeightFemale}</td>
