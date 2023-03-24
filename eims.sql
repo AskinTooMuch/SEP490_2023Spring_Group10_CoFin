@@ -1,4 +1,6 @@
+-- V0.8.1: Update tables: customer, supplier (user_id -> facility_id)
 -- V0.8.0: Modify the user - role relationship from many-one to many-many
+-- V0.7.1: Import data on tables: registration, breed
 -- V0.7.0: Import data on tables: User, Facility, Specie, incubation phase, supplier, customer, subscription user, 
 -- V0.6.3: Minor audijustment at customer table (NOT NULL field and size)
 -- V0.6.2: Minor audijustment at facility table and add data into machine table
@@ -10,7 +12,7 @@
 -- V0.2.0: Add foreign key constraint
 -- V0.2.1: Change attribute _name, re-route foreign key constraint
 -- V0.2.2: Add CHECK constraint
--- Last update: 22/03/2023
+-- Last update: 24/03/2023
 -- Script for generating EIMS - Eggs Incubating Management System.
 -- Check if database already exist. If yes then drop the database to ensure the script runs successfully with no variations.
 DROP DATABASE IF EXISTS eims;
@@ -106,7 +108,7 @@ CREATE TABLE machine_type(
 
 CREATE TABLE supplier(
 	supplier_id			integer 		AUTO_INCREMENT PRIMARY KEY,
-    user_id				integer			NOT NULL,
+    facility_id			integer			NOT NULL,
     supplier_name		varchar(63)		NOT NULL,
     facility_name	    varchar(63)		NOT NULL,
     supplier_phone		varchar(15)		NOT NULL,
@@ -117,7 +119,7 @@ CREATE TABLE supplier(
 
 CREATE TABLE customer(
 	customer_id			integer 	AUTO_INCREMENT PRIMARY KEY,
-    user_id				integer		NOT NULL,
+    facility_id				integer		NOT NULL,
     customer_name		varchar(63)	NOT NULL,
     customer_phone		varchar(15) NOT NULL,
     customer_address	varchar(255) NOT NULL,
@@ -288,10 +290,10 @@ ALTER TABLE incubation_phase
 ADD FOREIGN KEY (specie_id)		REFERENCES specie(specie_id);
 
 ALTER TABLE supplier
-ADD FOREIGN KEY (user_id) 		REFERENCES user(user_id);
+ADD FOREIGN KEY (facility_id) 		REFERENCES facility(facility_id);
 
 ALTER TABLE customer
-ADD FOREIGN KEY (user_id) 		REFERENCES user(user_id);
+ADD FOREIGN KEY (facility_id) 		REFERENCES facility(facility_id);
 
 ALTER TABLE import_receipt
 ADD FOREIGN KEY (supplier_id) 	REFERENCES supplier(supplier_id),
@@ -468,14 +470,14 @@ INSERT INTO work_in(user_id, facility_id, status)
 VALUES (3, 1, 1);
 
 -- supplier
-INSERT INTO supplier(user_id, supplier_name, facility_name, supplier_phone, supplier_address, supplier_mail, status)
-VALUES (2, 'Vũ Hồng Nam', 'Trang trại gà hòa phát', '0978456331', '{"city":"Tỉnh Hà Giang","district":"Huyện Quản Bạ","ward":"Xã Thái An","street":"Thôn 1"}', 'vunamhong@gmail.com', 1),
-	   (2, 'Phạm Quang Việt', 'Gia cầm Việt Hương', '0978456332', '{"city":"Tỉnh Hà Giang","district":"Huyện Quản Bạ","ward":"Xã Thái An","street":"Thôn 7"}', 'viethuongeggsie@gmail.com', 1);
+INSERT INTO supplier(facility_id, supplier_name, facility_name, supplier_phone, supplier_address, supplier_mail, status)
+VALUES (1, 'Vũ Hồng Nam', 'Trang trại gà hòa phát', '0978456331', '{"city":"Tỉnh Hà Giang","district":"Huyện Quản Bạ","ward":"Xã Thái An","street":"Thôn 1"}', 'vunamhong@gmail.com', 1),
+	   (1, 'Phạm Quang Việt', 'Gia cầm Việt Hương', '0978456332', '{"city":"Tỉnh Hà Giang","district":"Huyện Quản Bạ","ward":"Xã Thái An","street":"Thôn 7"}', 'viethuongeggsie@gmail.com', 1);
        
 -- customer
-INSERT INTO customer(user_id, customer_name, customer_phone, customer_address, customer_mail, status)
-VALUES (2, 'Anh Tiến', '0978456341', '{"city":"Tỉnh Hà Giang","district":"Huyện Quản Bạ","ward":"Xã Thái An","street":"Thôn 3"}', 'tienchinngon@gmail.com', 1),
-	   (2, 'Chị Hương Giang', '0978456342', '{"city":"Tỉnh Hà Giang","district":"Huyện Quản Bạ","ward":"Xã Thái An","street":"Thôn 5"}', 'huongchaykhongmui@gmail.com', 1);
+INSERT INTO customer(facility_id, customer_name, customer_phone, customer_address, customer_mail, status)
+VALUES (1, 'Anh Tiến', '0978456341', '{"city":"Tỉnh Hà Giang","district":"Huyện Quản Bạ","ward":"Xã Thái An","street":"Thôn 3"}', 'tienchinngon@gmail.com', 1),
+	   (1, 'Chị Hương Giang', '0978456342', '{"city":"Tỉnh Hà Giang","district":"Huyện Quản Bạ","ward":"Xã Thái An","street":"Thôn 5"}', 'huongchaykhongmui@gmail.com', 1);
         
         
 -- specie

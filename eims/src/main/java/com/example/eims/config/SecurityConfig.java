@@ -141,7 +141,7 @@ public class SecurityConfig{
         final String[] OWNER = {
                 "/api/specie/new",
                 "/api/specie/edit/**",
-                "api/specie/delete",
+                "/api/specie/delete",
                 "/api/supplier/**",
                 "/api/customer/**",
                 "/api/facility/update/**",

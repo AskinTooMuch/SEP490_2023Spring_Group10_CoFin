@@ -66,7 +66,7 @@ export default function BasicTabs() {
 
     //DTO
     const [updateCustomerDTO, setUpdateCustomerDTO] = useState({
-        userId: sessionStorage.getItem("curUserId"),
+        facilityId: sessionStorage.getItem("facilityId"),
         customerId: "",
         customerName: "",
         customerPhone: "",

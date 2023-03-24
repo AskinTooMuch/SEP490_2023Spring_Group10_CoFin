@@ -15,8 +15,10 @@ package com.example.eims.service.impl;
 import com.example.eims.dto.supplier.CreateSupplierDTO;
 import com.example.eims.dto.supplier.SupplierDetailDTO;
 import com.example.eims.dto.supplier.UpdateSupplierDTO;
+import com.example.eims.entity.Facility;
 import com.example.eims.entity.ImportReceipt;
 import com.example.eims.entity.Supplier;
+import com.example.eims.repository.FacilityRepository;
 import com.example.eims.repository.ImportReceiptRepository;
 import com.example.eims.repository.SupplierRepository;
 import com.example.eims.repository.UserRepository;
@@ -41,27 +43,48 @@ public class SupplierServiceImpl implements ISupplierService {
     private final SupplierRepository supplierRepository;
     @Autowired
     private final ImportReceiptRepository importReceiptRepository;
+    @Autowired
+    private final FacilityRepository facilityRepository;
     private final StringDealer stringDealer;
     public SupplierServiceImpl(UserRepository userRepository, SupplierRepository supplierRepository,
-                               ImportReceiptRepository importReceiptRepository) {
+                               ImportReceiptRepository importReceiptRepository, FacilityRepository facilityRepository) {
         this.userRepository = userRepository;
         this.supplierRepository = supplierRepository;
         this.importReceiptRepository = importReceiptRepository;
+        this.facilityRepository = facilityRepository;
         this.stringDealer = new StringDealer();
     }
 
     /**
      * Get all of their suppliers.
      *
-     * @param userId the id of current logged-in user
+     * @param facilityId the id of facility
      * @return list of Suppliers
      */
     @Override
-    public ResponseEntity<?> getAllSupplier(Long userId) {
+    public ResponseEntity<?> getAllSupplier(Long facilityId) {
         // Get all suppliers of the current User
-        Optional<List<Supplier>> supplierListOptional = supplierRepository.findByUserId(userId);
+        Optional<List<Supplier>> supplierListOptional = supplierRepository.findByFacilityId(facilityId);
         if (supplierListOptional.isEmpty()) {
             return new ResponseEntity<>("No supplier found", HttpStatus.NO_CONTENT); // 204
+        } else {
+            return new ResponseEntity<>(supplierListOptional.get(), HttpStatus.OK);
+        }
+    }
+
+    /**
+     * Get all of their active suppliers.
+     *
+     * @param facilityId the id of facility
+     * @return list of Suppliers
+     */
+    @Override
+    public ResponseEntity<?> getActiveSupplier(Long facilityId) {
+        // Get all active suppliers of the current User
+        Optional<List<Supplier>> supplierListOptional = supplierRepository.
+                findByFacilityIdAndStatus(facilityId,1);
+        if (supplierListOptional.isEmpty()) {
+            return new ResponseEntity<>("No supplier found", HttpStatus.NO_CONTENT);
         } else {
             return new ResponseEntity<>(supplierListOptional.get(), HttpStatus.OK);
         }
@@ -105,10 +128,11 @@ public class SupplierServiceImpl implements ISupplierService {
     @Override
     public ResponseEntity<?> createSupplier(CreateSupplierDTO createSupplierDTO) {
         // Check if Owner's account is still activated
-        Long userId = createSupplierDTO.getUserId();
-        int accountStatus = (userRepository.getStatusByUserId(userId)? 1:0);
-        if (accountStatus == 0) { /* status = 0 (deactivated) */
-            return new ResponseEntity<>("Tài khoản đã bị vô hiệu hóa", HttpStatus.BAD_REQUEST);
+        Long facilityId = createSupplierDTO.getFacilityId();
+        Facility facility = facilityRepository.findByFacilityId(facilityId).get();
+        int facilityStatus = facility.getStatus();
+        if (facilityStatus == 0) { /* status = 0 (deactivated) */
+            return new ResponseEntity<>("Cở sở đã ngừng hoạt động", HttpStatus.BAD_REQUEST);
         }
         System.out.println(createSupplierDTO);
         // Retrieve supplier information and create new supplier
@@ -128,7 +152,7 @@ public class SupplierServiceImpl implements ISupplierService {
             return new ResponseEntity<>("Số điện thoại không hợp lệ", HttpStatus.BAD_REQUEST);
         }
         // Check phone number existed or not
-        boolean existed = supplierRepository.existsBySupplierPhoneAndUserId(phone, userId);
+        boolean existed = supplierRepository.existsBySupplierPhoneAndFacilityId(phone, facilityId);
         if (existed) { /* if phone number existed */
             return new ResponseEntity<>("Số điện thoại đã được sử dụng", HttpStatus.BAD_REQUEST);
         }
@@ -148,7 +172,7 @@ public class SupplierServiceImpl implements ISupplierService {
             return new ResponseEntity<>("Email không hợp lệ", HttpStatus.BAD_REQUEST);
         }
         // Set attribute
-        supplier.setUserId(userId);
+        supplier.setFacilityId(facilityId);
         supplier.setSupplierName(name);
         supplier.setSupplierPhone(phone);
         supplier.setSupplierAddress(address);
@@ -186,7 +210,8 @@ public class SupplierServiceImpl implements ISupplierService {
      */
     @Override
     public ResponseEntity<?> updateSupplier(UpdateSupplierDTO updateSupplierDTO) {
-        Long userId = updateSupplierDTO.getUserId();
+
+        Long facilityId = updateSupplierDTO.getFacilityId();
         // Check blank input
         // Name
         String name = stringDealer.trimMax(updateSupplierDTO.getSupplierName());
@@ -203,7 +228,7 @@ public class SupplierServiceImpl implements ISupplierService {
         }
         String oldPhone = supplierRepository.findSupplierPhoneById(updateSupplierDTO.getSupplierId());
         if (!oldPhone.equals(newPhone)){
-            boolean existed = supplierRepository.existsBySupplierPhoneAndUserId(newPhone, userId);
+            boolean existed = supplierRepository.existsBySupplierPhoneAndFacilityId(newPhone, facilityId);
             if (existed) {
                 return new ResponseEntity<>("Số điện thoại đã được sử dụng", HttpStatus.BAD_REQUEST);
             }
@@ -284,14 +309,14 @@ public class SupplierServiceImpl implements ISupplierService {
     /**
      * Get all of user's Suppliers with Paging.
      *
-     * @param userId the id of current logged-in user.
+     * @param facilityId the id of facility
      * @param page   the page number
      * @param size   the size of page
      * @param sort   sorting type
      * @return list of Suppliers
      */
     @Override
-    public ResponseEntity<?> getAllSupplierPaging(Long userId, Integer page, Integer size, String sort) {
+    public ResponseEntity<?> getAllSupplierPaging(Long facilityId, Integer page, Integer size, String sort) {
         // Get sorting type
         Sort sortable = null;
         if (sort.equals("ASC")) {
@@ -301,7 +326,7 @@ public class SupplierServiceImpl implements ISupplierService {
             sortable = Sort.by("supplierId").descending();
         }
         // Get all customers of the current User with Paging
-        Page<Supplier> supplierPage = supplierRepository.findAllByUserId(userId, PageRequest.of(page, size, sortable));
+        Page<Supplier> supplierPage = supplierRepository.findAllByFacilityId(facilityId, PageRequest.of(page, size, sortable));
         return new ResponseEntity<>(supplierPage, HttpStatus.OK);
     }
 }

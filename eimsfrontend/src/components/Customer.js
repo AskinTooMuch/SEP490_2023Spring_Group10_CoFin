@@ -53,7 +53,7 @@ const Customer = () => {
     //DTOs
     //CreateSupplierDTO
     const [createCustomerDTO, setCreateCustomerDTO] = useState({
-        userId: sessionStorage.getItem("curUserId"),
+        facilityId: sessionStorage.getItem("facilityId"),
         customerName: "",
         customerPhone: "",
         customerAddress: "",
@@ -148,7 +148,7 @@ const Customer = () => {
                 }
             );
             setCreateCustomerDTO({
-                userId: sessionStorage.getItem("curUserId"),
+                facilityId: sessionStorage.getItem("facilityId"),
                 customerName: "",
                 customerPhone: "",
                 customerAddress: "",
@@ -178,7 +178,7 @@ const Customer = () => {
     const loadCustomerList = async () => {
         const result = await axios.get(CUSTOMER_ALL,
             {
-                params: { userId: sessionStorage.getItem("curUserId") },
+                params: { facilityId: sessionStorage.getItem("facilityId") },
                 headers: {
                     'Content-Type': 'application/json',
                     'Access-Control-Allow-Origin': '*'

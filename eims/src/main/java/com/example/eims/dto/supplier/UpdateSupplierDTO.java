@@ -16,13 +16,12 @@ import lombok.Data;
 
 @Data
 public class UpdateSupplierDTO {
-    private Long userId;
+    private Long facilityId;
     private Long supplierId;
     private String supplierName;
     private String facilityName;
     private String supplierPhone;
     private String supplierAddress;
     private String supplierMail;
-
     private int status;
 }

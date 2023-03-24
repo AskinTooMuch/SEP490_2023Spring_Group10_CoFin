@@ -61,7 +61,7 @@ class CustomerServiceImplTest {
         customerList.add(customer2);
         Optional<List<Customer>> returnForUserId1 = Optional.empty();
         // Define behaviour of repository
-        when(customerRepository.findByUserId(1L)).thenReturn(returnForUserId1);
+        when(customerRepository.findByFacilityId(1L)).thenReturn(returnForUserId1);
         // Run service method
         ResponseEntity<?> responseEntity = customerService.getAllCustomer(userId);
         System.out.println(responseEntity.toString());
@@ -81,7 +81,7 @@ class CustomerServiceImplTest {
         customerList.add(customer2);
         Optional<List<Customer>> returnForUserId15 = Optional.empty();
         // Define behaviour of repository
-        when(customerRepository.findByUserId(15L)).thenReturn(returnForUserId15);
+        when(customerRepository.findByFacilityId(15L)).thenReturn(returnForUserId15);
         // Run service method
         ResponseEntity<?> responseEntity = customerService.getAllCustomer(userId);
         System.out.println(responseEntity.toString());
@@ -101,7 +101,7 @@ class CustomerServiceImplTest {
         customerList.add(customer2);
         Optional<List<Customer>> returnForUserId2 = Optional.of(customerList);
         // Define behaviour of repository
-        when(customerRepository.findByUserId(2L)).thenReturn(returnForUserId2);
+        when(customerRepository.findByFacilityId(2L)).thenReturn(returnForUserId2);
         // Run service method
         ResponseEntity<?> responseEntity = customerService.getAllCustomer(userId);
         System.out.println(responseEntity.toString());
@@ -149,7 +149,7 @@ class CustomerServiceImplTest {
         User user = new User();
         user.setUserId(1L);
         user.setStatus(1);
-        dto.setUserId(1L);
+        dto.setFacilityId(1L);
 
         dto.setCustomerName("Nguyen Van C");
         dto.setCustomerPhone("0987654321");
@@ -157,7 +157,7 @@ class CustomerServiceImplTest {
         dto.setCustomerMail("duonghoang01@gmail.com");
         // Define behaviour of repository
         when(userRepository.getStatusByUserId(user.getUserId())).thenReturn(user.getStatus() == 1);
-        when(customerRepository.existsByCustomerPhoneAndUserId(dto.getCustomerPhone(), user.getUserId()))
+        when(customerRepository.existsByCustomerPhoneAndFacilityId(dto.getCustomerPhone(), user.getUserId()))
                 .thenReturn(false);
 
         // Run service method
@@ -175,7 +175,7 @@ class CustomerServiceImplTest {
         User user = new User();
         user.setUserId(1L);
         user.setStatus(1);
-        dto.setUserId(1L);
+        dto.setFacilityId(1L);
 
         dto.setCustomerName("Nguyen Van C");
         dto.setCustomerPhone("abcdefgh");
@@ -200,7 +200,7 @@ class CustomerServiceImplTest {
         User user = new User();
         user.setUserId(1L);
         user.setStatus(1);
-        dto.setUserId(1L);
+        dto.setFacilityId(1L);
 
         dto.setCustomerName("Nguyen Van C");
         dto.setCustomerPhone("0987654321");
@@ -225,7 +225,7 @@ class CustomerServiceImplTest {
         User user = new User();
         user.setUserId(1L);
         user.setStatus(1);
-        dto.setUserId(1L);
+        dto.setFacilityId(1L);
 
         dto.setCustomerName("Nguyen Van C");
         dto.setCustomerPhone("");
@@ -250,7 +250,7 @@ class CustomerServiceImplTest {
         User user = new User();
         user.setUserId(1L);
         user.setStatus(1);
-        dto.setUserId(1L);
+        dto.setFacilityId(1L);
 
         dto.setCustomerName(null);
         dto.setCustomerPhone("0987654321");
@@ -275,7 +275,7 @@ class CustomerServiceImplTest {
         User user = new User();
         user.setUserId(1L);
         user.setStatus(1);
-        dto.setUserId(1L);
+        dto.setFacilityId(1L);
 
         dto.setCustomerName("Nguyen Van C");
         dto.setCustomerPhone("0987654321");
@@ -300,7 +300,7 @@ class CustomerServiceImplTest {
         User user = new User();
         user.setUserId(1L);
         user.setStatus(1);
-        dto.setUserId(1L);
+        dto.setFacilityId(1L);
 
         dto.setCustomerName("Nguyen Van C");
         dto.setCustomerPhone("098765432");
@@ -325,7 +325,7 @@ class CustomerServiceImplTest {
         User user = new User();
         user.setUserId(1L);
         user.setStatus(1);
-        dto.setUserId(1L);
+        dto.setFacilityId(1L);
 
         dto.setCustomerName("Nguyen Van C");
         dto.setCustomerPhone("0987654321");
@@ -350,7 +350,7 @@ class CustomerServiceImplTest {
         User user = new User();
         user.setUserId(1L);
         user.setStatus(1);
-        dto.setUserId(1L);
+        dto.setFacilityId(1L);
 
         dto.setCustomerName("Nguyen Van C");
         dto.setCustomerPhone("0987654321");
@@ -406,7 +406,7 @@ class CustomerServiceImplTest {
         // Set up
         UpdateCustomerDTO dto = new UpdateCustomerDTO();
         Customer customer = new Customer();
-        dto.setUserId(1L);
+        dto.setFacilityId(1L);
         dto.setCustomerId(1L);
         dto.setCustomerName("Nguyen Van C");
         dto.setCustomerPhone("0932321198");
@@ -416,7 +416,7 @@ class CustomerServiceImplTest {
         String oldPhone = "0987654320";
         // Define behaviour of repository
         when(customerRepository.findCustomerPhoneById(1L)).thenReturn(oldPhone);
-        when(customerRepository.existsByCustomerPhoneAndUserId(dto.getCustomerPhone(), dto.getUserId()))
+        when(customerRepository.existsByCustomerPhoneAndFacilityId(dto.getCustomerPhone(), dto.getFacilityId()))
                 .thenReturn(false);
         when(customerRepository.findByCustomerId(dto.getCustomerId())).thenReturn(Optional.of(customer));
         // Run service method
@@ -432,7 +432,7 @@ class CustomerServiceImplTest {
         // Set up
         UpdateCustomerDTO dto = new UpdateCustomerDTO();
         Customer customer = new Customer();
-        dto.setUserId(1L);
+        dto.setFacilityId(1L);
         dto.setCustomerId(1L);
         dto.setCustomerName("Nguyen Van C");
         dto.setCustomerPhone("abcdefgh");
@@ -458,7 +458,7 @@ class CustomerServiceImplTest {
         // Set up
         UpdateCustomerDTO dto = new UpdateCustomerDTO();
         Customer customer = new Customer();
-        dto.setUserId(1L);
+        dto.setFacilityId(1L);
         dto.setCustomerId(1L);
         dto.setCustomerName("Nguyen Van C");
         dto.setCustomerPhone("0932321198");
@@ -484,7 +484,7 @@ class CustomerServiceImplTest {
         // Set up
         UpdateCustomerDTO dto = new UpdateCustomerDTO();
         Customer customer = new Customer();
-        dto.setUserId(1L);
+        dto.setFacilityId(1L);
         dto.setCustomerId(1L);
         dto.setCustomerName("");
         dto.setCustomerPhone("0932321198");
@@ -510,7 +510,7 @@ class CustomerServiceImplTest {
         // Set up
         UpdateCustomerDTO dto = new UpdateCustomerDTO();
         Customer customer = new Customer();
-        dto.setUserId(1L);
+        dto.setFacilityId(1L);
         dto.setCustomerId(1L);
         dto.setCustomerName("Nguyen Van C");
         dto.setCustomerPhone(null);
@@ -536,7 +536,7 @@ class CustomerServiceImplTest {
         // Set up
         UpdateCustomerDTO dto = new UpdateCustomerDTO();
         Customer customer = new Customer();
-        dto.setUserId(1L);
+        dto.setFacilityId(1L);
         dto.setCustomerId(1L);
         dto.setCustomerName("Nguyen Van C");
         dto.setCustomerPhone("0932321198");
@@ -546,7 +546,7 @@ class CustomerServiceImplTest {
         String oldPhone = "0987654320";
         // Define behaviour of repository
         when(customerRepository.findCustomerPhoneById(1L)).thenReturn(oldPhone);
-        when(customerRepository.existsByCustomerPhoneAndUserId(dto.getCustomerPhone(), dto.getUserId()))
+        when(customerRepository.existsByCustomerPhoneAndFacilityId(dto.getCustomerPhone(), dto.getFacilityId()))
                 .thenReturn(false);
         when(customerRepository.findByCustomerId(dto.getCustomerId())).thenReturn(Optional.of(customer));
         // Run service method
@@ -562,7 +562,7 @@ class CustomerServiceImplTest {
         // Set up
         UpdateCustomerDTO dto = new UpdateCustomerDTO();
         Customer customer = new Customer();
-        dto.setUserId(1L);
+        dto.setFacilityId(1L);
         dto.setCustomerId(1L);
         dto.setCustomerName("Nguyen Van C");
         dto.setCustomerPhone("12345");
@@ -588,7 +588,7 @@ class CustomerServiceImplTest {
         // Set up
         UpdateCustomerDTO dto = new UpdateCustomerDTO();
         Customer customer = new Customer();
-        dto.setUserId(1L);
+        dto.setFacilityId(1L);
         dto.setCustomerId(1L);
         dto.setCustomerName("Nguyen Van C");
         dto.setCustomerPhone("0932321198");
@@ -614,7 +614,7 @@ class CustomerServiceImplTest {
         // Set up
         UpdateCustomerDTO dto = new UpdateCustomerDTO();
         Customer customer = new Customer();
-        dto.setUserId(1L);
+        dto.setFacilityId(1L);
         dto.setCustomerId(1L);
         dto.setCustomerName("Nguyen Van C");
         dto.setCustomerPhone("0932321198");
@@ -624,7 +624,7 @@ class CustomerServiceImplTest {
         String oldPhone = "0987654320";
         // Define behaviour of repository
         when(customerRepository.findCustomerPhoneById(1L)).thenReturn(oldPhone);
-        when(customerRepository.existsByCustomerPhoneAndUserId(dto.getCustomerPhone(), dto.getUserId()))
+        when(customerRepository.existsByCustomerPhoneAndFacilityId(dto.getCustomerPhone(), dto.getFacilityId()))
                 .thenReturn(false);
         when(customerRepository.findByCustomerId(dto.getCustomerId())).thenReturn(Optional.of(customer));
         // Run service method
@@ -640,7 +640,7 @@ class CustomerServiceImplTest {
         // Set up
         UpdateCustomerDTO dto = new UpdateCustomerDTO();
         Customer customer = new Customer();
-        dto.setUserId(1L);
+        dto.setFacilityId(1L);
         dto.setCustomerId(1L);
         dto.setCustomerName("Nguyen Van C");
         dto.setCustomerPhone("0932321198");
@@ -650,7 +650,7 @@ class CustomerServiceImplTest {
         String oldPhone = "0987654320";
         // Define behaviour of repository
         when(customerRepository.findCustomerPhoneById(1L)).thenReturn(oldPhone);
-        when(customerRepository.existsByCustomerPhoneAndUserId(dto.getCustomerPhone(), dto.getUserId()))
+        when(customerRepository.existsByCustomerPhoneAndFacilityId(dto.getCustomerPhone(), dto.getFacilityId()))
                 .thenReturn(false);
         //when(customerRepository.findByCustomerId(dto.getCustomerId())).thenReturn(Optional.of(customer));
         // Run service method
@@ -666,7 +666,7 @@ class CustomerServiceImplTest {
         // Set up
         UpdateCustomerDTO dto = new UpdateCustomerDTO();
         Customer customer = new Customer();
-        dto.setUserId(1L);
+        dto.setFacilityId(1L);
         dto.setCustomerId(1L);
         dto.setCustomerName("Nguyen Van C");
         dto.setCustomerPhone("0932321198");
@@ -676,7 +676,7 @@ class CustomerServiceImplTest {
         String oldPhone = "0987654320";
         // Define behaviour of repository
         when(customerRepository.findCustomerPhoneById(1L)).thenReturn(oldPhone);
-        when(customerRepository.existsByCustomerPhoneAndUserId(dto.getCustomerPhone(), dto.getUserId()))
+        when(customerRepository.existsByCustomerPhoneAndFacilityId(dto.getCustomerPhone(), dto.getFacilityId()))
                 .thenReturn(false);
         when(customerRepository.findByCustomerId(dto.getCustomerId())).thenReturn(Optional.of(customer));
         // Run service method
@@ -800,7 +800,7 @@ class CustomerServiceImplTest {
         Sort sortable = Sort.by("customerId").ascending();
         Pageable pageable = PageRequest.of(page, size, sortable);
         // Define behaviour of repository
-        when(customerRepository.findAllByUserId(ownerId, pageable)).thenReturn(customerPage);
+        when(customerRepository.findAllByFacilityId(ownerId, pageable)).thenReturn(customerPage);
         // Run service method
         ResponseEntity<?> responseEntity = customerService.getAllCustomerPaging(ownerId, page, size, "ASC");
         System.out.println(responseEntity.toString());
@@ -822,7 +822,7 @@ class CustomerServiceImplTest {
         Sort sortable = Sort.by("customerId").ascending();
         Pageable pageable = PageRequest.of(page, size, sortable);
         // Define behaviour of repository
-        when(customerRepository.findAllByUserId(1L, pageable)).thenReturn(customerPage);
+        when(customerRepository.findAllByFacilityId(1L, pageable)).thenReturn(customerPage);
         // Run service method
         ResponseEntity<?> responseEntity = customerService.getAllCustomerPaging(1L, 1, 2, "ASC");
         System.out.println(responseEntity.toString());

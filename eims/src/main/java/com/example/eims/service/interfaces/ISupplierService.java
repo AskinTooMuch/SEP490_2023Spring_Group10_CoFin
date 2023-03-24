@@ -20,10 +20,18 @@ public interface ISupplierService {
     /**
      * Get all of their suppliers.
      *
-     * @param userId the id of current logged-in user
+     * @param facilityId the id of facility
      * @return list of Suppliers
      */
-    public ResponseEntity<?> getAllSupplier(Long userId);
+    public ResponseEntity<?> getAllSupplier(Long facilityId);
+
+    /**
+     * Get all of their active suppliers.
+     *
+     * @param facilityId the id of facility
+     * @return list of Suppliers
+     */
+    public ResponseEntity<?> getActiveSupplier(Long facilityId);
 
     /**
      * Get a supplier.
@@ -60,11 +68,11 @@ public interface ISupplierService {
     /**
      * Search supplier of the user by their name or phone number.
      *
-     * @param userId the id of current logged-in user
+     * @param facilityId the id of facility
      * @param key the search key (name or phone number)
      * @return list of suppliers
      */
-    public ResponseEntity<?> searchSupplier(Long userId, String key);
+    public ResponseEntity<?> searchSupplier(Long facilityId, String key);
 
     /**
      * Get all import bill from supplier.
@@ -77,12 +85,12 @@ public interface ISupplierService {
     /**
      * Get all of user's Suppliers with Paging.
      *
-     * @param userId the id of current logged-in user.
+     * @param facilityId the id of facility
      * @param page the page number
      * @param size the size of page
      * @param sort sorting type
      * @return list of Suppliers
      */
-    public ResponseEntity<?> getAllSupplierPaging(Long userId, Integer page, Integer size, String sort);
+    public ResponseEntity<?> getAllSupplierPaging(Long facilityId, Integer page, Integer size, String sort);
 
 }

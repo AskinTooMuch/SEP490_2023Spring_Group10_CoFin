@@ -1,5 +1,10 @@
-import React, { useState } from 'react';
+import { ImportantDevicesTwoTone } from '@mui/icons-material';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from "react-router-dom";
+import axios from 'axios';
+import { ToastContainer, toast } from 'react-toastify';
+import { display } from '@mui/system';
+
 function TableRows({ rowsData, deleteTableRows, handleChange }) {
     return (
         rowsData.map((data, index) => {
@@ -18,9 +23,16 @@ function TableRows({ rowsData, deleteTableRows, handleChange }) {
     )
 }
 const CreateImportBill = () => {
+    // Dependency
+    const [dataLoaded, setDataLoaded] = useState(false);
     let navigate = useNavigate();
     const [rowsData, setRowsData] = useState([]);
-//Add table rows
+
+    // API URLs
+    const CREATE_IMPORT_SAVE = '/api/import/create';
+    const SUPPLIER_ACTIVE_GET = '/api/supplier/allActive';
+
+    //Add table rows
     const addTableRows = () => {
         const rowsInput = {
             species: '',
@@ -44,6 +56,72 @@ const CreateImportBill = () => {
         rowsInput[index][name] = value;
         setRowsData(rowsInput);
     }
+    // DTOs
+    // List active
+    const [supplierList, setSupplierList] = useState([])
+    // Create import Dto
+    const [createImportDTO, setCreateImportDTO] = useState({
+        supplierId: "",
+        userId: sessionStorage.getItem("curUserId"),
+        facilityId: sessionStorage.getItem("facilityId"),
+        importDate: "",
+        eggBatchList: []
+    })
+
+    //Handle Change functions:
+    //Create Import
+    const handleCreateImportChange = (event, field) => {
+        let actualValue = event.target.value
+        setCreateImportDTO({
+            ...createImportDTO,
+            [field]: actualValue
+        })
+        if (field == "supplierId"){
+            show();
+        }
+            
+    }
+    // Load supplier list
+    useEffect(() => {
+        loadSuppliers();
+    }, [dataLoaded]);
+
+    const loadSuppliers = async () => {
+        let response;
+        try {
+            response = await axios.get(SUPPLIER_ACTIVE_GET,
+                {
+                    params: { facilityId: sessionStorage.getItem("facilityId") },
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Access-Control-Allow-Origin': '*'
+                    },
+                    withCredentials: true
+                });
+            setSupplierList(response.data);
+            setDataLoaded(true)
+            console.log(supplierList);
+        } catch (err) {
+            if (!err?.response) {
+                toast.error('Server không phản hồi');
+            } else {
+                toast.error(err.response.data);
+            }
+        }
+    }
+
+    // Display phone number of supplier
+    function show() {
+        var select = document.getElementById('select');
+        var id = select.options[select.selectedIndex].value;
+        supplierList.map((item) => {
+            item.supplierId == id 
+            ?document.getElementById('phone').innerHTML = item.supplierPhone
+            :console.log("");
+        }
+        )
+    }
+
     return (
         <>
             <h2>Tạo hoá đơn nhập</h2>
@@ -55,15 +133,24 @@ const CreateImportBill = () => {
                                 <p>Nhà cung cấp</p>
                             </div>
                             <div className="col-md-3">
-                                <select className="form-control mt-1">
+                                <select onChange={(e) => handleCreateImportChange(e, "supplierId")}
+                                 id="select" className="form-control mt-1" required>
                                     <option defaultValue="Chọn nhà cung cấp">Chọn nhà cung cấp</option>
+                                    {
+                                        supplierList &&
+                                            supplierList.length > 0 ?
+                                            supplierList.map((item, index) =>
+                                                <option value={item.supplierId}>{item.supplierName}</option>
+                                            ) : ''
+
+                                    }
                                 </select>
                             </div>
                             <div className="col-md-3 " style={{ textAlign: "right" }}>
                                 <p>Số điện thoại</p>
                             </div>
                             <div className="col-md-3">
-                                <p>09726164856</p>
+                                <p id="phone" name="phone"></p>
                             </div>
                         </div>
                         <div className="row">
@@ -73,7 +160,8 @@ const CreateImportBill = () => {
                                 <p>Ngày nhập</p>
                             </div>
                             <div className="col-md-3 ">
-                                <input type="date" />
+                                <input required type="date" 
+                                onChange={(e) => handleCreateImportChange(e, "importDate")}/>
                             </div>
                             <div className="col-md-3">
                             </div>
@@ -108,7 +196,18 @@ const CreateImportBill = () => {
                     </div>
                 </div>
             </form>
+            <ToastContainer position="top-left"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="colored" />
         </>
+
     );
 }
 

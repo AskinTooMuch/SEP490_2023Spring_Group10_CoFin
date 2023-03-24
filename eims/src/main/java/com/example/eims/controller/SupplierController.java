@@ -35,13 +35,25 @@ public class SupplierController {
     /**
      * Get all of their suppliers.
      *
-     * @param userId the id of current logged-in user
+     * @param facilityId the id of facility
      * @return list of Suppliers
      */
     @GetMapping("/all")
     @Secured({"ROLE_OWNER"})
-    public ResponseEntity<?> getAllSupplier(@RequestParam Long userId) {
-        return supplierService.getAllSupplier(userId);
+    public ResponseEntity<?> getAllSupplier(@RequestParam Long facilityId) {
+        return supplierService.getAllSupplier(facilityId);
+    }
+
+    /**
+     * Get all of their active suppliers.
+     *
+     * @param facilityId the id of facility
+     * @return list of Suppliers
+     */
+    @GetMapping("/allActive")
+    @Secured({"ROLE_OWNER"})
+    public ResponseEntity<?> getActiveSupplier(@RequestParam Long facilityId) {
+        return supplierService.getActiveSupplier(facilityId);
     }
 
     /**
@@ -94,14 +106,14 @@ public class SupplierController {
     /**
      * Search supplier of the user by their name or phone number.
      *
-     * @param userId the id of current logged-in user
+     * @param facilityId the id of facility
      * @param key the search key (name or phone number
      * @return list of suppliers
      */
     @GetMapping("/search")
     @Secured({"ROLE_OWNER"})
-    public ResponseEntity<?> searchSupplier(@RequestParam Long userId, @RequestParam String key) {
-        return supplierService.searchSupplier(userId, key);
+    public ResponseEntity<?> searchSupplier(@RequestParam Long facilityId, @RequestParam String key) {
+        return supplierService.searchSupplier(facilityId, key);
     }
 
     /**
@@ -118,15 +130,15 @@ public class SupplierController {
     /**
      * Get all of user's Suppliers with Paging.
      *
-     * @param userId the id of current logged-in user.
+     * @param facilityId the id of facility
      * @return list of Suppliers
      */
     @GetMapping("/allPaging")
     @Secured({"ROLE_OWNER"})
-    public ResponseEntity<?> getAllSupplierPaging(@RequestParam(name = "userId") Long userId,
+    public ResponseEntity<?> getAllSupplierPaging(@RequestParam(name = "facilityId") Long facilityId,
                                                     @RequestParam(name = "page", required = false, defaultValue = "0") Integer page,
                                                     @RequestParam(name = "size", required = false, defaultValue = "5") Integer size,
                                                     @RequestParam(name = "sort", required = false, defaultValue = "ASC") String sort) {
-        return supplierService.getAllSupplierPaging(userId, page, size, sort);
+        return supplierService.getAllSupplierPaging(facilityId, page, size, sort);
     }
 }

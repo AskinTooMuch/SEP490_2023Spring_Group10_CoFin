@@ -16,7 +16,7 @@ import lombok.Data;
 
 @Data
 public class CreateSupplierDTO {
-    private Long userId;
+    private Long facilityId;
     private String supplierName;
     private String facilityName;
     private String supplierPhone;

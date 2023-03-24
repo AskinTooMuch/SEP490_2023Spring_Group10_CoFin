@@ -14,7 +14,9 @@ package com.example.eims.service.impl;
 import com.example.eims.dto.customer.CreateCustomerDTO;
 import com.example.eims.dto.customer.UpdateCustomerDTO;
 import com.example.eims.entity.Customer;
+import com.example.eims.entity.Facility;
 import com.example.eims.repository.CustomerRepository;
+import com.example.eims.repository.FacilityRepository;
 import com.example.eims.repository.UserRepository;
 import com.example.eims.service.interfaces.ICustomerService;
 import com.example.eims.utils.StringDealer;
@@ -38,23 +40,27 @@ public class CustomerServiceImpl implements ICustomerService {
     private final CustomerRepository customerRepository;
     @Autowired
     private final UserRepository userRepository;
-    private StringDealer stringDealer = new StringDealer();
+    @Autowired
+    private final FacilityRepository facilityRepository;
+    private final StringDealer stringDealer = new StringDealer();
 
-    public CustomerServiceImpl(CustomerRepository customerRepository, UserRepository userRepository) {
+    public CustomerServiceImpl(CustomerRepository customerRepository, UserRepository userRepository,
+                               FacilityRepository facilityRepository) {
         this.customerRepository = customerRepository;
         this.userRepository = userRepository;
+        this.facilityRepository = facilityRepository;
     }
 
     /**
      * Get all of user's customers.
      *
-     * @param userId the id of current logged-in user.
+     * @param facilityId the id of facility
      * @return list of Customers
      */
     @Override
-    public ResponseEntity<?> getAllCustomer(Long userId) {
+    public ResponseEntity<?> getAllCustomer(Long facilityId) {
         // Get all customers of the current User
-        Optional<List<Customer>> customers = customerRepository.findByUserId(userId);
+        Optional<List<Customer>> customers = customerRepository.findByFacilityId(facilityId);
         if (customers.isPresent()) {
             return new ResponseEntity<>(customers.get(), HttpStatus.OK);
         }
@@ -87,10 +93,10 @@ public class CustomerServiceImpl implements ICustomerService {
     @Override
     public ResponseEntity<?> createCustomer(CreateCustomerDTO createCustomerDTO) {
         // Check if Owner's account is still activated
-        Long userId = createCustomerDTO.getUserId();
-        int accountStatus = (userRepository.getStatusByUserId(userId)? 1:0);
-        if (accountStatus == 0) { /* status = 0 (deactivated) */
-            return new ResponseEntity<>("Tài khoản đã bị vô hiệu hóa", HttpStatus.BAD_REQUEST);
+        Long facilityId = createCustomerDTO.getFacilityId();
+        Facility facility = facilityRepository.findByFacilityId(facilityId).get();
+        if (facility.getStatus() == 0) { /* status = 0 (deactivated) */
+            return new ResponseEntity<>("Cơ sở đã ngừng hoạt động", HttpStatus.BAD_REQUEST);
         }
         // Check blank input
         // Name
@@ -108,7 +114,7 @@ public class CustomerServiceImpl implements ICustomerService {
             return new ResponseEntity<>("Số điện thoại không hợp lệ", HttpStatus.BAD_REQUEST);
         }
         // Check phone number existed or not
-        boolean existed = customerRepository.existsByCustomerPhoneAndUserId(phone, userId);
+        boolean existed = customerRepository.existsByCustomerPhoneAndFacilityId(phone, facilityId);
         if (existed) { /* if phone number existed */
             return new ResponseEntity<>("Số điện thoại đã được sử dụng", HttpStatus.BAD_REQUEST);
         }
@@ -118,7 +124,8 @@ public class CustomerServiceImpl implements ICustomerService {
             return new ResponseEntity<>("Email không hợp lệ", HttpStatus.BAD_REQUEST);
         }
         // Address
-        if (createCustomerDTO.getCustomerAddress() == null || stringDealer.trimMax(createCustomerDTO.getCustomerAddress()).equals("")) { /* Address is empty */
+        if (createCustomerDTO.getCustomerAddress() == null
+                || stringDealer.trimMax(createCustomerDTO.getCustomerAddress()).equals("")) { /* Address is empty */
             return new ResponseEntity<>("Địa chỉ không được để trống", HttpStatus.BAD_REQUEST);
         }
         String address = stringDealer.trimMax(createCustomerDTO.getCustomerAddress());
@@ -135,7 +142,7 @@ public class CustomerServiceImpl implements ICustomerService {
         }
         // Retrieve customer information and create new customer
         Customer customer = new Customer();
-        customer.setUserId(createCustomerDTO.getUserId());
+        customer.setFacilityId(createCustomerDTO.getFacilityId());
         customer.setCustomerName(name);
         customer.setCustomerPhone(phone);
         customer.setCustomerAddress(address);
@@ -171,7 +178,7 @@ public class CustomerServiceImpl implements ICustomerService {
      */
     @Override
     public ResponseEntity<?> updateCustomer(UpdateCustomerDTO updateCustomerDTO) {
-        Long userId = updateCustomerDTO.getUserId();
+        Long facilityId = updateCustomerDTO.getFacilityId();
         // Name
         if (updateCustomerDTO.getCustomerName() == null || stringDealer.trimMax(updateCustomerDTO.getCustomerName()).equals("")) { /* Supplier name is empty */
             return new ResponseEntity<>("Tên khách hàng không được để trống", HttpStatus.BAD_REQUEST);
@@ -187,7 +194,7 @@ public class CustomerServiceImpl implements ICustomerService {
         }
         String oldPhone = customerRepository.findCustomerPhoneById(updateCustomerDTO.getCustomerId());
         if (!newPhone.equals(oldPhone)) {
-            boolean existed = customerRepository.existsByCustomerPhoneAndUserId(newPhone, userId);
+            boolean existed = customerRepository.existsByCustomerPhoneAndFacilityId(newPhone, facilityId);
             if (existed) {
                 return new ResponseEntity<>("Số điện thoại đã được sử dụng", HttpStatus.BAD_REQUEST);
             }
@@ -238,19 +245,19 @@ public class CustomerServiceImpl implements ICustomerService {
     /**
      * Search customer of the user by their name or phone number.
      *
-     * @param userId the id of current logged-in user
+     * @param facilityId the id of facility
      * @param key    the search key (name or phone number)
      * @return list of customers match the key search item.
      */
     @Override
-    public ResponseEntity<?> searchCustomer(Long userId, String key) {
+    public ResponseEntity<?> searchCustomer(Long facilityId, String key) {
         if(key == null || stringDealer.trimMax(key).equals("")){
             return new ResponseEntity<>("Nhập tên hoặc số điện thoại để tìm kiếm", HttpStatus.BAD_REQUEST);
         }
         // Trim spaces
         key = stringDealer.trimMax(key);
         // Search
-        Optional<List<Customer>> customerList = customerRepository.searchByUsernameOrPhone(userId, key);
+        Optional<List<Customer>> customerList = customerRepository.searchByUsernameOrPhone(facilityId, key);
         if (customerList.isPresent()) {
             return new ResponseEntity<>(customerList.get(), HttpStatus.OK);
         } else {
@@ -261,14 +268,14 @@ public class CustomerServiceImpl implements ICustomerService {
     /**
      * Get all of user's customers with Paging.
      *
-     * @param userId the id of current logged-in user.
+     * @param facilityId the id of facility
      * @param page   the page number
      * @param size   the size of page
      * @param sort   sorting type
      * @return list of Customers
      */
     @Override
-    public ResponseEntity<?> getAllCustomerPaging(Long userId, Integer page, Integer size, String sort) {
+    public ResponseEntity<?> getAllCustomerPaging(Long facilityId, Integer page, Integer size, String sort) {
         // Get sorting type
         Sort sortable = null;
         if (sort.equals("ASC")) {
@@ -278,7 +285,7 @@ public class CustomerServiceImpl implements ICustomerService {
             sortable = Sort.by("customerId").descending();
         }
         // Get all customers of the current User with Paging
-        Page<Customer> customerPage = customerRepository.findAllByUserId(userId, PageRequest.of(page, size, sortable));
+        Page<Customer> customerPage = customerRepository.findAllByFacilityId(facilityId, PageRequest.of(page, size, sortable));
         return new ResponseEntity<>(customerPage, HttpStatus.OK);
     }
 }

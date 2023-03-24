@@ -16,7 +16,7 @@ import lombok.Data;
 
 @Data
 public class SupplierDetailDTO {
-    private Long userId;
+    private Long facilityId;
     private Long supplierId;
     private String supplierName;
     private String facilityName;
@@ -28,7 +28,7 @@ public class SupplierDetailDTO {
     private int status;
 
     public void getFromEntity(Supplier supplier) {
-        this.userId = supplier.getUserId();
+        this.facilityId = supplier.getFacilityId();
         this.supplierId = supplier.getSupplierId();
         this.supplierName = supplier.getSupplierName();
         this.supplierPhone = supplier.getSupplierPhone();

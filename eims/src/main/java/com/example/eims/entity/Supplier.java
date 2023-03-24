@@ -22,7 +22,7 @@ public class Supplier {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long supplierId;
-    private Long userId;
+    private Long facilityId;
     private String supplierName;
     private String facilityName;
     private String supplierPhone;
