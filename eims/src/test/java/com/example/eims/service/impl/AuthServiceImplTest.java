@@ -13,11 +13,12 @@
  package com.example.eims.service.impl;
 
  import com.example.eims.dto.auth.*;
- import com.example.eims.entity.Facility;
- import com.example.eims.entity.Otp;
- import com.example.eims.entity.Registration;
- import com.example.eims.entity.User;
+ import com.example.eims.entity.*;
  import com.example.eims.repository.*;
+ import jakarta.servlet.ServletContext;
+ import jakarta.servlet.http.HttpServletRequest;
+ import jakarta.servlet.http.HttpServletResponse;
+ import jakarta.servlet.http.HttpSession;
  import org.junit.jupiter.api.DisplayName;
  import org.junit.jupiter.api.Test;
  import org.junit.jupiter.api.extension.ExtendWith;
@@ -25,11 +26,17 @@
  import org.mockito.Mock;
  import org.mockito.junit.jupiter.MockitoExtension;
  import org.springframework.http.ResponseEntity;
+ import org.springframework.mock.web.MockHttpServletRequest;
  import org.springframework.security.authentication.AuthenticationManager;
+ import org.springframework.security.authentication.AuthenticationProvider;
+ import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+ import org.springframework.security.core.Authentication;
+ import org.springframework.security.core.GrantedAuthority;
+ import org.springframework.security.core.context.SecurityContextHolder;
  import org.springframework.security.crypto.password.PasswordEncoder;
 
  import java.io.IOException;
- import java.util.Optional;
+ import java.util.*;
 
  import static org.junit.jupiter.api.Assertions.*;
  import static org.mockito.ArgumentMatchers.any;
@@ -38,7 +45,9 @@
  @ExtendWith(MockitoExtension.class)
  class AuthServiceImplTest {
      @Mock
-     AuthenticationManager authenticationManager;
+     AuthenticationProvider authenticationProvider;
+     @Mock
+     SecurityContextHolder securityContextHolder;
      @Mock
      UserRepository userRepository;
      @Mock
@@ -51,13 +60,17 @@
      OtpRepository otpRepository;
      @Mock
      PasswordEncoder passwordEncoder;
+     @Mock
+     HttpServletRequest httpServletRequest;
+     @Mock
+     HttpServletResponse httpServletResponse;
      @InjectMocks
      AuthServiceImpl authService;
 
      // Create demo entity
      LoginDTO loginDTO = new LoginDTO("0987654321", "@User123");
      // User
-     User user = new User(6L, 2L, "0987654321", "$2a$10$oqiLElPhIymUCkPwBQlBrOBIgZRIko8kwjWJSFFOK9LpGhxWnobj.", 1);
+     User user = new User(6L, "0987654321", "$2a$10$4GrQ4t2aPfe8mnGuWwmsB.YACEEyiZ8BAnEuSK70IpROqu.Bv9Ttm", 1);
      // Facility
      Facility facility = new Facility(4L, user.getUserId(), 1);
      //Registration
@@ -482,17 +495,122 @@
      void authenticateUserUTC01() {
          // Set up
          LoginDTO loginDTO = new LoginDTO("0987654321", "@User123");
+         List<Role> role = new ArrayList<>();
+         role.add(new Role(2, "ROLE_OWNER", true));
+         user.setRoles(role);
+
+         UserDetailsImpl userDetails = new UserDetailsImpl();
+         userDetails.setUser(user);
+         Authentication auth = new Authentication() {
+             @Override
+             public Collection<? extends GrantedAuthority> getAuthorities() {
+                 return null;
+             }
+
+             @Override
+             public Object getCredentials() {
+                 return null;
+             }
+
+             @Override
+             public Object getDetails() {
+                 return null;
+             }
+
+             @Override
+             public Object getPrincipal() {
+                 return null;
+             }
+
+             @Override
+             public boolean isAuthenticated() {
+                 return false;
+             }
+
+             @Override
+             public void setAuthenticated(boolean isAuthenticated) throws IllegalArgumentException {
+
+             }
+
+             @Override
+             public String getName() {
+                 return null;
+             }};
          // Define behaviour of repository
          when(userRepository.findByPhone(user.getPhone())).thenReturn(Optional.of(user));
          when(facilityRepository.findByUserId(user.getUserId())).thenReturn(Optional.of(facility));
          when(registrationRepository.findByUserId(user.getUserId())).thenReturn(Optional.of(registration));
-         when(passwordEncoder.matches("@User123", "$2a$10$oqiLElPhIymUCkPwBQlBrOBIgZRIko8kwjWJSFFOK9LpGhxWnobj.")).thenReturn(true);
+         when(passwordEncoder.matches(loginDTO.getPassword(), user.getPassword())).thenReturn(true);
+         when(authenticationProvider.authenticate(new UsernamePasswordAuthenticationToken(loginDTO.getPhone(), loginDTO.getPassword()))).thenReturn(auth);
+         when(httpServletRequest.getSession(true)).thenReturn(new HttpSession() {
+             @Override
+             public long getCreationTime() {
+                 return 0;
+             }
+
+             @Override
+             public String getId() {
+                 return null;
+             }
+
+             @Override
+             public long getLastAccessedTime() {
+                 return 0;
+             }
+
+             @Override
+             public ServletContext getServletContext() {
+                 return null;
+             }
+
+             @Override
+             public void setMaxInactiveInterval(int i) {
+
+             }
+
+             @Override
+             public int getMaxInactiveInterval() {
+                 return 0;
+             }
+
+             @Override
+             public Object getAttribute(String s) {
+                 return null;
+             }
+
+             @Override
+             public Enumeration<String> getAttributeNames() {
+                 return null;
+             }
+
+             @Override
+             public void setAttribute(String s, Object o) {
+
+             }
+
+             @Override
+             public void removeAttribute(String s) {
+
+             }
+
+             @Override
+             public void invalidate() {
+
+             }
+
+             @Override
+             public boolean isNew() {
+                 return false;
+             }
+         });
+         when(SecurityContextHolder.getContext().getAuthentication()).thenReturn(auth);
+         when(SecurityContextHolder.getContext().getAuthentication().getPrincipal()).thenReturn(userDetails);
          // Run service method
-         ResponseEntity<?> responseEntity = authService.authenticateUser(loginDTO);
+         ResponseEntity<?> responseEntity = authService.authenticateUser(httpServletRequest,httpServletResponse, loginDTO);
          System.out.println(responseEntity.toString());
          SessionDTO sessionDTO = (SessionDTO) responseEntity.getBody();
          // Assert
-         assertEquals(sessionDTO.getUserId(), user.getUserId());
+         assertEquals(user.getUserId(), sessionDTO.getUserId());
          //assertEquals(sessionDTO.getUserId(), 3L);
      }
 
@@ -503,7 +621,7 @@
          LoginDTO loginDTO = new LoginDTO("", "@User123");
 
          // Run service method
-         ResponseEntity<?> responseEntity = authService.authenticateUser(loginDTO);
+         ResponseEntity<?> responseEntity = authService.authenticateUser(httpServletRequest,httpServletResponse, loginDTO);
          System.out.println(responseEntity.toString());
          // Assert
          assertEquals("Số điện thoại không được để trống", responseEntity.getBody());
@@ -517,7 +635,7 @@
          LoginDTO loginDTO = new LoginDTO(null, "@User123");
 
          // Run service method
-         ResponseEntity<?> responseEntity = authService.authenticateUser(loginDTO);
+         ResponseEntity<?> responseEntity = authService.authenticateUser(httpServletRequest,httpServletResponse, loginDTO);
          System.out.println(responseEntity.toString());
          // Assert
          assertEquals("Số điện thoại không được để trống", responseEntity.getBody());
@@ -529,13 +647,16 @@
      void authenticateUserUTC04() {
          // Set up
          LoginDTO loginDTO = new LoginDTO("0987654321", "eimslogin");
+         List<Role> role = new ArrayList<>();
+         role.add(new Role(2, "ROLE_OWNER", true));
+         user.setRoles(role);
          // Define behaviour of repository
          when(userRepository.findByPhone(user.getPhone())).thenReturn(Optional.of(user));
          //when(facilityRepository.findByUserId(user.getUserId())).thenReturn(Optional.of(facility));
          when(registrationRepository.findByUserId(user.getUserId())).thenReturn(Optional.of(registration));
 
          // Run service method
-         ResponseEntity<?> responseEntity = authService.authenticateUser(loginDTO);
+         ResponseEntity<?> responseEntity = authService.authenticateUser(httpServletRequest,httpServletResponse, loginDTO);
          System.out.println(responseEntity.toString());
          // Assert
          assertEquals("Mật khẩu hoặc tài khoản sai",responseEntity.getBody());
@@ -549,7 +670,7 @@
          LoginDTO loginDTO = new LoginDTO("0987654321", "");
 
          // Run service method
-         ResponseEntity<?> responseEntity = authService.authenticateUser(loginDTO);
+         ResponseEntity<?> responseEntity = authService.authenticateUser(httpServletRequest,httpServletResponse, loginDTO);
          System.out.println(responseEntity.toString());
          // Assert
          assertEquals("Mật khẩu không được để trống", responseEntity.getBody());
@@ -563,7 +684,7 @@
          LoginDTO loginDTO = new LoginDTO("0987654321", null);
 
          // Run service method
-         ResponseEntity<?> responseEntity = authService.authenticateUser(loginDTO);
+         ResponseEntity<?> responseEntity = authService.authenticateUser(httpServletRequest,httpServletResponse, loginDTO);
          System.out.println(responseEntity.toString());
          // Assert
          assertEquals("Mật khẩu không được để trống", responseEntity.getBody());
@@ -581,6 +702,7 @@
          when(userRepository.findByUserId(user.getUserId())).thenReturn(Optional.of(user));
          when(passwordEncoder.matches(dto.getPassword(), user.getPassword()))
                  .thenReturn((dto.getPassword().equals(user.getPassword())));
+         when(passwordEncoder.matches(dto.getPassword(),user.getPassword())).thenReturn(true);
          // Run service method
          ResponseEntity<?> responseEntity = authService.changePassword(dto);
          System.out.println(responseEntity.toString());

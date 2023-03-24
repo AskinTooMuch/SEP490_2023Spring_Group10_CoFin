@@ -58,7 +58,7 @@ class SupplierServiceImplTest {
         supplierList.add(supplier1);
         supplierList.add(supplier2);
         // Define behaviour of repository
-        when(supplierRepository.findByFacilityId(1L)).thenReturn(Optional.of(supplierList));
+        when(supplierRepository.findByUserId(1L)).thenReturn(Optional.of(supplierList));
 
         // Run service method
         ResponseEntity<?> responseEntity = supplierService.getAllSupplier(1L);
@@ -93,7 +93,7 @@ class SupplierServiceImplTest {
         Supplier supplier = new Supplier();
         supplier.setSupplierId(1L);
         CreateSupplierDTO dto = new CreateSupplierDTO();
-        dto.setFacilityId(1L);
+        dto.setUserId(1L);
         dto.setSupplierName("name");
         dto.setSupplierPhone("0987654321");
         dto.setSupplierAddress("address");
@@ -102,7 +102,7 @@ class SupplierServiceImplTest {
 
         // Define behaviour of repository
         when(userRepository.getStatusByUserId(1L)).thenReturn(true);
-        when(supplierRepository.existsBySupplierPhoneAndFacilityId("0987654321", dto.getFacilityId()))
+        when(supplierRepository.existsBySupplierPhoneAndUserId("0987654321", dto.getUserId()))
                 .thenReturn(false);
 
         // Run service method
@@ -134,7 +134,7 @@ class SupplierServiceImplTest {
         Supplier supplier = new Supplier();
         supplier.setSupplierId(1L);
         UpdateSupplierDTO dto = new UpdateSupplierDTO();
-        dto.setFacilityId(1L);
+        dto.setUserId(1L);
         dto.setSupplierId(1L);
         dto.setSupplierName("name");
         dto.setSupplierPhone("0987654321");
@@ -145,7 +145,7 @@ class SupplierServiceImplTest {
         String oldPhone = "0987654320";
         // Define behaviour of repository
         when(supplierRepository.findSupplierPhoneById(dto.getSupplierId())).thenReturn(oldPhone);
-        when(supplierRepository.existsBySupplierPhoneAndFacilityId(dto.getSupplierPhone(), dto.getFacilityId()))
+        when(supplierRepository.existsBySupplierPhoneAndUserId(dto.getSupplierPhone(), dto.getUserId()))
                 .thenReturn(false);
         when(supplierRepository.findBySupplierId(1L)).thenReturn(Optional.of(supplier));
         // Run service method
@@ -207,7 +207,7 @@ class SupplierServiceImplTest {
         Sort sortable = Sort.by("supplierId").ascending();
         Pageable pageable = PageRequest.of(page, size, sortable);
         // Define behaviour of repository
-        when(supplierRepository.findAllByFacilityId(1L, pageable)).thenReturn(supplierPage);
+        when(supplierRepository.findAllByUserId(1L, pageable)).thenReturn(supplierPage);
         // Run service method
         ResponseEntity<?> responseEntity = supplierService.getAllSupplierPaging(1L, 1, 2, "ASC");
         System.out.println(responseEntity.toString());

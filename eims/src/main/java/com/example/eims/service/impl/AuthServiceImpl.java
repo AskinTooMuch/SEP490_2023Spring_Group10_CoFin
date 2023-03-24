@@ -87,16 +87,16 @@ public class AuthServiceImpl implements IAuthService {
      */
     @Override
     public ResponseEntity<?> authenticateUser(HttpServletRequest request, HttpServletResponse response, LoginDTO loginDTO) {
-        loginDTO.setPassword(stringDealer.trimMax(loginDTO.getPassword()));
-        loginDTO.setPhone(stringDealer.trimMax(loginDTO.getPhone()));
-        String phone = loginDTO.getPhone();
-        String password = loginDTO.getPassword();
         if (loginDTO.getPhone() == null || stringDealer.trimMax(loginDTO.getPhone()).equals("")) { /* Phone number is empty */
             return new ResponseEntity<>("Số điện thoại không được để trống", HttpStatus.BAD_REQUEST);
         }
+        String phone = stringDealer.trimMax(loginDTO.getPhone());
         if (loginDTO.getPassword() == null || stringDealer.trimMax(loginDTO.getPassword()).equals("")) { /* Password is empty */
             return new ResponseEntity<>("Mật khẩu không được để trống", HttpStatus.BAD_REQUEST);
         }
+        String password = stringDealer.trimMax(loginDTO.getPassword());
+        loginDTO.setPassword(stringDealer.trimMax(loginDTO.getPassword()));
+        loginDTO.setPhone(stringDealer.trimMax(loginDTO.getPhone()));
         Optional<User> userOpt = userRepository.findByPhone(phone);
         if (userOpt.isEmpty()) {
             return new ResponseEntity<>("Tài khoản hoặc mật khẩu sai", HttpStatus.BAD_REQUEST);

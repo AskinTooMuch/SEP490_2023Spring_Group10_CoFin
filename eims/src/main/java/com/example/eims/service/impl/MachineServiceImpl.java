@@ -110,25 +110,28 @@ public class MachineServiceImpl implements IMachineService {
             machineDetailDTO.getFromEntity(machine);
             MachineType machineType = machineTypeRepository.findByMachineTypeId(machine.getMachineTypeId());
             machineDetailDTO.setMachineTypeName(machineType.getMachineTypeName());
-            List<EggLocation> eggs = eggLocationRepository.getAllByMachineId(machineId).get();
             List<EggLocationMachineDetailDTO> eggLocations = new ArrayList<>();
-            for (EggLocation eggLocation : eggs) {
-                EggLocationMachineDetailDTO eggLocationMachineDetailDTO = new EggLocationMachineDetailDTO();
-                eggLocationMachineDetailDTO.getFromEntity(eggLocation);
-                EggProduct eggProduct = eggProductRepository.getByProductId(eggLocation.getProductId()).get();
+            Optional<List<EggLocation>> eggsOpt = eggLocationRepository.getAllByMachineId(machineId);
+            if (eggsOpt.isPresent()){
+                List<EggLocation> eggs = eggsOpt.get();
+                for (EggLocation eggLocation : eggs) {
+                    EggLocationMachineDetailDTO eggLocationMachineDetailDTO = new EggLocationMachineDetailDTO();
+                    eggLocationMachineDetailDTO.getFromEntity(eggLocation);
+                    EggProduct eggProduct = eggProductRepository.getByProductId(eggLocation.getProductId()).get();
 
-                LocalDateTime dateTime = eggProduct.getIncubationDate();
-                Date startDate = Date.valueOf(dateTime.toLocalDate());
-                Date endDate = Date.valueOf(LocalDate.now());
+                    LocalDateTime dateTime = eggProduct.getIncubationDate();
+                    Date startDate = Date.valueOf(dateTime.toLocalDate());
+                    Date endDate = Date.valueOf(LocalDate.now());
 
-                Breed breed = breedRepository.getBreedOfProduct(eggProduct.getProductId());
-                int growthTime = breed.getGrowthTime();
-                String breedName = breed.getBreedName();
-                eggLocationMachineDetailDTO.setGrowthTime(growthTime);
-                eggLocationMachineDetailDTO.setBreedName(breedName);
-                eggLocationMachineDetailDTO.setIncubationDateToNow(stringDealer.dateDiff(startDate, endDate));
-                eggLocationMachineDetailDTO.setEggBatchId(eggProduct.getEggBatchId());
-                eggLocations.add(eggLocationMachineDetailDTO);
+                    Breed breed = breedRepository.getBreedOfProduct(eggProduct.getProductId());
+                    int growthTime = breed.getGrowthTime();
+                    String breedName = breed.getBreedName();
+                    eggLocationMachineDetailDTO.setGrowthTime(growthTime);
+                    eggLocationMachineDetailDTO.setBreedName(breedName);
+                    eggLocationMachineDetailDTO.setIncubationDateToNow(stringDealer.dateDiff(startDate, endDate));
+                    eggLocationMachineDetailDTO.setEggBatchId(eggProduct.getEggBatchId());
+                    eggLocations.add(eggLocationMachineDetailDTO);
+                }
             }
             machineDetailDTO.setEggs(eggLocations);
             return new ResponseEntity<>(machineDetailDTO, HttpStatus.OK);
@@ -174,6 +177,9 @@ public class MachineServiceImpl implements IMachineService {
     public ResponseEntity<?> createMachine(CreateMachineDTO createMachineDTO) {
         // Check if facility is not running
         Long facilityId = createMachineDTO.getFacilityId();
+        if (!facilityRepository.findByFacilityId(facilityId).isPresent()){
+            return new ResponseEntity<>("Cơ sở không tồn tại", HttpStatus.BAD_REQUEST);
+        }
         if (!facilityRepository.getStatusById(facilityId)) { /*Facility stopped running*/
             return new ResponseEntity<>("Cơ sở đã ngừng hoạt động", HttpStatus.BAD_REQUEST);
         } else {
@@ -181,12 +187,18 @@ public class MachineServiceImpl implements IMachineService {
             Machine machine = new Machine();
             // Check blank input
             // Machine's name
-            String name = stringDealer.trimMax(createMachineDTO.getMachineName());
-            if (name.equals("")) { /* Machine name is empty */
+            if (createMachineDTO.getMachineName() == null || stringDealer.trimMax(createMachineDTO.getMachineName()).equals("")) { /* Machine name is empty */
                 return new ResponseEntity<>("Tên máy không được để trống", HttpStatus.BAD_REQUEST);
             }
+            String name = stringDealer.trimMax(createMachineDTO.getMachineName());
             // Machine type
             Long machineType = createMachineDTO.getMachineTypeId();
+            Optional<MachineType> machineTypeOpt = machineTypeRepository.findById(machineType);
+            if(!machineTypeOpt.isPresent()){
+                return new ResponseEntity<>("Loại máy không tồn tại", HttpStatus.BAD_REQUEST);
+            } else if (!machineTypeOpt.get().isStatus()){
+                return new ResponseEntity<>("Loại máy không tồn tại", HttpStatus.BAD_REQUEST);
+            }
             // Max capacity
             int maxCapacity = createMachineDTO.getMaxCapacity();
             if (maxCapacity <= 0) { /* Capacity must bigger than 0 */
@@ -240,11 +252,14 @@ public class MachineServiceImpl implements IMachineService {
             Machine machine = machineOptional.get();
             // Check blank input
             // Machine's name
-            String name = stringDealer.trimMax(updateMachineDTO.getMachineName());
-            if (name.equals("")) { /* Machine name is empty */
+            if (updateMachineDTO.getMachineName() == null || stringDealer.trimMax(updateMachineDTO.getMachineName()).equals("")) { /* Machine name is empty */
                 return new ResponseEntity<>("Tên máy không được để trống", HttpStatus.BAD_REQUEST);
             }
+            String name = stringDealer.trimMax(updateMachineDTO.getMachineName());
             machine.setMachineName(name);
+            if(updateMachineDTO.getStatus() != 1 && updateMachineDTO.getStatus() != 0){
+                return new ResponseEntity<>("Trạng thái không hợp lệ", HttpStatus.BAD_REQUEST);
+            }
             machine.setStatus(updateMachineDTO.getStatus());
             // Save
             machineRepository.save(machine);
@@ -272,7 +287,7 @@ public class MachineServiceImpl implements IMachineService {
                 return new ResponseEntity<>("Xóa máy thành công", HttpStatus.OK);
             }
         } else {
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Máy không tồn tại", HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -289,6 +304,9 @@ public class MachineServiceImpl implements IMachineService {
     @Override
     public ResponseEntity<?> getAllMachinePaging(Long facilityId, Integer page, Integer size, String sort) {
         // Get sorting type
+        if(!facilityRepository.existsByFacilityId(facilityId)){
+            return new ResponseEntity<>("Cơ sở không tồn tại", HttpStatus.BAD_REQUEST);
+        }
         Sort sortable = null;
         if (sort.equals("ASC")) {
             sortable = Sort.by("machineId").ascending();
