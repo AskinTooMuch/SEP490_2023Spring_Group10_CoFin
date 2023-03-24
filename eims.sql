@@ -1,3 +1,4 @@
+-- V0.8.2: Roll back to V0.8.0
 -- V0.8.1: Update tables: customer, supplier (user_id -> facility_id)
 -- V0.8.0: Modify the user - role relationship from many-one to many-many
 -- V0.7.1: Import data on tables: registration, breed
@@ -108,7 +109,7 @@ CREATE TABLE machine_type(
 
 CREATE TABLE supplier(
 	supplier_id			integer 		AUTO_INCREMENT PRIMARY KEY,
-    facility_id			integer			NOT NULL,
+    user_id				integer			NOT NULL,
     supplier_name		varchar(63)		NOT NULL,
     facility_name	    varchar(63)		NOT NULL,
     supplier_phone		varchar(15)		NOT NULL,
@@ -119,7 +120,7 @@ CREATE TABLE supplier(
 
 CREATE TABLE customer(
 	customer_id			integer 	AUTO_INCREMENT PRIMARY KEY,
-    facility_id				integer		NOT NULL,
+    user_id				integer		NOT NULL,
     customer_name		varchar(63)	NOT NULL,
     customer_phone		varchar(15) NOT NULL,
     customer_address	varchar(255) NOT NULL,
@@ -290,10 +291,10 @@ ALTER TABLE incubation_phase
 ADD FOREIGN KEY (specie_id)		REFERENCES specie(specie_id);
 
 ALTER TABLE supplier
-ADD FOREIGN KEY (facility_id) 		REFERENCES facility(facility_id);
+ADD FOREIGN KEY (user_id) 		REFERENCES user(user_id);
 
 ALTER TABLE customer
-ADD FOREIGN KEY (facility_id) 		REFERENCES facility(facility_id);
+ADD FOREIGN KEY (user_id) 		REFERENCES user(user_id);
 
 ALTER TABLE import_receipt
 ADD FOREIGN KEY (supplier_id) 	REFERENCES supplier(supplier_id),
@@ -470,14 +471,14 @@ INSERT INTO work_in(user_id, facility_id, status)
 VALUES (3, 1, 1);
 
 -- supplier
-INSERT INTO supplier(facility_id, supplier_name, facility_name, supplier_phone, supplier_address, supplier_mail, status)
-VALUES (1, 'Vũ Hồng Nam', 'Trang trại gà hòa phát', '0978456331', '{"city":"Tỉnh Hà Giang","district":"Huyện Quản Bạ","ward":"Xã Thái An","street":"Thôn 1"}', 'vunamhong@gmail.com', 1),
-	   (1, 'Phạm Quang Việt', 'Gia cầm Việt Hương', '0978456332', '{"city":"Tỉnh Hà Giang","district":"Huyện Quản Bạ","ward":"Xã Thái An","street":"Thôn 7"}', 'viethuongeggsie@gmail.com', 1);
+INSERT INTO supplier(user_id, supplier_name, facility_name, supplier_phone, supplier_address, supplier_mail, status)
+VALUES (2, 'Vũ Hồng Nam', 'Trang trại gà hòa phát', '0978456331', '{"city":"Tỉnh Hà Giang","district":"Huyện Quản Bạ","ward":"Xã Thái An","street":"Thôn 1"}', 'vunamhong@gmail.com', 1),
+	   (2, 'Phạm Quang Việt', 'Gia cầm Việt Hương', '0978456332', '{"city":"Tỉnh Hà Giang","district":"Huyện Quản Bạ","ward":"Xã Thái An","street":"Thôn 7"}', 'viethuongeggsie@gmail.com', 1);
        
 -- customer
-INSERT INTO customer(facility_id, customer_name, customer_phone, customer_address, customer_mail, status)
-VALUES (1, 'Anh Tiến', '0978456341', '{"city":"Tỉnh Hà Giang","district":"Huyện Quản Bạ","ward":"Xã Thái An","street":"Thôn 3"}', 'tienchinngon@gmail.com', 1),
-	   (1, 'Chị Hương Giang', '0978456342', '{"city":"Tỉnh Hà Giang","district":"Huyện Quản Bạ","ward":"Xã Thái An","street":"Thôn 5"}', 'huongchaykhongmui@gmail.com', 1);
+INSERT INTO customer(user_id, customer_name, customer_phone, customer_address, customer_mail, status)
+VALUES (2, 'Anh Tiến', '0978456341', '{"city":"Tỉnh Hà Giang","district":"Huyện Quản Bạ","ward":"Xã Thái An","street":"Thôn 3"}', 'tienchinngon@gmail.com', 1),
+	   (2, 'Chị Hương Giang', '0978456342', '{"city":"Tỉnh Hà Giang","district":"Huyện Quản Bạ","ward":"Xã Thái An","street":"Thôn 5"}', 'huongchaykhongmui@gmail.com', 1);
         
         
 -- specie

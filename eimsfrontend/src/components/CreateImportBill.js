@@ -5,14 +5,26 @@ import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import { display } from '@mui/system';
 
-function TableRows({ rowsData, deleteTableRows, handleChange }) {
+function TableRows({ rowsData, deleteTableRows, handleChange, breedList }) {
     return (
         rowsData.map((data, index) => {
             const { species, breed, number, price, total } = data;
             return (
                 <tr key={index}>
-                    <td><input type="text" value={species} onChange={(evnt) => (handleChange(index, evnt))} name="species" className="form-control" /></td>
-                    <td><input type="text" value={breed} onChange={(evnt) => (handleChange(index, evnt))} name="breed" className="form-control" /> </td>
+                    <td>
+                        <select onChange={(evnt) => handleChange(index, evnt)}
+                            id="selectBreed" className="form-control mt-1" required>
+                            <option defaultValue={breed}>Chọn loại</option>
+                            {
+                                breedList &&
+                                    breedList.length > 0 ?
+                                    breedList.map((item, index) =>
+                                        <option value={item.breedId}>{item.breedName}</option>
+                                    ) : ''
+
+                            }
+                        </select>
+                    </td>
                     <td><input type="text" value={number} onChange={(evnt) => (handleChange(index, evnt))} name="number" className="form-control" /> </td>
                     <td><input type="text" value={price} onChange={(evnt) => (handleChange(index, evnt))} name="price" className="form-control" /> </td>
                     <td><input type="text" value={total} onChange={(evnt) => (handleChange(index, evnt))} name="total" className="form-control" /> </td>
@@ -31,11 +43,11 @@ const CreateImportBill = () => {
     // API URLs
     const CREATE_IMPORT_SAVE = '/api/import/create';
     const SUPPLIER_ACTIVE_GET = '/api/supplier/allActive';
+    const BREED_LIST_GET = 'api/breed/detail/userId'
 
     //Add table rows
     const addTableRows = () => {
         const rowsInput = {
-            species: '',
             breed: '',
             number: '',
             price: '',
@@ -67,6 +79,8 @@ const CreateImportBill = () => {
         importDate: "",
         eggBatchList: []
     })
+    // Breed list
+    const [breedList, setBreedList] = useState([])
 
     //Handle Change functions:
     //Create Import
@@ -76,16 +90,18 @@ const CreateImportBill = () => {
             ...createImportDTO,
             [field]: actualValue
         })
-        if (field == "supplierId"){
+        if (field == "supplierId") {
             show();
         }
-            
+
     }
     // Load supplier list
     useEffect(() => {
         loadSuppliers();
+        loadBreeds();
     }, [dataLoaded]);
 
+    // Load supplier list
     const loadSuppliers = async () => {
         let response;
         try {
@@ -110,14 +126,39 @@ const CreateImportBill = () => {
         }
     }
 
+    // Load breed list
+    const loadBreeds = async () => {
+        let response;
+        try {
+            response = await axios.get(BREED_LIST_GET,
+                {
+                    params: { userId: sessionStorage.getItem("curUserId") },
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Access-Control-Allow-Origin': '*'
+                    },
+                    withCredentials: true
+                });
+            setBreedList(response.data);
+            setDataLoaded(true)
+            console.log(breedList);
+        } catch (err) {
+            if (!err?.response) {
+                toast.error('Server không phản hồi');
+            } else {
+                toast.error(err.response.data);
+            }
+        }
+    }
+
     // Display phone number of supplier
     function show() {
         var select = document.getElementById('select');
         var id = select.options[select.selectedIndex].value;
         supplierList.map((item) => {
-            item.supplierId == id 
-            ?document.getElementById('phone').innerHTML = item.supplierPhone
-            :console.log("");
+            item.supplierId == id
+                ? document.getElementById('phone').innerHTML = item.supplierPhone
+                : console.log("");
         }
         )
     }
@@ -134,7 +175,7 @@ const CreateImportBill = () => {
                             </div>
                             <div className="col-md-3">
                                 <select onChange={(e) => handleCreateImportChange(e, "supplierId")}
-                                 id="select" className="form-control mt-1" required>
+                                    id="select" className="form-control mt-1" required>
                                     <option defaultValue="Chọn nhà cung cấp">Chọn nhà cung cấp</option>
                                     {
                                         supplierList &&
@@ -160,8 +201,8 @@ const CreateImportBill = () => {
                                 <p>Ngày nhập</p>
                             </div>
                             <div className="col-md-3 ">
-                                <input required type="date" 
-                                onChange={(e) => handleCreateImportChange(e, "importDate")}/>
+                                <input required type="date"
+                                    onChange={(e) => handleCreateImportChange(e, "importDate")} />
                             </div>
                             <div className="col-md-3">
                             </div>
@@ -171,7 +212,6 @@ const CreateImportBill = () => {
                     <table className="table table-bordered">
                         <thead>
                             <tr>
-                                <th scope="col">Loài</th>
                                 <th scope="col">Loại</th>
                                 <th scope="col">Số lượng (trứng)</th>
                                 <th scope="col">Đơn giá</th>
@@ -179,7 +219,7 @@ const CreateImportBill = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            <TableRows rowsData={rowsData} deleteTableRows={deleteTableRows} handleChange={handleChange} />
+                            <TableRows rowsData={rowsData} deleteTableRows={deleteTableRows} handleChange={handleChange} breedList={breedList} />
                         </tbody>
                     </table>
                     <div style={{ textAlign: "center" }}>

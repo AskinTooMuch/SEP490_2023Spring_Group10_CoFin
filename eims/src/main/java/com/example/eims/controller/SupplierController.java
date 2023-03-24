@@ -35,25 +35,25 @@ public class SupplierController {
     /**
      * Get all of their suppliers.
      *
-     * @param facilityId the id of facility
+     * @param userId the id of the Owner
      * @return list of Suppliers
      */
     @GetMapping("/all")
     @Secured({"ROLE_OWNER"})
-    public ResponseEntity<?> getAllSupplier(@RequestParam Long facilityId) {
-        return supplierService.getAllSupplier(facilityId);
+    public ResponseEntity<?> getAllSupplier(@RequestParam Long userId) {
+        return supplierService.getAllSupplier(userId);
     }
 
     /**
      * Get all of their active suppliers.
      *
-     * @param facilityId the id of facility
+     * @param userId the id of the Owner
      * @return list of Suppliers
      */
     @GetMapping("/allActive")
     @Secured({"ROLE_OWNER"})
-    public ResponseEntity<?> getActiveSupplier(@RequestParam Long facilityId) {
-        return supplierService.getActiveSupplier(facilityId);
+    public ResponseEntity<?> getActiveSupplier(@RequestParam Long userId) {
+        return supplierService.getActiveSupplier(userId);
     }
 
     /**
@@ -106,14 +106,14 @@ public class SupplierController {
     /**
      * Search supplier of the user by their name or phone number.
      *
-     * @param facilityId the id of facility
-     * @param key the search key (name or phone number
+     * @param userId the id of the Owner
+     * @param key        the search key (name or phone number
      * @return list of suppliers
      */
     @GetMapping("/search")
     @Secured({"ROLE_OWNER"})
-    public ResponseEntity<?> searchSupplier(@RequestParam Long facilityId, @RequestParam String key) {
-        return supplierService.searchSupplier(facilityId, key);
+    public ResponseEntity<?> searchSupplier(@RequestParam Long userId, @RequestParam String key) {
+        return supplierService.searchSupplier(userId, key);
     }
 
     /**
@@ -130,15 +130,15 @@ public class SupplierController {
     /**
      * Get all of user's Suppliers with Paging.
      *
-     * @param facilityId the id of facility
+     * @param userId the id of the Owner
      * @return list of Suppliers
      */
     @GetMapping("/allPaging")
     @Secured({"ROLE_OWNER"})
-    public ResponseEntity<?> getAllSupplierPaging(@RequestParam(name = "facilityId") Long facilityId,
-                                                    @RequestParam(name = "page", required = false, defaultValue = "0") Integer page,
-                                                    @RequestParam(name = "size", required = false, defaultValue = "5") Integer size,
-                                                    @RequestParam(name = "sort", required = false, defaultValue = "ASC") String sort) {
-        return supplierService.getAllSupplierPaging(facilityId, page, size, sort);
+    public ResponseEntity<?> getAllSupplierPaging(@RequestParam(name = "userId") Long userId,
+                                                  @RequestParam(name = "page", required = false, defaultValue = "0") Integer page,
+                                                  @RequestParam(name = "size", required = false, defaultValue = "5") Integer size,
+                                                  @RequestParam(name = "sort", required = false, defaultValue = "ASC") String sort) {
+        return supplierService.getAllSupplierPaging(userId, page, size, sort);
     }
 }

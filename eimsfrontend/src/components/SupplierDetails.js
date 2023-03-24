@@ -65,6 +65,7 @@ export default function BasicTabs() {
     const handleShow = () => setShow(true);
     //DTO
     const [updateSupplierDTO, setUpdateSupplierDTO] = useState({
+        userId: sessionStorage.getItem("curUserId"),
         supplierId: "",
         supplierName: "",
         facilityName: "",
@@ -135,6 +136,7 @@ export default function BasicTabs() {
             });
         // Set inf
         setAddressJson(JSON.parse(result.data.supplierAddress));
+        updateSupplierDTO.userId = sessionStorage.getItem("curUserId");
         updateSupplierDTO.supplierId = result.data.supplierId;
         updateSupplierDTO.supplierName = result.data.supplierName;
         updateSupplierDTO.facilityName = result.data.facilityName;

@@ -66,7 +66,7 @@ export default function BasicTabs() {
 
     //DTO
     const [updateCustomerDTO, setUpdateCustomerDTO] = useState({
-        facilityId: sessionStorage.getItem("facilityId"),
+        userId: sessionStorage.getItem("curUserId"),
         customerId: "",
         customerName: "",
         customerPhone: "",
@@ -272,9 +272,6 @@ export default function BasicTabs() {
             }
         }
     }
-
-
-
 
     return (
         <Box sx={{ width: '100%' }}>

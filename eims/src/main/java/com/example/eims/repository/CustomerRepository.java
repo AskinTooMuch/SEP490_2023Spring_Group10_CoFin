@@ -23,17 +23,17 @@ import java.util.List;
 import java.util.Optional;
 
 public interface CustomerRepository extends JpaRepository<Customer, Long> {
-    Optional<List<Customer>> findByFacilityId(Long facilityId);
+    Optional<List<Customer>> findByUserId(Long facilityId);
     Optional<Customer> findByCustomerId(Long customerId);
     boolean existsByCustomerPhone(String phoneNumber);
-    boolean existsByCustomerPhoneAndFacilityId(String phoneNumber, Long facilityId);
-    @Query(value = "SELECT * FROM eims.customer WHERE facility_id = ?1 " +
+    boolean existsByCustomerPhoneAndUserId(String phoneNumber, Long userId);
+    @Query(value = "SELECT * FROM eims.customer WHERE user_id = ?1 " +
             "AND customer_name LIKE %?2% OR customer_phone LIKE %?2%", nativeQuery = true)
-    Optional<List<Customer>> searchByUsernameOrPhone(Long facilityId, String key);
-    Page<Customer> findAllByFacilityId(Long facilityId, Pageable pageable);
+    Optional<List<Customer>> searchByUsernameOrPhone(Long userId, String key);
+    Page<Customer> findAllByUserId(Long userId, Pageable pageable);
     boolean existsByCustomerPhoneNot(String phone);
     @Query(value = "SELECT customer_phone FROM eims.customer WHERE customer_id = ?1 ", nativeQuery = true)
     String findCustomerPhoneById(Long customerId);
     Optional<Customer> findByCustomerPhone(String phone);
-    Optional<Customer> findByCustomerPhoneAndFacilityId(String phone, Long facilityId);
+    Optional<Customer> findByCustomerPhoneAndUserId(String phone, Long userId);
 }

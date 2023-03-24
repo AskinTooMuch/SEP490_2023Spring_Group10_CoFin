@@ -50,7 +50,7 @@ const Supplier = () => {
   //DTOs
   //CreateSupplierDTO
   const [newSupplierDTO, setNewSupplierDTO] = useState({
-    facilityId: sessionStorage.getItem("facilityId"),
+    userId: sessionStorage.getItem("curUserId"),
     supplierName: "",
     supplierPhone: "",
     supplierAddress: "",
@@ -149,7 +149,7 @@ const Supplier = () => {
         }
       );
       setNewSupplierDTO({
-        facilityId: sessionStorage.getItem("facilityId"),
+        userId: sessionStorage.getItem("curUserId"),
         supplierName: "",
         supplierPhone: "",
         supplierAddress: "",
@@ -179,7 +179,7 @@ const Supplier = () => {
   const loadSupplerList = async () => {
     const result = await axios.get(SUPPLIER_ALL,
       {
-        params: { facilityId: sessionStorage.getItem("facilityId") },
+        params: { userId: sessionStorage.getItem("curUserId") },
         headers: {
           'Content-Type': 'application/json',
           'Access-Control-Allow-Origin': '*'

@@ -34,13 +34,13 @@ public class CustomerController {
     /**
      * Get all of user's customers.
      *
-     * @param facilityId the id of facility
+     * @param userId the id of the Owner
      * @return list of Customers
      */
     @GetMapping("/all")
     @Secured({"ROLE_OWNER"})
-    public ResponseEntity<?> getAllCustomer(@RequestParam Long facilityId) {
-        return customerService.getAllCustomer(facilityId);
+    public ResponseEntity<?> getAllCustomer(@RequestParam Long userId) {
+        return customerService.getAllCustomer(userId);
     }
 
     /**
@@ -95,20 +95,20 @@ public class CustomerController {
     /**
      * Search customer of the user by their name or phone number.
      *
-     * @param facilityId the id of facility
+     * @param userId the id of the Owner
      * @param key    the search key (name or phone number)
      * @return list of customers match the key search item.
      */
     @GetMapping("/search")
     @Secured({"ROLE_OWNER"})
-    public ResponseEntity<?> searchCustomer(@RequestParam Long facilityId, @RequestParam String key) {
-        return customerService.searchCustomer(facilityId, key);
+    public ResponseEntity<?> searchCustomer(@RequestParam Long userId, @RequestParam String key) {
+        return customerService.searchCustomer(userId, key);
     }
 
     /**
      * Get all of user's customers with Paging.
      *
-     * @param facilityId the id of facility
+     * @param userId the id of the Owner
      * @param page   the page number
      * @param size   the size of page
      * @param sort   sorting type
@@ -116,11 +116,11 @@ public class CustomerController {
      */
     @GetMapping("/allPaging")
     @Secured({"ROLE_OWNER"})
-    public ResponseEntity<?> getAllCustomerPaging(@RequestParam(name = "facilityId") Long facilityId,
+    public ResponseEntity<?> getAllCustomerPaging(@RequestParam(name = "userId") Long userId,
                                                   @RequestParam(name = "page", required = false, defaultValue = "0") Integer page,
                                                   @RequestParam(name = "size", required = false, defaultValue = "5") Integer size,
                                                   @RequestParam(name = "sort", required = false, defaultValue = "ASC") String sort) {
-        return customerService.getAllCustomerPaging(facilityId, page, size, sort);
+        return customerService.getAllCustomerPaging(userId, page, size, sort);
     }
 
 }

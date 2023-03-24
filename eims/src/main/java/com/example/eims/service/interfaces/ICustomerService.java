@@ -19,10 +19,10 @@ public interface ICustomerService {
     /**
      * Get all of user's customers.
      *
-     * @param facilityId the id of facility
+     * @param userId the id of the Owner
      * @return list of Customers
      */
-    public ResponseEntity<?> getAllCustomer(Long facilityId);
+    public ResponseEntity<?> getAllCustomer(Long userId);
 
     /**
      * Get a customer.
@@ -60,19 +60,19 @@ public interface ICustomerService {
      * Search customer of the user by their name or phone number.
      *
      * @param key    the search key (name or phone number)
-     * @param facilityId the id of facility
+     * @param userId the id of the Owner
      * @return list of customers match the key search item.
      */
-    public ResponseEntity<?> searchCustomer(Long facilityId, String key);
+    public ResponseEntity<?> searchCustomer(Long userId, String key);
 
     /**
      * Get all of user's customers with Paging.
      *
-     * @param facilityId the id of facility
+     * @param userId the id of the Owner
      * @param page   the page number
      * @param size   the size of page
      * @param sort   sorting type
      * @return list of Customers
      */
-    public ResponseEntity<?> getAllCustomerPaging(Long facilityId, Integer page, Integer size, String sort);
+    public ResponseEntity<?> getAllCustomerPaging(Long userId, Integer page, Integer size, String sort);
 }
