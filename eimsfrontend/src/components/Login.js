@@ -54,7 +54,7 @@ const Login = () => {
       sessionStorage.setItem("curUserId", responseJson.userId);
       sessionStorage.setItem("curPhone", loginDetail.phone);
       sessionStorage.setItem("roleId", responseJson.roleId);
-      if (responseJson.facilityId != null) { /* role = USER/EMPLOYEE */
+      if (responseJson.facilityId != null) { /* role = OWNER/EMPLOYEE */
         sessionStorage.setItem("facilityId", responseJson.facilityId);
       }
       toast.success("Đăng nhập thành công")

@@ -1,3 +1,4 @@
+-- V0.9.0: Modify the stored procedure user_and_facility
 -- V0.8.2: Roll back to V0.8.0
 -- V0.8.1: Update tables: customer, supplier (user_id -> facility_id)
 -- V0.8.0: Modify the user - role relationship from many-one to many-many
@@ -368,18 +369,27 @@ ADD FOREIGN KEY (product_id)REFERENCES egg_product(product_id);
 DELIMITER //
 CREATE PROCEDURE user_and_facility(uid integer) 
 BEGIN
+DECLARE fid integer DEFAULT 0;
+-- SELECT the facility id and set to the variable fid. If at the end of the query fid == 0 then the user is a employee
+SET fid = (SELECT facility_id
+			FROM facility
+			WHERE user_id = uid);
 SELECT U.user_id, R.role_name, U.username, U.dob, U.email, U.salary, U.address, U.status AS USER_STATUS, 
 		F.facility_id, F.facility_name, F.facility_address, F.facility_found_date, F.business_license_number,
         F.hotline, F.status AS FACILITY_STATUS, F.subscription_expiration_date, US.subscription_id
 FROM user U JOIN user_role UR ON U.user_id = UR.user_id
-		LEFT JOIN role R ON UR.role_id = R.role_id
-		LEFT JOIN facility F ON U.user_id = F.user_id
+		LEFT JOIN role R ON UR.role_id = R.role_id, 
+		facility F
         LEFT JOIN user_subsription US ON F.facility_id = US.facility_id
-WHERE U.user_id = uid AND US.status = 1
+		WHERE U.user_id = uid AND F.facility_id = (CASE
+													WHEN fid != 0 THEN fid
+													ELSE (SELECT facility_id FROM work_in WHERE user_id = uid)
+												END)
 ORDER BY US.subscribe_date DESC
 LIMIT 1;
 END //
 DELIMITER ;
+
 
 -- Add new specie and it's incubation phase
 DELIMITER //
