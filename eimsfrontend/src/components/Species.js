@@ -264,7 +264,8 @@ const Species = () => {
                       onChange={e => handleNewSpecieChange(e, "specieName")}
                       value={newSpecieDTO.specieName}
                       required
-                      className="form-control" />
+                      className="form-control"
+                      maxLength="32" />
                   </div>
                 </div>
                 <div className="row">
@@ -406,7 +407,8 @@ const Species = () => {
                                 value={editSpecieDTO.specieName}
                                 onChange={e => handleEditSpecieChange(e, "specieName")}
                                 required
-                                className='form-control' />
+                                className='form-control'
+                                maxLength="32" />
                             </div>
                           </div>
                           <div className="row">

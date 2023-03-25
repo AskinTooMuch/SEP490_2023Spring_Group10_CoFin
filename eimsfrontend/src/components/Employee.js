@@ -441,7 +441,7 @@ export default function BasicTabs() {
                                                         <td className="u-border-1 u-border-grey-30 u-first-column u-grey-5 u-table-cell u-table-cell-9">{index + 1}</td>
                                                         <td className="u-border-1 u-border-grey-30 u-table-cell">{item.employeeName}</td>
                                                         <td className="u-border-1 u-border-grey-30 u-table-cell">{item.employeePhone}</td>
-                                                        {item.status === 1
+                                                        {item.status === 2
                                                             ? <td className="u-border-1 u-border-grey-30 u-table-cell text-green">
                                                                 Hoạt động
                                                             </td>
