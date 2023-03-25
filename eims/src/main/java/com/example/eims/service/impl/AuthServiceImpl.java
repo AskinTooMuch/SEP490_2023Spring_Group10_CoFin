@@ -313,7 +313,6 @@ public class AuthServiceImpl implements IAuthService {
     @Override
     public ResponseEntity<?> changePassword(ChangePasswordDTO changePasswordDTO) {
         // Check blank input
-
         if (changePasswordDTO.getPassword() == null || stringDealer.trimMax(changePasswordDTO.getPassword()).equals("")) { /* Password is empty */
             return new ResponseEntity<>("Mật khẩu không được để trống", HttpStatus.BAD_REQUEST);
         }

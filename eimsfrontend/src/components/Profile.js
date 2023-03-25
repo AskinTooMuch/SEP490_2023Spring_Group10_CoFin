@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect} from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -208,47 +208,58 @@ const Profile = () => {
     }
 
     const loadUserDetails = async () => {
-        const result = await axios.get(USER_DETAIL_URL,
-            {
-                params: { userId: sessionStorage.getItem("curUserId") },
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Access-Control-Allow-Origin': '*'
-                },
-                withCredentials: true
-            });
-        const responseJson = result.data;
-        console.log(responseJson);
-        setAddressJson(JSON.parse(responseJson.userAddress));
-        setAddressJson1(JSON.parse(responseJson.facilityAddress));
-        //Set account information
-        setAccountInformation({
-            userId: responseJson.userId,
-            userRoleName: responseJson.userRoleName,
-            username: responseJson.username,
-            userDob: responseJson.userDob,
-            userEmail: responseJson.userEmail,
-            userSalary: responseJson.userSalary,
-            userAddress: responseJson.userAddress,
-            userStatus: responseJson.userStatus
-        })
-        setUserAddress(JSON.parse(responseJson.userAddress))
+        try {
+            const result = await axios.get(USER_DETAIL_URL,
+                {
+                    params: { userId: sessionStorage.getItem("curUserId") },
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Access-Control-Allow-Origin': '*'
+                    },
+                    withCredentials: true
+                });
+            const responseJson = result.data;
+            console.log(responseJson);
+            setAddressJson(JSON.parse(responseJson.userAddress));
+            setAddressJson1(JSON.parse(responseJson.facilityAddress));
+            //Set account information
+            setAccountInformation({
+                userId: responseJson.userId,
+                userRoleName: responseJson.userRoleName,
+                username: responseJson.username,
+                userDob: responseJson.userDob,
+                userEmail: responseJson.userEmail,
+                userSalary: responseJson.userSalary,
+                userAddress: responseJson.userAddress,
+                userStatus: responseJson.userStatus
+            })
+            setUserAddress(JSON.parse(responseJson.userAddress));
 
-        //Set facility information
-        setFacilityInformation({
-            facilityId: responseJson.facilityId,
-            facilityName: responseJson.facilityName,
-            facilityAddress: responseJson.facilityAddress,
-            facilityFoundDate: responseJson.facilityFoundDate,
-            businessLicenseNumber: responseJson.businessLicenseNumber,
-            hotline: responseJson.hotline,
-            facilityStatus: responseJson.facilityStatus,
-            subscriptionId: responseJson.subscriptionId,
-            subscriptionExpirationDate: responseJson.subscriptionExpirationDate,
-            subStatus: responseJson.subStatus
-        })
-        setFaciAddress(JSON.parse(responseJson.facilityAddress))
-
+            //Set facility information
+            setFacilityInformation({
+                facilityId: responseJson.facilityId,
+                facilityName: responseJson.facilityName,
+                facilityAddress: responseJson.facilityAddress,
+                facilityFoundDate: responseJson.facilityFoundDate,
+                businessLicenseNumber: responseJson.businessLicenseNumber,
+                hotline: responseJson.hotline,
+                facilityStatus: responseJson.facilityStatus,
+                subscriptionId: responseJson.subscriptionId,
+                subscriptionExpirationDate: responseJson.subscriptionExpirationDate,
+                subStatus: responseJson.subStatus
+            })
+            setFaciAddress(JSON.parse(responseJson.facilityAddress));
+        } catch (err) {
+            if (!err?.response) {
+                toast.error('Server không phản hồi');
+            } else {
+                if (err.response.data === '' || err.response.data === null) {
+                    toast.error('Lỗi không xác định');
+                } else {
+                    toast.error(err.response.data);
+                }
+            }
+        }
     }
 
     //Function for populating dropdowns
@@ -688,7 +699,7 @@ const Profile = () => {
                                                             <input ref={userRef} id="oldPassword" onChange={e => handleChange(e, "password")}
                                                                 value={changePasswordDTO.password} required
                                                                 type={passwordShown ? "text" : "password"}
-                                                                minLength="8" maxLength="20"
+                                                                minLength="8"
                                                                 className="form-control " />
                                                             <i onClick={togglePasswordVisiblity}>{eye}</i>
                                                         </div>
@@ -708,8 +719,8 @@ const Profile = () => {
                                                                 aria-invalid={validPwd ? "false" : "true"}
                                                                 aria-describedby="pwdnote"
                                                                 type={passwordShown2 ? "text" : "password"}
-                                                                className="form-control "
-                                                                minLength="8" maxLength="20" onFocus={() => setPassFocus(true)}
+                                                                className="form-control"
+                                                                minLength="8" onFocus={() => setPassFocus(true)}
                                                                 onBlur={() => setPassFocus(false)}
                                                             />
                                                             <i onClick={togglePasswordVisiblity2}>{eye}</i>
@@ -732,7 +743,7 @@ const Profile = () => {
                                                                 aria-describedby="confirmnote"
                                                                 type={passwordShown3 ? "text" : "password"}
                                                                 className="form-control "
-                                                                minLength="8" maxLength="20" />
+                                                                minLength="8" />
                                                             <i onClick={togglePasswordVisiblity3}>{eye}</i>
                                                         </div>
 
@@ -947,7 +958,7 @@ const Profile = () => {
                                                     <p id="licenseNumber">{facilityInformation.businessLicenseNumber}</p>
                                                 </div>
                                             </div>
-                                            <div className="row">
+                                            {/* <div className="row">
                                                 <div className="col-md-6">
                                                     <p>Số nhà</p>
                                                 </div>
@@ -977,6 +988,14 @@ const Profile = () => {
                                                 </div>
                                                 <div className="col-md-6">
                                                     <p id="city">{faciAddress.city}</p>
+                                                </div>
+                                            </div> */}
+                                            <div className="row">
+                                                <div className="col-md-6">
+                                                    <p>Địa chỉ</p>
+                                                </div>
+                                                <div className="col-md-6">
+                                                    <p id="userAddress">{userAddress.street + ", " + userAddress.ward + ", " + userAddress.district + ", " + userAddress.city}</p>
                                                 </div>
                                             </div>
                                             <div className="row">

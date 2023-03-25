@@ -58,10 +58,14 @@ const Login = () => {
         sessionStorage.setItem("facilityId", responseJson.facilityId);
       }
       toast.success("Đăng nhập thành công")
-      if (responseJson.roleId === 2) {
-        navigate("/egg");
+      if ((responseJson.roleId === 2) || (responseJson.roleId === 3)) {
+        setTimeout(() => {
+          navigate("/egg");
+        }, 1000);
       } else if (responseJson.roleId === 4) {
-        navigate("/accountmanage");
+        setTimeout(() => {
+          navigate("/accountmanage");
+        }, 1000);
       }
 
     } catch (err) {
