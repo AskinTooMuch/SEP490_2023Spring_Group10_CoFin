@@ -9,7 +9,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from 'axios';
 //Toast
 import { ToastContainer, toast } from 'react-toastify';
-const Cost = () => {
+const Payroll = () => {
     //Show-hide Popup
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
@@ -24,35 +24,46 @@ const Cost = () => {
         <div>
             <nav className="navbar justify-content-between">
                 <button className='btn btn-light' onClick={handleShow}>+ Thêm</button>
-                {/* Start: form to add new supplier */}
+                {/* Start: form to add new payroll */}
                 <Modal show={show} onHide={handleClose}
                     size="lg" aria-labelledby="contained-modal-title-vcenter" centered >
                     <form>
                         <Modal.Header closeButton onClick={handleClose}>
-                            <Modal.Title>Thêm thông tin chi phí </Modal.Title>
+                            <Modal.Title>Tạo khoản tiền lương </Modal.Title>
                         </Modal.Header>
                         <Modal.Body>
                             <div className="changepass">
                                 <div className="row">
                                     <div className="col-md-6">
-                                        <p>Tên chi phí<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
+                                        <p>Nhân viên<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                     </div>
                                     <div className="col-md-6">
-                                        <input required style={{ width: "100%" }} placeholder="Tiền sửa máy tháng 1/2023" />
+                                        <select
+                                            id="select" className="form-control mt-1" required>
+                                            <option defaultValue="Chọn nhân viên">Chọn nhân viên</option>
+                                            <option value="1">Nguyễn Hoàng Dương</option>
+                                        </select>
+
                                     </div>
                                     <div className="col-md-6">
-                                        <p>Tổng chi phí <FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
+                                        <p>Ngày nhập <FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                     </div>
                                     <div className="col-md-6">
-                                        <input required style={{ width: "100%" }} placeholder="0" />
+                                        <input required type="date" style={{ width: "100%" }} placeholder="0" />
                                     </div>
                                 </div>
                                 <div className="row">
                                     <div className="col-md-6">
-                                        <p>Đã thanh toán</p>
+                                        <p>Khoản tiền <FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                     </div>
                                     <div className="col-md-6">
-                                        <input style={{ width: "100%" }} placeholder="0" />
+                                        <input required style={{ width: "100%" }} placeholder="Tiền thưởng " />
+                                    </div>
+                                    <div className="col-md-6">
+                                        <p>Số tiền </p>
+                                    </div>
+                                    <div className="col-md-6">
+                                        <input style={{ width: "100%" }} placeholder="1.000.000" />
                                     </div>
                                     <div className="col-md-6">
                                         <p>Ghi chú </p>
@@ -73,7 +84,6 @@ const Cost = () => {
                         </div>
                     </form>
                 </Modal>
-                {/* End: form to add new supplier */}
                 {/* Start: Filter and sort table */}
                 <div className='filter my-2 my-lg-0'>
                     <p><FilterAltIcon />Lọc</p>
@@ -89,11 +99,9 @@ const Cost = () => {
                 </div>
                 {/* End: Filter and sort table */}
             </nav>
-            {/* Start: Table for supplier list */}
             <div>
                 <section className="u-align-center u-clearfix u-section-1" id="sec-b42b">
                     <div className="u-clearfix u-sheet u-sheet-1">
-
                         <div className="u-expanded-width u-table u-table-responsive u-table-1">
                             <table className="u-table-entity u-table-entity-1">
                                 <colgroup>
@@ -105,27 +113,27 @@ const Cost = () => {
                                 </colgroup>
                                 <thead className="u-palette-4-base u-table-header u-table-header-1">
                                     <tr style={{ height: "21px" }}>
-                                        <th className="u-border-1 u-border-custom-color-1 u-palette-2-base u-table-cell u-table-cell-1">Tên chi phí</th>
-                                        <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-2">Ngày nhập</th>
-                                        <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-3">Tổng chi phí</th>
-                                        <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-4">Đã thanh toán</th>
-                                        <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-5">Trạng thái</th>
+                                        <th className="u-border-1 u-border-custom-color-1 u-palette-2-base u-table-cell u-table-cell-1">STT</th>
+                                        <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-2">Nhân viên</th>
+                                        <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-3">Ngày nhập</th>
+                                        <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-4">Khoản tiền</th>
+                                        <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-5">Số tiền</th>
                                     </tr>
                                 </thead>
                                 <tbody className="u-table-body">
                                     <tr style={{ height: "76px" }} onClick={handleShow2}>
-                                        <td className="u-border-1 u-border-grey-30 u-first-column u-grey-5 u-table-cell u-table-cell-5">Tiền mua máy ấp</td>
+                                        <td className="u-border-1 u-border-grey-30 u-first-column u-grey-5 u-table-cell u-table-cell-5">1</td>
+                                        <td className="u-border-1 u-border-grey-30 u-table-cell">Phạm Ngọc A</td>
                                         <td className="u-border-1 u-border-grey-30 u-table-cell">27/10/2022</td>
-                                        <td className="u-border-1 u-border-grey-30 u-table-cell">100.000.000 VNĐ</td>
-                                        <td className="u-border-1 u-border-grey-30 u-table-cell">100.000.000 VNĐ</td>
-                                        <td className="u-border-1 u-border-grey-30 u-table-cell text-green">Đã thanh toán đủ</td>
+                                        <td className="u-border-1 u-border-grey-30 u-table-cell">Tiền lương Tháng 12</td>
+                                        <td className="u-border-1 u-border-grey-30 u-table-cell ">5.000.000 VNĐ</td>
                                     </tr>
                                     <tr style={{ height: "76px" }}>
-                                        <td className="u-border-1 u-border-grey-30 u-first-column u-grey-5 u-table-cell u-table-cell-9">Tiền mua máy nở</td>
+                                        <td className="u-border-1 u-border-grey-30 u-first-column u-grey-5 u-table-cell u-table-cell-9">2</td>
+                                        <td className="u-border-1 u-border-grey-30 u-table-cell">Phạm Ngọc A</td>
                                         <td className="u-border-1 u-border-grey-30 u-table-cell">15/11/2022</td>
-                                        <td className="u-border-1 u-border-grey-30 u-table-cell">120.000.000 VNĐ</td>
-                                        <td className="u-border-1 u-border-grey-30 u-table-cell">100.000.000 VNĐ</td>
-                                        <td className="u-border-1 u-border-grey-30 u-table-cell text-red">Chưa thanh toán đủ</td>
+                                        <td className="u-border-1 u-border-grey-30 u-table-cell">Thưởng Tết</td>
+                                        <td className="u-border-1 u-border-grey-30 u-table-cell ">2.000.000 VNĐ</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -139,33 +147,39 @@ const Cost = () => {
                 size="lg" aria-labelledby="contained-modal-title-vcenter" centered >
                 <form>
                     <Modal.Header closeButton onClick={handleClose2}>
-                        <Modal.Title>Cập nhật thông tin chi phí</Modal.Title>
+                        <Modal.Title>Cập nhật khoản tiền lương</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
                         <div className="changepass">
                             <div className="row">
                                 <div className="col-md-6">
-                                    <p>Tên chi phí<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
+                                    <p>Nhân viên<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                 </div>
                                 <div className="col-md-6">
-                                    <input required style={{ width: "100%" }} placeholder="Tiền mua máy nở" />
+                                    <p>Nguyễn Hoàng Dương</p>
                                 </div>
                                 <div className="col-md-6">
-                                    <p>Tổng chi phí <FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
+                                    <p>Ngày nhập <FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                 </div>
                                 <div className="col-md-6">
-                                    <input required style={{ width: "100%" }} placeholder="120.000.000" />
+                                    <input required type="date" style={{ width: "100%" }} placeholder="0" />
                                 </div>
                             </div>
                             <div className="row">
                                 <div className="col-md-6">
-                                    <p>Đã thanh toán</p>
+                                    <p>Khoản tiền <FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                 </div>
                                 <div className="col-md-6">
-                                    <input style={{ width: "100%" }} placeholder="100.000.000" />
+                                    <input required style={{ width: "100%" }} placeholder="Tiền thưởng " />
                                 </div>
                                 <div className="col-md-6">
-                                    <p>Ghi chú</p>
+                                    <p>Số tiền </p>
+                                </div>
+                                <div className="col-md-6">
+                                    <input style={{ width: "100%" }} placeholder="1.000.000" />
+                                </div>
+                                <div className="col-md-6">
+                                    <p>Ghi chú </p>
                                 </div>
                                 <div className="col-md-6">
                                     <textarea style={{ width: "100%" }} />
@@ -183,10 +197,8 @@ const Cost = () => {
                     </div>
                 </form>
             </Modal>
-
-            {/* End: Table for supplier list */}
-
+            {/* End: Table for payroll */}
         </div>
     );
 }
-export default Cost;
+export default Payroll;

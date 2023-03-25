@@ -6,6 +6,8 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Supplier from './Supplier'
 import Cost from './Cost';
+import Payroll from './Payroll';
+import ImportReport from './ImportReport';
 function FinanManage(props) {
   const { children, value, index, ...other } = props;
 
@@ -65,10 +67,10 @@ export default function BasicTabs() {
        <Cost/>
       </FinanManage>
       <FinanManage value={value} index={1}>
-        Item Two
+        <Payroll/>
       </FinanManage>
       <FinanManage value={value} index={2}>
-        <Supplier/>
+        <ImportReport/>
       </FinanManage>
       <FinanManage value={value} index={3}>
         Item four

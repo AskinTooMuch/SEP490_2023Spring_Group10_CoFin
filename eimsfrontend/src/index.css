@@ -5,7 +5,9 @@
   background-color: white;
   font-weight: bold;
 }
-
+.input-date{
+  margin: 10px;
+}
 .modal-90w {
   width: 90%;
   max-width: none !important;

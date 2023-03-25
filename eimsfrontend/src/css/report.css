@@ -1,0 +1,9 @@
+.modal-body .MuiTabs-root .MuiTabs-scroller {
+    background: #ffffff;
+    color: #f46110;
+    border-bottom: #f46110;
+    
+}
+.modal-body .MuiTabs-root .MuiTabs-scroller .MuiTabs-indicator{
+    background-color: #f46110;
+}
