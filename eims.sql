@@ -214,6 +214,7 @@ CREATE TABLE cost(
     facility_id	integer 		NOT NULL,
     cost_item	varchar(63) 	NOT NULL,
     cost_amount	decimal(15,2) 	NOT NULL,
+    paid_amount	decimal(15,2) 	NOT NULL,
     issue_date	datetime		NOT NULL,
     note		varchar(255),
     status 		boolean 		NOT NULL
