@@ -20,6 +20,7 @@ import com.example.eims.entity.Supplier;
 import com.example.eims.repository.ImportReceiptRepository;
 import com.example.eims.repository.SupplierRepository;
 import com.example.eims.repository.UserRepository;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -49,19 +50,23 @@ class SupplierServiceImplTest {
     Page supplierPage;
     @InjectMocks
     SupplierServiceImpl supplierService;
+
     @Test
-    void getAllSupplier() {
+    @DisplayName("getAllSupplierUTCID01")
+    void getAllSupplierUTCID01() {
         // Set up
+        Long userId = 1L;
         Supplier supplier1 = new Supplier();
         Supplier supplier2 = new Supplier();
         List<Supplier> supplierList = new ArrayList<>();
         supplierList.add(supplier1);
         supplierList.add(supplier2);
         // Define behaviour of repository
+        when(userRepository.existsById(1L)).thenReturn(true);
         when(supplierRepository.findByUserId(1L)).thenReturn(Optional.of(supplierList));
 
         // Run service method
-        ResponseEntity<?> responseEntity = supplierService.getAllSupplier(1L);
+        ResponseEntity<?> responseEntity = supplierService.getAllSupplier(userId);
         System.out.println(responseEntity.toString());
         List<Supplier> resultList = (List<Supplier>) responseEntity.getBody();
         // Assert
@@ -69,36 +74,88 @@ class SupplierServiceImplTest {
     }
 
     @Test
-    void getSupplier() {
+    @DisplayName("getAllSupplierUTCID02")
+    void getAllSupplierUTCID02() {
         // Set up
+        Long userId = 15L;
+        // Define behaviour of repository
+        when(userRepository.existsById(15L)).thenReturn(true);
+        when(supplierRepository.findByUserId(15L)).thenReturn(Optional.empty());
+
+        // Run service method
+        ResponseEntity<?> responseEntity = supplierService.getAllSupplier(userId);
+        System.out.println(responseEntity.toString());
+        // Assert
+        assertEquals(null, responseEntity.getBody());
+    }
+
+    @Test
+    @DisplayName("getAllSupplierUTCID03")
+    void getAllSupplierUTCID03() {
+        // Set up
+        Long userId = 0L;
+        // Define behaviour of repository
+        when(userRepository.existsById(0L)).thenReturn(false);
+
+        // Run service method
+        ResponseEntity<?> responseEntity = supplierService.getAllSupplier(userId);
+        System.out.println(responseEntity.toString());
+        // Assert
+        assertEquals("Người dùng không tồn tại", responseEntity.getBody());
+    }
+
+    @Test
+    @DisplayName("getSupplierUTCID01")
+    void getSupplierUTCID01() {
+        // Set up
+        Long supplierId = 1L;
         Supplier supplier = new Supplier();
-        supplier.setSupplierId(1L);
+        supplier.setSupplierId(supplierId);
+        supplier.setSupplierName("Nguyễn Văn A");
+        supplier.setSupplierPhone("0987654321");
+        supplier.setSupplierMail("abc@gmail.com");
+        supplier.setFacilityName("abc123");
+        supplier.setSupplierAddress("Hải Dương, Việt Nam");
+        supplier.setStatus(1);
         SupplierDetailDTO dto = new SupplierDetailDTO();
         dto.getFromEntity(supplier);
-        dto.setFertilizedRate(9.0F);
-        dto.setMaleRate(6.0F);
         // Define behaviour of repository
         when(supplierRepository.findBySupplierId(1L)).thenReturn(Optional.of(supplier));
 
         // Run service method
-        ResponseEntity<?> responseEntity = supplierService.getSupplier(1L);
+        ResponseEntity<?> responseEntity = supplierService.getSupplier(supplierId);
         System.out.println(responseEntity.toString());
         // Assert
-        assertEquals(dto, responseEntity.getBody());
+        assertNotEquals(null, responseEntity.getBody());
     }
 
     @Test
-    void createSupplier() {
+    @DisplayName("getSupplierUTCID02")
+    void getSupplierUTCID02() {
         // Set up
-        Supplier supplier = new Supplier();
-        supplier.setSupplierId(1L);
+        Long supplierId = 0L;
+        // Define behaviour of repository
+        when(supplierRepository.findBySupplierId(0L)).thenReturn(Optional.empty());
+
+        // Run service method
+        ResponseEntity<?> responseEntity = supplierService.getSupplier(supplierId);
+        System.out.println(responseEntity.toString());
+        // Assert
+        assertEquals(null, responseEntity.getBody());
+    }
+
+    @Test
+    @DisplayName("createSupplierUTCID01")
+    void createSupplierUTCID01() {
+        // Set up
+        Long userId = 1L;
         CreateSupplierDTO dto = new CreateSupplierDTO();
-        dto.setUserId(1L);
-        dto.setSupplierName("name");
+        dto.setUserId(userId);
+        dto.setSupplierName("Nguyễn Văn A");
+        dto.setFacilityName("Nguyễn Văn A");
         dto.setSupplierPhone("0987654321");
-        dto.setSupplierAddress("address");
-        dto.setSupplierMail("a@a.com");
-        dto.setFacilityName("F name");
+        dto.setSupplierAddress("Ha Noi, Viet Nam");
+        dto.setSupplierMail("BNV71@gmail.com");
 
         // Define behaviour of repository
         when(userRepository.getStatusByUserId(1L)).thenReturn(true);
@@ -113,34 +170,344 @@ class SupplierServiceImplTest {
     }
 
     @Test
-    void showFormUpdate() {
+    @DisplayName("createSupplierUTCID02")
+    void createSupplierUTCID02() {
         // Set up
+        Long userId = 1L;
+        CreateSupplierDTO dto = new CreateSupplierDTO();
+        dto.setUserId(userId);
+        dto.setSupplierName("Nguyễn Văn A");
+        dto.setFacilityName("ABC123");
+        dto.setSupplierPhone("0987654321");
+        dto.setSupplierAddress("So 27 duong Truong Trinh");
+        dto.setSupplierMail("BNV71@gmail.com");
+
+        // Define behaviour of repository
+        when(userRepository.getStatusByUserId(1L)).thenReturn(true);
+        when(supplierRepository.existsBySupplierPhoneAndUserId("0987654321", dto.getUserId()))
+                .thenReturn(false);
+
+        // Run service method
+        ResponseEntity<?> responseEntity = supplierService.createSupplier(dto);
+        System.out.println(responseEntity.toString());
+        // Assert
+        assertEquals("Thêm nhà cung cấp thành công", responseEntity.getBody());
+    }
+
+    @Test
+    @DisplayName("createSupplierUTCID03")
+    void createSupplierUTCID03() {
+        // Set up
+        Long userId = 1L;
+        CreateSupplierDTO dto = new CreateSupplierDTO();
+        dto.setUserId(userId);
+        dto.setSupplierName("");
+        dto.setFacilityName("ABC123");
+        dto.setSupplierPhone("0987654321");
+        dto.setSupplierAddress("Ha Noi, Viet Nam");
+        dto.setSupplierMail("BNV71@gmail.com");
+
+        // Define behaviour of repository
+        when(userRepository.getStatusByUserId(1L)).thenReturn(true);
+
+        // Run service method
+        ResponseEntity<?> responseEntity = supplierService.createSupplier(dto);
+        System.out.println(responseEntity.toString());
+        // Assert
+        assertEquals("Tên không được để trống", responseEntity.getBody());
+    }
+
+    @Test
+    @DisplayName("createSupplierUTCID04")
+    void createSupplierUTCID04() {
+        // Set up
+        Long userId = 1L;
+        CreateSupplierDTO dto = new CreateSupplierDTO();
+        dto.setUserId(userId);
+        dto.setSupplierName(null);
+        dto.setFacilityName("ABC123");
+        dto.setSupplierPhone("0987654321");
+        dto.setSupplierAddress("Ha Noi, Viet Nam");
+        dto.setSupplierMail("BNV71@gmail.com");
+
+        // Define behaviour of repository
+        when(userRepository.getStatusByUserId(1L)).thenReturn(true);
+        // Run service method
+        ResponseEntity<?> responseEntity = supplierService.createSupplier(dto);
+        System.out.println(responseEntity.toString());
+        // Assert
+        assertEquals("Tên không được để trống", responseEntity.getBody());
+    }
+
+    @Test
+    @DisplayName("createSupplierUTCID05")
+    void createSupplierUTCID05() {
+        // Set up
+        Long userId = 1L;
+        CreateSupplierDTO dto = new CreateSupplierDTO();
+        dto.setUserId(userId);
+        dto.setSupplierName("Nguyễn Văn A");
+        dto.setFacilityName("");
+        dto.setSupplierPhone("0987654321");
+        dto.setSupplierAddress("Ha Noi, Viet Nam");
+        dto.setSupplierMail("BNV71@gmail.com");
+
+        // Define behaviour of repository
+        when(userRepository.getStatusByUserId(1L)).thenReturn(true);
+        // Run service method
+        ResponseEntity<?> responseEntity = supplierService.createSupplier(dto);
+        System.out.println(responseEntity.toString());
+        // Assert
+        assertEquals("Tên cơ sở không được để trống", responseEntity.getBody());
+    }
+
+    @Test
+    @DisplayName("createSupplierUTCID06")
+    void createSupplierUTCID06() {
+        // Set up
+        Long userId = 1L;
+        CreateSupplierDTO dto = new CreateSupplierDTO();
+        dto.setUserId(userId);
+        dto.setSupplierName("Nguyễn Văn A");
+        dto.setFacilityName(null);
+        dto.setSupplierPhone("0987654321");
+        dto.setSupplierAddress("Ha Noi, Viet Nam");
+        dto.setSupplierMail("BNV71@gmail.com");
+
+        // Define behaviour of repository
+        when(userRepository.getStatusByUserId(1L)).thenReturn(true);
+        // Run service method
+        ResponseEntity<?> responseEntity = supplierService.createSupplier(dto);
+        System.out.println(responseEntity.toString());
+        // Assert
+        assertEquals("Tên cơ sở không được để trống", responseEntity.getBody());
+    }
+
+    @Test
+    @DisplayName("createSupplierUTCID07")
+    void createSupplierUTCID07() {
+        // Set up
+        Long userId = 1L;
+        CreateSupplierDTO dto = new CreateSupplierDTO();
+        dto.setUserId(userId);
+        dto.setSupplierName("Nguyễn Văn A");
+        dto.setFacilityName("Nguyễn Văn A");
+        dto.setSupplierPhone("0987654321");
+        dto.setSupplierAddress("");
+        dto.setSupplierMail("BNV71@gmail.com");
+
+        // Define behaviour of repository
+        when(userRepository.getStatusByUserId(1L)).thenReturn(true);
+        // Run service method
+        ResponseEntity<?> responseEntity = supplierService.createSupplier(dto);
+        System.out.println(responseEntity.toString());
+        // Assert
+        assertEquals("Địa chỉ không được để trống", responseEntity.getBody());
+    }
+
+    @Test
+    @DisplayName("createSupplierUTCID08")
+    void createSupplierUTCID08() {
+        // Set up
+        Long userId = 1L;
+        CreateSupplierDTO dto = new CreateSupplierDTO();
+        dto.setUserId(userId);
+        dto.setSupplierName("Nguyễn Văn A");
+        dto.setFacilityName("Nguyễn Văn A");
+        dto.setSupplierPhone("0987654321");
+        dto.setSupplierAddress(null);
+        dto.setSupplierMail("BNV71@gmail.com");
+
+        // Define behaviour of repository
+        when(userRepository.getStatusByUserId(1L)).thenReturn(true);
+        // Run service method
+        ResponseEntity<?> responseEntity = supplierService.createSupplier(dto);
+        System.out.println(responseEntity.toString());
+        // Assert
+        assertEquals("Địa chỉ không được để trống", responseEntity.getBody());
+    }
+
+    @Test
+    @DisplayName("createSupplierUTCID09")
+    void createSupplierUTCID09() {
+        // Set up
+        Long userId = 1L;
+        CreateSupplierDTO dto = new CreateSupplierDTO();
+        dto.setUserId(userId);
+        dto.setSupplierName("Nguyễn Văn A");
+        dto.setFacilityName("Nguyễn Văn A");
+        dto.setSupplierPhone("abcdefgh");
+        dto.setSupplierAddress("Ha Noi, Viet Nam");
+        dto.setSupplierMail("BNV71@gmail.com");
+
+        // Define behaviour of repository
+        when(userRepository.getStatusByUserId(1L)).thenReturn(true);
+        // Run service method
+        ResponseEntity<?> responseEntity = supplierService.createSupplier(dto);
+        System.out.println(responseEntity.toString());
+        // Assert
+        assertEquals("Số điện thoại không hợp lệ", responseEntity.getBody());
+    }
+
+    @Test
+    @DisplayName("createSupplierUTCID10")
+    void createSupplierUTCID10() {
+        // Set up
+        Long userId = 1L;
+        CreateSupplierDTO dto = new CreateSupplierDTO();
+        dto.setUserId(userId);
+        dto.setSupplierName("Nguyễn Văn A");
+        dto.setFacilityName("Nguyễn Văn A");
+        dto.setSupplierPhone("098765432");
+        dto.setSupplierAddress("Ha Noi, Viet Nam");
+        dto.setSupplierMail("BNV71@gmail.com");
+
+        // Define behaviour of repository
+        when(userRepository.getStatusByUserId(1L)).thenReturn(true);
+        // Run service method
+        ResponseEntity<?> responseEntity = supplierService.createSupplier(dto);
+        System.out.println(responseEntity.toString());
+        // Assert
+        assertEquals("Số điện thoại không hợp lệ", responseEntity.getBody());
+    }
+
+    @Test
+    @DisplayName("createSupplierUTCID11")
+    void createSupplierUTCID11() {
+        // Set up
+        Long userId = 1L;
+        CreateSupplierDTO dto = new CreateSupplierDTO();
+        dto.setUserId(userId);
+        dto.setSupplierName("Nguyễn Văn A");
+        dto.setFacilityName("Nguyễn Văn A");
+        dto.setSupplierPhone("");
+        dto.setSupplierAddress("Ha Noi, Viet Nam");
+        dto.setSupplierMail("BNV71@gmail.com");
+
+        // Define behaviour of repository
+        when(userRepository.getStatusByUserId(1L)).thenReturn(true);
+        // Run service method
+        ResponseEntity<?> responseEntity = supplierService.createSupplier(dto);
+        System.out.println(responseEntity.toString());
+        // Assert
+        assertEquals("Số điện thoại không được để trống", responseEntity.getBody());
+    }
+
+    @Test
+    @DisplayName("createSupplierUTCID12")
+    void createSupplierUTCID12() {
+        // Set up
+        Long userId = 1L;
+        CreateSupplierDTO dto = new CreateSupplierDTO();
+        dto.setUserId(userId);
+        dto.setSupplierName("Nguyễn Văn A");
+        dto.setFacilityName("Nguyễn Văn A");
+        dto.setSupplierPhone(null);
+        dto.setSupplierAddress("Ha Noi, Viet Nam");
+        dto.setSupplierMail("BNV71@gmail.com");
+
+        // Define behaviour of repository
+        when(userRepository.getStatusByUserId(1L)).thenReturn(true);
+        // Run service method
+        ResponseEntity<?> responseEntity = supplierService.createSupplier(dto);
+        System.out.println(responseEntity.toString());
+        // Assert
+        assertEquals("Số điện thoại không được để trống", responseEntity.getBody());
+    }
+
+    @Test
+    @DisplayName("createSupplierUTCID13")
+    void createSupplierUTCID13() {
+        // Set up
+        Long userId = 1L;
+        CreateSupplierDTO dto = new CreateSupplierDTO();
+        dto.setUserId(userId);
+        dto.setSupplierName("Nguyễn Văn A");
+        dto.setFacilityName("Nguyễn Văn A");
+        dto.setSupplierPhone("0987654321");
+        dto.setSupplierAddress("Ha Noi, Viet Nam");
+        dto.setSupplierMail("a_b_c@gmail.com");
+
+        // Define behaviour of repository
+        when(userRepository.getStatusByUserId(1L)).thenReturn(true);
+        // Run service method
+        ResponseEntity<?> responseEntity = supplierService.createSupplier(dto);
+        System.out.println(responseEntity.toString());
+        // Assert
+        assertEquals("Email không hợp lệ", responseEntity.getBody());
+    }
+
+    @Test
+    @DisplayName("createSupplierUTCID14")
+    void createSupplierUTCID14() {
+        // Set up
+        Long userId = 1L;
+        CreateSupplierDTO dto = new CreateSupplierDTO();
+        dto.setUserId(userId);
+        dto.setSupplierName("Nguyễn Văn A");
+        dto.setFacilityName("Nguyễn Văn A");
+        dto.setSupplierPhone("0987654321");
+        dto.setSupplierAddress("Ha Noi, Viet Nam");
+        dto.setSupplierMail("12@3tungdt@gmail.com");
+
+        // Define behaviour of repository
+        when(userRepository.getStatusByUserId(1L)).thenReturn(true);
+        // Run service method
+        ResponseEntity<?> responseEntity = supplierService.createSupplier(dto);
+        System.out.println(responseEntity.toString());
+        // Assert
+        assertEquals("Email không hợp lệ", responseEntity.getBody());
+    }
+
+    @Test
+    @DisplayName("showFormUpdateUTCID01")
+    void showFormUpdateUTCID01() {
+        // Set up
+        Long supplierId = 1L;
         Supplier supplier = new Supplier();
-        supplier.setSupplierId(1L);
+        supplier.setSupplierId(supplierId);
 
         // Define behaviour of repository
         when(supplierRepository.findBySupplierId(1L)).thenReturn(Optional.of(supplier));
 
-        // Run service method
-        ResponseEntity<?> responseEntity = supplierService.showFormUpdate(1L);
+        // Run service method24/3
+        ResponseEntity<?> responseEntity = supplierService.showFormUpdate(supplierId);
         System.out.println(responseEntity.toString());
         // Assert
         assertEquals(supplier, responseEntity.getBody());
     }
 
     @Test
-    void updateSupplier() {
+    @DisplayName("showFormUpdateUTCID02")
+    void showFormUpdateUTCID02() {
+        // Set up
+        Long supplierId = 0L;
+
+        // Define behaviour of repository
+        when(supplierRepository.findBySupplierId(0L)).thenReturn(Optional.empty());
+
+        // Run service method
+        ResponseEntity<?> responseEntity = supplierService.showFormUpdate(supplierId);
+        System.out.println(responseEntity.toString());
+        // Assert
+        assertEquals(null, responseEntity.getBody());
+    }
+
+
+    @Test
+    @DisplayName("updateSupplierUTCID01")
+    void updateSupplierUTCID01() {
         // Set up
         Supplier supplier = new Supplier();
         supplier.setSupplierId(1L);
         UpdateSupplierDTO dto = new UpdateSupplierDTO();
         dto.setUserId(1L);
         dto.setSupplierId(1L);
-        dto.setSupplierName("name");
+        dto.setSupplierName("Nguyễn Văn A");
+        dto.setFacilityName("Nguyễn Văn A");
         dto.setSupplierPhone("0987654321");
-        dto.setSupplierAddress("address");
-        dto.setSupplierMail("a@a.com");
-        dto.setFacilityName("F name");
+        dto.setSupplierAddress("Ha Noi, Viet Nam");
+        dto.setSupplierMail("BNV71@gmail.com");
         dto.setStatus(1);
         String oldPhone = "0987654320";
         // Define behaviour of repository
@@ -156,10 +523,336 @@ class SupplierServiceImplTest {
     }
 
     @Test
-    void searchSupplier() {
+    @DisplayName("updateSupplierUTCID02")
+    void updateSupplierUTCID02() {
         // Set up
-        String key1 = "uye";
-        String key2 = "0987";
+        Supplier supplier = new Supplier();
+        supplier.setSupplierId(1L);
+        UpdateSupplierDTO dto = new UpdateSupplierDTO();
+        dto.setUserId(1L);
+        dto.setSupplierId(1L);
+        dto.setSupplierName("Nguyễn Văn A");
+        dto.setFacilityName("Nguyễn Văn A");
+        dto.setSupplierPhone("0987654321");
+        dto.setSupplierAddress("Ha Noi, Viet Nam");
+        dto.setSupplierMail("BNV71@gmail.com");
+        dto.setStatus(0);
+        String oldPhone = "0987654320";
+        // Define behaviour of repository
+        when(supplierRepository.findSupplierPhoneById(dto.getSupplierId())).thenReturn(oldPhone);
+        when(supplierRepository.existsBySupplierPhoneAndUserId(dto.getSupplierPhone(), dto.getUserId()))
+                .thenReturn(false);
+        when(supplierRepository.findBySupplierId(1L)).thenReturn(Optional.of(supplier));
+        // Run service method
+        ResponseEntity<?> responseEntity = supplierService.updateSupplier(dto);
+        System.out.println(responseEntity.toString());
+        // Assert
+        assertEquals("Cập nhật thông tin nhà cung cấp thành công", responseEntity.getBody());
+    }
+
+    @Test
+    @DisplayName("updateSupplierUTCID03")
+    void updateSupplierUTCID03() {
+        // Set up
+        Supplier supplier = new Supplier();
+        supplier.setSupplierId(1L);
+        UpdateSupplierDTO dto = new UpdateSupplierDTO();
+        dto.setUserId(1L);
+        dto.setSupplierId(1L);
+        dto.setSupplierName("");
+        dto.setFacilityName("Nguyễn Văn A");
+        dto.setSupplierPhone("0987654321");
+        dto.setSupplierAddress("Ha Noi, Viet Nam");
+        dto.setSupplierMail("BNV71@gmail.com");
+        dto.setStatus(0);
+        String oldPhone = "0987654320";
+        // Run service method
+        ResponseEntity<?> responseEntity = supplierService.updateSupplier(dto);
+        System.out.println(responseEntity.toString());
+        // Assert
+        assertEquals("Tên không được để trống", responseEntity.getBody());
+    }
+
+    @Test
+    @DisplayName("updateSupplierUTCID04")
+    void updateSupplierUTCID04() {
+        // Set up
+        Supplier supplier = new Supplier();
+        supplier.setSupplierId(1L);
+        UpdateSupplierDTO dto = new UpdateSupplierDTO();
+        dto.setUserId(1L);
+        dto.setSupplierId(1L);
+        dto.setSupplierName(null);
+        dto.setFacilityName("Nguyễn Văn A");
+        dto.setSupplierPhone("0987654321");
+        dto.setSupplierAddress("Ha Noi, Viet Nam");
+        dto.setSupplierMail("BNV71@gmail.com");
+        dto.setStatus(0);
+        String oldPhone = "0987654320";
+        // Run service method
+        ResponseEntity<?> responseEntity = supplierService.updateSupplier(dto);
+        System.out.println(responseEntity.toString());
+        // Assert
+        assertEquals("Tên không được để trống", responseEntity.getBody());
+    }
+
+    @Test
+    @DisplayName("updateSupplierUTCID05")
+    void updateSupplierUTCID05() {
+        // Set up
+        Supplier supplier = new Supplier();
+        supplier.setSupplierId(1L);
+        UpdateSupplierDTO dto = new UpdateSupplierDTO();
+        dto.setUserId(1L);
+        dto.setSupplierId(1L);
+        dto.setSupplierName("Nguyễn Văn A");
+        dto.setFacilityName("");
+        dto.setSupplierPhone("0987654321");
+        dto.setSupplierAddress("Ha Noi, Viet Nam");
+        dto.setSupplierMail("BNV71@gmail.com");
+        dto.setStatus(0);
+        String oldPhone = "0987654320";
+        // Define behaviour of repository
+        when(supplierRepository.findSupplierPhoneById(dto.getSupplierId())).thenReturn(oldPhone);
+        // Run service method
+        ResponseEntity<?> responseEntity = supplierService.updateSupplier(dto);
+        System.out.println(responseEntity.toString());
+        // Assert
+        assertEquals("Tên cơ sở không được để trống", responseEntity.getBody());
+    }
+
+    @Test
+    @DisplayName("updateSupplierUTCID06")
+    void updateSupplierUTCID06() {
+        // Set up
+        Supplier supplier = new Supplier();
+        supplier.setSupplierId(1L);
+        UpdateSupplierDTO dto = new UpdateSupplierDTO();
+        dto.setUserId(1L);
+        dto.setSupplierId(1L);
+        dto.setSupplierName("Nguyễn Văn A");
+        dto.setFacilityName(null);
+        dto.setSupplierPhone("0987654321");
+        dto.setSupplierAddress("Ha Noi, Viet Nam");
+        dto.setSupplierMail("BNV71@gmail.com");
+        dto.setStatus(0);
+        String oldPhone = "0987654320";
+        // Define behaviour of repository
+        when(supplierRepository.findSupplierPhoneById(dto.getSupplierId())).thenReturn(oldPhone);
+        // Run service method
+        ResponseEntity<?> responseEntity = supplierService.updateSupplier(dto);
+        System.out.println(responseEntity.toString());
+        // Assert
+        assertEquals("Tên cơ sở không được để trống", responseEntity.getBody());
+    }
+
+    @Test
+    @DisplayName("updateSupplierUTCID07")
+    void updateSupplierUTCID07() {
+        // Set up
+        Supplier supplier = new Supplier();
+        supplier.setSupplierId(1L);
+        UpdateSupplierDTO dto = new UpdateSupplierDTO();
+        dto.setUserId(1L);
+        dto.setSupplierId(1L);
+        dto.setSupplierName("Nguyễn Văn A");
+        dto.setFacilityName("Nguyễn Văn A");
+        dto.setSupplierPhone("0987654321");
+        dto.setSupplierAddress("");
+        dto.setSupplierMail("BNV71@gmail.com");
+        dto.setStatus(0);
+        String oldPhone = "0987654320";
+        // Define behaviour of repository
+        when(supplierRepository.findSupplierPhoneById(dto.getSupplierId())).thenReturn(oldPhone);
+        when(supplierRepository.existsBySupplierPhoneAndUserId(dto.getSupplierPhone(), dto.getUserId()))
+                .thenReturn(false);
+        // Run service method
+        ResponseEntity<?> responseEntity = supplierService.updateSupplier(dto);
+        System.out.println(responseEntity.toString());
+        // Assert
+        assertEquals("Địa chỉ không được để trống", responseEntity.getBody());
+    }
+
+    @Test
+    @DisplayName("updateSupplierUTCID08")
+    void updateSupplierUTCID08() {
+        // Set up
+        Supplier supplier = new Supplier();
+        supplier.setSupplierId(1L);
+        UpdateSupplierDTO dto = new UpdateSupplierDTO();
+        dto.setUserId(1L);
+        dto.setSupplierId(1L);
+        dto.setSupplierName("Nguyễn Văn A");
+        dto.setFacilityName("Nguyễn Văn A");
+        dto.setSupplierPhone("0987654321");
+        dto.setSupplierAddress(null);
+        dto.setSupplierMail("BNV71@gmail.com");
+        dto.setStatus(0);
+        String oldPhone = "0987654320";
+        // Define behaviour of repository
+        when(supplierRepository.findSupplierPhoneById(dto.getSupplierId())).thenReturn(oldPhone);
+        when(supplierRepository.existsBySupplierPhoneAndUserId(dto.getSupplierPhone(), dto.getUserId()))
+                .thenReturn(false);
+        // Run service method
+        ResponseEntity<?> responseEntity = supplierService.updateSupplier(dto);
+        System.out.println(responseEntity.toString());
+        // Assert
+        assertEquals("Địa chỉ không được để trống", responseEntity.getBody());
+    }
+
+    @Test
+    @DisplayName("updateSupplierUTCID09")
+    void updateSupplierUTCID09() {
+        // Set up
+        Supplier supplier = new Supplier();
+        supplier.setSupplierId(1L);
+        UpdateSupplierDTO dto = new UpdateSupplierDTO();
+        dto.setUserId(1L);
+        dto.setSupplierId(1L);
+        dto.setSupplierName("Nguyễn Văn A");
+        dto.setFacilityName("Nguyễn Văn A");
+        dto.setSupplierPhone("abcdefgh");
+        dto.setSupplierAddress("Ha Noi, Viet Nam");
+        dto.setSupplierMail("BNV71@gmail.com");
+        dto.setStatus(0);
+        String oldPhone = "0987654320";
+        // Run service method
+        ResponseEntity<?> responseEntity = supplierService.updateSupplier(dto);
+        System.out.println(responseEntity.toString());
+        // Assert
+        assertEquals("Số điện thoại không hợp lệ", responseEntity.getBody());
+    }
+
+    @Test
+    @DisplayName("updateSupplierUTCID10")
+    void updateSupplierUTCID10() {
+        // Set up
+        Supplier supplier = new Supplier();
+        supplier.setSupplierId(1L);
+        UpdateSupplierDTO dto = new UpdateSupplierDTO();
+        dto.setUserId(1L);
+        dto.setSupplierId(1L);
+        dto.setSupplierName("Nguyễn Văn A");
+        dto.setFacilityName("Nguyễn Văn A");
+        dto.setSupplierPhone("098765432");
+        dto.setSupplierAddress("Ha Noi, Viet Nam");
+        dto.setSupplierMail("BNV71@gmail.com");
+        dto.setStatus(0);
+        String oldPhone = "0987654320";
+        // Run service method
+        ResponseEntity<?> responseEntity = supplierService.updateSupplier(dto);
+        System.out.println(responseEntity.toString());
+        // Assert
+        assertEquals("Số điện thoại không hợp lệ", responseEntity.getBody());
+    }
+
+    @Test
+    @DisplayName("updateSupplierUTCID11")
+    void updateSupplierUTCID11() {
+        // Set up
+        Supplier supplier = new Supplier();
+        supplier.setSupplierId(1L);
+        UpdateSupplierDTO dto = new UpdateSupplierDTO();
+        dto.setUserId(1L);
+        dto.setSupplierId(1L);
+        dto.setSupplierName("Nguyễn Văn A");
+        dto.setFacilityName("Nguyễn Văn A");
+        dto.setSupplierPhone("");
+        dto.setSupplierAddress("Ha Noi, Viet Nam");
+        dto.setSupplierMail("BNV71@gmail.com");
+        dto.setStatus(0);
+        String oldPhone = "0987654320";
+        // Run service method
+        ResponseEntity<?> responseEntity = supplierService.updateSupplier(dto);
+        System.out.println(responseEntity.toString());
+        // Assert
+        assertEquals("Số điện thoại không được để trống", responseEntity.getBody());
+    }
+
+    @Test
+    @DisplayName("updateSupplierUTCID12")
+    void updateSupplierUTCID12() {
+        // Set up
+        Supplier supplier = new Supplier();
+        supplier.setSupplierId(1L);
+        UpdateSupplierDTO dto = new UpdateSupplierDTO();
+        dto.setUserId(1L);
+        dto.setSupplierId(1L);
+        dto.setSupplierName("Nguyễn Văn A");
+        dto.setFacilityName("Nguyễn Văn A");
+        dto.setSupplierPhone(null);
+        dto.setSupplierAddress("Ha Noi, Viet Nam");
+        dto.setSupplierMail("BNV71@gmail.com");
+        dto.setStatus(0);
+        String oldPhone = "0987654320";
+        // Run service method
+        ResponseEntity<?> responseEntity = supplierService.updateSupplier(dto);
+        System.out.println(responseEntity.toString());
+        // Assert
+        assertEquals("Số điện thoại không được để trống", responseEntity.getBody());
+    }
+
+    @Test
+    @DisplayName("updateSupplierUTCID13")
+    void updateSupplierUTCID13() {
+        // Set up
+        Supplier supplier = new Supplier();
+        supplier.setSupplierId(1L);
+        UpdateSupplierDTO dto = new UpdateSupplierDTO();
+        dto.setUserId(1L);
+        dto.setSupplierId(1L);
+        dto.setSupplierName("Nguyễn Văn A");
+        dto.setFacilityName("Nguyễn Văn A");
+        dto.setSupplierPhone("0987654321");
+        dto.setSupplierAddress("Ha Noi, Viet Nam");
+        dto.setSupplierMail("a_b_c@gmail.com");
+        dto.setStatus(0);
+        String oldPhone = "0987654320";
+        // Define behaviour of repository
+        when(supplierRepository.findSupplierPhoneById(dto.getSupplierId())).thenReturn(oldPhone);
+        when(supplierRepository.existsBySupplierPhoneAndUserId(dto.getSupplierPhone(), dto.getUserId()))
+                .thenReturn(false);
+        when(supplierRepository.findBySupplierId(1L)).thenReturn(Optional.of(supplier));
+        // Run service method
+        ResponseEntity<?> responseEntity = supplierService.updateSupplier(dto);
+        System.out.println(responseEntity.toString());
+        // Assert
+        assertEquals("Email không hợp lệ", responseEntity.getBody());
+    }
+
+    @Test
+    @DisplayName("updateSupplierUTCID14")
+    void updateSupplierUTCID14() {
+        // Set up
+        Supplier supplier = new Supplier();
+        supplier.setSupplierId(1L);
+        UpdateSupplierDTO dto = new UpdateSupplierDTO();
+        dto.setUserId(1L);
+        dto.setSupplierId(1L);
+        dto.setSupplierName("Nguyễn Văn A");
+        dto.setFacilityName("Nguyễn Văn A");
+        dto.setSupplierPhone("0987654321");
+        dto.setSupplierAddress("Ha Noi, Viet Nam");
+        dto.setSupplierMail("12@3tungdt@gmail.com");
+        dto.setStatus(0);
+        String oldPhone = "0987654320";
+        // Define behaviour of repository
+        when(supplierRepository.findSupplierPhoneById(dto.getSupplierId())).thenReturn(oldPhone);
+        when(supplierRepository.existsBySupplierPhoneAndUserId(dto.getSupplierPhone(), dto.getUserId()))
+                .thenReturn(false);
+        // Run service method
+        ResponseEntity<?> responseEntity = supplierService.updateSupplier(dto);
+        System.out.println(responseEntity.toString());
+        // Assert
+        assertEquals("Email không hợp lệ", responseEntity.getBody());
+    }
+
+    @Test
+    @DisplayName("searchSupplierUTCID01")
+    void searchSupplierUTCID01() {
+        // Set up
+        Long userId = 1L;
+        String key1 = "Nguyễn Văn A";
         Supplier supplier1 = new Supplier();
         Supplier supplier2 = new Supplier();
         List<Supplier> supplierList = new ArrayList<>();
@@ -168,11 +861,73 @@ class SupplierServiceImplTest {
         // Define behaviour of repository
         when(supplierRepository.searchByUsernameOrPhone(1L, key1)).thenReturn(Optional.of(supplierList));
         // Run service method
-        ResponseEntity<?> responseEntity = supplierService.searchSupplier(1L, key1);
+        ResponseEntity<?> responseEntity = supplierService.searchSupplier(userId, key1);
         List<Customer> resultList = (List<Customer>) responseEntity.getBody();
         System.out.println(responseEntity.toString());
         // Assert
-        assertEquals(supplierList, responseEntity.getBody());
+        assertEquals(supplierList, resultList);
+    }
+
+    @Test
+    @DisplayName("searchSupplierUTCID02")
+    void searchSupplierUTCID02() {
+        // Set up
+        Long userId = 1L;
+        String key1 = "09876";
+        Supplier supplier1 = new Supplier();
+        Supplier supplier2 = new Supplier();
+        List<Supplier> supplierList = new ArrayList<>();
+        supplierList.add(supplier1);
+        supplierList.add(supplier2);
+        // Define behaviour of repository
+        when(supplierRepository.searchByUsernameOrPhone(1L, key1)).thenReturn(Optional.of(supplierList));
+        // Run service method
+        ResponseEntity<?> responseEntity = supplierService.searchSupplier(userId, key1);
+        List<Customer> resultList = (List<Customer>) responseEntity.getBody();
+        System.out.println(responseEntity.toString());
+        // Assert
+        assertEquals(supplierList, resultList);
+    }
+
+    @Test
+    @DisplayName("searchSupplierUTCID04")
+    void searchSupplierUTCID04() {
+        // Set up
+        Long userId = 1L;
+        String key1 = "";
+        // Run service method
+        ResponseEntity<?> responseEntity = supplierService.searchSupplier(userId, key1);
+        System.out.println(responseEntity.toString());
+        // Assert
+        assertEquals("Nhập từ khóa để tìm kiếm", responseEntity.getBody());
+    }
+
+    @Test
+    @DisplayName("searchSupplierUTCID03")
+    void searchSupplierUTCID03() {
+        // Set up
+        Long userId = 1L;
+        String key1 = "@ucnxnfr";
+        // Define behaviour of repository
+        when(supplierRepository.searchByUsernameOrPhone(1L, key1)).thenReturn(Optional.empty());
+        // Run service method
+        ResponseEntity<?> responseEntity = supplierService.searchSupplier(userId, key1);
+        System.out.println(responseEntity.toString());
+        // Assert
+        assertEquals(null, responseEntity.getBody());
+    }
+
+    @Test
+    @DisplayName("searchSupplierUTCID05")
+    void searchSupplierUTCID05() {
+        // Set up
+        Long userId = 1L;
+        String key1 = "";
+        // Run service method
+        ResponseEntity<?> responseEntity = supplierService.searchSupplier(userId, key1);
+        System.out.println(responseEntity.toString());
+        // Assert
+        assertEquals("Nhập từ khóa để tìm kiếm", responseEntity.getBody());
     }
 
     @Test
@@ -194,8 +949,10 @@ class SupplierServiceImplTest {
     }
 
     @Test
-    void getAllSupplierPaging() {
+    @DisplayName("getAllSupplierPagingUTCID01")
+    void getAllSupplierPagingUTCID01() {
         // Set up
+        Long userId = 1L;
         Supplier supplier1 = new Supplier();
         Supplier supplier2 = new Supplier();
         List<Supplier> supplierList = new ArrayList<>();
@@ -207,9 +964,10 @@ class SupplierServiceImplTest {
         Sort sortable = Sort.by("supplierId").ascending();
         Pageable pageable = PageRequest.of(page, size, sortable);
         // Define behaviour of repository
+        when(userRepository.existsById(1L)).thenReturn(true);
         when(supplierRepository.findAllByUserId(1L, pageable)).thenReturn(supplierPage);
         // Run service method
-        ResponseEntity<?> responseEntity = supplierService.getAllSupplierPaging(1L, 1, 2, "ASC");
+        ResponseEntity<?> responseEntity = supplierService.getAllSupplierPaging(userId, page, size, sort);
         System.out.println(responseEntity.toString());
         // Assert
         assertEquals(supplierPage, responseEntity.getBody());

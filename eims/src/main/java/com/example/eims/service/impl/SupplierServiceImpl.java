@@ -64,9 +64,12 @@ public class SupplierServiceImpl implements ISupplierService {
     @Override
     public ResponseEntity<?> getAllSupplier(Long userId) {
         // Get all suppliers of the current User
+        if(!userRepository.existsById(userId)){
+            return new ResponseEntity<>("Người dùng không tồn tại", HttpStatus.OK);
+        }
         Optional<List<Supplier>> supplierListOptional = supplierRepository.findByUserId(userId);
         if (supplierListOptional.isEmpty()) {
-            return new ResponseEntity<>("No supplier found", HttpStatus.NO_CONTENT); // 204
+            return new ResponseEntity<>(null, HttpStatus.NO_CONTENT); // 204
         } else {
             return new ResponseEntity<>(supplierListOptional.get(), HttpStatus.OK);
         }
@@ -138,15 +141,15 @@ public class SupplierServiceImpl implements ISupplierService {
         Supplier supplier = new Supplier();
         // Check input
         // Name
-        String name = stringDealer.trimMax(createSupplierDTO.getSupplierName());
-        if (name.equals("")) { /* Supplier name is empty */
+        if (createSupplierDTO.getSupplierName() == null || stringDealer.trimMax(createSupplierDTO.getSupplierName()).equals("")) { /* Supplier name is empty */
             return new ResponseEntity<>("Tên không được để trống", HttpStatus.BAD_REQUEST);
         }
+        String name = stringDealer.trimMax(createSupplierDTO.getSupplierName());
         // Phone number
-        String phone = stringDealer.trimMax(createSupplierDTO.getSupplierPhone());
-        if (phone.equals("")) { /* Phone number is empty */
+        if (createSupplierDTO.getSupplierPhone() == null || stringDealer.trimMax(createSupplierDTO.getSupplierPhone()).equals("")) { /* Phone number is empty */
             return new ResponseEntity<>("Số điện thoại không được để trống", HttpStatus.BAD_REQUEST);
         }
+        String phone = stringDealer.trimMax(createSupplierDTO.getSupplierPhone());
         if (!stringDealer.checkPhoneRegex(phone)) { /* Phone number is not valid */
             return new ResponseEntity<>("Số điện thoại không hợp lệ", HttpStatus.BAD_REQUEST);
         }
@@ -156,19 +159,22 @@ public class SupplierServiceImpl implements ISupplierService {
             return new ResponseEntity<>("Số điện thoại đã được sử dụng", HttpStatus.BAD_REQUEST);
         }
         // Address
-        String address = stringDealer.trimMax(createSupplierDTO.getSupplierAddress());
-        if (address.equals("")) { /* Address is empty */
+        if (createSupplierDTO.getSupplierAddress() == null || stringDealer.trimMax(createSupplierDTO.getSupplierAddress()).equals("")) { /* Address is empty */
             return new ResponseEntity<>("Địa chỉ không được để trống", HttpStatus.BAD_REQUEST);
         }
+        String address = stringDealer.trimMax(createSupplierDTO.getSupplierAddress());
         // Facility name
-        String fName = stringDealer.trimMax(createSupplierDTO.getFacilityName());
-        if (fName.equals("")) { /* Facility name is empty */
+        if (createSupplierDTO.getFacilityName() == null || stringDealer.trimMax(createSupplierDTO.getFacilityName()).equals("")) { /* Facility name is empty */
             return new ResponseEntity<>("Tên cơ sở không được để trống", HttpStatus.BAD_REQUEST);
         }
+        String fName = stringDealer.trimMax(createSupplierDTO.getFacilityName());
         // Email
-        String email = stringDealer.trimMax(createSupplierDTO.getSupplierMail());
-        if ((!email.equals("")) && (!stringDealer.checkEmailRegex(email))) { /* Email is not valid */
-            return new ResponseEntity<>("Email không hợp lệ", HttpStatus.BAD_REQUEST);
+        String email = "";
+        if(createSupplierDTO.getSupplierMail() != null){
+            email = stringDealer.trimMax(createSupplierDTO.getSupplierMail());
+            if ((!email.equals("")) && (!stringDealer.checkEmailRegex(email))) { /* Email is not valid */
+                return new ResponseEntity<>("Email không hợp lệ", HttpStatus.BAD_REQUEST);
+            }
         }
         // Set attribute
         supplier.setUserId(userId);
@@ -212,15 +218,15 @@ public class SupplierServiceImpl implements ISupplierService {
         Long userId = updateSupplierDTO.getUserId();
         // Check blank input
         // Name
-        String name = stringDealer.trimMax(updateSupplierDTO.getSupplierName());
-        if (name.equals("")) { /* Supplier name is empty */
+        if (updateSupplierDTO.getSupplierName() == null || stringDealer.trimMax(updateSupplierDTO.getSupplierName()).equals("")) { /* Supplier name is empty */
             return new ResponseEntity<>("Tên không được để trống", HttpStatus.BAD_REQUEST);
         }
+        String name = stringDealer.trimMax(updateSupplierDTO.getSupplierName());
         // Phone number
-        String newPhone = stringDealer.trimMax(updateSupplierDTO.getSupplierPhone());
-        if (newPhone.equals("")) { /* Phone number is empty */
+        if (updateSupplierDTO.getSupplierPhone() == null || stringDealer.trimMax(updateSupplierDTO.getSupplierPhone()).equals("")) { /* Phone number is empty */
             return new ResponseEntity<>("Số điện thoại không được để trống", HttpStatus.BAD_REQUEST);
         }
+        String newPhone = stringDealer.trimMax(updateSupplierDTO.getSupplierPhone());
         if (!stringDealer.checkPhoneRegex(newPhone)) { /* Phone number is not valid */
             return new ResponseEntity<>("Số điện thoại không hợp lệ", HttpStatus.BAD_REQUEST);
         }
@@ -232,23 +238,28 @@ public class SupplierServiceImpl implements ISupplierService {
             }
         }
         // Address
-        String address = stringDealer.trimMax(updateSupplierDTO.getSupplierAddress());
-        if (address.equals("")) { /* Address is empty */
+        if (updateSupplierDTO.getSupplierAddress() == null || stringDealer.trimMax(updateSupplierDTO.getSupplierAddress()).equals("")) { /* Address is empty */
             return new ResponseEntity<>("Địa chỉ không được để trống", HttpStatus.BAD_REQUEST);
         }
+        String address = stringDealer.trimMax(updateSupplierDTO.getSupplierAddress());
         // Facility name
-        String fName = stringDealer.trimMax(updateSupplierDTO.getFacilityName());
-        if (fName.equals("")) { /* Facility name is empty */
+        if (updateSupplierDTO.getFacilityName() == null || stringDealer.trimMax(updateSupplierDTO.getFacilityName()).equals("")) { /* Facility name is empty */
             return new ResponseEntity<>("Tên cơ sở không được để trống", HttpStatus.BAD_REQUEST);
         }
+        String fName = stringDealer.trimMax(updateSupplierDTO.getFacilityName());
         // Email
-        String email = stringDealer.trimMax(updateSupplierDTO.getSupplierMail());
-        if (!(email.equals("")) && !stringDealer.checkEmailRegex(email)) { /* Email is not valid */
-            return new ResponseEntity<>("Email không hợp lệ", HttpStatus.BAD_REQUEST);
+        String email = "";
+        if(updateSupplierDTO.getSupplierMail() != null){
+            email = stringDealer.trimMax(updateSupplierDTO.getSupplierMail());
+            if ((!email.equals("")) && (!stringDealer.checkEmailRegex(email))) { /* Email is not valid */
+                return new ResponseEntity<>("Email không hợp lệ", HttpStatus.BAD_REQUEST);
+            }
         }
         // Status
         int status = updateSupplierDTO.getStatus();
-
+        if(status != 0 && status != 1){
+            return new ResponseEntity<>("Trạng thái không hợp lệ", HttpStatus.BAD_REQUEST);
+        }
         // Retrieve supplier's new information
         Optional<Supplier> supplierOptional = supplierRepository.findBySupplierId(updateSupplierDTO.getSupplierId());
         if (supplierOptional.isPresent()){
@@ -277,6 +288,9 @@ public class SupplierServiceImpl implements ISupplierService {
     @Override
     public ResponseEntity<?> searchSupplier(Long userId, String key) {
         // Trim spaces
+        if(key == null || stringDealer.trimMax(key).equals("")){
+            return new ResponseEntity<>("Nhập từ khóa để tìm kiếm", HttpStatus.BAD_REQUEST);
+        }
         StringDealer stringDealer = new StringDealer();
         key = stringDealer.trimMax(key);
         // Search
@@ -315,6 +329,9 @@ public class SupplierServiceImpl implements ISupplierService {
      */
     @Override
     public ResponseEntity<?> getAllSupplierPaging(Long userId, Integer page, Integer size, String sort) {
+        if(!userRepository.existsById(userId)){
+            return new ResponseEntity<>("Người dùng không tồn tại", HttpStatus.OK);
+        }
         // Get sorting type
         Sort sortable = null;
         if (sort.equals("ASC")) {
