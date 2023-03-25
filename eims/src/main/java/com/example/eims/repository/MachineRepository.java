@@ -30,7 +30,7 @@ public interface MachineRepository extends JpaRepository<Machine, Long> {
     @Query(value = "SELECT * FROM eims.machine WHERE max_capacity > cur_capacity AND facility_id = ?1",
             nativeQuery = true)
     Optional<List<Machine>> findAllNotFull(Long facilityId);
-    @Query(value = "SELECT IFNULL(SUM(amount), 0) FROM eims.egg_location WHERE machine = ?1  GROUP BY machine_id",
+    @Query(value = "SELECT IFNULL(SUM(amount), 0) FROM eims.egg_location WHERE machine_id = ?1",
             nativeQuery = true)
     int getCurrentAmount(Long machineId);
 }

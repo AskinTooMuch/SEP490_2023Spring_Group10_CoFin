@@ -22,13 +22,13 @@ const EggBatch = () => {
     // Get import list
     const loadEggBatchList = async () => {
         const result = await axios.get(EGGBATCH_ALL,
-            { params: { facilityId: sessionStorage.getItem("facilityId") } },
             {
+                params: { facilityId: sessionStorage.getItem("facilityId") },
                 headers: {
                     'Content-Type': 'application/json',
                     'Access-Control-Allow-Origin': '*'
                 },
-                withCredentials: false
+                withCredentials: true
             });
         setEggBatchList(result.data);
         setDataLoaded(true);
@@ -81,24 +81,24 @@ const EggBatch = () => {
                                         <td>{item.supplierName}</td>
                                         <td>{item.amount}</td>
                                         <td>{item.importDate}</td>
-                                        <td> 
-                                        {
-                                            item.progress == 0
-                                            ?'Chưa ấp'
-                                            :''
-                                        }
-                                        {
-                                            item.progress <5 && item.progress != 0
-                                            ?'Đang ấp'
-                                            :''
-                                        }
-                                        {
-                                            item.progress > 5
-                                            ?'Đang nở'
-                                            :''
-                                        }
+                                        <td>
+                                            {
+                                                item.progress == 0
+                                                    ? 'Chưa ấp'
+                                                    : ''
+                                            }
+                                            {
+                                                item.progress < 5 && item.progress != 0
+                                                    ? 'Đang ấp'
+                                                    : ''
+                                            }
+                                            {
+                                                item.progress > 5
+                                                    ? 'Đang nở'
+                                                    : ''
+                                            }
                                         </td>
-                                        
+
                                     </tr>
                                 ) : 'Nothing'
                         }

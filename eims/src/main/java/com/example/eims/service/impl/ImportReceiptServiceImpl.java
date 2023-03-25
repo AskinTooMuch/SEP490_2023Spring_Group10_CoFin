@@ -38,9 +38,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class ImportReceiptServiceImpl implements IImportReceiptService {
@@ -208,9 +206,22 @@ public class ImportReceiptServiceImpl implements IImportReceiptService {
         if (createImportDTO.getImportDate() == null || createImportDTO.getImportDate().equals("")) { // Import date empty
             return new ResponseEntity<>("Hãy nhập ngày nhập đơn hàng", HttpStatus.BAD_REQUEST);
         }
+        // Egg batch list
+        List<CreateEggBatchDTO> eggBatchDTOList = createImportDTO.getEggBatchList();
+        if (eggBatchDTOList.size() == 0) {
+            return new ResponseEntity<>("Hãy tạo ít nhất 1 lô trứng", HttpStatus.BAD_REQUEST);
+        }
+        List<CreateEggBatchDTO> eggBatchDupList = new ArrayList<>();
+        Set inputSet = new HashSet(eggBatchDTOList);
+        if(inputSet.size() < eggBatchDTOList.size()) {
+            return new ResponseEntity<>("Các lô trứng phải khác loại nhau", HttpStatus.BAD_REQUEST);
+        }
         // Amount and Price
         float total = 0;
         for (CreateEggBatchDTO eggBatch : createImportDTO.getEggBatchList()) {
+            if (eggBatch.getBreedId() == null) {
+                return new ResponseEntity<>("Chưa chọn loại", HttpStatus.BAD_REQUEST);
+            }
             if (eggBatch.getAmount() <= 0) { // Amount negative
                 return new ResponseEntity<>("Số lượng trứng phải lớn hơn 0", HttpStatus.BAD_REQUEST);
             }

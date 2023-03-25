@@ -147,7 +147,8 @@ public class SecurityConfig{
                 "/api/facility/update/**",
                 "/api/breed/**",
                 "/api/employee/**",
-                "/api/import/**"
+                "/api/import/**",
+                "/api/eggBatch/**"
         };
         final String[] MODERATOR = {
                 "/api/registration/**"

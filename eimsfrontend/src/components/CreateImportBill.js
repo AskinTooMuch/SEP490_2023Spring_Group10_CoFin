@@ -8,13 +8,13 @@ import { display } from '@mui/system';
 function TableRows({ rowsData, deleteTableRows, handleChange, breedList }) {
     return (
         rowsData.map((data, index) => {
-            const { species, breed, number, price, total } = data;
+            const { breedId, amount, price } = data;
             return (
                 <tr key={index}>
                     <td>
-                        <select onChange={(evnt) => handleChange(index, evnt)}
+                        <select onChange={(evnt) => (handleChange(index, evnt))} name="breedId"
                             id="selectBreed" className="form-control mt-1" required>
-                            <option defaultValue={breed}>Chọn loại</option>
+                            <option defaultValue="chọn loại">Chọn loại</option>
                             {
                                 breedList &&
                                     breedList.length > 0 ?
@@ -25,9 +25,9 @@ function TableRows({ rowsData, deleteTableRows, handleChange, breedList }) {
                             }
                         </select>
                     </td>
-                    <td><input type="text" value={number} onChange={(evnt) => (handleChange(index, evnt))} name="number" className="form-control" /> </td>
-                    <td><input type="text" value={price} onChange={(evnt) => (handleChange(index, evnt))} name="price" className="form-control" /> </td>
-                    <td><input type="text" value={total} onChange={(evnt) => (handleChange(index, evnt))} name="total" className="form-control" /> </td>
+                    <td><input type="number" value={amount} onChange={(evnt) => (handleChange(index, evnt))} name="amount" className="form-control" required/> </td>
+                    <td><input type="number" value={price} onChange={(evnt) => (handleChange(index, evnt))} name="price" className="form-control" required/> </td>
+                    <td><input disabled type="text" value={(amount * price).toLocaleString('vi', { style: 'currency', currency: 'VND' })} name="total" className="form-control" /> </td>
                     <td><button className="btn btn-outline-danger" type='button' onClick={() => (deleteTableRows(index))}>x</button></td>
                 </tr>
             )
@@ -48,10 +48,9 @@ const CreateImportBill = () => {
     //Add table rows
     const addTableRows = () => {
         const rowsInput = {
-            breed: '',
-            number: '',
-            price: '',
-            total: ''
+            breedId: '',
+            amount: '',
+            price: ''
         }
         setRowsData([...rowsData, rowsInput])
     }
@@ -67,10 +66,16 @@ const CreateImportBill = () => {
         const rowsInput = [...rowsData];
         rowsInput[index][name] = value;
         setRowsData(rowsInput);
+        if (name == "amount" || name == "price") {
+            cal();
+        }
     }
     // DTOs
     // List active
     const [supplierList, setSupplierList] = useState([])
+    // total
+    const [total, setTotal] = useState()
+
     // Create import Dto
     const [createImportDTO, setCreateImportDTO] = useState({
         supplierId: "",
@@ -107,7 +112,7 @@ const CreateImportBill = () => {
         try {
             response = await axios.get(SUPPLIER_ACTIVE_GET,
                 {
-                    params: { facilityId: sessionStorage.getItem("facilityId") },
+                    params: { userId: sessionStorage.getItem("curUserId") },
                     headers: {
                         'Content-Type': 'application/json',
                         'Access-Control-Allow-Origin': '*'
@@ -116,7 +121,7 @@ const CreateImportBill = () => {
                 });
             setSupplierList(response.data);
             setDataLoaded(true)
-            console.log(supplierList);
+            console.log("list:"+ response.data);
         } catch (err) {
             if (!err?.response) {
                 toast.error('Server không phản hồi');
@@ -151,6 +156,40 @@ const CreateImportBill = () => {
         }
     }
 
+    // Handle Submit create import
+    const handleCreateImportSubmit = async (event) => {
+        event.preventDefault();
+        console.log(rowsData);
+        createImportDTO.eggBatchList = rowsData;
+        let response;
+        try {
+            response = await axios.post(CREATE_IMPORT_SAVE,
+                createImportDTO,
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Access-Control-Allow-Origin': '*'
+                    },
+                    withCredentials: true
+                });
+            setCreateImportDTO({
+                supplierId: "",
+                userId: sessionStorage.getItem("curUserId"),
+                facilityId: sessionStorage.getItem("facilityId"),
+                importDate: "",
+                eggBatchList: []
+            })
+            navigate("/importbill", { state: "Tạo hóa đơn thành công" });
+
+        } catch (err) {
+            if (!err?.response) {
+                toast.error('Server không phản hồi');
+            } else {
+                toast.error(err.response.data);
+            }
+        }
+    }
+
     // Display phone number of supplier
     function show() {
         var select = document.getElementById('select');
@@ -162,11 +201,22 @@ const CreateImportBill = () => {
         }
         )
     }
+    // calculate total
+    function cal() {
+        var total = 0;
+        rowsData.map((item) => {
+            total += item.amount * item.price;
+        }
+        
+        )
+        var s = total.toLocaleString('vi', { style: 'currency', currency: 'VND' });
+        document.getElementById('total').innerHTML ="Tổng hóa đơn: " + s;
+    }
 
     return (
         <>
             <h2>Tạo hoá đơn nhập</h2>
-            <form>
+            <form onSubmit={handleCreateImportSubmit}>
                 <div className='container'>
                     <div className='detailbody'>
                         <div className="row">
@@ -195,13 +245,11 @@ const CreateImportBill = () => {
                             </div>
                         </div>
                         <div className="row">
-                            <div className="col-md-3">
-                            </div>
                             <div className="col-md-3" style={{ textAlign: "right" }}>
                                 <p>Ngày nhập</p>
                             </div>
                             <div className="col-md-3 ">
-                                <input required type="date"
+                                <input required type="datetime-local"
                                     onChange={(e) => handleCreateImportChange(e, "importDate")} />
                             </div>
                             <div className="col-md-3">
@@ -226,11 +274,12 @@ const CreateImportBill = () => {
                         <button className="btn btn-light" type='button' onClick={addTableRows} >+</button>
                     </div>
                     <div className='model-footer'>
-                        <label>Tổng giá trị: 49.000.000 VNĐ</label>
+                        <p style={{ textAlign: "right", fontWeight: "bold" }} id="total">
+                        </p>
                         <button style={{ width: "10%" }} className="col-md-6 btn-light" type='submit'>
                             Tạo
                         </button>
-                        <button style={{ width: "10%" }} onClick={() => navigate("/order")} className="btn btn-light">
+                        <button style={{ width: "10%" }} onClick={() => navigate("/order")} className="btn btn-light" type='button'>
                             Huỷ
                         </button>
                     </div>

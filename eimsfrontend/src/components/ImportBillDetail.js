@@ -231,15 +231,15 @@ export default function BasicTabs() {
                         <div className="col-md-6"></div>
                         <div className="col-md-3"></div>
                         <div className="col-md-3">
-                            <p>Tổng giá trị: {importDetail.total} VNĐ</p>
-                            <p>Đã thanh toán: {importDetail.paid} VNĐ</p>
-                            <p>Trạng thái: <span className='text-red'>
+                            <p>Tổng giá trị: {importDetail.total.toLocaleString('vi', { style: 'currency', currency: 'VND' })} </p>
+                            <p>Đã thanh toán: {importDetail.paid.toLocaleString('vi', { style: 'currency', currency: 'VND' })} </p>
+                            <p>Trạng thái:
                                 {
                                     importDetail.total == importDetail.paid
-                                        ? 'Đã thanh toán đủ'
-                                        : 'Chưa thanh toán đủ'
+                                        ? <span className='text-green'> Đã thanh toán đủ</span>
+                                        : <span className='text-red'> Chưa thanh toán đủ</span>
                                 }
-                            </span></p>
+                            </p>
                         </div>
                     </div>
                     <div className='model-footer'>

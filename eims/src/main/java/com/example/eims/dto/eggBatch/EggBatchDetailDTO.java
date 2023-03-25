@@ -12,6 +12,7 @@
 package com.example.eims.dto.eggBatch;
 
 import com.example.eims.dto.eggLocation.EggLocationEggBatchDetailDTO;
+import com.example.eims.dto.machine.MachineListItemDTO;
 import com.example.eims.entity.EggProduct;
 import lombok.Data;
 
@@ -36,4 +37,5 @@ public class EggBatchDetailDTO {
     private int status;
     private List<EggProduct> eggProductList;
     private List<EggLocationEggBatchDetailDTO> machineList;
+    private List<MachineListItemDTO> machineNotFullList;
 }

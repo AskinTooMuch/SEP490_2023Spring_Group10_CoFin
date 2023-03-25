@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import ImportExportIcon from '@mui/icons-material/ImportExport';
 import SearchIcon from '@mui/icons-material/Search';
@@ -15,6 +15,9 @@ const ImportBill = () => {
     //Data holding objects
     const [importList, setImportList] = useState([]);
 
+    //Get sent params
+    const { state } = useLocation();
+    //
     useEffect(() => {
         loadImportList();
     }, [dataLoaded]);
@@ -32,6 +35,10 @@ const ImportBill = () => {
             });
         setImportList(result.data);
         setDataLoaded(true);
+        // Toast message
+        console.log("state:====" + state)
+        if (state !== null && state !== "") toast.success(state);
+        state = "";
     }
 
     let navigate = useNavigate();
@@ -98,7 +105,7 @@ const ImportBill = () => {
                                                             <td className="u-border-1 u-border-grey-30 u-table-cell text-green">
                                                                 Đã thanh toán đủ</td>
                                                             :
-                                                            <td className="u-border-1 u-border-grey-30 u-table-cell text-green">
+                                                            <td className="u-border-1 u-border-grey-30 u-table-cell text-red">
                                                                 Chưa thanh toán đủ</td>
                                                     }
                                                 </tr>
@@ -121,7 +128,7 @@ const ImportBill = () => {
                 pauseOnHover
                 theme="colored" />
         </>
-        
+
     );
 }
 export default ImportBill;
