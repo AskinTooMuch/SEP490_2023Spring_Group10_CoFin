@@ -376,7 +376,7 @@ SET fid = (SELECT facility_id
 			WHERE user_id = uid);
 SELECT U.user_id, R.role_name, U.username, U.dob, U.email, U.salary, U.address, U.status AS USER_STATUS, 
 		F.facility_id, F.facility_name, F.facility_address, F.facility_found_date, F.business_license_number,
-        F.hotline, F.status AS FACILITY_STATUS, F.subscription_expiration_date, US.subscription_id
+        F.hotline, F.status AS FACILITY_STATUS, F.subscription_expiration_date, US.subscription_id, US.status AS SUB_STATUS
 FROM user U JOIN user_role UR ON U.user_id = UR.user_id
 		LEFT JOIN role R ON UR.role_id = R.role_id, 
 		facility F
@@ -459,7 +459,7 @@ VALUES 	(1, 'ROLE_USER', 1),
 INSERT INTO user(user_id, username, dob, phone, email, salary, password, address, status)
 VALUES 	(1,	'Nguyễn Chức', '2001-12-16', '0969044714',	'ownerchuc@gmail.com', 0, '$2a$10$Vp3h.q0WVd4LCt.jY4gbHe5bs2OKdQIa88oIFe7xR83m5UNRDaGPq',	'{"city":"Tỉnh Hải Dương","district":"Huyện Gia Lộc","ward":"Xã Hoàng Diệu","street":"Thôn Nghĩa Hy"}', 2),
 		(2,	'Test Owner', '2001-01-01', '0987654322', 'owner@gmail.com', 0, '$2a$10$NpyM9vyE2zQ7bTdEA7nYAeoirBlK5SqI/7v23kVQd7nCZq9nI.oUu', '{"city":"Tỉnh Hải Dương","district":"Huyện Gia Lộc","ward":"Xã Hoàng Diệu","street":"Thôn Nghĩa Hy"}', 2),
-		(3,	'Test Employee', '2001-01-01', '0978654323', 'employee@gmail.com', 0, '$2a$10$uRRgBmQCWBLgBsB4lImrguTBcHkx96MErC2fhvxmgUPDacoHPPr6W', '{"city":"Tỉnh Hải Dương","district":"Huyện Gia Lộc","ward":"Xã Hoàng Diệu","street":"Thôn Nghĩa Hy"}', 2),
+		(3,	'Test Employee', '2001-01-01', '0987654323', 'employee@gmail.com', 0, '$2a$10$uRRgBmQCWBLgBsB4lImrguTBcHkx96MErC2fhvxmgUPDacoHPPr6W', '{"city":"Tỉnh Hải Dương","district":"Huyện Gia Lộc","ward":"Xã Hoàng Diệu","street":"Thôn Nghĩa Hy"}', 2),
 		(4, 'Test Moderator', '2001-01-01', '0987654324', 'moderator@gmail.com', 0, '$2a$10$FNOLtGaY4coy0.CAHUxLpuBj9PIEO5J3/nqbORI8UmZuZd4eqARw2', '{"city":"Tỉnh Hải Dương","district":"Huyện Gia Lộc","ward":"Xã Hoàng Diệu","street":"Thôn Nghĩa Hy"}', 2),
         (5,	'Nguyễn Dương', '2001-01-01', '0852274855', 'ownerduong@gmail.com', 0, '$2a$10$UOEamoIHKWrb7BVNTOtZHebHBp6zPZ03STsKXDCZFD0BJusC9xFlO', '{"city":"Tỉnh Hải Dương","district":"Huyện Gia Lộc","ward":"Xã Hoàng Diệu","street":"Thôn Nghĩa Hy"}', 0);
 		
@@ -593,7 +593,8 @@ VALUES	('1', '3', '2022-05-31', 0),
 -- registration
 INSERT INTO registration(registration_id, user_id, register_date, status)
 VALUES 	(1, 2, '2022-05-31', 2),
-		(2, 5, '2022-05-31', 0);
+		(2, 1, '2022-05-31', 2),
+		(3, 5, '2022-05-31', 0);
    
 -- breed
 INSERT INTO breed(breed_id, specie_id, user_id, breed_name, average_weight_male, average_weight_female, common_disease, growth_time, image_src, status) 

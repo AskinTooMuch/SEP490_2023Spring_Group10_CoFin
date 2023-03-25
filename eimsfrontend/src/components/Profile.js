@@ -123,7 +123,8 @@ const Profile = () => {
         hotline: "",
         facilityStatus: "",
         subscriptionId: "",
-        subscriptionExpirationDate: ""
+        subscriptionExpirationDate: "",
+        subStatus: ""
     });
 
 
@@ -243,7 +244,8 @@ const Profile = () => {
             hotline: responseJson.hotline,
             facilityStatus: responseJson.facilityStatus,
             subscriptionId: responseJson.subscriptionId,
-            subscriptionExpirationDate: responseJson.subscriptionExpirationDate
+            subscriptionExpirationDate: responseJson.subscriptionExpirationDate,
+            subStatus: responseJson.subStatus
         })
         setFaciAddress(JSON.parse(responseJson.facilityAddress))
 
@@ -990,7 +992,7 @@ const Profile = () => {
                                                     <p>Gói đăng ký</p>
                                                 </div>
                                                 <div className="col-md-6">
-                                                    {facilityInformation.subscriptionId === ''
+                                                    {(facilityInformation.subscriptionId === '') || (!facilityInformation.subStatus)
                                                         ? <p id="subscription">Chưa đăng ký gói</p>
                                                         : <p id="subscription">Gói {facilityInformation.subscriptionId}</p>
                                                     }

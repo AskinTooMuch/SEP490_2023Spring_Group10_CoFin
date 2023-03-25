@@ -41,6 +41,7 @@ import java.sql.Date;
                         @ColumnResult(name = "facilityStatus", type = Boolean.class),
                         @ColumnResult(name = "subscriptionExpirationDate", type = Date.class),
                         @ColumnResult(name = "subscriptionId", type = Long.class),
+                        @ColumnResult(name = "SUB_STATUS", type = Long.class),
                             }))
 
 //@SqlResultSetMapping(name="UserDetailMapping",
@@ -106,10 +107,13 @@ public class UserDetailDTO {
     @Column(name = "subscription_id")
     private Long subscriptionId;
 
+    @Column(name = "SUB_STATUS")
+    private Boolean subStatus;
+
     public UserDetailDTO(Long userId, String userRoleName, String username, Date userDob, String userEmail,
                          Float userSalary, String userAddress, boolean userStatus, Long facilityId, String facilityName,
                          String facilityAddress, Date facilityFoundDate, String hotline, boolean facilityStatus,
-                         Date subscriptionExpirationDate, Long subscriptionId) {
+                         Date subscriptionExpirationDate, Long subscriptionId, Boolean subStatus) {
         this.userId = userId;
         this.userRoleName = userRoleName;
         this.username = username;
@@ -126,6 +130,7 @@ public class UserDetailDTO {
         this.facilityStatus = facilityStatus;
         this.subscriptionExpirationDate = subscriptionExpirationDate;
         this.subscriptionId = subscriptionId;
+        this.subStatus = subStatus;
     }
 
     public UserDetailDTO() {
