@@ -68,21 +68,24 @@ public class EmployeeServiceImpl implements IEmployeeService {
      */
     @Override
     public ResponseEntity<?> createNewEmployee(CreateEmployeeDTO createEmployeeDTO) {
-        String employeeName = stringDealer.trimMax(createEmployeeDTO.getEmployeeName());
-
-        if (employeeName.equals("")) { /* Username is empty */
+        Optional<Facility> facility = facilityRepository.findByFacilityId(createEmployeeDTO.getFacilityId());
+        if(!facility.isPresent()){
+            return new ResponseEntity<>("Cơ sở hiện không được hoạt động", HttpStatus.BAD_REQUEST);
+        }
+        if (createEmployeeDTO.getEmployeeName() == null || stringDealer.trimMax(createEmployeeDTO.getEmployeeName()).equals("")) { /* Username is empty */
             return new ResponseEntity<>("Tên không được để trống", HttpStatus.BAD_REQUEST);
         }
+        String employeeName = stringDealer.trimMax(createEmployeeDTO.getEmployeeName());
         // Date of birth
-        String sDate = stringDealer.trimMax(createEmployeeDTO.getEmployeeDob());
-        if (sDate.equals("")) { /* Date of birth is empty */
+        if (createEmployeeDTO.getEmployeeDob() == null || stringDealer.trimMax(createEmployeeDTO.getEmployeeDob()).equals("")) { /* Date of birth is empty */
             return new ResponseEntity<>("Ngày sinh không được để trống", HttpStatus.BAD_REQUEST);
         }
+        String sDate = stringDealer.trimMax(createEmployeeDTO.getEmployeeDob());
         // Phone number
-        String phone = stringDealer.trimMax(createEmployeeDTO.getEmployeePhone());
-        if (phone.equals("")) { /* Phone number is empty */
+        if (createEmployeeDTO.getEmployeePhone() == null || stringDealer.trimMax(createEmployeeDTO.getEmployeePhone()).equals("")) { /* Phone number is empty */
             return new ResponseEntity<>("Số điện thoại không được để trống", HttpStatus.BAD_REQUEST);
         }
+        String phone = stringDealer.trimMax(createEmployeeDTO.getEmployeePhone());
         if (!stringDealer.checkPhoneRegex(phone)) { /* Phone number is not valid*/
             return new ResponseEntity<>("Số điện thoại không đúng đinh dạng", HttpStatus.BAD_REQUEST);
         }
@@ -90,26 +93,23 @@ public class EmployeeServiceImpl implements IEmployeeService {
             return new ResponseEntity<>("Số điện thoại đã được sử dụng", HttpStatus.BAD_REQUEST);
         }
         // Email
-        String email = stringDealer.trimMax(createEmployeeDTO.getEmail());
-        if ((!email.equals("")) && !stringDealer.checkEmailRegex(email)) { /* Email is not valid */
-            return new ResponseEntity<>("Email không đúng định dạng", HttpStatus.BAD_REQUEST);
+        String email = "";
+        if (createEmployeeDTO.getEmail() != null){
+            email = stringDealer.trimMax(createEmployeeDTO.getEmail());
+            if ((!email.equals("")) && !stringDealer.checkEmailRegex(email)) { /* Email is not valid */
+                return new ResponseEntity<>("Email không đúng định dạng", HttpStatus.BAD_REQUEST);
+            }
         }
         // Address
-        String address = stringDealer.trimMax(createEmployeeDTO.getEmployeeAddress());
-        if (address.equals("")) { /* Address is empty */
+        if (createEmployeeDTO.getEmployeeAddress() == null || stringDealer.trimMax(createEmployeeDTO.getEmployeeAddress()).equals("")) { /* Address is empty */
             return new ResponseEntity<>("Địa chỉ không được để trống", HttpStatus.BAD_REQUEST);
         }
+        String address = stringDealer.trimMax(createEmployeeDTO.getEmployeeAddress());
         // Password
-        String password = stringDealer.trimMax(createEmployeeDTO.getEmployeePassword());
-        if (password.equals("")) { /* Password is empty */
+        if (createEmployeeDTO.getEmployeePassword() == null || stringDealer.trimMax(createEmployeeDTO.getEmployeePassword()).equals("")) { /* Password is empty */
             return new ResponseEntity<>("Mật khẩu không được để trống", HttpStatus.BAD_REQUEST);
         }
-
-        Optional<Facility> facility = facilityRepository.findByFacilityId(createEmployeeDTO.getFacilityId());
-        if(!facility.isPresent()){
-            return new ResponseEntity<>("Cơ sở hiện không được hoạt động", HttpStatus.BAD_REQUEST);
-        }
-
+        String password = stringDealer.trimMax(createEmployeeDTO.getEmployeePassword());
         if (!stringDealer.checkPasswordRegex(password)) { /* Password is not valid */
             return new ResponseEntity<>("Mật khẩu không đúng định dạng", HttpStatus.BAD_REQUEST);
         }
@@ -162,6 +162,11 @@ public class EmployeeServiceImpl implements IEmployeeService {
      */
     @Override
     public ResponseEntity<?> updateEmployee(UpdateEmployeeDTO updateEmployeeDTO) {
+        //facility check
+        Optional<Facility> facility = facilityRepository.findByFacilityId(updateEmployeeDTO.getFacilityId());
+        if(!facility.isPresent()){
+            return new ResponseEntity<>("Cơ sở hiện không được hoạt động", HttpStatus.BAD_REQUEST);
+        }
 
         Long employeeId = updateEmployeeDTO.getEmployeeId();
         Optional<User> oldEmployeeInfo = userRepository.findByUserId(employeeId);
@@ -180,39 +185,36 @@ public class EmployeeServiceImpl implements IEmployeeService {
             return new ResponseEntity<>("Nhân viên không còn tồn tại trên hệ thống", HttpStatus.BAD_REQUEST);
         }
 
-        String employeeName = stringDealer.trimMax(updateEmployeeDTO.getEmployeeName());
-        if (employeeName.equals("")) { /* Username is empty */
+        if (updateEmployeeDTO.getEmployeeName() == null || stringDealer.trimMax(updateEmployeeDTO.getEmployeeName()).equals("")) { /* Username is empty */
             return new ResponseEntity<>("Tên không được để trống", HttpStatus.BAD_REQUEST);
         }
+        String employeeName = stringDealer.trimMax(updateEmployeeDTO.getEmployeeName());
         // Date of birth
-        String sDate = stringDealer.trimMax(updateEmployeeDTO.getEmployeeDob());
-        if (sDate.equals("")) { /* Date of birth is empty */
+        if (updateEmployeeDTO.getEmployeeDob() == null || stringDealer.trimMax(updateEmployeeDTO.getEmployeeDob()).equals("")) { /* Date of birth is empty */
             return new ResponseEntity<>("Ngày sinh không được để trống", HttpStatus.BAD_REQUEST);
         }
+        String sDate = stringDealer.trimMax(updateEmployeeDTO.getEmployeeDob());
         // Phone number
-        String phone = stringDealer.trimMax(updateEmployeeDTO.getEmployeePhone());
-        if (phone.equals("")) { /* Phone number is empty */
+        if (updateEmployeeDTO.getEmployeePhone() == null || stringDealer.trimMax(updateEmployeeDTO.getEmployeePhone()).equals("")) { /* Phone number is empty */
             return new ResponseEntity<>("Số điện thoại không được để trống", HttpStatus.BAD_REQUEST);
         }
+        String phone = stringDealer.trimMax(updateEmployeeDTO.getEmployeePhone());
         if (!stringDealer.checkPhoneRegex(phone)) { /* Phone number is not valid*/
             return new ResponseEntity<>("Số điện thoại không đúng đinh dạng", HttpStatus.BAD_REQUEST);
         }
         // Email
-        String email = stringDealer.trimMax(updateEmployeeDTO.getEmail());
-        if ((!email.equals("")) && !stringDealer.checkEmailRegex(email)) { /* Email is not valid */
-            return new ResponseEntity<>("Email không đúng định dạng", HttpStatus.BAD_REQUEST);
+        String email = "";
+        if(updateEmployeeDTO.getEmail() != null){
+            email = stringDealer.trimMax(updateEmployeeDTO.getEmail());
+            if ((!email.equals("")) && !stringDealer.checkEmailRegex(email)) { /* Email is not valid */
+                return new ResponseEntity<>("Email không đúng định dạng", HttpStatus.BAD_REQUEST);
+            }
         }
         // Address
-        String address = stringDealer.trimMax(updateEmployeeDTO.getEmployeeAddress());
-        if (address.equals("")) { /* Address is empty */
+        if (updateEmployeeDTO.getEmployeeAddress() == null || stringDealer.trimMax(updateEmployeeDTO.getEmployeeAddress()).equals("")) { /* Address is empty */
             return new ResponseEntity<>("Địa chỉ không được để trống", HttpStatus.BAD_REQUEST);
         }
-
-        //facility check
-        Optional<Facility> facility = facilityRepository.findByFacilityId(updateEmployeeDTO.getFacilityId());
-        if(!facility.isPresent()){
-            return new ResponseEntity<>("Cơ sở hiện không được hoạt động", HttpStatus.BAD_REQUEST);
-        }
+        String address = stringDealer.trimMax(updateEmployeeDTO.getEmployeeAddress());
 
         Float salary = updateEmployeeDTO.getSalary();
         if (oldEmployeeInfo.isPresent()){

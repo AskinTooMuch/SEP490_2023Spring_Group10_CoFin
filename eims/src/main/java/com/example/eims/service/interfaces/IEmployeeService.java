@@ -55,8 +55,8 @@ public interface IEmployeeService {
     /**
      * Find employee by name or phone number
      * @param facilityId facility id
-     * @param employeePhone employee phone number
+     * @param searchKey search key word
      * @return employee list
      */
-    ResponseEntity<?> searchEmployeeByNameOrPhone(Long facilityId, String employeePhone);
+    ResponseEntity<?> searchEmployeeByNameOrPhone(Long facilityId, String searchKey);
 }
