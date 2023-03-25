@@ -1,3 +1,4 @@
+-- V0.10.0: Modify field lengths
 -- V0.9.0: Modify the stored procedure user_and_facility
 -- V0.8.2: Roll back to V0.8.0
 -- V0.8.1: Update tables: customer, supplier (user_id -> facility_id)
@@ -24,30 +25,30 @@ USE eims;
 -- Create all tables with no foreign keys.
 CREATE TABLE role(
 	role_id 	integer 	AUTO_INCREMENT PRIMARY KEY,
-    role_name 	varchar(63) NOT NULL,
+    role_name 	varchar(15) NOT NULL,
     status		boolean		NOT NULL
 );
 
 CREATE TABLE facility(
 	facility_id						integer 	AUTO_INCREMENT PRIMARY KEY,
     user_id							integer		NOT NULL,
-    facility_name					varchar(63) NOT NULL,
+    facility_name					varchar(50) NOT NULL,
     facility_address				varchar(511) NOT NULL,
     facility_found_date				date 		NOT NULL,
     subscription_expiration_date	datetime,
-    hotline							varchar(15)	NOT NULL,
-    business_license_number			varchar(31) NOT NULL UNIQUE,
+    hotline							varchar(11)	NOT NULL,
+    business_license_number			varchar(10) NOT NULL UNIQUE,
     status							boolean		NOT NULL
 );
 
 CREATE TABLE user(
 	user_id		integer 		AUTO_INCREMENT PRIMARY KEY,
-    username	varchar(63)		NOT NULL,
+    username	varchar(32)		NOT NULL,
     dob			date			NOT NULL,
-    phone		varchar(15)		NOT NULL,
-    email		varchar(127),
+    phone		varchar(11)		NOT NULL,
+    email		varchar(64),
     salary		decimal(15,2),
-    password	varchar(127)	NOT NULL,
+    password	varchar(511)	NOT NULL, -- When entering check is max length 20, this length is for encoded passwords.
     address		varchar(511),
 	status		boolean			NOT NULL
 );
@@ -55,7 +56,7 @@ CREATE TABLE user(
 CREATE TABLE user_role(
 	user_id		integer		NOT NULL,
     role_id		integer		NOT NULL,
-    status		boolean		NOT NULL
+    status		boolean		NOT NULL DEFAULT true
 );
 
 CREATE TABLE work_in(
@@ -74,7 +75,7 @@ CREATE TABLE salary_history(
 CREATE TABLE specie(
 	specie_id			integer		AUTO_INCREMENT PRIMARY KEY,
     user_id				integer		NOT NULL,
-    specie_name			varchar(63) NOT NULL,
+    specie_name			varchar(32) NOT NULL,
     incubation_period	integer,
     status				boolean		NOT NULL
 );
@@ -83,10 +84,10 @@ CREATE TABLE breed(
 	breed_id				integer 	AUTO_INCREMENT PRIMARY KEY,
     specie_id				integer,
     user_id					integer		NOT NULL,
-    breed_name				varchar(63)	NOT NULL,
+    breed_name				varchar(32)	NOT NULL,
     average_weight_male		double,
     average_weight_female	double,
-    common_disease			varchar(255),
+    common_disease			varchar(1027),
     growth_time				integer		NOT NULL,
     image_src				varchar(1027),
     status 					boolean		NOT NULL
@@ -103,7 +104,7 @@ CREATE TABLE incubation_phase(
 
 CREATE TABLE machine_type(
 	machine_type_id		integer		AUTO_INCREMENT PRIMARY KEY,
-    machine_type_name	varchar(63)	NOT NULL,
+    machine_type_name	varchar(32)	NOT NULL,
     description			varchar(255),
     status				boolean		NOT NULL
 );
@@ -111,21 +112,21 @@ CREATE TABLE machine_type(
 CREATE TABLE supplier(
 	supplier_id			integer 		AUTO_INCREMENT PRIMARY KEY,
     user_id				integer			NOT NULL,
-    supplier_name		varchar(63)		NOT NULL,
-    facility_name	    varchar(63)		NOT NULL,
-    supplier_phone		varchar(15)		NOT NULL,
-    supplier_address	varchar(255)	NOT NULL,
-    supplier_mail		varchar(127),
+    supplier_name		varchar(32)		NOT NULL,
+    facility_name	    varchar(50)		NOT NULL,
+    supplier_phone		varchar(11)		NOT NULL,
+    supplier_address	varchar(511)	NOT NULL,
+    supplier_mail		varchar(64),
     status				boolean		NOT NULL
 );
 
 CREATE TABLE customer(
 	customer_id			integer 	AUTO_INCREMENT PRIMARY KEY,
     user_id				integer		NOT NULL,
-    customer_name		varchar(63)	NOT NULL,
-    customer_phone		varchar(15) NOT NULL,
-    customer_address	varchar(255) NOT NULL,
-    customer_mail		varchar(127),
+    customer_name		varchar(32)	NOT NULL,
+    customer_phone		varchar(11) NOT NULL,
+    customer_address	varchar(511) NOT NULL,
+    customer_mail		varchar(64),
     status				boolean		NOT NULL
 );
 
@@ -172,7 +173,7 @@ CREATE TABLE machine(
 	machine_id		integer		AUTO_INCREMENT PRIMARY KEY,
     machine_type_id	integer 	NOT NULL,
     facility_id		integer		NOT NULL,
-    machine_name	varchar(63)	NOT NULL,
+    machine_name	varchar(32)	NOT NULL,
     max_capacity	integer		NOT NULL,
     cur_capacity	integer		NOT NULL,
     added_date		date		NOT NULL,
@@ -201,7 +202,7 @@ CREATE TABLE egg_location(
 CREATE TABLE payroll(
 	payroll_id		integer		AUTO_INCREMENT PRIMARY KEY,
 	user_id			integer			NOT NULL,
-    payroll_item	varchar(255)	NOT NULL,
+    payroll_item	varchar(50)	NOT NULL,
     payroll_amount	decimal(15,2)	NOT NULL,
 	issue_date		date			NOT NULL,
     note			varchar(255),
@@ -212,7 +213,7 @@ CREATE TABLE cost(
 	cost_id 	integer 		AUTO_INCREMENT PRIMARY KEY,
     user_id		integer			NOT NULL,
     facility_id	integer 		NOT NULL,
-    cost_item	varchar(63) 	NOT NULL,
+    cost_item	varchar(50) 	NOT NULL,
     cost_amount	decimal(15,2) 	NOT NULL,
     paid_amount	decimal(15,2) 	NOT NULL,
     issue_date	datetime		NOT NULL,
@@ -252,7 +253,7 @@ CREATE TABLE notification(
 
 CREATE TABLE otp(
 	otp_id			integer			AUTO_INCREMENT PRIMARY KEY,
-    phone_number	varchar(15)		NOT NULL,
+    phone_number	varchar(11)		NOT NULL,
     otp				varchar(10) 	DEFAULT "",
     time 			datetime,
     status				boolean

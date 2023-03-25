@@ -127,9 +127,6 @@ const Register = () => {
             districtList[i] = { value: districtList[i].Id, label: districtList[i].Name }
         }
         setUserDistrict(districtList);
-        //ALso set facility addresses
-        setFaciCityIndex(index);
-        setFaciDistrict(districtList);
     }
 
     //Load user ward list
@@ -142,20 +139,11 @@ const Register = () => {
             wardList[i] = { value: wardList[i].Id, label: wardList[i].Name }
         }
         setUserWard(wardList);
-        //ALso set facility addresses
-        if (faciCityIndex === userCityIndex) {
-            setFaciDistrictIndex(index);
-            setFaciWard(wardList);
-        }
     }
 
     function saveUserWard(index) {
         console.log("Ward " + index);
         setUserWardIndex(index);
-        //ALso set facility addresses
-        if (faciDistrictIndex === userDistrictIndex) {
-            setFaciWardIndex(index);
-        }
     }
 
     //Load Address into the fields
@@ -369,7 +357,7 @@ const Register = () => {
                                                                         onChange={(e) => loadUserDistrict(e.target.value)}
                                                                         value={userCityIndex}
                                                                         required>
-                                                                        <option value="" disabled>Chọn Tỉnh/Thành phố của bạn</option>
+                                                                        <option value="" disabled selected>Chọn Tỉnh/Thành phố của bạn</option>
                                                                         {city &&
                                                                             city.map((item, index) => (
                                                                                 <option value={index}>{item.label}</option>
@@ -388,7 +376,7 @@ const Register = () => {
                                                                         onChange={(e) => loadUserWard(e.target.value)}
                                                                         value={userDistrictIndex}
                                                                         required>
-                                                                        <option value="" disabled>Chọn Quận/Huyện của bạn</option>
+                                                                        <option value="" disabled selected>Chọn Quận/Huyện của bạn</option>
                                                                         {userDistrict &&
                                                                             userDistrict.map((item, index) => (
                                                                                 <option value={index}>{item.label}</option>
@@ -407,7 +395,7 @@ const Register = () => {
                                                                         onChange={(e) => saveUserWard(e.target.value)}
                                                                         value={userWardIndex}
                                                                         required>
-                                                                        <option value="" disabled>Chọn Phường của bạn</option>
+                                                                        <option value="" disabled selected>Chọn Phường của bạn</option>
                                                                         {userWard &&
                                                                             userWard.map((item, index) => (
                                                                                 <option value={index}>{item.label}</option>
@@ -515,7 +503,7 @@ const Register = () => {
                                                                         onChange={(e) => loadFaciDistrict(e.target.value)}
                                                                         value={faciCityIndex}
                                                                         required>
-                                                                        <option value="" disabled>Chọn Tỉnh/Thành phố của bạn</option>
+                                                                        <option value="" disabled selected>Chọn Tỉnh/Thành phố của bạn</option>
                                                                         {city &&
                                                                             city.map((item, index) => (
                                                                                 <option value={index}>{item.label}</option>
@@ -534,7 +522,7 @@ const Register = () => {
                                                                         onChange={(e) => loadFaciWard(e.target.value)}
                                                                         value={faciDistrictIndex}
                                                                         required>
-                                                                        <option value="" disabled>Chọn Quận/Huyện của bạn</option>
+                                                                        <option value="" disabled selected>Chọn Quận/Huyện của bạn</option>
                                                                         {faciDistrict &&
                                                                             faciDistrict.map((item, index) => (
                                                                                 <option value={index}>{item.label}</option>
@@ -553,7 +541,7 @@ const Register = () => {
                                                                         onChange={(e) => saveFaciWard(e.target.value)}
                                                                         value={faciWardIndex}
                                                                         required>
-                                                                        <option value="" disabled>Chọn Phường của bạn</option>
+                                                                        <option value="" disabled selected>Chọn Phường của bạn</option>
                                                                         {faciWard &&
                                                                             faciWard.map((item, index) => (
                                                                                 <option value={index}>{item.label}</option>
