@@ -1,67 +1,109 @@
 #root header {
   background-color: #ffffff;
-  
+
 }
+
 #root header .title {
-  color:#F46110;
+  color: #F46110;
 }
+
 .css-i9gxme button {
   padding: 10px;
   margin: 5px;
   border-radius: 40px;
-  background-image:linear-gradient(to right, #F1C50E,#F46110);
-}
-.css-i9gxme button:hover{
-  background-image:linear-gradient(#000);
+  background-image: linear-gradient(to right, #F1C50E, #F46110);
 }
 
+.css-i9gxme button:hover {
+  background-image: linear-gradient(#000);
+}
 
-.css-i9gxme button a{
+.css-i9gxme button a {
   color: white;
 }
 
-.notifi-box{
-  width: 300px;
+.mybtn {
+  position: fixed;
+  top: 93%;
+  left: 40%;
+  border: none;
+  background-color: transparent;
+}
+
+.notifi-header {
+  background-color: #ffffff;
+  text-align: center;
+  border-bottom: 5px solid #F46110;
+}
+
+.notification {
+  background-color: #F46110;
+  border-radius: 10px 10px 0 0;
+}
+
+.notify {
+  max-height: 850px;
+  overflow: visible;
+}
+
+.MuiPaper-root ul {
+  margin: auto;
+}
+
+.notify h3 {
+  font-size: 3vh;
+  color: #ffffff;
+  text-align: center;
+  padding: 20px;
+  margin: auto;
+}
+.notify .close{
   position: absolute;
-  top: 40px;
-  right: 5px;
-  background: white;
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  border: transparent;
+  border-radius: 10px;
+  top: 3vh;
+  left: 90%;
+  color: #ffffff;
+  background-color: transparent;
+}
+.notify .close :hover{
+  color: #F46110;
+  background-color: #ffffff;
+  border-radius: 10px;
 }
 
-.notifi-box h2{
-  font-size: 14px;
-  padding: 10px;
-  border-bottom: 1px solid #eee;
-  color: #999;
-}
-
-.notifi-box h2 span{
+.notify h3 span {
   color: #f00;
 }
 
 .notifi-item {
+  box-shadow: inset -10px -10px 15px rgba(255, 255, 255, 0.5),
+    inset 10px 10px 15px rgba(70, 70, 70, 0.12);
   display: flex;
-  border-bottom: 1px solid #eee;
-  padding: 15px 5px;
-  margin-bottom: 15px;
+  padding: 20px 20px 0 20px;
   cursor: pointer;
 }
 
-.notifi-item img{
-  display: block;
-  width: 50px;
-  margin-right: 10px;
-  border-radius: 50%;
-}
-
-.notifi-item .text h4{
-  color: #777;
+.notifi-item .text h4 {
+  font-weight: bold;
+  color: #020202;
   font-size: 16px;
-  margin-top: 10px;
+  margin: auto;
 }
 
-.notifi-item .text p{
-  color: #aaa;
+.notifi-item .text p {
+  font-weight: bold;
+  color: #F46110;
   font-size: 12px;
+  padding: auto;
+}
+
+.ptime{
+  font-weight: bold;
+  color: #F46110;
+  font-size: 15px;
+  padding: auto;
+}
+.modal {
+  z-index: 9999
 }

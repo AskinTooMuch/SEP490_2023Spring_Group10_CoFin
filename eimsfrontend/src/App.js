@@ -29,6 +29,7 @@ import AccountManager from './components/AccountManager';
 import SubcriptionManager from './components/SubcriptionManager';
 import CreateImportBill from './components/CreateImportBill';
 import ImportBillDetail from './components/ImportBillDetail';
+import NotificationList from './components/NotificationList';
 function App() {
   return (
     <>
@@ -45,6 +46,7 @@ function App() {
           <Route path="/finance" element={<FinanManage />} />
           <Route path="/employee" element={<Employee />} />
           <Route path="/importbill" element={<ImportBill />} />
+          <Route path="/notificationlist" element={<NotificationList/>}/>
           <Route path="/createimportbill" element={<CreateImportBill />} />
           {/*Details pages */}
           <Route path="/employeedetail" element={<EmployeeDetails/>} />

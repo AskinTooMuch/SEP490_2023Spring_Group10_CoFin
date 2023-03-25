@@ -12,9 +12,19 @@
     font-weight: bold;
 }
 
-.btn-light:hover {
+.btn-light:hover, .btn-light:focus:hover {
     background-color: #f46110;
     color: white;
+    font-weight: bold;
+}
+
+
+.btn-light:focus {
+    border-radius: 50px;
+    border: 3px #f89e6e solid;
+    color: #f46110;
+    height: 46px;
+    background-color: white;
     font-weight: bold;
 }
 
@@ -48,7 +58,7 @@ p {
     cursor: pointer;
 }
 
-tbody :hover{
+tbody :hover {
     background-color: lightblue;
 }
 
@@ -56,17 +66,17 @@ tbody tr ::after :hover {
     background-color: grey;
 }
 
-.col-md-4 .button .btn{
+.col-md-4 .button .btn {
     width: 20%;
     float: right;
     margin: 15px;
 }
 
-.detailbody{
+.detailbody {
     background-color: #EAE5E5;
     padding: 20px;
 }
 
-.machineborder{
+.machineborder {
     padding: 10px;
 }

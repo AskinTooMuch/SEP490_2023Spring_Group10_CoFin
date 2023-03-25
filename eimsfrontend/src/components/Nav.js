@@ -1,5 +1,6 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom';
+import CloseIcon from '@mui/icons-material/Close';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -19,6 +20,8 @@ import DashboardIcon from '@mui/icons-material/Dashboard';
 import "../css/navbar.css"
 import logo from '../pics/EIMSlogo.png'
 import WithPermission from '../utils.js/WithPermission';
+import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
+import { Modal } from 'react-bootstrap';
 const Nav = () => {
     const auth = sessionStorage.getItem("curUserId");
     const navigate = useNavigate();
@@ -29,6 +32,16 @@ const Nav = () => {
     const account = () => {
         navigate("/accountmanage")
     }
+
+    const [notify, setNotify] = React.useState(null);
+    const open = Boolean(notify);
+    const handleClickNoti = (event: React.MouseEvent<HTMLElement>) => {
+        setNotify(event.currentTarget);
+    };
+    const handleCloseNoti = () => {
+        setNotify(null);
+    };
+
     const [anchorEl, setAnchorEl] = React.useState(null);
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
 
@@ -69,6 +82,14 @@ const Nav = () => {
             transformOrigin={{
                 vertical: 'top',
                 horizontal: 'right',
+            }}
+            PaperProps={{
+                elevation: 0,
+                sx: {
+                    overflow: 'visible',
+                    filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
+                    mt: 5
+                }
             }}
             open={isMenuOpen}
             onClose={handleMenuClose}
@@ -116,10 +137,10 @@ const Nav = () => {
             <MenuItem>
                 <IconButton
                     size="large"
-                    aria-label="show 17 new notifications"
                     color="inherit"
+                    onClick={handleClickNoti}
                 >
-                    <Badge badgeContent={17} color="error">
+                    <Badge badgeContent={<FiberManualRecordIcon color="error" />} >
                         <NotificationsIcon />
                     </Badge>
                 </IconButton>
@@ -139,7 +160,10 @@ const Nav = () => {
             </MenuItem>
         </Menu>
     );
-
+    //Show-hide Popup
+    const [show, setShow] = useState(false);
+    const handleClosePopup = () => setShow(false);
+    const handleShowPopup = () => setShow(true);
     return (
 
         <div>
@@ -178,10 +202,13 @@ const Nav = () => {
                                         </WithPermission>
                                         <IconButton
                                             size="large"
-                                            aria-label="show 17 new notifications"
+                                            onClick={handleClickNoti}
+                                            aria-controls={open ? 'notify-menu' : undefined}
+                                            aria-haspopup="true"
+                                            aria-expanded={open ? 'true' : undefined}
                                             color="inherit"
                                         >
-                                            <Badge badgeContent={17} color="error">
+                                            <Badge badgeContent={<FiberManualRecordIcon color="error" />}>
                                                 <NotificationsIcon />
                                             </Badge>
                                         </IconButton>
@@ -222,6 +249,95 @@ const Nav = () => {
                 {renderMobileMenu}
                 {renderMenu}
             </Box>
+            <Menu
+                notify={notify}
+                id="notify-menu"
+                open={open}
+                onClose={handleCloseNoti}
+                PaperProps={{
+                    elevation: 0,
+                    sx: {
+                        overflow: 'hidden',
+                        filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
+                        mt: "-30vh",
+                    },
+                    style: {
+                        width: '350px',
+                        borderRadius: '15px'
+                    },
+                }}
+                transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+                anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+            >
+                {/* Dropdown Notification List (only 5) */}
+                <div className='notify'>
+                    <div className='notification'>
+                        <h3 >Thông báo</h3>
+                    </div>
+                    <button className='close' onClick={handleCloseNoti}><CloseIcon /></button>
+                    <div className="notifi-item" onClick={handleShowPopup}>
+                        <div className="text">
+                            <h4>Lô GFJ816 hoàn thành giai đoạn ấp lần 2 cần chiếu trứng</h4>
+                            <p>(30p trước)</p>
+                        </div>
+                    </div>
+                    {/* Popup detail notification */}
+                    <Modal show={show} onHide={handleClosePopup}
+                        size="lg"
+                        aria-labelledby="contained-modal-title-vcenter"
+                        centered >
+                        <Modal.Header closeButton onClick={handleClosePopup}>
+                            <Modal.Title>Thông báo</Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>
+                            <div className="row">
+                                <div className="">
+                                    <p>Lô trứng 01 có 800 quả ở máy số 1, 200 quả ở máy số 2, 300 quả ở máy số 3.
+                                        Hiện đang cần thực hiện soi trứng lần 1
+                                    </p>
+                                    <p className='ptime'>30 phút trước</p>
+                                </div>
+                            </div>
+                        </Modal.Body>
+                        <div className='model-footer'>
+                            <button style={{ width: "30%" }} className="col-md-6 btn-light" type="submit">
+                                Cập nhật lô
+                            </button>
+                            <button style={{ width: "20%" }} onClick={handleClosePopup} className="btn btn-light" type="button">
+                                Thoát
+                            </button>
+                        </div>
+                    </Modal>
+                    <div className="notifi-item">
+                        <div className="text">
+                            <h4>Lô GFJ816 hoàn thành giai đoạn ấp lần 2 cần chiếu trứng</h4>
+                            <p>(1 giờ trước)</p>
+                        </div>
+                    </div>
+
+                    <div className="notifi-item">
+                        <div className="text">
+                            <h4>Lô GFJ816 hoàn thành giai đoạn ấp lần 2 cần chiếu trứng</h4>
+                            <p>(1 giờ  trước)</p>
+                        </div>
+                    </div>
+
+                    <div className="notifi-item">
+                        <div className="text">
+                            <h4>Lô GFJ816 hoàn thành giai đoạn ấp lần 2 cần chiếu trứng</h4>
+                            <p>(2 giờ  trước)</p>
+                        </div>
+                    </div>
+
+                    <div className="notifi-item">
+                        <div className="text">
+                            <h4>Lô GFJ816 hoàn thành giai đoạn ấp lần 2 cần chiếu trứng</h4>
+                            <p>(3 giờ  trước)</p>
+                        </div>
+                    </div>
+                    <i><button className='mybtn' onClick={() => navigate("/notificationlist")} >Xem tất cả</button></i>
+                </div>
+            </Menu>
         </div>
 
     )
