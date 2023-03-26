@@ -32,7 +32,9 @@ const Nav = () => {
     const account = () => {
         navigate("/accountmanage")
     }
-
+    const egg = () => {
+        navigate("/egg")
+    }
     const [notify, setNotify] = React.useState(null);
     const open = Boolean(notify);
     const handleClickNoti = (event: React.MouseEvent<HTMLElement>) => {
@@ -188,6 +190,13 @@ const Nav = () => {
                                     <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
                                         <WithPermission roleRequired="2">
                                             <IconButton size="large" color="inherit" onClick={dashboard}>
+                                                <Badge color="error">
+                                                    <DashboardIcon />
+                                                </Badge>
+                                            </IconButton>
+                                        </WithPermission>
+                                        <WithPermission roleRequired="3">
+                                            <IconButton size="large" color="inherit" onClick={egg}>
                                                 <Badge color="error">
                                                     <DashboardIcon />
                                                 </Badge>

@@ -9,12 +9,14 @@ const useAuth = () => {
     if (user) {
         return {
             auth: true,
-            role: userRole,
+            role1: userRole,
+            role2: userRole
         }
     } else {
         return {
             auth: false,
-            role: null
+            role1: null,
+            role2: null
         }
     }
 }
@@ -30,10 +32,10 @@ type ProtectedRouteType = {
 
 const PrivateRoute = (props: ProtectedRouteType) => {
     // let auth = {'token':false};
-    const { auth, role } = useAuth();
+    const { auth, role1, role2 } = useAuth();
 
     if (props.roleRequired) {
-        return auth ? (props.roleRequired === role ? (
+        return auth ? (props.roleRequired === role1 || role2 ? (
             <Layout><Outlet /></Layout>
         ) : (
             <Navigate to="/unauthorized" />

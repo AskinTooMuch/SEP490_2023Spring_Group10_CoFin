@@ -9,7 +9,7 @@ import "../css/profile.css"
 import { Modal, Button } from 'react-bootstrap'
 const eye = <FontAwesomeIcon icon={faEye} />;
 //regex check password
-const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
+const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,20}$/;
 const Profile = () => {
     //api url
     const CHANGE_PASS_URL = '/api/auth/changePassword';
@@ -699,7 +699,7 @@ const Profile = () => {
                                                             <input ref={userRef} id="oldPassword" onChange={e => handleChange(e, "password")}
                                                                 value={changePasswordDTO.password} required
                                                                 type={passwordShown ? "text" : "password"}
-                                                                minLength="8"
+                                                                minLength="8" maxLength="20"
                                                                 className="form-control " />
                                                             <i onClick={togglePasswordVisiblity}>{eye}</i>
                                                         </div>
@@ -720,7 +720,7 @@ const Profile = () => {
                                                                 aria-describedby="pwdnote"
                                                                 type={passwordShown2 ? "text" : "password"}
                                                                 className="form-control"
-                                                                minLength="8" onFocus={() => setPassFocus(true)}
+                                                                minLength="8" maxLength="20" onFocus={() => setPassFocus(true)}
                                                                 onBlur={() => setPassFocus(false)}
                                                             />
                                                             <i onClick={togglePasswordVisiblity2}>{eye}</i>
@@ -749,15 +749,6 @@ const Profile = () => {
 
                                                     </div>
                                                 </div>
-                                                {/* <h6 id="pwdnote" >
-                                                    <FontAwesomeIcon icon={faInfoCircle} />
-                                                    &nbsp; 8 - 20 kí tự.<br />
-                                                    Bao gồm 1 chữ cái viết hoa, 1 số và 1 kí tự đặc biệt.<br />
-                                                    Các kí tự đặc biệt cho phép: <span aria-label="exclamation mark">!</span> <span aria-label="at symbol">@</span> <span aria-label="hashtag">#</span> <span aria-label="dollar sign">$</span> <span aria-label="percent">%</span>
-                                                    <br /> Mật khẩu mới không được trùng với mật khẩu cũ
-                                                    <br />Mật khẩu xác nhận lại phải trùng với mẩt khẩu đã nhập ở trên
-
-                                                </h6> */}
                                                 <div className='model-footer'>
                                                     <button className="btn btn-light" style={{ width: "30%" }} id="confirmChangePassword">
                                                         Đổi mật khẩu
