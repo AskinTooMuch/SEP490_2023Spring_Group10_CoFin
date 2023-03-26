@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { useNavigate, useParams, useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import PropTypes from 'prop-types';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
@@ -289,7 +289,7 @@ export default function BasicTabs() {
             </Box>
             <SupplierDetails value={value} index={0}>
                 <div className='container'>
-                    <h3 style={{ textAlign: "center" }}>Thông tin chi tiết nhà cung cấp</h3>
+                    <h3 style={{ textAlign: "center" }}>Thông tin nhà cung cấp</h3>
                     <form><Modal show={show} onHide={handleClose}
                         size="lg"
                         aria-labelledby="contained-modal-title-vcenter"
@@ -308,49 +308,49 @@ export default function BasicTabs() {
                                             value={updateSupplierDTO.supplierName}
                                             onChange={(e) => handleUpdateSupplierChange(e, "supplierName")}
                                             className="form-control mt-1"
-                                            placeholder='Tên/biệt danh gợi nhớ'/>
+                                            placeholder='Tên/biệt danh gợi nhớ' />
                                     </div>
                                 </div>
                                 <div className="row">
                                     <div className="col-md-4">
-                                    <label htmlFor='updateSupplierPhoneNumber' className='col-form-label'>Số điện thoại&nbsp;<FontAwesomeIcon className="star" icon={faStarOfLife} /></label>
+                                        <label htmlFor='updateSupplierPhoneNumber' className='col-form-label'>Số điện thoại&nbsp;<FontAwesomeIcon className="star" icon={faStarOfLife} /></label>
                                     </div>
                                     <div className="col-md-8">
                                         <input required id="updateSupplierPhoneNumber"
                                             value={updateSupplierDTO.supplierPhone}
                                             onChange={(e) => handleUpdateSupplierChange(e, "supplierPhone")}
                                             className="form-control mt-1"
-                                            placeholder='Số điện thoại Việt Nam'/>
+                                            placeholder='Số điện thoại Việt Nam' />
                                     </div>
                                 </div>
                                 <div className="row">
                                     <div className="col-md-4">
-                                    <label htmlFor='updateSupplierEmail' className='col-form-label'>Email</label>
+                                        <label htmlFor='updateSupplierEmail' className='col-form-label'>Email</label>
                                     </div>
                                     <div className="col-md-8">
                                         <input id="updateSupplierEmail"
                                             value={updateSupplierDTO.supplierMail}
                                             onChange={(e) => handleUpdateSupplierChange(e, "supplierMail")}
                                             className="form-control mt-1"
-                                            placeholder='Địa chỉ thư điện tử'/>
+                                            placeholder='Địa chỉ thư điện tử' />
                                     </div>
                                 </div>
                                 <div className="row">
                                     <div className="col-md-4">
-                                        <label htmlFor='updateSupplierFacilityName' className='col-form-label'>Tên cơ sở&nbsp;<FontAwesomeIcon className="star" icon={faStarOfLife}/></label>
+                                        <label htmlFor='updateSupplierFacilityName' className='col-form-label'>Tên cơ sở&nbsp;<FontAwesomeIcon className="star" icon={faStarOfLife} /></label>
                                     </div>
                                     <div className="col-md-8">
                                         <input required id="updateSupplierFacilityName"
                                             value={updateSupplierDTO.facilityName}
                                             onChange={(e) => handleUpdateSupplierChange(e, "facilityName")}
                                             className="form-control mt-1"
-                                            placeholder='Tên cơ sở cung cấp'/>
+                                            placeholder='Tên cơ sở cung cấp' />
                                     </div>
                                 </div>
                                 {/*City*/}
                                 <div className="row">
                                     <div className="col-md-4">
-                                        <label htmlFor='uprovince' className='col-form-label'>Thành phố&nbsp;<FontAwesomeIcon className="star" icon={faStarOfLife}/></label>
+                                        <label htmlFor='uprovince' className='col-form-label'>Thành phố&nbsp;<FontAwesomeIcon className="star" icon={faStarOfLife} /></label>
                                     </div>
                                     <div className="col-md-8">
                                         <select className="form-control mt-1" id="uprovince"
@@ -376,7 +376,7 @@ export default function BasicTabs() {
                                 {/*District*/}
                                 <div className="row">
                                     <div className="col-md-4">
-                                        <label htmlFor='udistrict' className='col-form-label'>Quận/Huyện&nbsp;<FontAwesomeIcon className="star" icon={faStarOfLife}/></label>
+                                        <label htmlFor='udistrict' className='col-form-label'>Quận/Huyện&nbsp;<FontAwesomeIcon className="star" icon={faStarOfLife} /></label>
                                     </div>
                                     <div className="col-md-8">
                                         <select className="form-control mt-1" id="udistrict"
@@ -402,7 +402,7 @@ export default function BasicTabs() {
                                 {/*Ward*/}
                                 <div className="row">
                                     <div className="col-md-4">
-                                        <label htmlFor='uward' className='col-form-label'>Phường xã&nbsp;<FontAwesomeIcon className="star" icon={faStarOfLife}/></label>
+                                        <label htmlFor='uward' className='col-form-label'>Phường xã&nbsp;<FontAwesomeIcon className="star" icon={faStarOfLife} /></label>
                                     </div>
                                     <div className="col-md-8">
                                         <select className="form-control mt-1" id="uward"
@@ -428,7 +428,7 @@ export default function BasicTabs() {
                                 {/*Street*/}
                                 <div className="row">
                                     <div className="col-md-4">
-                                        <label htmlFor='uhomenum' className='col-form-label'>Số nhà&nbsp;<FontAwesomeIcon className="star" icon={faStarOfLife}/></label>
+                                        <label htmlFor='uhomenum' className='col-form-label'>Số nhà&nbsp;<FontAwesomeIcon className="star" icon={faStarOfLife} /></label>
                                     </div>
                                     <div className="col-md-8">
                                         <input type="text" id="uhomenum"
@@ -438,12 +438,12 @@ export default function BasicTabs() {
                                             required
                                             className="form-control mt-1"
                                             value={addressJson.street}
-                                            placeholder='Địa chỉ cụ thể'/>
+                                            placeholder='Địa chỉ cụ thể' />
                                     </div>
                                 </div>
                                 <div className="row">
                                     <div className="col-md-4">
-                                        <label htmlFor='' className='col-form-label'>Trạng thái&nbsp;<FontAwesomeIcon className="star" icon={faStarOfLife}/></label>
+                                        <label htmlFor='' className='col-form-label'>Trạng thái&nbsp;<FontAwesomeIcon className="star" icon={faStarOfLife} /></label>
                                     </div>
                                     <div className="col-md-8">
                                         <select className="form-select mt-1" aria-label="Default select example" id="updateSupplierStatus"
