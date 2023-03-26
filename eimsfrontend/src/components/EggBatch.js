@@ -66,7 +66,7 @@ const EggBatch = () => {
                             <th scope="col">Nhà cung cấp</th>
                             <th scope="col">Số lượng</th>
                             <th scope="col">Ngày nhập</th>
-                            <th scope="col">Trạng thái</th>
+                            <th scope="col">Giai đoạn</th>
                         </tr>
                     </thead>
                     <tbody id="specie_list_table_body">
@@ -79,26 +79,9 @@ const EggBatch = () => {
                                         <td>{item.breedName}</td>
                                         <td>{item.importId}</td>
                                         <td>{item.supplierName}</td>
-                                        <td>{item.amount}</td>
+                                        <td>{item.amount.toLocaleString()}</td>
                                         <td>{item.importDate}</td>
-                                        <td>
-                                            {
-                                                item.progress == 0
-                                                    ? 'Chưa ấp'
-                                                    : ''
-                                            }
-                                            {
-                                                item.progress < 5 && item.progress != 0
-                                                    ? 'Đang ấp'
-                                                    : ''
-                                            }
-                                            {
-                                                item.progress > 5
-                                                    ? 'Đang nở'
-                                                    : ''
-                                            }
-                                        </td>
-
+                                        <td>{item.progress}</td>
                                     </tr>
                                 ) : 'Nothing'
                         }

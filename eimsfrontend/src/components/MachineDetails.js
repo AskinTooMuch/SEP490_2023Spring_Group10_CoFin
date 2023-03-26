@@ -243,14 +243,14 @@ export default function BasicTabs() {
                                             <div className="col-md-6">
                                                 <select onChange={(e) => handleUpdateMachineChange(e, "status")} class="form-select" aria-label="Default select example">
                                                     <option value="1" selected>Hoạt động</option>
-                                                    <option value="2">Dừng hoạt động</option>
+                                                    <option value="0">Dừng hoạt động</option>
                                                 </select>
                                             </div>
                                             :
                                             <div className="col-md-6">
                                                 <select onChange={(e) => handleUpdateMachineChange(e, "status")} class="form-select" aria-label="Default select example">
                                                     <option value="1">Hoạt động</option>
-                                                    <option value="2" selected>Dừng hoạt động</option>
+                                                    <option value="0" selected>Dừng hoạt động</option>
                                                 </select>
                                             </div>
                                         }

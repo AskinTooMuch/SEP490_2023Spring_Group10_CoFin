@@ -67,6 +67,7 @@ export default function BasicTabs() {
     const [machineList, setMachineList] = useState([]);
     //Get sent params
     const { state } = useLocation();
+    var mess = true;
     //DTOs
     //CreateMachineDTO
     const [createMachineDTO, setCreateMachineDTO] = useState({
@@ -141,8 +142,10 @@ export default function BasicTabs() {
         setMachineList(result.data);
 
         // Toast Delete Machine success
-        console.log("state:====" + state)
-        if (state != null) toast.success(state);
+        if (mess) {
+            toast.success(state);
+            mess = false;
+        } 
     }
 
     //Navigate to detail Page
