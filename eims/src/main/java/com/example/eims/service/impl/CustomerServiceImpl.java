@@ -7,6 +7,7 @@
  * Record of change:<br>
  * DATE         Version     Author      DESCRIPTION<br>
  * 02/03/2023   1.0         DuongVV     First Deploy<br>
+ * 26/03/2023   1.1         ChucNV      Refine Code<br>
  */
 
 package com.example.eims.service.impl;
@@ -14,8 +15,6 @@ package com.example.eims.service.impl;
 import com.example.eims.dto.customer.CreateCustomerDTO;
 import com.example.eims.dto.customer.UpdateCustomerDTO;
 import com.example.eims.entity.Customer;
-import com.example.eims.entity.Facility;
-import com.example.eims.entity.User;
 import com.example.eims.repository.CustomerRepository;
 import com.example.eims.repository.FacilityRepository;
 import com.example.eims.repository.UserRepository;
@@ -65,7 +64,7 @@ public class CustomerServiceImpl implements ICustomerService {
         if (customers.isPresent()) {
             return new ResponseEntity<>(customers.get(), HttpStatus.OK);
         }
-        return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>("Không tìm thấy khách hàng", HttpStatus.NOT_FOUND);
     }
 
     /**
@@ -81,7 +80,7 @@ public class CustomerServiceImpl implements ICustomerService {
         if (customer.isPresent()) {
             return new ResponseEntity<>(customer.get(), HttpStatus.OK);
         } else {
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Không tìm thấy khách hàng", HttpStatus.NOT_FOUND);
         }
     }
 
@@ -101,13 +100,18 @@ public class CustomerServiceImpl implements ICustomerService {
         }
         // Check blank input
         // Name
+        String name = stringDealer.trimMax(createCustomerDTO.getCustomerName());
+        String phone = stringDealer.trimMax(createCustomerDTO.getCustomerPhone());
+        String mail = stringDealer.trimMax(createCustomerDTO.getCustomerMail());
+        String address = stringDealer.trimMax(createCustomerDTO.getCustomerAddress());
 
-        if (createCustomerDTO.getCustomerName() == null || stringDealer.trimMax(createCustomerDTO.getCustomerName()).equals("")) { /* Supplier name is empty */
+        if (name == null || name.equals("")) { /* Customer name is empty */
             return new ResponseEntity<>("Tên không được để trống", HttpStatus.BAD_REQUEST);
         }
-        String name = stringDealer.trimMax(createCustomerDTO.getCustomerName());
+        if (name.length() > 32) { /* Supplier name is empty */
+            return new ResponseEntity<>("Tên khách hàng không được dài hơn 32 ký tự.", HttpStatus.BAD_REQUEST);
+        }
         // Phone number
-        String phone = stringDealer.trimMax(createCustomerDTO.getCustomerPhone());
         if (phone.equals("")) { /* Phone number is empty */
             return new ResponseEntity<>("Số điện thoại không được để trống", HttpStatus.BAD_REQUEST);
         }
@@ -115,21 +119,18 @@ public class CustomerServiceImpl implements ICustomerService {
             return new ResponseEntity<>("Số điện thoại không hợp lệ", HttpStatus.BAD_REQUEST);
         }
         // Check phone number existed or not
-        boolean existed = customerRepository.existsByCustomerPhoneAndUserId(phone, userId);
-        if (existed) { /* if phone number existed */
+        if (customerRepository.existsByCustomerPhoneAndUserId(phone, userId)) { /* if phone number existed */
             return new ResponseEntity<>("Số điện thoại đã được sử dụng", HttpStatus.BAD_REQUEST);
         }
         // Email
-        String mail = stringDealer.trimMax(createCustomerDTO.getCustomerMail());
-        if ((!mail.equals("")) && !stringDealer.checkEmailRegex(mail)) { /* Supplier email is not valid */
+        if ((!mail.equals("")) && !stringDealer.checkEmailRegex(mail)) { /* Customer email is not valid */
             return new ResponseEntity<>("Email không hợp lệ", HttpStatus.BAD_REQUEST);
         }
         // Address
         if (createCustomerDTO.getCustomerAddress() == null || stringDealer.trimMax(createCustomerDTO.getCustomerAddress()).equals("")) { /* Address is empty */
             return new ResponseEntity<>("Địa chỉ không được để trống", HttpStatus.BAD_REQUEST);
         }
-        String address = stringDealer.trimMax(createCustomerDTO.getCustomerAddress());
-        JSONObject addressObj = null;
+        JSONObject addressObj;
         try {
             addressObj = new JSONObject(address);
             String street = (String) addressObj.get("street");
@@ -180,37 +181,37 @@ public class CustomerServiceImpl implements ICustomerService {
     public ResponseEntity<?> updateCustomer(UpdateCustomerDTO updateCustomerDTO) {
         Long userId = updateCustomerDTO.getUserId();
         // Name
-        if (updateCustomerDTO.getCustomerName() == null
-                || stringDealer.trimMax(updateCustomerDTO.getCustomerName()).equals("")) { /* Supplier name is empty */
+        String name = stringDealer.trimMax(updateCustomerDTO.getCustomerName());
+        String newPhone = stringDealer.trimMax(updateCustomerDTO.getCustomerPhone());
+        String mail = stringDealer.trimMax(updateCustomerDTO.getCustomerMail());
+        String address = stringDealer.trimMax(updateCustomerDTO.getCustomerAddress());
+
+        if (name == null || name.equals("")) { /* Customer name is empty */
             return new ResponseEntity<>("Tên khách hàng không được để trống", HttpStatus.BAD_REQUEST);
         }
-        String name = stringDealer.trimMax(updateCustomerDTO.getCustomerName());
+        if (name.length() > 32) { /* Supplier name is empty */
+            return new ResponseEntity<>("Tên khách hàng không được dài hơn 32 ký tự.", HttpStatus.BAD_REQUEST);
+        }
         // Phone number
-        if (updateCustomerDTO.getCustomerPhone() == null || stringDealer.trimMax(updateCustomerDTO.getCustomerPhone()).equals("")) { /* Phone number is empty */
+        if (newPhone == null || newPhone.equals("")) { /* Phone number is empty */
             return new ResponseEntity<>("Số điện thoại không được để trống", HttpStatus.BAD_REQUEST);
         }
-        String newPhone = stringDealer.trimMax(updateCustomerDTO.getCustomerPhone());
         if (!stringDealer.checkPhoneRegex(newPhone)) { /* Phone number is not valid */
             return new ResponseEntity<>("Số điện thoại không hợp lệ", HttpStatus.BAD_REQUEST);
         }
         String oldPhone = customerRepository.findCustomerPhoneById(updateCustomerDTO.getCustomerId());
-        if (!newPhone.equals(oldPhone)) {
-            boolean existed = customerRepository.existsByCustomerPhoneAndUserId(newPhone, userId);
-            if (existed) {
+        if (!newPhone.equals(oldPhone) && (customerRepository.existsByCustomerPhoneAndUserId(newPhone, userId))) {
                 return new ResponseEntity<>("Số điện thoại đã được sử dụng", HttpStatus.BAD_REQUEST);
-            }
         }
         // Email
-        String mail = stringDealer.trimMax(updateCustomerDTO.getCustomerMail());
-        if ((!mail.equals("")) && !stringDealer.checkEmailRegex(mail)) { /* Supplier email is not valid */
+        if ((!mail.equals("")) && !stringDealer.checkEmailRegex(mail)) { /* Customer email is not valid */
             return new ResponseEntity<>("Email không hợp lệ", HttpStatus.BAD_REQUEST);
         }
         // Address
-        if (updateCustomerDTO.getCustomerAddress() == null || stringDealer.trimMax(updateCustomerDTO.getCustomerAddress()).equals("")) { /* Address is empty */
+        if (address == null || address.equals("")) { /* Address is empty */
             return new ResponseEntity<>("Địa chỉ không được để trống", HttpStatus.BAD_REQUEST);
         }
-        String address = stringDealer.trimMax(updateCustomerDTO.getCustomerAddress());
-        JSONObject addressObj = null;
+        JSONObject addressObj;
         try {
             addressObj = new JSONObject(address);
             String street = (String) addressObj.get("street");
@@ -239,7 +240,7 @@ public class CustomerServiceImpl implements ICustomerService {
             customerRepository.save(customer);
             return new ResponseEntity<>("Cập nhật thông tin khách hàng thành công", HttpStatus.OK);
         } else {
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Có lỗi xảy ra, vui lòng thử lại sau.", HttpStatus.BAD_REQUEST);
         }
     }
 

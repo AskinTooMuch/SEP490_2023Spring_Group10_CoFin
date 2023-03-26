@@ -7,7 +7,8 @@
  * Record of change:<br>
  * DATE         Version     Author      DESCRIPTION<br>
  * 02/03/2023   1.0         DuongVV     First Deploy<br>
- * 09/03/2023   1.1         ChucNV      Hot Fix
+ * 09/03/2023   1.1         ChucNV      Hot Fix<br>
+ * 26/03/2023   1.2         ChucNV      Refine Code<br>
  */
 
 package com.example.eims.service.impl;
@@ -25,6 +26,8 @@ import com.example.eims.repository.UserRepository;
 import com.example.eims.service.interfaces.ISupplierService;
 import com.example.eims.utils.StringDealer;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.configurationprocessor.json.JSONException;
+import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -45,14 +48,13 @@ public class SupplierServiceImpl implements ISupplierService {
     private final ImportReceiptRepository importReceiptRepository;
     @Autowired
     private final FacilityRepository facilityRepository;
-    private final StringDealer stringDealer;
+    private final StringDealer stringDealer = new StringDealer();
     public SupplierServiceImpl(UserRepository userRepository, SupplierRepository supplierRepository,
                                ImportReceiptRepository importReceiptRepository, FacilityRepository facilityRepository) {
         this.userRepository = userRepository;
         this.supplierRepository = supplierRepository;
         this.importReceiptRepository = importReceiptRepository;
         this.facilityRepository = facilityRepository;
-        this.stringDealer = new StringDealer();
     }
 
     /**
@@ -175,6 +177,17 @@ public class SupplierServiceImpl implements ISupplierService {
         if ((!createSupplierDTO.getSupplierMail().equals("")) && (!stringDealer.checkEmailRegex(supplierMail))) { /* Email is not valid */
             return new ResponseEntity<>("Email không hợp lệ.", HttpStatus.BAD_REQUEST);
         }
+        JSONObject addressObj;
+        try {
+            addressObj = new JSONObject(supplierAddress);
+            String street = (String) addressObj.get("street");
+            System.out.println(street);
+            if (street == null || stringDealer.trimMax(street).equals("") || stringDealer.chechValidStreetString(street)){
+                return new ResponseEntity<>("Số nhà sai định dạng", HttpStatus.BAD_REQUEST);
+            }
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
         // Set attribute
         supplier.setUserId(userId);
         supplier.setSupplierName(createSupplierDTO.getSupplierName());
@@ -255,7 +268,17 @@ public class SupplierServiceImpl implements ISupplierService {
         if ((!supplierMail.equals("")) && (!stringDealer.checkEmailRegex(supplierMail))) { /* Email is not valid */
             return new ResponseEntity<>("Email không hợp lệ.", HttpStatus.BAD_REQUEST);
         }
-
+        JSONObject addressObj;
+        try {
+            addressObj = new JSONObject(supplierAddress);
+            String street = (String) addressObj.get("street");
+            System.out.println(street);
+            if (street == null || stringDealer.trimMax(street).equals("") || stringDealer.chechValidStreetString(street)){
+                return new ResponseEntity<>("Số nhà sai định dạng", HttpStatus.BAD_REQUEST);
+            }
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
         // Status
         int status = updateSupplierDTO.getStatus();
 
