@@ -66,7 +66,7 @@ public class SupplierServiceImpl implements ISupplierService {
         // Get all suppliers of the current User
         Optional<List<Supplier>> supplierListOptional = supplierRepository.findByUserId(userId);
         if (supplierListOptional.isEmpty()) {
-            return new ResponseEntity<>("No supplier found", HttpStatus.NO_CONTENT); // 204
+            return new ResponseEntity<>("Không tìm thấy nhà cung cấp", HttpStatus.NOT_FOUND); // 404
         } else {
             return new ResponseEntity<>(supplierListOptional.get(), HttpStatus.OK);
         }
@@ -84,7 +84,7 @@ public class SupplierServiceImpl implements ISupplierService {
         Optional<List<Supplier>> supplierListOptional = supplierRepository.
                 findByUserIdAndStatus(userId,1);
         if (supplierListOptional.isEmpty()) {
-            return new ResponseEntity<>("No supplier found", HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>("Không tìm thấy nhà cung cấp", HttpStatus.NOT_FOUND); //404
         } else {
             return new ResponseEntity<>(supplierListOptional.get(), HttpStatus.OK);
         }
@@ -131,57 +131,61 @@ public class SupplierServiceImpl implements ISupplierService {
         Long userId = createSupplierDTO.getUserId();
         int accountStatus = (userRepository.getStatusByUserId(userId)? 1:0);
         if (accountStatus == 0) { /* status = 0 (deactivated) */
-            return new ResponseEntity<>("Tài khoản đã bị vô hiệu hóa", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Tài khoản đã bị vô hiệu hóa.", HttpStatus.BAD_REQUEST);
         }
-        System.out.println(createSupplierDTO);
         // Retrieve supplier information and create new supplier
         Supplier supplier = new Supplier();
+        //Trim inputs
+        String supplierName = stringDealer.trimMax(createSupplierDTO.getSupplierName());
+        String supplierPhone = stringDealer.trimMax(createSupplierDTO.getSupplierPhone());
+        String supplierAddress = stringDealer.trimMax(createSupplierDTO.getSupplierAddress());
+        String facilityName = stringDealer.trimMax(createSupplierDTO.getFacilityName());
+        String supplierMail = stringDealer.trimMax(createSupplierDTO.getSupplierMail());
         // Check input
         // Name
-        String name = stringDealer.trimMax(createSupplierDTO.getSupplierName());
-        if (name.equals("")) { /* Supplier name is empty */
-            return new ResponseEntity<>("Tên không được để trống", HttpStatus.BAD_REQUEST);
+        if (supplierName.equals("")) { /* Supplier name is empty */
+            return new ResponseEntity<>("Tên nhà cung cấp không được để trống.", HttpStatus.BAD_REQUEST);
+        }
+        if (supplierName.length() > 32) { /* Supplier name is empty */
+            return new ResponseEntity<>("Tên nhà cung cấp không được dài hơn 32 ký tự.", HttpStatus.BAD_REQUEST);
         }
         // Phone number
-        String phone = stringDealer.trimMax(createSupplierDTO.getSupplierPhone());
-        if (phone.equals("")) { /* Phone number is empty */
-            return new ResponseEntity<>("Số điện thoại không được để trống", HttpStatus.BAD_REQUEST);
+        if (supplierPhone.equals("")) { /* Phone number is empty */
+            return new ResponseEntity<>("Số điện thoại không được để trống.", HttpStatus.BAD_REQUEST);
         }
-        if (!stringDealer.checkPhoneRegex(phone)) { /* Phone number is not valid */
-            return new ResponseEntity<>("Số điện thoại không hợp lệ", HttpStatus.BAD_REQUEST);
+        if (!stringDealer.checkPhoneRegex(supplierPhone)) { /* Phone number is not valid */
+            return new ResponseEntity<>("Số điện thoại không hợp lệ.", HttpStatus.BAD_REQUEST);
         }
         // Check phone number existed or not
-        boolean existed = supplierRepository.existsBySupplierPhoneAndUserId(phone, userId);
-        if (existed) { /* if phone number existed */
-            return new ResponseEntity<>("Số điện thoại đã được sử dụng", HttpStatus.BAD_REQUEST);
+        if (supplierRepository.existsBySupplierPhoneAndUserId(supplierPhone, userId)) { /* if phone number existed */
+            return new ResponseEntity<>("Số điện thoại đã được sử dụng.", HttpStatus.BAD_REQUEST);
         }
         // Address
-        String address = stringDealer.trimMax(createSupplierDTO.getSupplierAddress());
-        if (address.equals("")) { /* Address is empty */
-            return new ResponseEntity<>("Địa chỉ không được để trống", HttpStatus.BAD_REQUEST);
+        if (supplierAddress.equals("")) { /* Address is empty */
+            return new ResponseEntity<>("Địa chỉ không được để trống.", HttpStatus.BAD_REQUEST);
         }
         // Facility name
-        String fName = stringDealer.trimMax(createSupplierDTO.getFacilityName());
-        if (fName.equals("")) { /* Facility name is empty */
-            return new ResponseEntity<>("Tên cơ sở không được để trống", HttpStatus.BAD_REQUEST);
+        if (facilityName.equals("")) { /* Facility name is empty */
+            return new ResponseEntity<>("Tên cơ sở không được để trống.", HttpStatus.BAD_REQUEST);
+        }
+        if (facilityName.length() > 50) { /* Facility name is empty */
+            return new ResponseEntity<>("Tên cơ sở không được dài hơn 50 ký tự.", HttpStatus.BAD_REQUEST);
         }
         // Email
-        String email = stringDealer.trimMax(createSupplierDTO.getSupplierMail());
-        if ((!email.equals("")) && (!stringDealer.checkEmailRegex(email))) { /* Email is not valid */
-            return new ResponseEntity<>("Email không hợp lệ", HttpStatus.BAD_REQUEST);
+        if ((!createSupplierDTO.getSupplierMail().equals("")) && (!stringDealer.checkEmailRegex(supplierMail))) { /* Email is not valid */
+            return new ResponseEntity<>("Email không hợp lệ.", HttpStatus.BAD_REQUEST);
         }
         // Set attribute
         supplier.setUserId(userId);
-        supplier.setSupplierName(name);
-        supplier.setSupplierPhone(phone);
-        supplier.setSupplierAddress(address);
-        supplier.setFacilityName(fName);
-        supplier.setSupplierMail(email);
+        supplier.setSupplierName(createSupplierDTO.getSupplierName());
+        supplier.setSupplierPhone(createSupplierDTO.getSupplierPhone());
+        supplier.setSupplierAddress(createSupplierDTO.getSupplierAddress());
+        supplier.setFacilityName(createSupplierDTO.getFacilityName());
+        supplier.setSupplierMail(createSupplierDTO.getSupplierMail());
         supplier.setStatus(1);
         // Save
         supplierRepository.save(supplier);
-        return new ResponseEntity<>("Thêm nhà cung cấp thành công", HttpStatus.OK);
-
+        return new ResponseEntity<>("Thêm nhà cung cấp thành công.", HttpStatus.OK);
     }
 
     /**
@@ -210,42 +214,48 @@ public class SupplierServiceImpl implements ISupplierService {
     @Override
     public ResponseEntity<?> updateSupplier(UpdateSupplierDTO updateSupplierDTO) {
         Long userId = updateSupplierDTO.getUserId();
-        // Check blank input
+        //Trim inputs
+        String supplierName = stringDealer.trimMax(updateSupplierDTO.getSupplierName());
+        String supplierPhone = stringDealer.trimMax(updateSupplierDTO.getSupplierPhone());
+        String supplierAddress = stringDealer.trimMax(updateSupplierDTO.getSupplierAddress());
+        String facilityName = stringDealer.trimMax(updateSupplierDTO.getFacilityName());
+        String supplierMail = stringDealer.trimMax(updateSupplierDTO.getSupplierMail());
+        // Check input
         // Name
-        String name = stringDealer.trimMax(updateSupplierDTO.getSupplierName());
-        if (name.equals("")) { /* Supplier name is empty */
-            return new ResponseEntity<>("Tên không được để trống", HttpStatus.BAD_REQUEST);
+        if (supplierName.equals("")) { /* Supplier name is empty */
+            return new ResponseEntity<>("Tên nhà cung cấp không được để trống.", HttpStatus.BAD_REQUEST);
+        }
+        if (supplierName.length() > 32) { /* Supplier name is empty */
+            return new ResponseEntity<>("Tên nhà cung cấp không được dài hơn 32 ký tự.", HttpStatus.BAD_REQUEST);
         }
         // Phone number
-        String newPhone = stringDealer.trimMax(updateSupplierDTO.getSupplierPhone());
-        if (newPhone.equals("")) { /* Phone number is empty */
-            return new ResponseEntity<>("Số điện thoại không được để trống", HttpStatus.BAD_REQUEST);
+        if (supplierPhone.equals("")) { /* Phone number is empty */
+            return new ResponseEntity<>("Số điện thoại không được để trống.", HttpStatus.BAD_REQUEST);
         }
-        if (!stringDealer.checkPhoneRegex(newPhone)) { /* Phone number is not valid */
-            return new ResponseEntity<>("Số điện thoại không hợp lệ", HttpStatus.BAD_REQUEST);
+        if (!stringDealer.checkPhoneRegex(supplierPhone)) { /* Phone number is not valid */
+            return new ResponseEntity<>("Số điện thoại không hợp lệ.", HttpStatus.BAD_REQUEST);
         }
         String oldPhone = supplierRepository.findSupplierPhoneById(updateSupplierDTO.getSupplierId());
-        if (!oldPhone.equals(newPhone)){
-            boolean existed = supplierRepository.existsBySupplierPhoneAndUserId(newPhone, userId);
-            if (existed) {
-                return new ResponseEntity<>("Số điện thoại đã được sử dụng", HttpStatus.BAD_REQUEST);
-            }
+        if ((!oldPhone.equals(updateSupplierDTO.getSupplierPhone())) &&
+                (supplierRepository.existsBySupplierPhoneAndUserId(updateSupplierDTO.getSupplierPhone(), userId))){
+                return new ResponseEntity<>("Số điện thoại đã được sử dụng.", HttpStatus.BAD_REQUEST);
         }
         // Address
-        String address = stringDealer.trimMax(updateSupplierDTO.getSupplierAddress());
-        if (address.equals("")) { /* Address is empty */
-            return new ResponseEntity<>("Địa chỉ không được để trống", HttpStatus.BAD_REQUEST);
+        if (supplierAddress.equals("")) { /* Address is empty */
+            return new ResponseEntity<>("Địa chỉ không được để trống.", HttpStatus.BAD_REQUEST);
         }
         // Facility name
-        String fName = stringDealer.trimMax(updateSupplierDTO.getFacilityName());
-        if (fName.equals("")) { /* Facility name is empty */
-            return new ResponseEntity<>("Tên cơ sở không được để trống", HttpStatus.BAD_REQUEST);
+        if (facilityName.equals("")) { /* Facility name is empty */
+            return new ResponseEntity<>("Tên cơ sở không được để trống.", HttpStatus.BAD_REQUEST);
+        }
+        if (facilityName.length() > 50) { /* Facility name is empty */
+            return new ResponseEntity<>("Tên cơ sở không được dài hơn 50 ký tự.", HttpStatus.BAD_REQUEST);
         }
         // Email
-        String email = stringDealer.trimMax(updateSupplierDTO.getSupplierMail());
-        if (!(email.equals("")) && !stringDealer.checkEmailRegex(email)) { /* Email is not valid */
-            return new ResponseEntity<>("Email không hợp lệ", HttpStatus.BAD_REQUEST);
+        if ((!supplierMail.equals("")) && (!stringDealer.checkEmailRegex(supplierMail))) { /* Email is not valid */
+            return new ResponseEntity<>("Email không hợp lệ.", HttpStatus.BAD_REQUEST);
         }
+
         // Status
         int status = updateSupplierDTO.getStatus();
 
@@ -253,14 +263,15 @@ public class SupplierServiceImpl implements ISupplierService {
         Optional<Supplier> supplierOptional = supplierRepository.findBySupplierId(updateSupplierDTO.getSupplierId());
         if (supplierOptional.isPresent()){
             Supplier supplier = supplierOptional.get();
-            supplier.setSupplierName(name);
-            supplier.setSupplierPhone(newPhone);
-            supplier.setSupplierAddress(address);
-            supplier.setSupplierMail(email);
+            supplier.setSupplierName(supplierName);
+            supplier.setSupplierPhone(supplierPhone);
+            supplier.setSupplierAddress(supplierAddress);
+            supplier.setSupplierMail(supplierMail);
+            supplier.setFacilityName(facilityName);
             supplier.setStatus(status);
             // Save
             supplierRepository.save(supplier);
-            return new ResponseEntity<>("Cập nhật thông tin nhà cung cấp thành công", HttpStatus.OK);
+            return new ResponseEntity<>("Cập nhật thông tin nhà cung cấp thành công.", HttpStatus.OK);
         } else {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }

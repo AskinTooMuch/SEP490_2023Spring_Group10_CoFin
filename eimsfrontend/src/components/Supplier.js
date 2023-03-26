@@ -158,7 +158,7 @@ const Supplier = () => {
       });
       console.log(response);
       loadSupplerList();
-      toast.success("Tạo thành công");
+      toast.success(response.data);
       setShow(false);
     } catch (err) {
       if (!err?.response) {

@@ -268,13 +268,13 @@ export default function BasicTabs() {
             );
             //loadSupplier(id);
             console.log(response);
-            toast.success("Cập nhật thành công");
+            toast.success(response.data);
             setShow(false);
         } catch (err) {
             if (!err?.response) {
                 toast.error('Server không phản hồi');
             } else {
-                toast.error(response);
+                toast.error(err.response.data);
             }
         }
     }
