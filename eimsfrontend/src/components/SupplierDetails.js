@@ -118,6 +118,14 @@ export default function BasicTabs() {
         ward: "",
         street: ""
     });
+
+    const [updateAddressJson, setUpdateAddressJson] = useState({
+        city: "",
+        district: "",
+        ward: "",
+        street: ""
+    });
+
     //Get supplier details
     useEffect(() => {
         console.log("Get Supplier");
@@ -195,6 +203,7 @@ export default function BasicTabs() {
             }
         }
         setStreet(addressJson.street);
+        setUpdateAddressJson(addressJson);
     }
 
     //Function for populating dropdowns
@@ -232,11 +241,12 @@ export default function BasicTabs() {
     function saveAddressJson(s) {
         console.log("ward " + wardIndex);
         setStreet(s);
-        addressJson.city = fullAddresses[cityIndex].Name;
-        addressJson.district = fullAddresses[cityIndex].Districts[districtIndex].Name;
-        addressJson.ward = fullAddresses[cityIndex].Districts[districtIndex].Wards[wardIndex].Name;
-        addressJson.street = street;
-        updateSupplierDTO.supplierAddress = JSON.stringify(addressJson);
+        updateAddressJson.city = fullAddresses[cityIndex].Name;
+        updateAddressJson.district = fullAddresses[cityIndex].Districts[districtIndex].Name;
+        updateAddressJson.ward = fullAddresses[cityIndex].Districts[districtIndex].Wards[wardIndex].Name;
+        updateAddressJson.street = street;
+        updateSupplierDTO.supplierAddress = JSON.stringify(updateAddressJson);
+        console.log(addressJson);
     }
 
     //Handle Change functions:
@@ -247,6 +257,11 @@ export default function BasicTabs() {
             ...updateSupplierDTO,
             [field]: actualValue
         })
+    }
+
+    const handleCancel = () => {
+        handleClose();
+        setUpdateAddressJson(addressJson);
     }
 
     //Handle Submit functions
@@ -363,7 +378,7 @@ export default function BasicTabs() {
                                             {city &&
                                                 city.map((item, index) => (
                                                     <>
-                                                        {item.label === addressJson.city
+                                                        {item.label === updateAddressJson.city
                                                             ? <option value={index} selected>{item.label}</option>
                                                             : <option value={index}>{item.label}</option>
                                                         }
@@ -389,7 +404,7 @@ export default function BasicTabs() {
                                             {district &&
                                                 district.map((item, index) => (
                                                     <>
-                                                        {item.label === addressJson.district
+                                                        {item.label === updateAddressJson.district
                                                             ? <option value={index} selected>{item.label}</option>
                                                             : <option value={index}>{item.label}</option>
                                                         }
@@ -415,7 +430,7 @@ export default function BasicTabs() {
                                             {ward &&
                                                 ward.map((item, index) => (
                                                     <>
-                                                        {item.label === addressJson.ward
+                                                        {item.label === updateAddressJson.ward
                                                             ? <option value={index} selected>{item.label}</option>
                                                             : <option value={index}>{item.label}</option>
                                                         }
@@ -437,8 +452,8 @@ export default function BasicTabs() {
                                             onChange={(e) => saveAddressJson(e.target.value)}
                                             required
                                             className="form-control mt-1"
-                                            value={addressJson.street}
-                                            placeholder='Địa chỉ cụ thể' />
+                                            value={street}
+                                            placeholder='Địa chỉ cụ thể'/>
                                     </div>
                                 </div>
                                 <div className="row">
@@ -456,7 +471,7 @@ export default function BasicTabs() {
                             </div>
                         </Modal.Body>
                         <Modal.Footer>
-                            <Button variant="danger" style={{ width: "20%" }} onClick={handleClose} id="cancelUpdateSupplier" >
+                            <Button variant="danger" style={{ width: "20%" }} onClick={handleCancel} id="cancelUpdateSupplier">
                                 Huỷ
                             </Button>
                             <Button variant="success" style={{ width: "30%" }} className="col-md-6" id="confirmUpdateSupplier" onClick={handleUpdateSupplierSubmit}>
