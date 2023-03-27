@@ -126,7 +126,7 @@ public class EmployeeServiceImpl implements IEmployeeService {
         List roleList = new ArrayList<Role>();
         roleList.add(new Role(3, "ROLE_EMPLOYEE", true));
         employeeInformation.setRoles(roleList);     /* Role EMPLOYEE */
-        employeeInformation.setStatus(1);
+        employeeInformation.setStatus(2);
         employeeInformation.setPassword(passwordEncoder.encode(password));
         employeeInformation.setSalary(salary);
 

@@ -546,6 +546,8 @@ export default function BasicTabs() {
                                         </div>
                                         <div className="col-md-6">
                                             <input style={{ width: "100%" }} required
+                                                type='number'
+                                                min='0'
                                                 onChange={(e) => handleUpdateEmployeeChange(e, "salary")}
                                                 value={updateEmployeeDTO.salary} />
                                         </div>
