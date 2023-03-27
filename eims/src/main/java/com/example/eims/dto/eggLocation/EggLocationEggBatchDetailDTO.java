@@ -19,6 +19,7 @@ public class EggLocationEggBatchDetailDTO {
     private Long productId;
     private Long machineId;
     private String machineName;
+    private Long machineTypeId;
     private int amount;
     private int maxCapacity;
     private int curCapacity;

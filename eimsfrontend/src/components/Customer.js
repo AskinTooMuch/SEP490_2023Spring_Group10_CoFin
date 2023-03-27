@@ -42,12 +42,7 @@ const Customer = () => {
 
     //API URLs
     const CUSTOMER_ALL = '/api/customer/all';
-    const CUSTOMER_DETAIL = "/api/customer/get";
     const CUSTOMER_CREATE = "/api/customer/create";
-    const CUSTOMER_UPDATE_GET = "/api/customer/update/get";
-    const CUSTOMER_UPDATE_SAVE = "/api/customer/update/save";
-    const CUSTOMER_DELETE = "/api/customer/delete";
-    const CUSTOMER_SEARCH = "/api/customer/search";
 
 
     //DTOs
@@ -73,7 +68,6 @@ const Customer = () => {
     // Set value for address fields
     //User
     useEffect(() => {
-        console.log("Load address");
         loadAddress();
     }, [dataLoaded]);
 
@@ -81,8 +75,6 @@ const Customer = () => {
         const result = await axios.get("https://raw.githubusercontent.com/kenzouno1/DiaGioiHanhChinhVN/master/data.json",
             {});
         setFullAddresses(result.data);
-        console.log("Full address");
-        console.log(fullAddresses);
         // Set inf
 
         const cityList = fullAddresses.slice();
@@ -157,7 +149,7 @@ const Customer = () => {
             console.log(response);
             loadCustomerList();
             setAddressJson('');
-            toast.success("Tạo thành công");
+            toast.success(response.data);
             setShow(false);
         } catch (err) {
             if (!err?.response) {
@@ -176,19 +168,26 @@ const Customer = () => {
 
     // Request Customer list and load the customer list into the table rows
     const loadCustomerList = async () => {
-        const result = await axios.get(CUSTOMER_ALL,
-            {
-                params: { userId: sessionStorage.getItem("curUserId") },
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Access-Control-Allow-Origin': '*'
-                },
-                withCredentials: true
-            });
-        setCustomerList(result.data);
-        console.log(customerList);
+        try {
+            const result = await axios.get(CUSTOMER_ALL,
+                {
+                    params: { userId: sessionStorage.getItem("curUserId") },
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Access-Control-Allow-Origin': '*'
+                    },
+                    withCredentials: true
+                });
+            setCustomerList(result.data);
+            console.log(customerList);
+        } catch (err) {
+            if (!err?.response) {
+                toast.error('Server không phản hồi');
+            } else {
+                toast.error(err.response.data);
+            }
+        }
     }
-
 
     //Navigate to detail Page
     let navigate = useNavigate();
@@ -196,6 +195,7 @@ const Customer = () => {
         //let path = '/customerdetail';
         navigate('/customerdetail', { state: { id: cid } });
     }
+
     return (
         <div>
             <nav className="navbar justify-content-between">
@@ -210,24 +210,55 @@ const Customer = () => {
                         <Modal.Body>
                             <div className="changepass">
                                 <div className="row">
-                                    <div className="col-md-3">
-                                        <p>Họ và tên<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
+                                    <div className="col-md-4">
+                                        <label htmlFor='customerName' className='col-form-label'>Họ và tên&nbsp;<FontAwesomeIcon className="star" icon={faStarOfLife} /></label>
                                     </div>
-                                    <div className="col-md-3">
-                                        <input required id="createCustomerName" className="form-control mt-1" style={{ width: "100%" }} onChange={e => handleCreateCustomerChange(e, "customerName")} />
+                                    <div className="col-md-8">
+                                        <input id="customerName"
+                                            className="form-control mt-1"
+                                            style={{ width: "100%" }}
+                                            required
+                                            placeholder='Tên/biệt danh gợi nhớ'
+                                            onChange={e => handleCreateCustomerChange(e, "customerName")} />
                                     </div>
+                                </div>
+                                <div className="row">
+                                    <div className="col-md-4">
+                                        <label htmlFor='customerPhoneNumber' className='col-form-label'>Điện thoại&nbsp;<FontAwesomeIcon className="star" icon={faStarOfLife} /></label>
+                                    </div>
+                                    <div className="col-md-8">
+                                        <input id="customerPhoneNumber"
+                                            className="form-control mt-1"
+                                            style={{ width: "100%" }}
+                                            placeholder='Số điện thoại Việt Nam'
+                                            onChange={e => handleCreateCustomerChange(e, "customerPhone")} />
+                                    </div>
+                                </div>
+                                <div className="row">
+                                    <div className="col-md-4">
+                                        <label htmlFor='customerEmail' className='col-form-label'>Email</label>
+                                    </div>
+                                    <div className="col-md-8">
+                                        <input id="customerEmail"
+                                            className="form-control mt-1"
+                                            style={{ width: "100%" }}
+                                            placeholder='Địa chỉ thư điện tử'
+                                            onChange={e => handleCreateCustomerChange(e, "customerEmail")} />
+                                    </div>
+                                </div>
+                                <div className='row'>
                                     {/*City*/}
-                                    <div className="col-md-3">
-                                        <label htmlFor="uprovince" >Tỉnh/Thành Phố <FontAwesomeIcon className="star" icon={faStarOfLife} /></label>
+                                    <div className="col-md-4">
+                                        <label htmlFor="uprovince" className='col-form-label'>Tỉnh/Thành Phố&nbsp;<FontAwesomeIcon className="star" icon={faStarOfLife} /></label>
                                     </div>
-                                    <div className="col-md-3">
+                                    <div className="col-md-8">
                                         <select className="form-control mt-1" id="uprovince"
                                             ref={userRef}
                                             autoComplete="off"
                                             onChange={(e) => loadDistrict(e.target.value)}
                                             value={cityIndex}
                                             required>
-                                            <option value="" disabled>Chọn Tỉnh/Thành phố</option>
+                                            <option value="" disabled selected>Chọn Tỉnh/Thành phố</option>
                                             {city &&
                                                 city.map((item, index) => (
                                                     <option value={index}>{item.label}</option>
@@ -236,25 +267,19 @@ const Customer = () => {
                                         </select>
                                     </div>
                                 </div>
-                                <div className="row">
-                                    <div className="col-md-3">
-                                        <p>Số điện thoại<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
-                                    </div>
-                                    <div className="col-md-3">
-                                        <input required id="createCustomerPhone" className="form-control mt-1" style={{ width: "100%" }} onChange={e => handleCreateCustomerChange(e, "customerPhone")} />
-                                    </div>
+                                <div className='row'>
                                     {/*District*/}
-                                    <div className="col-md-3">
-                                        <label htmlFor="udistrict" >Quận/Huyện <FontAwesomeIcon className="star" icon={faStarOfLife} /></label>
+                                    <div className="col-md-4">
+                                        <label htmlFor="udistrict" className='col-form-label'>Quận/Huyện&nbsp;<FontAwesomeIcon className="star" icon={faStarOfLife} /></label>
                                     </div>
-                                    <div className="col-md-3">
-                                        <select className="form-control mt-1" id="udistrict"
+                                    <div className="col-md-8">
+                                        <select className="form-control mt-1" id="udistrict" name="supplierDistrict"
                                             ref={userRef}
                                             autoComplete="off"
                                             onChange={(e) => loadWard(e.target.value)}
                                             value={districtIndex}
                                             required>
-                                            <option value="" disabled>Chọn Quận/Huyện</option>
+                                            <option value="" disabled selected>Chọn Quận/Huyện</option>
                                             {district &&
                                                 district.map((item, index) => (
                                                     <option value={index}>{item.label}</option>
@@ -263,25 +288,19 @@ const Customer = () => {
                                         </select>
                                     </div>
                                 </div>
-                                <div className="row">
-                                    <div className="col-md-3">
-                                        <p>Email</p>
-                                    </div>
-                                    <div className="col-md-3">
-                                        <input id="createCustomerEmail" className="form-control mt-1" style={{ width: "100%" }} onChange={e => handleCreateCustomerChange(e, "customerMail")} />
-                                    </div>
+                                <div className='row'>
                                     {/*User ward*/}
-                                    <div className="col-md-3">
-                                        <label htmlFor="uward" >Phường/Xã <FontAwesomeIcon className="star" icon={faStarOfLife} /></label>
+                                    <div className="col-md-4">
+                                        <label htmlFor="uward" className='col-form-label'>Phường/Xã&nbsp;<FontAwesomeIcon className="star" icon={faStarOfLife} /></label>
                                     </div>
-                                    <div className="col-md-3">
-                                        <select className="form-control mt-1" id="uward"
+                                    <div className="col-md-8">
+                                        <select className="form-control mt-1" id="uward" name="supplierWard"
                                             ref={userRef}
                                             autoComplete="off"
                                             onChange={(e) => saveWard(e.target.value)}
                                             value={wardIndex}
                                             required>
-                                            <option value="" disabled>Chọn Phường/Xã</option>
+                                            <option value="" disabled selected>Chọn Phường/Xã</option>
                                             {ward &&
                                                 ward.map((item, index) => (
                                                     <option value={index}>{item.label}</option>
@@ -290,20 +309,19 @@ const Customer = () => {
                                         </select>
                                     </div>
                                 </div>
-                                <div className="row">
+                                <div className='row'>
                                     {/*User Street*/}
-                                    <div className="col-md-6">
+                                    <div className="col-md-4">
+                                        <label htmlFor="uhomenum" className='col-form-label'>Số nhà&nbsp;<FontAwesomeIcon className="star" icon={faStarOfLife} /></label>
                                     </div>
-                                    <div className="col-md-3">
-                                        <label htmlFor="uhomenum">Số nhà <FontAwesomeIcon className="star" icon={faStarOfLife} /></label>
-                                    </div>
-                                    <div className="col-md-3">
+                                    <div className="col-md-8">
                                         <input type="text" id="uhomenum"
                                             ref={userRef}
                                             autoComplete="off"
                                             onChange={(e) => saveAddressJson(e.target.value)}
                                             required
-                                            className="form-control " />
+                                            className="form-control mt-1"
+                                            placeholder='Địa chỉ cụ thể' />
                                     </div>
                                 </div>
                             </div>

@@ -30,6 +30,7 @@ import SubcriptionManager from './components/SubcriptionManager';
 import CreateImportBill from './components/CreateImportBill';
 import ImportBillDetail from './components/ImportBillDetail';
 import NotificationList from './components/NotificationList';
+import SubscriptionDetail from './components/SubscriptionDetail';
 function App() {
   return (
     <>
@@ -46,28 +47,36 @@ function App() {
           <Route path="/finance" element={<FinanManage />} />
           <Route path="/employee" element={<Employee />} />
           <Route path="/importbill" element={<ImportBill />} />
-          <Route path="/notificationlist" element={<NotificationList/>}/>
+          <Route path="/notificationlist" element={<NotificationList />} />
           <Route path="/createimportbill" element={<CreateImportBill />} />
           {/*Details pages */}
-          <Route path="/employeedetail" element={<EmployeeDetails/>} />
-          <Route path="/eggbatchdetail" element={<EggBatchDetail/>} />
-          <Route path="/breeddetail" element={<BreedDetails/>} />
-          <Route path="/machinedetail" element={<MachineDetails/>} />
-          <Route path="/supplierdetail" element={<SupplierDetails/>} />
-          <Route path="/customerdetail" element={<CustomerDetails/>} />
-          <Route path="/importbilldetail" element={<ImportBillDetail/>}/>
+          <Route path="/employeedetail" element={<EmployeeDetails />} />
+          <Route path="/eggbatchdetail" element={<EggBatchDetail />} />
+          <Route path="/breeddetail" element={<BreedDetails />} />
+          <Route path="/machinedetail" element={<MachineDetails />} />
+          <Route path="/supplierdetail" element={<SupplierDetails />} />
+          <Route path="/customerdetail" element={<CustomerDetails />} />
+          <Route path="/importbilldetail" element={<ImportBillDetail />} />
         </Route>
 
         {/*Moderator pages */}
         <Route element={<PrivateRoute roleRequired="4" />} >
+          <Route path="/subcriptiondetail" element={<SubscriptionDetail />} />
           <Route path='/accountmanage' element={<AccountManager />} />
           <Route path='/subcribemanage' element={<SubcriptionManager />} />
         </Route>
 
+        {/*Employee pages */}
+        <Route element={<PrivateRoute roleRequired="3" />} >
+          <Route path="/egg" element={<Egg />} />
+          <Route path="/machine" element={<Machine />} />
+        </Route>
+
+        {/*All roles pages */}
         <Route element={<PrivateRoute />} >
           <Route path="/profile" element={<Profile />} />
         </Route>
-        
+
         {/* Public routes */}
         <Route path="/" element={<HomePage />} />
         <Route path="login" element={<Login />} />

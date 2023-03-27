@@ -58,8 +58,25 @@ export default function BasicTabs() {
     const navigate = useNavigate();
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
 
+    const handleShow = () => {
+        const rows = [...rowsData];
+        rows.splice(0, rows.length);
+
+        for (let i = 0; i < eggBatchDetail.machineList.length; i++) {
+            rows.splice(i, 0, {
+                machineId: eggBatchDetail.machineList[i].machineId,
+                machineName: eggBatchDetail.machineList[i].machineName,
+                machineTypeId: eggBatchDetail.machineList[i].machineTypeId,
+                amountCurrent: eggBatchDetail.machineList[i].curCapacity,
+                capacity: eggBatchDetail.machineList[i].maxCapacity,
+                amountUpdate: eggBatchDetail.machineList[i].amount
+            });
+        }
+
+        setRowsData(rows);
+        setShow(true);
+    }
     const [show2, setShow2] = useState(false);
     const handleClose2 = () => setShow2(false);
     const handleShow2 = () => setShow2(true);
@@ -77,19 +94,8 @@ export default function BasicTabs() {
 
     const [rowsData, setRowsData] = useState([]);
     // add to machine list
-    const addTableRows = (item, index) => {
-        console.log("item goc:" + JSON.stringify(item))
-        const rowsInput = {
-            machineId: item.machineId,
-            machineName: item.machineName,
-            machineTypeId: item.machineTypeId,
-            amountCurrent: item.curCapacity,
-            capacity: item.maxCapacity,
-            amountUpdate: item.amount
-        };
-
-        console.log("LIST:"+JSON.stringify(rowsData))
-        rowsData.splice(index, 0, {
+    const addTableRows = (item) => {
+        rowsData.splice(rowsData.length, 0, {
             machineId: item.machineId,
             machineName: item.machineName,
             machineTypeId: item.machineTypeId,
@@ -97,8 +103,7 @@ export default function BasicTabs() {
             capacity: item.maxCapacity,
             amountUpdate: item.amount
         });
-
-        setShow2(false)
+        setShow2(false);
     }
 
     const deleteTableRows = (index) => {
@@ -156,9 +161,10 @@ export default function BasicTabs() {
     //Get import details
     useEffect(() => {
         loadEggBatch();
-    }, [eggBatchLoaded]);
+    },[eggBatchLoaded] );
 
     const loadEggBatch = async () => {
+        
         const result = await axios.get(EGGBATCH_GET,
             {
                 params: { eggBatchId: id },
@@ -192,12 +198,6 @@ export default function BasicTabs() {
         if (result.data.progress != 0) {
             remain.remain = eggBatchDetail.eggProductList[2].curAmount + eggBatchDetail.eggProductList[6].curAmount;
         }
-
-        for (let i = 0; i< result.data.machineList.length; i++) {
-            addTableRows(result.data.machineList[i], i);
-        }
-        console.log("LIST real:" + JSON.stringify(result.data.machineList))
-        console.log("LIST fake:" + JSON.stringify(rowsData))
         setEggBatchLoaded(true);
     }
 
@@ -221,11 +221,15 @@ export default function BasicTabs() {
 
     // display total amount
     function cal() {
-        let a = Number(document.getElementById("eggWasted").value);
-        let b = Number(document.getElementById("amount").value);
-
-        let sum = remain.remain - (a + b);
-        document.getElementById('remain').innerHTML = sum;
+         if (eggBatchDetail.eggProductList[8].amount ==0) {
+            let a = Number(document.getElementById("eggWasted").value);
+            let b = Number(document.getElementById("amount").value);
+    
+            let sum = remain.remain - (a + b);
+            document.getElementById('remain').innerHTML = sum;
+         } else {
+            document.getElementById('remain').innerHTML = "";
+         }
     }
     //Handle Change functions:
     //Update EggBatch
@@ -273,12 +277,14 @@ export default function BasicTabs() {
             });
             setRowsData([]);
             loadEggBatch();
-            toast.success("Cập nhật lô trứng thành công")
+            setEggBatchLoaded(false);
+            toast.success("Cập nhật lô trứng thành công");
         } catch (err) {
             if (!err?.response) {
                 toast.error('Server không phản hồi');
             } else {
                 toast.error(err.response.data);
+                console.log(err.response.data);
             }
         }
     }
@@ -357,25 +363,10 @@ export default function BasicTabs() {
                         </div>
                         <div className="row">
                             <div className="col-md-3">
-                                <p>Giai đoạn hiện tại: {eggBatchDetail.progress} </p>
+                                <p>Giai đoạn hiện tại:  </p>
                             </div>
                             <div className="col-md-3">
-                                <p>
-                                    {
-                                        eggBatchDetail.progress === 0
-                                            ? 'Chưa ấp'
-                                            : ''
-                                    }
-                                    {
-                                        eggBatchDetail.progress < 5 && eggBatchDetail.progress !== 0
-                                            ? 'Đang ấp'
-                                            : ''
-                                    }
-                                    {
-                                        eggBatchDetail.progress > 5
-                                            ? 'Đang nở'
-                                            : ''
-                                    }
+                                <p>{eggBatchDetail.progress}
                                 </p>
                             </div>
                         </div>
@@ -385,12 +376,26 @@ export default function BasicTabs() {
                     </div>
                     <table className="table table-bordered">
                         <thead>
+                        <tr>
+                                <th scope="col">Giai đoạn</th>
+                                <th scope="col" width="8%"></th>
+                                <th scope="col" width="8%">0</th>
+                                <th scope="col" width="8%">1</th>
+                                <th scope="col" width="8%">2</th>
+                                <th scope="col" width="8%">3</th>
+                                <th scope="col" width="8%">4</th>
+                                <th scope="col" width="8%">5</th>
+                                <th scope="col" width="8%">6</th>
+                                <th scope="col" width="8%">7</th>
+                                <th scope="col" width="8%">8</th>
+                                <th scope="col" width="8%">9</th>
+                            </tr>
                             <tr>
                                 <th scope="col"></th>
                                 <th scope="col" width="8%">Hao hụt</th>
                                 <th scope="col" width="8%">Trứng dập</th>
                                 <th scope="col" width="8%">Trứng đang ấp</th>
-                                <th scope="col" width="8%">Trứng trắng</th>
+                                <th scope="col" width="8%">Trứng trắng </th>
                                 <th scope="col" width="8%">Trứng loãng</th>
                                 <th scope="col" width="8%">Trứng lộn</th>
                                 <th scope="col" width="8%">Trứng đang nở</th>
@@ -406,31 +411,31 @@ export default function BasicTabs() {
                                 <tbody>
                                     <tr>
                                         <th scope="row">Ban đầu</th>
-                                        <td>{eggBatchDetail.eggProductList[0].amount}</td>
-                                        <td>{eggBatchDetail.eggProductList[1].amount}</td>
-                                        <td>{eggBatchDetail.eggProductList[2].amount}</td>
-                                        <td>{eggBatchDetail.eggProductList[3].amount}</td>
-                                        <td>{eggBatchDetail.eggProductList[4].amount}</td>
-                                        <td>{eggBatchDetail.eggProductList[5].amount}</td>
-                                        <td>{eggBatchDetail.eggProductList[6].amount}</td>
-                                        <td>{eggBatchDetail.eggProductList[7].amount}</td>
-                                        <td>{eggBatchDetail.eggProductList[8].amount}</td>
-                                        <td>{eggBatchDetail.eggProductList[9].amount}</td>
-                                        <td>{eggBatchDetail.eggProductList[10].amount}</td>
+                                        <td>{eggBatchDetail.eggProductList[0].amount.toLocaleString()}</td>
+                                        <td>{eggBatchDetail.eggProductList[1].amount.toLocaleString()}</td>
+                                        <td>{eggBatchDetail.eggProductList[2].amount.toLocaleString()}</td>
+                                        <td>{eggBatchDetail.eggProductList[3].amount.toLocaleString()}</td>
+                                        <td>{eggBatchDetail.eggProductList[4].amount.toLocaleString()}</td>
+                                        <td>{eggBatchDetail.eggProductList[5].amount.toLocaleString()}</td>
+                                        <td>{eggBatchDetail.eggProductList[6].amount.toLocaleString()}</td>
+                                        <td>{eggBatchDetail.eggProductList[7].amount.toLocaleString()}</td>
+                                        <td>{eggBatchDetail.eggProductList[8].amount.toLocaleString()}</td>
+                                        <td>{eggBatchDetail.eggProductList[9].amount.toLocaleString()}</td>
+                                        <td>{eggBatchDetail.eggProductList[10].amount.toLocaleString()}</td>
                                     </tr>
                                     <tr>
                                         <th scope="row">Hiện tại</th>
-                                        <td>{eggBatchDetail.eggProductList[0].curAmount}</td>
-                                        <td>{eggBatchDetail.eggProductList[1].curAmount}</td>
-                                        <td>{eggBatchDetail.eggProductList[2].curAmount}</td>
-                                        <td>{eggBatchDetail.eggProductList[3].curAmount}</td>
-                                        <td>{eggBatchDetail.eggProductList[4].curAmount}</td>
-                                        <td>{eggBatchDetail.eggProductList[5].curAmount}</td>
-                                        <td>{eggBatchDetail.eggProductList[6].curAmount}</td>
-                                        <td>{eggBatchDetail.eggProductList[7].curAmount}</td>
-                                        <td>{eggBatchDetail.eggProductList[8].curAmount}</td>
-                                        <td>{eggBatchDetail.eggProductList[9].curAmount}</td>
-                                        <td>{eggBatchDetail.eggProductList[10].curAmount}</td>
+                                        <td>{eggBatchDetail.eggProductList[0].curAmount.toLocaleString()}</td>
+                                        <td>{eggBatchDetail.eggProductList[1].curAmount.toLocaleString()}</td>
+                                        <td>{eggBatchDetail.eggProductList[2].curAmount.toLocaleString()}</td>
+                                        <td>{eggBatchDetail.eggProductList[3].curAmount.toLocaleString()}</td>
+                                        <td>{eggBatchDetail.eggProductList[4].curAmount.toLocaleString()}</td>
+                                        <td>{eggBatchDetail.eggProductList[5].curAmount.toLocaleString()}</td>
+                                        <td>{eggBatchDetail.eggProductList[6].curAmount.toLocaleString()}</td>
+                                        <td>{eggBatchDetail.eggProductList[7].curAmount.toLocaleString()}</td>
+                                        <td>{eggBatchDetail.eggProductList[8].curAmount.toLocaleString()}</td>
+                                        <td>{eggBatchDetail.eggProductList[9].curAmount.toLocaleString()}</td>
+                                        <td>{eggBatchDetail.eggProductList[10].curAmount.toLocaleString()}</td>
                                     </tr>
                                 </tbody>
                                 : <tbody>
@@ -480,7 +485,7 @@ export default function BasicTabs() {
                                     eggBatchDetail.machineList.map((item, index) =>
                                         <tr className='trclick' style={{ height: "76px", textAlign: "left" }} onClick={() => routeChange(item.machineId)}>
                                             <th scope="row">{item.machineName}</th>
-                                            <td>{item.amount}</td>
+                                            <td>{item.amount.toLocaleString()}</td>
                                         </tr>
                                     ) : ''
                             }
@@ -522,6 +527,7 @@ export default function BasicTabs() {
                                                     <option value="5">Trứng đang nở</option>
                                                     <option value="6">Trứng tắc</option>
                                                     <option value="8">Con đực</option>
+                                                    <option value="9">Con Cái</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -538,7 +544,7 @@ export default function BasicTabs() {
                                                 <label>Số lượng trứng còn lại</label>
                                             </div>
                                             <div className="col-md-3">
-                                                <p id="remain" name="remain">{remain.remain}</p>
+                                                <p id="remain" name="remain">{remain.remain.toLocaleString()}</p>
                                             </div>
                                         </div>
                                     </div>
@@ -583,8 +589,8 @@ export default function BasicTabs() {
                                                                     eggBatchDetail.machineNotFullList.map((item, index) =>
                                                                         <tr className='trclick' onClick={() => addTableRows(item, index)}>
                                                                             <td>{item.machineName}</td>
-                                                                            <td>{item.curCapacity}/{item.maxCapacity}</td>
-                                                                            <td>{item.maxCapacity - item.curCapacity}</td>
+                                                                            <td>{item.curCapacity.toLocaleString()}/{item.maxCapacity.toLocaleString()}</td>
+                                                                            <td>{(item.maxCapacity - item.curCapacity).toLocaleString()}</td>
                                                                         </tr>
                                                                     ) : 'Nothing'
                                                             }
@@ -635,12 +641,12 @@ function TableRows({ rowsData, deleteTableRows, handleChangeData }) {
                     </td>
                     <td>
                         <div name="current" className="form-control" >
-                            {amountCurrent} / {capacity}
+                            {amountCurrent.toLocaleString()} / {capacity.toLocaleString()}
                         </div>
                     </td>
                     <td>
                         <div name="emptySlot" className="form-control" >
-                            {capacity - amountCurrent}
+                            {(capacity - amountCurrent).toLocaleString()}
                         </div>
                     </td>
                     <td><input required type="number" value={amountUpdate} onChange={(evnt) => (handleChangeData(index, evnt))} name="amountUpdate" className="form-control" /> </td>

@@ -12,6 +12,7 @@
  * 28/02/2023   3.0         ChucNV      Enable Security<br>
  * 28/02/2023   4.0         DuongVV     Add Paging<br>
  * 02/03/2023   5.0         DuongVV     New code structure<br>
+ * 26/03/2023   5.1         ChucNV      Refine Code<br>
  */
 
 package com.example.eims.controller;
@@ -20,7 +21,6 @@ import com.example.eims.dto.supplier.CreateSupplierDTO;
 import com.example.eims.dto.supplier.UpdateSupplierDTO;
 import com.example.eims.service.interfaces.ISupplierService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;

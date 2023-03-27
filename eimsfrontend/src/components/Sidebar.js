@@ -4,6 +4,7 @@ import SidebarItemsOwner from "./SidebarItemsOwner";
 import { Link, useLocation } from "react-router-dom";
 import WithPermission from "../utils.js/WithPermission";
 import SidebarItemsModer from "./SidebarItemsModer";
+import SidebarItemsEmployee from "./SidebarItemsEmployee";
 
 function Sidebar(props, { defaultActive, }) {
   const location = useLocation();
@@ -27,7 +28,6 @@ function Sidebar(props, { defaultActive, }) {
     const activeItem = SidebarItemsOwner.findIndex(item => getPath(item.route) === getPath(location.pathname))
     changeActiveIndex(activeItem);
   }, [location])
-
   return (
     <>
       <SidebarParent>
@@ -51,14 +51,28 @@ function Sidebar(props, { defaultActive, }) {
           {/**Sidenav for Moderator */}
           <WithPermission roleRequired='4'>
             {
-              SidebarItemsModer.map((item2, index2) => {
+              SidebarItemsModer.map((item, index) => {
                 return (
-                  <Link to={item2.route}>
-                    <SidebarItemModer key={[item2.id]}
-                      active={index2 === activeIndex}
+                  <Link to={item.route}>
+                    <SidebarItemModer key={[item.id]}
                     >
-                      {item2.icon}<p>{item2.name}</p>
+                      {item.icon}<p>{item.name}</p>
                     </SidebarItemModer>
+                  </Link>
+                );
+              })
+            }
+          </WithPermission>
+          {/**Sidenav for Employee */}
+          <WithPermission roleRequired='3'>
+            {
+              SidebarItemsEmployee.map((item, index) => {
+                return (
+                  <Link to={item.route}>
+                    <SidebarItemEmployee key={[item.id]}
+                    >
+                      {item.icon}<p>{item.name}</p>
+                    </SidebarItemEmployee>
                   </Link>
                 );
               })
@@ -112,6 +126,26 @@ const SidebarItemOwner = styled.div`
 `;
 
 const SidebarItemModer = styled.div`
+  transition: all 0.25s ease-in-out;
+  background: ${props => props.active ? "#F46110" : ""};
+  margin: 4px 12px;
+  border-radius: 4px;
+  p {
+    color: white;
+    font-weight: bold;
+    text-decoration: none;
+  }
+  &:hover {
+    cursor:pointer;
+    background-color: #F46110;
+  }
+  
+  &:hover:not(:first-child) {
+    background: #009b4d;
+  }
+`;
+
+const SidebarItemEmployee = styled.div`
   transition: all 0.25s ease-in-out;
   background: ${props => props.active ? "#F46110" : ""};
   margin: 4px 12px;

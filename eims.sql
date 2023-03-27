@@ -485,7 +485,7 @@ VALUES (3, 1, 1);
 -- supplier
 INSERT INTO supplier(user_id, supplier_name, facility_name, supplier_phone, supplier_address, supplier_mail, status)
 VALUES (2, 'Vũ Hồng Nam', 'Trang trại gà hòa phát', '0978456331', '{"city":"Tỉnh Hà Giang","district":"Huyện Quản Bạ","ward":"Xã Thái An","street":"Thôn 1"}', 'vunamhong@gmail.com', 1),
-	   (2, 'Phạm Quang Việt', 'Gia cầm Việt Hương', '0978456332', '{"city":"Tỉnh Hà Giang","district":"Huyện Quản Bạ","ward":"Xã Thái An","street":"Thôn 7"}', 'viethuongeggsie@gmail.com', 1);
+	   (2, 'Phạm Quang Việt', 'Gia cầm Việt Hương', '0978456332', '{"city":"Tỉnh Lào Cai","district":"Huyện Mường Khương","ward":"Xã La Pan Tẩn","street":"Thôn 7"}', 'viethuongeggsie@gmail.com', 1);
        
 -- customer
 INSERT INTO customer(user_id, customer_name, customer_phone, customer_address, customer_mail, status)

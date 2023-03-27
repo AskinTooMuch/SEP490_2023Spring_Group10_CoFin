@@ -59,7 +59,7 @@ p {
 }
 
 tbody :hover {
-    background-color: lightblue;
+    background-color: rgb(238, 177, 121);
 }
 
 tbody tr ::after :hover {

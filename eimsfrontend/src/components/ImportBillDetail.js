@@ -152,7 +152,10 @@ export default function BasicTabs() {
             }
         }
     }
-
+    
+    const routeChange = (ebi) => {
+        navigate('/eggbatchdetail', { state: { id: ebi } });
+    }
     return (
         <Box sx={{ width: '100%' }}>
             <Box sx={{ borderBottom: 1, borderColor: 'black' }}>
@@ -214,13 +217,13 @@ export default function BasicTabs() {
                             {
                                 eggBatchList && eggBatchList.length > 0 ?
                                     eggBatchList.map((item, index) =>
-                                        <tr>
+                                        <tr className='trclick' style={{ height: "76px" }} onClick={() => routeChange(item.eggBatchId)}>
                                             <td>{index + 1}</td>
                                             <td>{item.eggBatchId}</td>
                                             <td>{item.breedName}</td>
-                                            <td>{item.amount}</td>
-                                            <td>{item.price}</td>
-                                            <td>{item.amount * item.price}</td>
+                                            <td>{item.amount.toLocaleString()}</td>
+                                            <td>{item.price.toLocaleString('vi', { style: 'currency', currency: 'VND' })}</td>
+                                            <td>{(item.amount * item.price).toLocaleString('vi', { style: 'currency', currency: 'VND' })}</td>
                                         </tr>
                                     ) : "Nothing"
                             }
@@ -260,7 +263,7 @@ export default function BasicTabs() {
                                             <p>Số tiền đã thanh toán</p>
                                         </div>
                                         <div className="col-md-6">
-                                            <input required style={{ width: "100%" }} type="number"
+                                            <input required style={{ width: "100%" }} type="number" 
                                                 value={paid.paid} onChange={(e) => handleUpdatePaidChange(e, "paid")}
                                             />
                                         </div>

@@ -16,6 +16,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from 'axios';
 //Toast
 import { ToastContainer, toast } from 'react-toastify';
+import WithPermission from '../utils.js/WithPermission';
 function Machine(props) {
     const { children, value, index, ...other } = props;
     return (
@@ -66,6 +67,7 @@ export default function BasicTabs() {
     const [machineList, setMachineList] = useState([]);
     //Get sent params
     const { state } = useLocation();
+    var mess = true;
     //DTOs
     //CreateMachineDTO
     const [createMachineDTO, setCreateMachineDTO] = useState({
@@ -140,8 +142,10 @@ export default function BasicTabs() {
         setMachineList(result.data);
 
         // Toast Delete Machine success
-        console.log("state:====" + state)
-        if (state != null) toast.success(state);
+        if (mess) {
+            toast.success(state);
+            mess = false;
+        } 
     }
 
     //Navigate to detail Page
@@ -164,7 +168,9 @@ export default function BasicTabs() {
             {/* Start: form to add new machine */}
             <Machine value={value} index={0}>
                 <nav className="navbar justify-content-between">
-                    <button className='btn btn-light' onClick={handleShow} id="startCreateMachine">+ Thêm</button>
+                    <WithPermission roleRequired="2">
+                        <button className='btn btn-light' onClick={handleShow} id="startCreateMachine">+ Thêm</button>
+                    </WithPermission>
                     <Modal show={show} onHide={handleClose}
                         size="lg"
                         aria-labelledby="contained-modal-title-vcenter"

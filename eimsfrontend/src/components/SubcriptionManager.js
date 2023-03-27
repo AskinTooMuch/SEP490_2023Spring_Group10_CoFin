@@ -55,7 +55,7 @@ export default function BasicTabs() {
     const handleShow = () => setShow(true);
     let navigate = useNavigate();
     const routeChange = () => {
-        let path = '/employeedetail';
+        let path = '/subcriptiondetail';
         navigate(path);
     }
     return (

@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { useNavigate, useParams, useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import PropTypes from 'prop-types';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
@@ -93,17 +93,13 @@ export default function BasicTabs() {
     // Set value for address fields
     //User
     useEffect(() => {
-        console.log("Load address");
         loadAddress();
-        console.log(fullAddresses);
     }, [addressLoaded]);
 
     const loadAddress = async () => {
         const result = await axios.get("https://raw.githubusercontent.com/kenzouno1/DiaGioiHanhChinhVN/master/data.json",
             {});
         setFullAddresses(result.data);
-        console.log("Full address");
-        console.log(fullAddresses);
         // Set inf
         const cityList = fullAddresses.slice();
         for (let i in cityList) {
@@ -122,36 +118,54 @@ export default function BasicTabs() {
         ward: "",
         street: ""
     });
+
+    const [updateAddressJson, setUpdateAddressJson] = useState({
+        city: "",
+        district: "",
+        ward: "",
+        street: ""
+    });
+
     //Get supplier details
     useEffect(() => {
         console.log("Get Supplier");
         loadSupplier();
-    }, [supplierLoaded]);
+    }, [addressLoaded]);
 
     const loadSupplier = async () => {
-        const result = await axios.get(SUPPLIER_GET,
-            {
-                params: { supplierId: id },
-                withCredentials: true
-            });
-        // Set inf
-        setAddressJson(JSON.parse(result.data.supplierAddress));
-        updateSupplierDTO.userId = sessionStorage.getItem("curUserId");
-        updateSupplierDTO.supplierId = result.data.supplierId;
-        updateSupplierDTO.supplierName = result.data.supplierName;
-        updateSupplierDTO.facilityName = result.data.facilityName;
-        updateSupplierDTO.supplierPhone = result.data.supplierPhone;
-        updateSupplierDTO.supplierAddress = result.data.supplierAddress;
-        updateSupplierDTO.supplierMail = result.data.supplierMail;
-        updateSupplierDTO.fertilizedRate = result.data.fertilizedRate;
-        updateSupplierDTO.maleRate = result.data.maleRate;
-        updateSupplierDTO.status = result.data.status;
+        try {
+            const result = await axios.get(SUPPLIER_GET,
+                {
+                    params: { supplierId: id },
+                    withCredentials: true
+                });
+            // Set inf
+            setAddressJson(JSON.parse(result.data.supplierAddress));
+            updateSupplierDTO.userId = sessionStorage.getItem("curUserId");
+            updateSupplierDTO.supplierId = result.data.supplierId;
+            updateSupplierDTO.supplierName = result.data.supplierName;
+            updateSupplierDTO.facilityName = result.data.facilityName;
+            updateSupplierDTO.supplierPhone = result.data.supplierPhone;
+            updateSupplierDTO.supplierAddress = result.data.supplierAddress;
+            updateSupplierDTO.supplierMail = result.data.supplierMail;
+            updateSupplierDTO.fertilizedRate = result.data.fertilizedRate;
+            updateSupplierDTO.maleRate = result.data.maleRate;
+            updateSupplierDTO.status = result.data.status;
+            setSupplierLoaded(true);
+        } catch (err) {
+            if (!err?.response) {
+                toast.error('Server không phản hồi');
+            } else {
+                toast.error(err.response.data);
+            }
+        }
+    }
+
+    const handleUpdateClick = () => {
+        handleShow();
         // Get index of dropdowns
-        console.log("load values");
-        console.log(fullAddresses);
         console.log(addressJson);
         for (let i in city) {
-            console.log(i);
             if (addressJson.city === city[i].label) {
                 setCityIndex(i);
                 addressJson.city = fullAddresses[i].Name;
@@ -166,7 +180,6 @@ export default function BasicTabs() {
                 for (let j in districtList) {
                     if (addressJson.district === districtList[j].label) {
                         setDistrictIndex(j);
-                        console.log(j);
                         addressJson.district = fullAddresses[i].Districts[j].Name;
                         console.log("District " + j);
                         setDistrictIndex(j);
@@ -190,10 +203,8 @@ export default function BasicTabs() {
             }
         }
         setStreet(addressJson.street);
-        console.log(addressJson);
-        setSupplierLoaded(true);
+        setUpdateAddressJson(addressJson);
     }
-
 
     //Function for populating dropdowns
     function loadDistrict(index) {
@@ -230,11 +241,12 @@ export default function BasicTabs() {
     function saveAddressJson(s) {
         console.log("ward " + wardIndex);
         setStreet(s);
-        addressJson.city = fullAddresses[cityIndex].Name;
-        addressJson.district = fullAddresses[cityIndex].Districts[districtIndex].Name;
-        addressJson.ward = fullAddresses[cityIndex].Districts[districtIndex].Wards[wardIndex].Name;
-        addressJson.street = street;
-        updateSupplierDTO.supplierAddress = JSON.stringify(addressJson);
+        updateAddressJson.city = fullAddresses[cityIndex].Name;
+        updateAddressJson.district = fullAddresses[cityIndex].Districts[districtIndex].Name;
+        updateAddressJson.ward = fullAddresses[cityIndex].Districts[districtIndex].Wards[wardIndex].Name;
+        updateAddressJson.street = street;
+        updateSupplierDTO.supplierAddress = JSON.stringify(updateAddressJson);
+        console.log(addressJson);
     }
 
     //Handle Change functions:
@@ -245,6 +257,11 @@ export default function BasicTabs() {
             ...updateSupplierDTO,
             [field]: actualValue
         })
+    }
+
+    const handleCancel = () => {
+        handleClose();
+        setUpdateAddressJson(addressJson);
     }
 
     //Handle Submit functions
@@ -266,13 +283,13 @@ export default function BasicTabs() {
             );
             //loadSupplier(id);
             console.log(response);
-            toast.success("Cập nhật thành công");
+            toast.success(response.data);
             setShow(false);
         } catch (err) {
             if (!err?.response) {
                 toast.error('Server không phản hồi');
             } else {
-                toast.error(response);
+                toast.error(err.response.data);
             }
         }
     }
@@ -287,7 +304,7 @@ export default function BasicTabs() {
             </Box>
             <SupplierDetails value={value} index={0}>
                 <div className='container'>
-                    <h3 style={{ textAlign: "center" }}>Thông tin chi tiết nhà cung cấp</h3>
+                    <h3 style={{ textAlign: "center" }}>Thông tin nhà cung cấp</h3>
                     <form><Modal show={show} onHide={handleClose}
                         size="lg"
                         aria-labelledby="contained-modal-title-vcenter"
@@ -298,55 +315,59 @@ export default function BasicTabs() {
                         <Modal.Body>
                             <div className="">
                                 <div className="row">
-                                    <div className="col-md-6 ">
-                                        <p>Họ và tên<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
+                                    <div className="col-md-4">
+                                        <label htmlFor='updateSupplierName' className='col-form-label'>Họ và tên&nbsp;<FontAwesomeIcon className="star" icon={faStarOfLife} /></label>
                                     </div>
-                                    <div className="col-md-6">
+                                    <div className="col-md-8">
                                         <input required id="updateSupplierName"
                                             value={updateSupplierDTO.supplierName}
                                             onChange={(e) => handleUpdateSupplierChange(e, "supplierName")}
-                                            className="form-control " />
+                                            className="form-control mt-1"
+                                            placeholder='Tên/biệt danh gợi nhớ' />
                                     </div>
                                 </div>
                                 <div className="row">
-                                    <div className="col-md-6 ">
-                                        <p>Số điện thoại<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
+                                    <div className="col-md-4">
+                                        <label htmlFor='updateSupplierPhoneNumber' className='col-form-label'>Số điện thoại&nbsp;<FontAwesomeIcon className="star" icon={faStarOfLife} /></label>
                                     </div>
-                                    <div className="col-md-6">
+                                    <div className="col-md-8">
                                         <input required id="updateSupplierPhoneNumber"
                                             value={updateSupplierDTO.supplierPhone}
                                             onChange={(e) => handleUpdateSupplierChange(e, "supplierPhone")}
-                                            className="form-control " />
+                                            className="form-control mt-1"
+                                            placeholder='Số điện thoại Việt Nam' />
                                     </div>
                                 </div>
                                 <div className="row">
-                                    <div className="col-md-6 ">
-                                        <p>Email</p>
+                                    <div className="col-md-4">
+                                        <label htmlFor='updateSupplierEmail' className='col-form-label'>Email</label>
                                     </div>
-                                    <div className="col-md-6">
+                                    <div className="col-md-8">
                                         <input id="updateSupplierEmail"
                                             value={updateSupplierDTO.supplierMail}
                                             onChange={(e) => handleUpdateSupplierChange(e, "supplierMail")}
-                                            className="form-control " />
+                                            className="form-control mt-1"
+                                            placeholder='Địa chỉ thư điện tử' />
                                     </div>
                                 </div>
                                 <div className="row">
-                                    <div className="col-md-6 ">
-                                        <p>Tên cơ sở<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
+                                    <div className="col-md-4">
+                                        <label htmlFor='updateSupplierFacilityName' className='col-form-label'>Tên cơ sở&nbsp;<FontAwesomeIcon className="star" icon={faStarOfLife} /></label>
                                     </div>
-                                    <div className="col-md-6">
+                                    <div className="col-md-8">
                                         <input required id="updateSupplierFacilityName"
                                             value={updateSupplierDTO.facilityName}
                                             onChange={(e) => handleUpdateSupplierChange(e, "facilityName")}
-                                            className="form-control " />
+                                            className="form-control mt-1"
+                                            placeholder='Tên cơ sở cung cấp' />
                                     </div>
                                 </div>
                                 {/*City*/}
                                 <div className="row">
-                                    <div className="col-md-6 ">
-                                        <p>Thành phố<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
+                                    <div className="col-md-4">
+                                        <label htmlFor='uprovince' className='col-form-label'>Thành phố&nbsp;<FontAwesomeIcon className="star" icon={faStarOfLife} /></label>
                                     </div>
-                                    <div className="col-md-6">
+                                    <div className="col-md-8">
                                         <select className="form-control mt-1" id="uprovince"
                                             ref={userRef}
                                             autoComplete="off"
@@ -357,7 +378,7 @@ export default function BasicTabs() {
                                             {city &&
                                                 city.map((item, index) => (
                                                     <>
-                                                        {item.label === addressJson.city
+                                                        {item.label === updateAddressJson.city
                                                             ? <option value={index} selected>{item.label}</option>
                                                             : <option value={index}>{item.label}</option>
                                                         }
@@ -369,10 +390,10 @@ export default function BasicTabs() {
                                 </div>
                                 {/*District*/}
                                 <div className="row">
-                                    <div className="col-md-6 ">
-                                        <p>Quận/Huyện<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
+                                    <div className="col-md-4">
+                                        <label htmlFor='udistrict' className='col-form-label'>Quận/Huyện&nbsp;<FontAwesomeIcon className="star" icon={faStarOfLife} /></label>
                                     </div>
-                                    <div className="col-md-6">
+                                    <div className="col-md-8">
                                         <select className="form-control mt-1" id="udistrict"
                                             ref={userRef}
                                             autoComplete="off"
@@ -383,7 +404,7 @@ export default function BasicTabs() {
                                             {district &&
                                                 district.map((item, index) => (
                                                     <>
-                                                        {item.label === addressJson.district
+                                                        {item.label === updateAddressJson.district
                                                             ? <option value={index} selected>{item.label}</option>
                                                             : <option value={index}>{item.label}</option>
                                                         }
@@ -395,10 +416,10 @@ export default function BasicTabs() {
                                 </div>
                                 {/*Ward*/}
                                 <div className="row">
-                                    <div className="col-md-6 ">
-                                        <p>Phường xã<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
+                                    <div className="col-md-4">
+                                        <label htmlFor='uward' className='col-form-label'>Phường xã&nbsp;<FontAwesomeIcon className="star" icon={faStarOfLife} /></label>
                                     </div>
-                                    <div className="col-md-6">
+                                    <div className="col-md-8">
                                         <select className="form-control mt-1" id="uward"
                                             ref={userRef}
                                             autoComplete="off"
@@ -409,7 +430,7 @@ export default function BasicTabs() {
                                             {ward &&
                                                 ward.map((item, index) => (
                                                     <>
-                                                        {item.label === addressJson.ward
+                                                        {item.label === updateAddressJson.ward
                                                             ? <option value={index} selected>{item.label}</option>
                                                             : <option value={index}>{item.label}</option>
                                                         }
@@ -421,25 +442,26 @@ export default function BasicTabs() {
                                 </div>
                                 {/*Street*/}
                                 <div className="row">
-                                    <div className="col-md-6 ">
-                                        <p>Số nhà<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
+                                    <div className="col-md-4">
+                                        <label htmlFor='uhomenum' className='col-form-label'>Số nhà&nbsp;<FontAwesomeIcon className="star" icon={faStarOfLife} /></label>
                                     </div>
-                                    <div className="col-md-6">
+                                    <div className="col-md-8">
                                         <input type="text" id="uhomenum"
                                             ref={userRef}
                                             autoComplete="off"
                                             onChange={(e) => saveAddressJson(e.target.value)}
                                             required
-                                            className="form-control"
-                                            value={addressJson.street} />
+                                            className="form-control mt-1"
+                                            value={street}
+                                            placeholder='Địa chỉ cụ thể'/>
                                     </div>
                                 </div>
                                 <div className="row">
-                                    <div className="col-md-6">
-                                        <p>Trạng thái<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
+                                    <div className="col-md-4">
+                                        <label htmlFor='' className='col-form-label'>Trạng thái&nbsp;<FontAwesomeIcon className="star" icon={faStarOfLife} /></label>
                                     </div>
-                                    <div className="col-md-6">
-                                        <select className="form-select" aria-label="Default select example" id="updateSupplierStatus"
+                                    <div className="col-md-8">
+                                        <select className="form-select mt-1" aria-label="Default select example" id="updateSupplierStatus"
                                             onChange={(e) => handleUpdateSupplierChange(e, "status")}>
                                             <option value="1" className='text-green'>Đang hoạt động</option>
                                             <option value="0" className='text-red'>Ngừng hoạt động</option>
@@ -449,7 +471,7 @@ export default function BasicTabs() {
                             </div>
                         </Modal.Body>
                         <Modal.Footer>
-                            <Button variant="danger" style={{ width: "20%" }} onClick={handleClose} id="cancelUpdateSupplier" >
+                            <Button variant="danger" style={{ width: "20%" }} onClick={handleCancel} id="cancelUpdateSupplier">
                                 Huỷ
                             </Button>
                             <Button variant="success" style={{ width: "30%" }} className="col-md-6" id="confirmUpdateSupplier" onClick={handleUpdateSupplierSubmit}>
@@ -468,7 +490,7 @@ export default function BasicTabs() {
                             </div>
                             <div className="col-md-4 ">
                                 <div className='button'>
-                                    <button id="startEditSupplier" className='btn btn-success' onClick={handleShow}>Sửa</button>
+                                    <button id="startEditSupplier" className='btn btn-success' onClick={handleUpdateClick}>Sửa</button>
                                 </div>
                             </div>
                         </div>
@@ -501,7 +523,7 @@ export default function BasicTabs() {
                                 <p>Địa chỉ</p>
                             </div>
                             <div className="col-md-4">
-                                <p>{addressJson.street + " " + addressJson.ward + " " + addressJson.district + " " + addressJson.city}</p>
+                                <p>{addressJson.street + ", " + addressJson.ward + ", " + addressJson.district + ", " + addressJson.city}</p>
                             </div>
                         </div>
                         <div className="row">

@@ -17,10 +17,11 @@ const ImportBill = () => {
 
     //Get sent params
     const { state } = useLocation();
+    var mess = true;
     //
     useEffect(() => {
         loadImportList();
-    }, [dataLoaded]);
+    }, []);
 
     // Get import list
     const loadImportList = async () => {
@@ -34,11 +35,11 @@ const ImportBill = () => {
                 withCredentials: false
             });
         setImportList(result.data);
-        setDataLoaded(true);
         // Toast message
-        console.log("state:====" + state)
-        if (state !== null && state !== "") toast.success(state);
-        state = "";
+        if (mess) {
+            toast.success(state);
+            mess = false;
+        } 
     }
 
     let navigate = useNavigate();
@@ -46,6 +47,14 @@ const ImportBill = () => {
         navigate('/importbilldetail', { state: { id: iid } });
     }
 
+    function formatNumber(number) {
+        var text = number.toString();
+        var n = text.length / 3;
+        for (let i = 1; i < n ; i++) {
+            text.slice(text.length - 3 * i,0, ".")
+        }
+        return text;
+    }
     return (
         <>
             <nav className="navbar justify-content-between">
@@ -97,8 +106,8 @@ const ImportBill = () => {
                                                     <td className="u-border-1 u-border-grey-30 u-table-cell">{item.importId}</td>
                                                     <td className="u-border-1 u-border-grey-30 u-table-cell">{item.supplierName}</td>
                                                     <td className="u-border-1 u-border-grey-30 u-table-cell">{item.importDate}</td>
-                                                    <td className="u-border-1 u-border-grey-30 u-table-cell">{item.total}</td>
-                                                    <td className="u-border-1 u-border-grey-30 u-table-cell">{item.paid}</td>
+                                                    <td className="u-border-1 u-border-grey-30 u-table-cell">{item.total.toLocaleString()}</td>
+                                                    <td className="u-border-1 u-border-grey-30 u-table-cell">{item.paid.toLocaleString()}</td>
                                                     {
                                                         item.total == item.paid
                                                             ?

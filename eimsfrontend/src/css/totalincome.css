@@ -1,0 +1,105 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap');
+
+.tab-wrapper {
+    padding: 20px;
+    border-radius: 5px;
+    background: #fff;
+    box-shadow: 0px 10px 15px rgba(0, 0, 0, 0.1);
+}
+
+.sub-wrapper {
+    margin: auto;
+    padding: 20px 10% 0 10%;
+    border-radius: 5px;
+    background: #eee2da;
+    box-shadow: 0px 10px 15px rgba(0, 0, 0, 0.1);
+}
+
+.tab-wrapper header {
+    font-size: 30px;
+    font-weight: 600;
+    padding-bottom: 20px;
+}
+
+.tab-wrapper nav {
+    position: relative;
+    width: 20%;
+    height: 50px;
+    display: flex;
+    align-items: center;
+}
+
+.tab-wrapper nav label {
+    display: block;
+    height: 100%;
+    width: 100%;
+    text-align: center;
+    line-height: 50px;
+    cursor: pointer;
+    position: relative;
+    z-index: 1;
+    color: #F46110;
+    font-size: 17px;
+    border-radius: 15px;
+    margin: 0 5px;
+    transition: all 0.3s ease;
+    border: 1px solid #F46110;
+}
+
+.tab-wrapper nav label:hover {
+    background: rgba(209, 137, 89, 0.3);
+}
+
+#month:checked~nav label.month,
+#year:checked~nav label.year {
+    color: #fff;
+}
+
+nav label i {
+    padding-right: 7px;
+}
+
+nav .slider {
+    position: absolute;
+    height: 100%;
+    width: 48%;
+    left: 0;
+    bottom: 0;
+    z-index: 0;
+    border-radius: 15px;
+    background: #F46110;
+    transition: all 0.3s ease;
+}
+
+input[type="radio"] {
+    display: none;
+}
+
+#year:checked~nav .slider {
+    left: 50%;
+}
+
+section .content {
+    display: none;
+    background: #fff;
+}
+
+#month:checked~section .content-1,
+#year:checked~section .content-2,
+#code:checked~section .content-3,
+#help:checked~section .content-4,
+#about:checked~section .content-5 {
+    display: block;
+}
+
+section .content .title {
+    font-size: 21px;
+    font-weight: 500;
+    margin: 30px 0 10px 0;
+}
+
+section .content p {
+    text-align: end;
+    font-weight: bold;
+    font-size: large;
+}

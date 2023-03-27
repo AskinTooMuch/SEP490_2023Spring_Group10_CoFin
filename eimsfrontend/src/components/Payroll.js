@@ -105,11 +105,7 @@ const Payroll = () => {
                         <div className="u-expanded-width u-table u-table-responsive u-table-1">
                             <table className="u-table-entity u-table-entity-1">
                                 <colgroup>
-                                    <col width="20%" />
-                                    <col width="20%" />
-                                    <col width="20%" />
-                                    <col width="20%" />
-                                    <col width="20%" />
+                                    <col width="3%" />
                                 </colgroup>
                                 <thead className="u-palette-4-base u-table-header u-table-header-1">
                                     <tr style={{ height: "21px" }}>
