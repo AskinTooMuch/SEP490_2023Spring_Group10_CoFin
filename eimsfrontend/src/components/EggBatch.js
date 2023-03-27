@@ -67,6 +67,7 @@ const EggBatch = () => {
                             <th scope="col">Số lượng</th>
                             <th scope="col">Ngày nhập</th>
                             <th scope="col">Giai đoạn</th>
+                            <th scope="col">Trạng thái</th>
                         </tr>
                     </thead>
                     <tbody id="specie_list_table_body">
@@ -82,6 +83,11 @@ const EggBatch = () => {
                                         <td>{item.amount.toLocaleString()}</td>
                                         <td>{item.importDate}</td>
                                         <td>{item.progress}</td>
+                                        {
+                                            item.status == 1
+                                            ?<td>Chưa hoàn thành</td>
+                                            :<td>Đã hoàn thành</td>
+                                        }
                                     </tr>
                                 ) : 'Nothing'
                         }

@@ -56,4 +56,16 @@ public class EggBatchController {
     public ResponseEntity<?> updateEggBatch(@RequestBody UpdateEggBatchDTO updateEggBatchDTO) {
         return eggBatchService.updateEggBatch(updateEggBatchDTO);
     }
+
+    /**
+     * Update egg batch's state.
+     *
+     * @param eggBatchId the id of egg batch
+     * @param done       boolean value for state
+     * @return
+     */
+    @PutMapping("/update/done")
+    public ResponseEntity<?> updateEggBatch(@RequestParam Long eggBatchId, @RequestParam boolean done) {
+        return eggBatchService.setDoneEggBatch(eggBatchId, done);
+    }
 }

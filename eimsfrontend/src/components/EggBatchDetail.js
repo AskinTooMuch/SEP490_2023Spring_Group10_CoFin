@@ -51,6 +51,7 @@ export default function BasicTabs() {
     //URL
     const EGGBATCH_GET = "/api/eggBatch/get";
     const EGGBATCH_UPDATE = "/api/eggBatch/update";
+    const EGGBATCH_UPDATE_DONE = "/api/eggBatch/update/done";
     const MACHINE_NOT_FULL_GET = "/api/machine/notFull";
 
     //Show-hide Popup
@@ -60,22 +61,27 @@ export default function BasicTabs() {
     const handleClose = () => setShow(false);
 
     const handleShow = () => {
-        const rows = [...rowsData];
-        rows.splice(0, rows.length);
+        if (eggBatchDetail.status == 1) {
+            const rows = [...rowsData];
+            rows.splice(0, rows.length);
 
-        for (let i = 0; i < eggBatchDetail.machineList.length; i++) {
-            rows.splice(i, 0, {
-                machineId: eggBatchDetail.machineList[i].machineId,
-                machineName: eggBatchDetail.machineList[i].machineName,
-                machineTypeId: eggBatchDetail.machineList[i].machineTypeId,
-                amountCurrent: eggBatchDetail.machineList[i].curCapacity,
-                capacity: eggBatchDetail.machineList[i].maxCapacity,
-                amountUpdate: eggBatchDetail.machineList[i].amount
-            });
+            for (let i = 0; i < eggBatchDetail.machineList.length; i++) {
+                rows.splice(i, 0, {
+                    machineId: eggBatchDetail.machineList[i].machineId,
+                    machineName: eggBatchDetail.machineList[i].machineName,
+                    machineTypeId: eggBatchDetail.machineList[i].machineTypeId,
+                    amountCurrent: eggBatchDetail.machineList[i].curCapacity,
+                    capacity: eggBatchDetail.machineList[i].maxCapacity,
+                    amountUpdate: eggBatchDetail.machineList[i].amount
+                });
+            }
+
+            setRowsData(rows);
+            setShow(true);
+        } else {
+            toast.error("Lô trứng đã hoàn thành, không thể cập nhật")
         }
 
-        setRowsData(rows);
-        setShow(true);
     }
     const [show2, setShow2] = useState(false);
     const handleClose2 = () => setShow2(false);
@@ -146,9 +152,12 @@ export default function BasicTabs() {
         phaseNumber: "",
         eggWasted: "",
         amount: "",
-        eggLocationUpdateEggBatchDTOS: [],
-        done: true
+        eggLocationUpdateEggBatchDTOS: []
     })
+
+    const [done, setDone] = useState({
+        done: ""
+    });
 
     // Remain egg in updating
     const [remain, setRemain] = useState({
@@ -161,10 +170,10 @@ export default function BasicTabs() {
     //Get import details
     useEffect(() => {
         loadEggBatch();
-    },[eggBatchLoaded] );
+    }, [eggBatchLoaded]);
 
     const loadEggBatch = async () => {
-        
+
         const result = await axios.get(EGGBATCH_GET,
             {
                 params: { eggBatchId: id },
@@ -221,15 +230,18 @@ export default function BasicTabs() {
 
     // display total amount
     function cal() {
-         if (eggBatchDetail.eggProductList[8].amount ==0) {
-            let a = Number(document.getElementById("eggWasted").value);
-            let b = Number(document.getElementById("amount").value);
-    
-            let sum = remain.remain - (a + b);
-            document.getElementById('remain').innerHTML = sum;
-         } else {
-            document.getElementById('remain').innerHTML = "";
-         }
+        if (document.getElementById('remain') != null) {
+            if (eggBatchDetail.eggProductList[8].amount == 0) {
+                let a = Number(document.getElementById("eggWasted").value);
+                let b = Number(document.getElementById("amount").value);
+
+                let sum = remain.remain - (a + b);
+                document.getElementById('remain').innerHTML = sum;
+            } else {
+                document.getElementById('remain').innerHTML = "";
+            }
+        }
+
     }
     //Handle Change functions:
     //Update EggBatch
@@ -239,12 +251,21 @@ export default function BasicTabs() {
             ...updateEggBatchDTO,
             [field]: actualValue
         })
-        if (field == "amount" || field == "eggWasted") {
+        var e = document.getElementById("select");
+        if (e != null) {
+            var value = e.options[e.selectedIndex].value;
+            if (value == "") {
+                document.getElementById('amount').disabled = true;
+            }
+            if (value != "") {
+                document.getElementById('amount').disabled = false;
+            }
+        }
+
+        if ((field == "amount" && value != 5) || field == "eggWasted") {
             cal();
         }
     }
-
-    // Handle get to update egg batch funtion
 
 
     // Handle Submit functions
@@ -289,6 +310,41 @@ export default function BasicTabs() {
         }
     }
 
+
+    // Handle Update done 
+    const handleUpdateEggBatchDone = async () => {
+        console.log(eggBatchDetail.eggBatchId);
+        let response;
+        try {
+            response = await axios.put(EGGBATCH_UPDATE_DONE, {},
+                {
+                    params: {
+                        "eggBatchId": eggBatchDetail.eggBatchId,
+                        "done": true
+                    }
+                },
+                {
+
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Access-Control-Allow-Origin': '*'
+                    },
+                    withCredentials: true
+                }
+            );
+            setShow(false);
+            loadEggBatch();
+            setEggBatchLoaded(false);
+            toast.success("Đã hoàn thành lô trứng");
+        } catch (err) {
+            if (!err?.response) {
+                toast.error('Server không phản hồi');
+            } else {
+                toast.error(err.response.data);
+                console.log(err.response.data);
+            }
+        }
+    }
     return (
 
         <Box sx={{ width: '100%' }}>
@@ -369,6 +425,19 @@ export default function BasicTabs() {
                                 <p>{eggBatchDetail.progress}
                                 </p>
                             </div>
+                            <div className="col-md-3">
+                            </div>
+                            <div className="col-md-3">
+                                {
+                                    eggBatchDetail.status == 1
+                                    ?
+                                    <p className="text-red">Chưa hoàn thành</p>
+                                    :
+                                    <p className="text-green">Đã hoàn thành </p>
+
+                                }
+                                
+                            </div>
                         </div>
                     </div>
                     <div>
@@ -376,7 +445,7 @@ export default function BasicTabs() {
                     </div>
                     <table className="table table-bordered">
                         <thead>
-                        <tr>
+                            <tr>
                                 <th scope="col">Giai đoạn</th>
                                 <th scope="col" width="8%"></th>
                                 <th scope="col" width="8%">0</th>
@@ -407,7 +476,7 @@ export default function BasicTabs() {
                         </thead>
 
                         {
-                            eggBatchDetail.eggProductList.length > 0 ?
+                            eggBatchDetail.eggProductList && eggBatchDetail.eggProductList.length > 0 ?
                                 <tbody>
                                     <tr>
                                         <th scope="row">Ban đầu</th>
@@ -468,7 +537,6 @@ export default function BasicTabs() {
                                         <td>0</td>
                                     </tr>
                                 </tbody>
-
                         }
 
                     </table>
@@ -506,6 +574,7 @@ export default function BasicTabs() {
 
                                 <div className='container'>
                                     <div className='detailbody'>
+                                        <br />
                                         <div className="row">
                                             <div className="col-md-3" >
                                                 <label>Trứng hao hụt: </label>
@@ -514,11 +583,28 @@ export default function BasicTabs() {
                                                 <input className='form-control' id="eggWasted" name="eggWasted" type="number"
                                                     required onChange={(e) => handleUpdateEggBatchChange(e, "eggWasted")} />
                                             </div>
+                                            {
+                                                eggBatchDetail.eggProductList && eggBatchDetail.eggProductList.length > 0
+                                                    && eggBatchDetail.eggProductList[2].amount !== 0
+                                                    ? <>
+                                                        <div className="col-md-3" >
+                                                            <label>Số trứng đang ấp: </label>
+                                                        </div>
+                                                        <div className="col-md-3">
+                                                            <input disabled className='form-control'
+                                                                value={eggBatchDetail.eggProductList[2].amount.toLocaleString()} />
+                                                        </div>
+                                                    </>
+                                                    : ''
+                                            }
+                                        </div>
+                                        <br />
+                                        <div className="row">
                                             <div className="col-md-3 ">
-                                                <label>Trứng loại</label>
+                                                <label>Loại trứng cập nhật</label>
                                             </div>
                                             <div className="col-md-3">
-                                                <select required onChange={(e) => handleUpdateEggBatchChange(e, "phaseNumber")} id="" className="form-select" aria-label="Default select example">
+                                                <select required onChange={(e) => handleUpdateEggBatchChange(e, "phaseNumber")} id="select" className="form-select" aria-label="Default select example">
                                                     <option value="">Chọn</option>
                                                     <option value="0">Trứng vỡ/dập</option>
                                                     <option value="2">Trứng trắng/tròn, trứng không có phôi</option>
@@ -527,25 +613,63 @@ export default function BasicTabs() {
                                                     <option value="5">Trứng đang nở</option>
                                                     <option value="6">Trứng tắc</option>
                                                     <option value="8">Con đực</option>
-                                                    <option value="9">Con Cái</option>
+                                                    <option value="9">Con cái</option>
                                                 </select>
                                             </div>
+                                            {
+                                                eggBatchDetail.eggProductList && eggBatchDetail.eggProductList.length > 0
+                                                    && eggBatchDetail.eggProductList[6].amount !== 0
+                                                    ? <>
+                                                        <div className="col-md-3" >
+                                                            <label>Số trứng đang nở: </label>
+                                                        </div>
+                                                        <div className="col-md-3">
+                                                            <input disabled className='form-control'
+                                                                value={eggBatchDetail.eggProductList[6].amount.toLocaleString()} />
+                                                        </div>
+                                                    </>
+                                                    : ''
+                                            }
                                         </div>
                                         <br />
                                         <div className="row">
                                             <div className="col-md-3" >
-                                                <label>Số lượng</label>
+                                                <label>Số lượng cập nhật</label>
                                             </div>
                                             <div className="col-md-3">
-                                                <input className='form-control' id="amount" name="amount" type="number"
+                                                <input disabled className='form-control' id="amount" name="amount" type="number"
                                                     required onChange={(e) => handleUpdateEggBatchChange(e, "amount")} />
                                             </div>
-                                            <div className="col-md-3 ">
-                                                <label>Số lượng trứng còn lại</label>
-                                            </div>
-                                            <div className="col-md-3">
-                                                <p id="remain" name="remain">{remain.remain.toLocaleString()}</p>
-                                            </div>
+                                            {
+                                                eggBatchDetail.progress == 0
+                                                    || (eggBatchDetail.progress <= 5 && eggBatchDetail.eggProductList[2].amount !== 0)
+                                                    ?
+                                                    <>
+                                                        <div className="col-md-3 ">
+                                                            <label>Số lượng trứng còn lại</label>
+                                                            <p>(tổng trứng trong máy)</p>
+                                                        </div>
+                                                        <div className="col-md-3">
+                                                            <p className='form-control' id="remain" name="remain">{remain.remain.toLocaleString()}</p>
+                                                        </div>
+                                                    </>
+                                                    : ''
+                                            }
+                                            {
+                                                eggBatchDetail.progress >= 7
+                                                    ?
+                                                    <>
+                                                        <div className="col-md-3 ">
+                                                            <label>Số lượng con nở</label>
+                                                        </div>
+                                                        <div className="col-md-3">
+                                                            <p className='form-control' id="" name="">{eggBatchDetail.eggProductList[8].amount}</p>
+                                                        </div>
+                                                    </>
+                                                    : ''
+                                            }
+
+
                                         </div>
                                     </div>
                                     <br />
@@ -603,11 +727,15 @@ export default function BasicTabs() {
                                 </div>
                             </Modal.Body>
                             <div className='model-footer'>
+                                
                                 <button style={{ width: "20%" }} className="col-md-6 btn-light" type="submit">
                                     Xác nhận
                                 </button>
                                 <button style={{ width: "10%" }} onClick={handleClose} type='button' className="btn btn-light">
                                     Huỷ
+                                </button>
+                                <button style={{ width: "20%", float:"left" }} onClick={handleUpdateEggBatchDone} className="col-md-6 btn-light" type="button">
+                                    Hoàn thành
                                 </button>
                             </div>
                         </form>
@@ -623,7 +751,8 @@ export default function BasicTabs() {
                 pauseOnFocusLoss
                 draggable
                 pauseOnHover
-                theme="colored" />
+                theme="colored"
+                style={{ zIndex: "10000" }} />
         </Box>
     );
 }

@@ -219,11 +219,6 @@ public class ImportReceiptServiceImpl implements IImportReceiptService {
         if (eggBatchDTOList.size() == 0) {
             return new ResponseEntity<>("Hãy tạo ít nhất 1 lô trứng", HttpStatus.BAD_REQUEST);
         }
-        List<CreateEggBatchDTO> eggBatchDupList = new ArrayList<>();
-        Set inputSet = new HashSet(eggBatchDTOList);
-        if (inputSet.size() < eggBatchDTOList.size()) {
-            return new ResponseEntity<>("Các lô trứng phải khác loại nhau", HttpStatus.BAD_REQUEST);
-        }
         // Amount and Price
         float total = 0;
         for (CreateEggBatchDTO eggBatch : createImportDTO.getEggBatchList()) {

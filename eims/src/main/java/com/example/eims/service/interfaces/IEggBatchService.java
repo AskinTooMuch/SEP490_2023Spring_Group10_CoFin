@@ -40,4 +40,13 @@ public interface IEggBatchService {
      */
     public ResponseEntity<?> updateEggBatch(UpdateEggBatchDTO updateEggBatchDTO);
 
+    /**
+     * Update egg batch's state.
+     *
+     * @param eggBatchId the id of egg batch
+     * @param done boolean value for state
+     * @return
+     */
+    public ResponseEntity<?> setDoneEggBatch(Long eggBatchId, boolean done);
+
 }
