@@ -216,7 +216,7 @@ CREATE TABLE cost(
     cost_item	varchar(50) 	NOT NULL,
     cost_amount	decimal(15,2) 	NOT NULL,
     paid_amount	decimal(15,2) 	NOT NULL,
-    issue_date	datetime		NOT NULL,
+    issue_date	date		NOT NULL,
     note		varchar(255),
     status 		boolean 		NOT NULL
 );

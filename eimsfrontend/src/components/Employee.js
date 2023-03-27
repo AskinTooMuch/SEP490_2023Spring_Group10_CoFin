@@ -385,16 +385,18 @@ export default function BasicTabs() {
                                         <p>Lương<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                     </div>
                                     <div className="col-md-6">
-                                        <input required style={{ width: "100%" }} placeholder="0"
+                                        <input required style={{ width: "100%" }} placeholder="0" 
+                                            type='number'
+                                            min='0'
                                             onChange={(e) => handleCreateEmployeeChange(e, "salary")} />
                                     </div>
                                 </div>
                             </Modal.Body>
                             <div className='model-footer'>
-                                <button style={{ width: "30%" }} className="col-md-6 btn-light">
+                                <button style={{ width: "30%" }} type="submit" className="col-md-6 btn-light">
                                     Tạo
                                 </button>
-                                <button style={{ width: "20%" }} onClick={handleClose} className="btn btn-light">
+                                <button style={{ width: "20%" }} type="button" onClick={handleClose} className="btn btn-light">
                                     Huỷ
                                 </button>
                             </div>

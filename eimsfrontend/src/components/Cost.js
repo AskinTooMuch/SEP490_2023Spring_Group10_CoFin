@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect, useRef } from 'react';
+import { useNavigate, useLocation } from "react-router-dom";
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import SearchIcon from '@mui/icons-material/Search';
 import ImportExportIcon from '@mui/icons-material/ImportExport';
@@ -9,6 +9,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from 'axios';
 //Toast
 import { ToastContainer, toast } from 'react-toastify';
+import { EditOff } from '@mui/icons-material';
 const Cost = () => {
     //Show-hide Popup
     const [show, setShow] = useState(false);
@@ -18,7 +19,182 @@ const Cost = () => {
     const [show2, setShow2] = useState(false);
     const handleClose2 = () => setShow2(false);
     const handleShow2 = () => setShow2(true);
+
+    //URL
+    const COST_CREATE = "/api/cost/create";
+    const COST_ALL = "/api/cost/all";
+    const COST_GET = "/api/cost/get";
+    const COST_UPDATE_SAVE = "/api/cost/update/save"
+
+    const [value, setValue] = React.useState(0);
+    const handleChange = (event, newValue) => {
+        setValue(newValue);
+    };
+
     //Data holding objects
+    const [costList, setCostList] = useState([]);
+    //Get sent params
+    const { state } = useLocation();
+    //DTOs
+    //CreateCostDTO
+    const [createCostDTO, setCreateCostDTO] = useState({
+        userId: sessionStorage.getItem("curUserId"),
+        facilityId: sessionStorage.getItem("facilityId"),
+        costItem: "",
+        costAmount: "0",
+        paidAmount: "0",
+        issueDate: "",
+        note: ""
+    })
+
+    //Handle Change functions:
+    //CreateCost
+    const handleCreateCostChange = (event, field) => {
+        let actualValue = event.target.value
+        setCreateCostDTO({
+            ...createCostDTO,
+            [field]: actualValue
+        })
+    }
+    //EditCost
+    const handleEditCostChange = (event, field) => {
+        let actualValue = event.target.value
+        setEditCostDTO({
+            ...editCostDTO,
+            [field]: actualValue
+        })
+    }
+
+    //Handle Submit functions
+    //Handle submit new Cost
+    const handleCreateCostSubmit = async (event) => {
+        event.preventDefault();
+        let response;
+        try {
+            response = await axios.post(COST_CREATE,
+                createCostDTO,
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Access-Control-Allow-Origin': '*'
+                    },
+                    withCredentials: true
+                }
+            );
+            setCreateCostDTO({
+                userId: sessionStorage.getItem("curUserId"),
+                facilityId: sessionStorage.getItem("facilityId"),
+                costItem: "",
+                costAmount: "",
+                paidAmount: "",
+                issueDate: "",
+                note: ""
+            });
+            console.log(response);
+            loadCostList();
+            toast.success("Tạo thành công");
+            setShow(false);
+        } catch (err) {
+            if (!err?.response) {
+                toast.error('Server không phản hồi');
+            } else {
+                toast.error(err.response.data);
+            }
+        }
+    }
+
+    // Get list of cost and show
+    // Get cost list
+    useEffect(() => {
+        loadCostList();
+    }, []);
+
+    // Request Cost list and load the cost list into the table rows
+    const loadCostList = async () => {
+        const result = await axios.get(COST_ALL,
+            {
+                params: { userId: sessionStorage.getItem("curUserId") },
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Access-Control-Allow-Origin': '*'
+                },
+                withCredentials: true
+            });
+        setCostList(result.data);
+        console.log(costList.length)
+
+
+        // Toast Delete Cost success
+        console.log("state:====" + state)
+        if (state != null) toast.success(state);
+    }
+
+    //EditCostDTO
+    const [editCostDTO, setEditCostDTO] = useState({
+        userId: "",
+        facilityId: "",
+        costItem: "",
+        costAmount: "",
+        paidAmount: "",
+        issueDate: "",
+        note: ""
+    })
+
+    // Request Cost detail and load the cost list into the table rows
+    const loadCostDetail = async (findCostId) => {
+        const result = await axios.get(COST_GET,
+            {
+                params: { costId: findCostId },
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Access-Control-Allow-Origin': '*'
+                },
+                withCredentials: true
+            });
+        setEditCostDTO(result.data);
+        console.log(editCostDTO)
+        handleShow2();
+        // Toast Delete Cost success
+        console.log("state:====" + state)
+        if (state != null) toast.success(state);
+    }
+
+    const handleEditCostSubmit = async (event) => {
+        event.preventDefault();
+        let response;
+        try {
+            response = await axios.post(COST_UPDATE_SAVE,
+                editCostDTO,
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Access-Control-Allow-Origin': '*'
+                    },
+                    withCredentials: true
+                }
+            );
+            setEditCostDTO({
+                userId: "",
+                facilityId: "",
+                costItem: "",
+                costAmount: "",
+                paidAmount: "",
+                issueDate: "",
+                note: ""
+            })
+            loadCostList();
+            console.log(response);
+            toast.success("Cập nhật thành công");
+            handleClose2();
+        } catch (err) {
+            if (!err?.response) {
+                toast.error('Server không phản hồi');
+            } else {
+                toast.error(err.response.data);
+            }
+        }
+    }
+
 
     return (
         <div>
@@ -38,13 +214,17 @@ const Cost = () => {
                                         <p>Tên chi phí<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                     </div>
                                     <div className="col-md-6">
-                                        <input required style={{ width: "100%" }} placeholder="Tiền sửa máy tháng 1/2023" />
+                                        <input required style={{ width: "100%" }} placeholder="Tiền sửa máy tháng 1/2023"
+                                            onChange={(e) => handleCreateCostChange(e, "costItem")} />
                                     </div>
                                     <div className="col-md-6">
                                         <p>Tổng chi phí <FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                     </div>
                                     <div className="col-md-6">
-                                        <input required style={{ width: "100%" }} placeholder="0" />
+                                        <input required style={{ width: "100%" }} placeholder="0"
+                                            type='number'
+                                            min='0'
+                                            onChange={(e) => handleCreateCostChange(e, "costAmount")} />
                                     </div>
                                 </div>
                                 <div className="row">
@@ -52,22 +232,27 @@ const Cost = () => {
                                         <p>Đã thanh toán</p>
                                     </div>
                                     <div className="col-md-6">
-                                        <input style={{ width: "100%" }} placeholder="0" />
+                                        <input style={{ width: "100%" }} placeholder="0"
+                                            type='number'
+                                            min="0"
+                                            onChange={(e) => handleCreateCostChange(e, "paidAmount")}
+                                            max={createCostDTO.costAmount} />
                                     </div>
                                     <div className="col-md-6">
                                         <p>Ghi chú </p>
                                     </div>
                                     <div className="col-md-6">
-                                        <textarea style={{ width: "100%" }} />
+                                        <textarea style={{ width: "100%" }}
+                                            onChange={(e) => handleCreateCostChange(e, "note")} />
                                     </div>
                                 </div>
                             </div>
                         </Modal.Body>
                         <div className='model-footer'>
-                            <button style={{ width: "20%" }} type="submit" className="col-md-6 btn-light" >
+                            <button style={{ width: "20%" }} type="submit" className="col-md-6 btn-light" onClick={handleCreateCostSubmit}>
                                 Tạo
                             </button>
-                            <button className='btn btn-light' style={{ width: "20%" }} onClick={handleClose}>
+                            <button className='btn btn-light' type="button" style={{ width: "20%" }} onClick={handleClose}>
                                 Huỷ
                             </button>
                         </div>
@@ -113,20 +298,21 @@ const Cost = () => {
                                     </tr>
                                 </thead>
                                 <tbody className="u-table-body">
-                                    <tr style={{ height: "76px" }} onClick={handleShow2}>
-                                        <td className="u-border-1 u-border-grey-30 u-first-column u-grey-5 u-table-cell u-table-cell-5">Tiền mua máy ấp</td>
-                                        <td className="u-border-1 u-border-grey-30 u-table-cell">27/10/2022</td>
-                                        <td className="u-border-1 u-border-grey-30 u-table-cell">100.000.000 VNĐ</td>
-                                        <td className="u-border-1 u-border-grey-30 u-table-cell">100.000.000 VNĐ</td>
-                                        <td className="u-border-1 u-border-grey-30 u-table-cell text-green">Đã thanh toán đủ</td>
-                                    </tr>
-                                    <tr style={{ height: "76px" }}>
-                                        <td className="u-border-1 u-border-grey-30 u-first-column u-grey-5 u-table-cell u-table-cell-9">Tiền mua máy nở</td>
-                                        <td className="u-border-1 u-border-grey-30 u-table-cell">15/11/2022</td>
-                                        <td className="u-border-1 u-border-grey-30 u-table-cell">120.000.000 VNĐ</td>
-                                        <td className="u-border-1 u-border-grey-30 u-table-cell">100.000.000 VNĐ</td>
-                                        <td className="u-border-1 u-border-grey-30 u-table-cell text-red">Chưa thanh toán đủ</td>
-                                    </tr>
+                                    {
+                                        costList && costList.length > 0 ?
+                                            costList.map((item, index) =>
+                                                <tr style={{ height: "76px" }} onClick={(e) => loadCostDetail(item.costId)}>
+                                                    <td className="u-border-1 u-border-grey-30 u-first-column u-grey-5 u-table-cell u-table-cell-5">{item.costItem}</td>
+                                                    <td className="u-border-1 u-border-grey-30 u-table-cell">{item.issueDate}</td>
+                                                    <td className="u-border-1 u-border-grey-30 u-table-cell">{item.costAmount} <span style={{ float: "right" }}>VNĐ</span></td>
+                                                    <td className="u-border-1 u-border-grey-30 u-table-cell">{item.paidAmount} <span style={{ float: "right" }}>VNĐ</span></td>
+                                                    {
+                                                        item.paidAmount === item.costAmount
+                                                            ? <td className="u-border-1 u-border-grey-30 u-table-cell text-green">Đã thanh toán đủ</td>
+                                                            : <td className="u-border-1 u-border-grey-30 u-table-cell text-red">Chưa thanh toán đủ</td>
+                                                    }</tr>
+                                            ) : "Nothing"
+                                    }
                                 </tbody>
                             </table>
                         </div>
@@ -137,7 +323,7 @@ const Cost = () => {
 
             <Modal show={show2} onHide={handleClose2}
                 size="lg" aria-labelledby="contained-modal-title-vcenter" centered >
-                <form>
+                <form >
                     <Modal.Header closeButton onClick={handleClose2}>
                         <Modal.Title>Cập nhật thông tin chi phí</Modal.Title>
                     </Modal.Header>
@@ -148,36 +334,52 @@ const Cost = () => {
                                     <p>Tên chi phí<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                 </div>
                                 <div className="col-md-6">
-                                    <input required style={{ width: "100%" }} placeholder="Tiền mua máy nở" />
+                                    <input required style={{ width: "100%" }} placeholder="Tiền mua máy nở"
+                                        value={editCostDTO.costItem}
+                                        onChange={(e) => handleEditCostChange(e, "costItem")} />
                                 </div>
                                 <div className="col-md-6">
-                                    <p>Tổng chi phí <FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
+                                    <p>Tổng chi phí <FontAwesomeIcon className="star" icon={faStarOfLife}
+                                    /></p>
                                 </div>
                                 <div className="col-md-6">
-                                    <input required style={{ width: "100%" }} placeholder="120.000.000" />
+                                    <input required style={{ width: "100%" }} placeholder="0"
+                                        type='number'
+                                        step='0.000000000000000001'
+                                        min='0'
+                                        onChange={(e) => handleEditCostChange(e, "costAmount")}
+                                        value={editCostDTO.costAmount} />
                                 </div>
+
                             </div>
                             <div className="row">
                                 <div className="col-md-6">
                                     <p>Đã thanh toán</p>
                                 </div>
                                 <div className="col-md-6">
-                                    <input style={{ width: "100%" }} placeholder="100.000.000" />
+                                    <input style={{ width: "100%" }}
+                                        type='number'
+                                        step='0.000000000000000001'
+                                        min='0'
+                                        value={editCostDTO.paidAmount}
+                                        onChange={(e) => handleEditCostChange(e, "paidAmount")} />
                                 </div>
                                 <div className="col-md-6">
                                     <p>Ghi chú</p>
                                 </div>
                                 <div className="col-md-6">
-                                    <textarea style={{ width: "100%" }} />
+                                    <textarea style={{ width: "100%" }}
+                                        value={editCostDTO.note}
+                                        onChange={(e) => handleEditCostChange(e, "note")} />
                                 </div>
                             </div>
                         </div>
                     </Modal.Body>
                     <div className='model-footer'>
-                        <button style={{ width: "30%" }} className="col-md-6 btn-light" type='submit'>
+                        <button style={{ width: "30%" }} onClick={handleEditCostSubmit} className="col-md-6 btn-light" type='submit'>
                             Cập nhật
                         </button>
-                        <button style={{ width: "20%" }} onClick={handleClose2} className="btn btn-light">
+                        <button style={{ width: "20%" }} type='button' onClick={handleClose2} className="btn btn-light">
                             Huỷ
                         </button>
                     </div>
@@ -185,6 +387,16 @@ const Cost = () => {
             </Modal>
 
             {/* End: Table for supplier list */}
+            <ToastContainer position="top-left"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="colored" />
 
         </div>
     );

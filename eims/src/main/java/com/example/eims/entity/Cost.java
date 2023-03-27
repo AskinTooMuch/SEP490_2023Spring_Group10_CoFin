@@ -28,6 +28,7 @@ public class Cost {
     private Long facilityId;
     private String costItem;
     private Float costAmount;
+    private Float paidAmount;
     private Date issueDate;
     private String note;
     private boolean status;

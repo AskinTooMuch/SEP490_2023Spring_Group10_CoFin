@@ -541,14 +541,13 @@ class CustomerServiceImplTest {
         dto.setCustomerName("Nguyen Van C");
         dto.setCustomerPhone("0932321198");
         dto.setCustomerAddress("{\"city\":\"Tỉnh Hải Dương\",\"district\":\"Huyện Gia Lộc\",\"ward\":\"Xã Hoàng Diệu\",\"street\":\"Thôn Nghĩa Hy\"}");
-        dto.setCustomerMail("a_b_c@gmail.com"	);
+        dto.setCustomerMail("a_b_c@gmail.com");
         dto.setStatus(1);
         String oldPhone = "0987654320";
         // Define behaviour of repository
         when(customerRepository.findCustomerPhoneById(1L)).thenReturn(oldPhone);
         when(customerRepository.existsByCustomerPhoneAndUserId(dto.getCustomerPhone(), dto.getUserId()))
                 .thenReturn(false);
-        when(customerRepository.findByCustomerId(dto.getCustomerId())).thenReturn(Optional.of(customer));
         // Run service method
         ResponseEntity<?> responseEntity = customerService.updateCustomer(dto);
         System.out.println(responseEntity.toString());

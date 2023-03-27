@@ -43,10 +43,10 @@ function ConfirmBox({ open, closeDialog, title, deleteFunction }) {
                                 flexDirection: "column",
                             }}
                         >
-                            <Typography variant="h5">Xoá {title}</Typography>
+                            <Typography variant="h5">Xoá </Typography>
 
                             <Typography variant="body1">
-                                Bạn có chắc chắn muốn xoá {title} ?
+                                Bạn có chắc chắn muốn xoá không?
                             </Typography>
                         </Box>
                     </Grid>

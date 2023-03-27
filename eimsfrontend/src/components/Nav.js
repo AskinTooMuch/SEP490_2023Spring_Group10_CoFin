@@ -37,7 +37,7 @@ const Nav = () => {
     }
     const [notify, setNotify] = React.useState(null);
     const open = Boolean(notify);
-    const handleClickNoti = (event: React.MouseEvent<HTMLElement>) => {
+    const handleClickNoti = (event: React.MouseEvent<HTMLElement> ) => {
         setNotify(event.currentTarget);
     };
     const handleCloseNoti = () => {
@@ -268,15 +268,15 @@ const Nav = () => {
                     sx: {
                         overflow: 'hidden',
                         filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
-                        mt: "-30vh",
+                        
                     },
                     style: {
                         width: '350px',
                         borderRadius: '15px'
                     },
                 }}
-                transformOrigin={{ horizontal: 'right', vertical: 'top' }}
-                anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+                transformOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+                anchorOrigin={{ horizontal: 'right', vertical: 'top' }}
             >
                 {/* Dropdown Notification List (only 5) */}
                 <div className='notify'>
