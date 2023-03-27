@@ -207,7 +207,7 @@ export default function BasicTabs() {
     }
 
     //Function for populating dropdowns
-    function loadDistrict(index) {
+    const loadDistrict = (index) => {
         console.log("City " + index);
         setCityIndex(index);
         const districtOnIndex = fullAddresses[index].Districts;
@@ -219,7 +219,7 @@ export default function BasicTabs() {
     }
 
     //Load user ward list
-    function loadWard(districtIndex, cIndex) {
+    const loadWard = (districtIndex, cIndex) => {
         if (cIndex === -1) {
             cIndex = cityIndex;
         }
@@ -233,20 +233,22 @@ export default function BasicTabs() {
         setWard(wardList);
     }
 
-    function saveWard(index) {
+    const saveWard = (index) => {
         console.log("Ward " + index);
         setWardIndex(index);
     }
 
-    function saveAddressJson(s) {
-        console.log("ward " + wardIndex);
+    const saveAddressJson = (s) => {
         setStreet(s);
-        updateAddressJson.city = fullAddresses[cityIndex].Name;
-        updateAddressJson.district = fullAddresses[cityIndex].Districts[districtIndex].Name;
-        updateAddressJson.ward = fullAddresses[cityIndex].Districts[districtIndex].Wards[wardIndex].Name;
-        updateAddressJson.street = street;
+        setUpdateAddressJson({
+            city: fullAddresses[cityIndex].Name,
+            district: fullAddresses[cityIndex].Districts[districtIndex].Name,
+            ward: fullAddresses[cityIndex].Districts[districtIndex].Wards[wardIndex].Name,
+            street: s
+          });
         updateSupplierDTO.supplierAddress = JSON.stringify(updateAddressJson);
-        console.log(addressJson);
+        console.log(updateAddressJson.street);
+        console.log(addressJson.street);
     }
 
     //Handle Change functions:
@@ -259,9 +261,11 @@ export default function BasicTabs() {
         })
     }
 
+    //Cancel update: Revert changes
     const handleCancel = () => {
         handleClose();
         setUpdateAddressJson(addressJson);
+        setStreet(addressJson.street);
     }
 
     //Handle Submit functions
@@ -281,10 +285,11 @@ export default function BasicTabs() {
                     withCredentials: true
                 }
             );
-            //loadSupplier(id);
+            loadSupplier();
             console.log(response);
             toast.success(response.data);
             setShow(false);
+            
         } catch (err) {
             if (!err?.response) {
                 toast.error('Server không phản hồi');
@@ -458,7 +463,7 @@ export default function BasicTabs() {
                                 </div>
                                 <div className="row">
                                     <div className="col-md-4">
-                                        <label htmlFor='' className='col-form-label'>Trạng thái&nbsp;<FontAwesomeIcon className="star" icon={faStarOfLife} /></label>
+                                        <label htmlFor='updateSupplierStatus' className='col-form-label'>Trạng thái&nbsp;<FontAwesomeIcon className="star" icon={faStarOfLife} /></label>
                                     </div>
                                     <div className="col-md-8">
                                         <select className="form-select mt-1" aria-label="Default select example" id="updateSupplierStatus"
@@ -470,14 +475,14 @@ export default function BasicTabs() {
                                 </div>
                             </div>
                         </Modal.Body>
-                        <Modal.Footer>
-                            <Button variant="danger" style={{ width: "20%" }} onClick={handleCancel} id="cancelUpdateSupplier">
-                                Huỷ
-                            </Button>
-                            <Button variant="success" style={{ width: "30%" }} className="col-md-6" id="confirmUpdateSupplier" onClick={handleUpdateSupplierSubmit}>
+                        <div className='model-footer'>
+                            <button type='submit' style={{ width: "30%" }} className="btn-light" id="confirmUpdateSupplier" onClick={handleUpdateSupplierSubmit}>
                                 Cập nhật
-                            </Button>
-                        </Modal.Footer>
+                            </button>
+                            <button style={{ width: "20%" }} className="btn-light" onClick={handleCancel} id="cancelUpdateSupplier">
+                                Huỷ
+                            </button>
+                        </div>
                     </Modal>
                     </form>
                     <div className='detailbody'>

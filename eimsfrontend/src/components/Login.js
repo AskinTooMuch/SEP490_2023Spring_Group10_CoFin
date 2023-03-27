@@ -57,15 +57,10 @@ const Login = () => {
       if (responseJson.facilityId != null) { /* role = OWNER/EMPLOYEE */
         sessionStorage.setItem("facilityId", responseJson.facilityId);
       }
-      toast.success("Đăng nhập thành công")
       if ((responseJson.roleId === 2) || (responseJson.roleId === 3)) {
-        setTimeout(() => {
-          navigate("/egg");
-        }, 1000);
+        navigate("/egg");
       } else if (responseJson.roleId === 4) {
-        setTimeout(() => {
-          navigate("/accountmanage");
-        }, 1000);
+        navigate("/accountmanage");
       }
 
     } catch (err) {

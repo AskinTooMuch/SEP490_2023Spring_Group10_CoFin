@@ -118,6 +118,13 @@ export default function BasicTabs() {
         street: ""
     });
 
+    const [updateAddressJson, setUpdateAddressJson] = useState({
+        city: "",
+        district: "",
+        ward: "",
+        street: ""
+    });
+
     //Get customer details
     useEffect(() => {
         console.log("Get customer");
@@ -195,6 +202,7 @@ export default function BasicTabs() {
             }
         }
         setStreet(addressJson.street);
+        setUpdateAddressJson(addressJson);
     }
 
     //Function for populating dropdowns
@@ -231,13 +239,14 @@ export default function BasicTabs() {
     }
 
     function saveAddressJson(s) {
-        console.log("ward " + wardIndex);
         setStreet(s);
-        addressJson.city = fullAddresses[cityIndex].Name;
-        addressJson.district = fullAddresses[cityIndex].Districts[districtIndex].Name;
-        addressJson.ward = fullAddresses[cityIndex].Districts[districtIndex].Wards[wardIndex].Name;
-        addressJson.street = street;
-        updateCustomerDTO.customerAddress = JSON.stringify(addressJson);
+        setUpdateAddressJson({
+            city: fullAddresses[cityIndex].Name,
+            district: fullAddresses[cityIndex].Districts[districtIndex].Name,
+            ward: fullAddresses[cityIndex].Districts[districtIndex].Wards[wardIndex].Name,
+            street: s
+          });
+        updateCustomerDTO.customerAddress = JSON.stringify(updateAddressJson);
     }
 
     //Handle Change functions:
@@ -248,6 +257,13 @@ export default function BasicTabs() {
             ...updateCustomerDTO,
             [field]: actualValue
         })
+    }
+
+    //Cancel update: Revert changes
+    const handleCancel = () => {
+        handleClose();
+        setUpdateAddressJson(addressJson);
+        setStreet(addressJson.street);
     }
 
     //Handle Submit functions
@@ -419,7 +435,7 @@ export default function BasicTabs() {
                                             onChange={(e) => saveAddressJson(e.target.value)}
                                             required
                                             className="form-control mt-1"
-                                            value={addressJson.street}
+                                            value={street}
                                             placeholder='Địa chỉ cụ thể' />
                                     </div>
                                 </div>
@@ -441,7 +457,7 @@ export default function BasicTabs() {
                                 <button id="confirmUpdateCustomer" style={{ width: "30%" }} className="col-md-6 btn-light" type='submit'>
                                     Cập nhật
                                 </button>
-                                <button id="cancelUpdateCustomer" style={{ width: "20%" }} className="btn btn-light" onClick={handleClose} type='button'>
+                                <button id="cancelUpdateCustomer" style={{ width: "20%" }} className="btn btn-light" onClick={handleCancel} type='button'>
                                     Huỷ
                                 </button>
                             </div>
