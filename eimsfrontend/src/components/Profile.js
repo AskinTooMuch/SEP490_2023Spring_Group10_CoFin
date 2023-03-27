@@ -24,54 +24,20 @@ const Profile = () => {
     const [addressLoaded, setAddressLoaded] = useState(false);
     const [addressLoaded1, setAddressLoaded1] = useState(false);
     const [userDetailLoaded, setUserDetailLoaded] = useState(false);
-    const [addressJson, setAddressJson] = useState({
+    // Json to store addresses to show
+    const [addressUserShow, setAddressUserShow] = useState({
         city: "",
         district: "",
         ward: "",
         street: ""
     });
 
-
-    const [addressJson1, setAddressJson1] = useState({
+    const [addressFaciShow, setAddressFaciShow] = useState({
         city: "",
         district: "",
         ward: "",
         street: ""
     });
-
-    //show-hide password 
-    const [passwordShown, setPasswordShown] = useState(false);
-    const [passwordShown2, setPasswordShown2] = useState(false);
-    const [passwordShown3, setPasswordShown3] = useState(false);
-    const togglePasswordVisiblity = () => {
-        setPasswordShown(passwordShown ? false : true);
-    };
-    const togglePasswordVisiblity2 = () => {
-        setPasswordShown2(passwordShown2 ? false : true);
-    };
-    const togglePasswordVisiblity3 = () => {
-        setPasswordShown3(passwordShown3 ? false : true);
-    };
-
-    //show-hide popup change password
-    const [show, setShow] = useState(false);
-    const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
-
-    //show-hide popup edit profile
-    const [showProfile, setShowProfile] = useState(false);
-    const handleCloseProfile = () => setShowProfile(false);
-    const handleShow2 = () => setShowProfile(true);
-
-    ////show-hide popup edit facility
-    const [showFaci, setShowFaci] = useState(false);
-    const handleCloseFaci = () => setShowFaci(false);
-    const handleShowFaci = () => setShowFaci(true);
-    const inf_fetched_ref = useRef(false);
-
-    const [passFocus, setPassFocus] = useState(false);
-
-    const userRef = useRef();
 
     // DTO for sending change password request
     const [changePasswordDTO, setChangePasswordDTO] = useState({
@@ -127,6 +93,60 @@ const Profile = () => {
         subStatus: ""
     });
 
+    // Json to store addresses to update
+    const [addressUserEdit, setAddressUserEdit] = useState(
+        {
+            street: "",
+            ward: "",
+            district: "",
+            city: ""
+        }
+    );
+    const [addressFaciEdit, setFaciAddress] = useState(
+        {
+            street: "",
+            ward: "",
+            district: "",
+            city: ""
+        }
+    );
+
+    //show-hide password 
+    const [passwordShown, setPasswordShown] = useState(false);
+    const [passwordShown2, setPasswordShown2] = useState(false);
+    const [passwordShown3, setPasswordShown3] = useState(false);
+    const togglePasswordVisiblity = () => {
+        setPasswordShown(passwordShown ? false : true);
+    };
+    const togglePasswordVisiblity2 = () => {
+        setPasswordShown2(passwordShown2 ? false : true);
+    };
+    const togglePasswordVisiblity3 = () => {
+        setPasswordShown3(passwordShown3 ? false : true);
+    };
+
+    //show-hide popup change password
+    const [show, setShow] = useState(false);
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
+
+    //show-hide popup edit profile
+    const [showProfile, setShowProfile] = useState(false);
+    const handleCloseProfile = () => setShowProfile(false);
+    const handleShow2 = () => setShowProfile(true);
+
+    ////show-hide popup edit facility
+    const [showFaci, setShowFaci] = useState(false);
+    const handleCloseFaci = () => setShowFaci(false);
+    const handleShowFaci = () => setShowFaci(true);
+    const inf_fetched_ref = useRef(false);
+
+    const [passFocus, setPassFocus] = useState(false);
+
+    const userRef = useRef();
+
+
+
 
     //Full Json addresses
     // User
@@ -152,23 +172,6 @@ const Profile = () => {
     const [districtIndex1, setDistrictIndex1] = useState();
     const [wardIndex1, setWardIndex1] = useState();
     const [street1, setStreet1] = useState();
-    //address
-    const [userAddress, setUserAddress] = useState(
-        {
-            street: "",
-            ward: "",
-            district: "",
-            city: ""
-        }
-    );
-    const [faciAddress, setFaciAddress] = useState(
-        {
-            street: "",
-            ward: "",
-            district: "",
-            city: ""
-        }
-    );
 
     const [validPwd, setValidPwd] = useState(false);
     const [matchPwd, setMatchPwd] = useState('');
@@ -177,9 +180,7 @@ const Profile = () => {
     // Set value for address fields
     //User
     useEffect(() => {
-        console.log("Load address");
         loadAddress();
-        console.log(fullAddresses);
     }, [addressLoaded]);
 
     //Get user details
@@ -194,8 +195,6 @@ const Profile = () => {
             {});
         setFullAddresses(result.data);
         setFullAddresses1(result.data);
-        console.log("Full address");
-        console.log(fullAddresses);
         // Set inf
         const cityList = fullAddresses.slice();
         for (let i in cityList) {
@@ -220,8 +219,8 @@ const Profile = () => {
                 });
             const responseJson = result.data;
             console.log(responseJson);
-            setAddressJson(JSON.parse(responseJson.userAddress));
-            setAddressJson1(JSON.parse(responseJson.facilityAddress));
+            setAddressUserShow(JSON.parse(responseJson.userAddress));
+            setAddressFaciShow(JSON.parse(responseJson.facilityAddress));
             //Set account information
             setAccountInformation({
                 userId: responseJson.userId,
@@ -233,8 +232,16 @@ const Profile = () => {
                 userAddress: responseJson.userAddress,
                 userStatus: responseJson.userStatus
             })
-            setUserAddress(JSON.parse(responseJson.userAddress));
-
+            setAddressUserEdit(JSON.parse(responseJson.userAddress));
+            setUpdateUserDTO(
+                {
+                    userId: sessionStorage.getItem("curUserId"),
+                    username: accountInformation.username,
+                    dob: accountInformation.dob,
+                    email: accountInformation.email,
+                    address: accountInformation.address
+                });
+            setStreet(addressUserShow.street);
             //Set facility information
             setFacilityInformation({
                 facilityId: responseJson.facilityId,
@@ -249,6 +256,19 @@ const Profile = () => {
                 subStatus: responseJson.subStatus
             })
             setFaciAddress(JSON.parse(responseJson.facilityAddress));
+            setUpdateFacilityDTO({
+                facilityId: sessionStorage.getItem("facilityId"),
+                facilityName: facilityInformation.facilityName,
+                facilityAddress: facilityInformation.facilityAddress,
+                facilityFoundDate: facilityInformation.facilityFoundDate,
+                businessLicenseNumber: facilityInformation.businessLicenseNumber,
+                hotline: facilityInformation.hotline,
+                facilityStatus: facilityInformation.facilityStatus,
+                subscriptionId: facilityInformation.subscriptionId,
+                subscriptionExpirationDate: facilityInformation.subscriptionExpirationDate,
+                subStatus: facilityInformation.subStatus
+            });
+            setStreet1(addressFaciShow.street);
         } catch (err) {
             if (!err?.response) {
                 toast.error('Server không phản hồi');
@@ -321,28 +341,25 @@ const Profile = () => {
         setWardIndex1(index);
     }
     function saveAddressJsonUser(s) {
-        console.log("ward " + wardIndex);
         setStreet(s);
-        addressJson.city = fullAddresses[cityIndex].Name;
-        addressJson.district = fullAddresses[cityIndex].Districts[districtIndex].Name;
-        addressJson.ward = fullAddresses[cityIndex].Districts[districtIndex].Wards[wardIndex].Name;
-        addressJson.street = street;
-        updateUserDTO.address = JSON.stringify(addressJson);
+        addressUserEdit.city = fullAddresses[cityIndex].Name;
+        addressUserEdit.district = fullAddresses[cityIndex].Districts[districtIndex].Name;
+        addressUserEdit.ward = fullAddresses[cityIndex].Districts[districtIndex].Wards[wardIndex].Name;
+        addressUserEdit.street = s;
+        updateUserDTO.address = JSON.stringify(addressUserEdit);
     }
 
     function saveAddressJsonFacility(s) {
-        console.log("ward " + wardIndex1);
         setStreet1(s);
-        addressJson1.city = fullAddresses1[cityIndex1].Name;
-        addressJson1.district = fullAddresses1[cityIndex1].Districts[districtIndex1].Name;
-        addressJson1.ward = fullAddresses1[cityIndex1].Districts[districtIndex1].Wards[wardIndex1].Name;
-        addressJson1.street = street1;
-        updateFacilityDTO.facilityAddress = JSON.stringify(addressJson1);
+        addressFaciEdit.city = fullAddresses1[cityIndex1].Name;
+        addressFaciEdit.district = fullAddresses1[cityIndex1].Districts[districtIndex1].Name;
+        addressFaciEdit.ward = fullAddresses1[cityIndex1].Districts[districtIndex1].Wards[wardIndex1].Name;
+        addressFaciEdit.street = s;
+        updateFacilityDTO.facilityAddress = JSON.stringify(addressFaciEdit);
     }
 
     // Get user's information to update
     const handleUpdateUserGet = async () => {
-        setShowProfile(true);
         try {
             const response = await axios.get(USER_UPDATE_GET,
                 {
@@ -367,12 +384,12 @@ const Profile = () => {
             // Get index of dropdowns
             console.log("load values");
             console.log(fullAddresses);
-            console.log(addressJson);
+            console.log(addressUserShow);
             for (let i in city) {
                 console.log(i);
-                if (addressJson.city === city[i].label) {
+                if (addressUserShow.city === city[i].label) {
                     setCityIndex(i);
-                    addressJson.city = fullAddresses[i].Name;
+                    addressUserShow.city = fullAddresses[i].Name;
                     console.log("City " + i);
                     setCityIndex(i);
                     const districtOnIndex = fullAddresses[i].Districts;
@@ -382,10 +399,10 @@ const Profile = () => {
                     }
                     setDistrict(districtList);
                     for (let j in districtList) {
-                        if (addressJson.district === districtList[j].label) {
+                        if (addressUserShow.district === districtList[j].label) {
                             setDistrictIndex(j);
                             console.log(j);
-                            addressJson.district = fullAddresses[i].Districts[j].Name;
+                            addressUserShow.district = fullAddresses[i].Districts[j].Name;
                             console.log("District " + j);
                             setDistrictIndex(j);
                             const wardOnIndex = fullAddresses[i].Districts[j].Wards;
@@ -395,9 +412,9 @@ const Profile = () => {
                             }
                             setWard(wardList);
                             for (let k in wardList) {
-                                if (addressJson.ward === wardList[k].label) {
+                                if (addressUserShow.ward === wardList[k].label) {
                                     setWardIndex(k);
-                                    addressJson.ward = fullAddresses[i].Districts[j].Wards[k].Name;
+                                    addressUserShow.ward = fullAddresses[i].Districts[j].Wards[k].Name;
                                     break;
                                 }
                             }
@@ -407,9 +424,10 @@ const Profile = () => {
                     break;
                 }
             }
-            setStreet(addressJson.street);
-            console.log(addressJson);
+            setStreet(addressUserShow.street);
+            console.log(addressUserShow);
             setUserDetailLoaded(true);
+            setShowProfile(true);
         } catch (err) {
             if (!err?.response) {
                 toast.error('Server không phản hồi');
@@ -422,7 +440,6 @@ const Profile = () => {
 
     // Get facility's information to update
     const handleUpdateFacilityGet = async () => {
-        setShowFaci(true);
         try {
             const response = await axios.get(FACILITY_UPDATE_GET,
                 {
@@ -450,12 +467,12 @@ const Profile = () => {
             // Get index of dropdowns
             console.log("load values");
             console.log(fullAddresses1);
-            console.log(addressJson1);
+            console.log(addressFaciShow);
             for (let i in city) {
                 console.log(i);
-                if (addressJson1.city === city[i].label) {
+                if (addressFaciShow.city === city[i].label) {
                     setCityIndex1(i);
-                    addressJson1.city = fullAddresses1[i].Name;
+                    addressFaciShow.city = fullAddresses1[i].Name;
                     console.log("City " + i);
                     setCityIndex1(i);
                     const districtOnIndex = fullAddresses1[i].Districts;
@@ -465,10 +482,10 @@ const Profile = () => {
                     }
                     setDistrict1(districtList);
                     for (let j in districtList) {
-                        if (addressJson1.district === districtList[j].label) {
+                        if (addressFaciShow.district === districtList[j].label) {
                             setDistrictIndex1(j);
                             console.log(j);
-                            addressJson1.district = fullAddresses1[i].Districts[j].Name;
+                            addressFaciShow.district = fullAddresses1[i].Districts[j].Name;
                             console.log("District " + j);
                             setDistrictIndex1(j);
                             const wardOnIndex = fullAddresses1[i].Districts[j].Wards;
@@ -478,9 +495,9 @@ const Profile = () => {
                             }
                             setWard1(wardList);
                             for (let k in wardList) {
-                                if (addressJson1.ward === wardList[k].label) {
+                                if (addressFaciShow.ward === wardList[k].label) {
                                     setWardIndex1(k);
-                                    addressJson1.ward = fullAddresses1[i].Districts[j].Wards[k].Name;
+                                    addressFaciShow.ward = fullAddresses1[i].Districts[j].Wards[k].Name;
                                     break;
                                 }
                             }
@@ -490,10 +507,11 @@ const Profile = () => {
                     break;
                 }
             }
-            setStreet(addressJson1.street);
-            console.log(addressJson1);
+            setStreet1(addressFaciShow.street);
+            console.log(addressFaciShow);
             setUserDetailLoaded(true);
-            setAddressJson(JSON.parse(responseJson.facilityAddress));
+            setAddressFaciShow(JSON.parse(responseJson.facilityAddress));
+            setShowFaci(true);
         } catch (err) {
             if (!err?.response) {
                 toast.error('Server không phản hồi');
@@ -506,6 +524,10 @@ const Profile = () => {
     // Update user's information
     const handleUpdateUserSave = async (event) => {
         event.preventDefault();
+        setUpdateUserDTO({
+            ...updateUserDTO,
+            ["address"]: JSON.stringify(addressUserEdit)
+        })
         try {
             const response = await axios.put(USER_UPDATE_SAVE,
                 updateUserDTO,
@@ -536,6 +558,10 @@ const Profile = () => {
     // Update facility's information
     const handleUpdateFacilitySave = async (event) => {
         event.preventDefault();
+        setUpdateFacilityDTO({
+            ...updateFacilityDTO,
+            ["facilityAddress"]: JSON.stringify(addressFaciEdit)
+        })
         try {
             const response = await axios.put(FACILITY_UPDATE_SAVE,
                 updateFacilityDTO,
@@ -616,8 +642,8 @@ const Profile = () => {
             );
             console.log(JSON.stringify(response?.data));
             setChangePasswordDTO('');
-            toast.success("Đổi mật khẩu thành công")
-            setShow(false)
+            toast.success("Đổi mật khẩu thành công");
+            setShow(false);
         } catch (err) {
             if (!err?.response) {
                 toast.error('Server không phản hồi');
@@ -674,7 +700,7 @@ const Profile = () => {
                                         <p>Địa chỉ</p>
                                     </div>
                                     <div className="col-md-6">
-                                        <p id="userAddress">{userAddress.street + ", " + userAddress.ward + ", " + userAddress.district + ", " + userAddress.city}</p>
+                                        <p id="userAddress">{addressUserShow.street + ", " + addressUserShow.ward + ", " + addressUserShow.district + ", " + addressUserShow.city}</p>
                                     </div>
                                 </div>
                                 {/*Start: Change account details*/}
@@ -761,7 +787,7 @@ const Profile = () => {
                                         </Modal>
                                     </div>
                                     <div className="col-md-6">
-                                        <Button onClick={handleUpdateUserGet} style={{ width: "100%" }} className="btn btn-light" id="startChangeUserInformation">Cập nhật</Button >
+                                        <button onClick={handleUpdateUserGet} style={{ width: "100%" }} className="btn btn-light" id="startChangeUserInformation">Cập nhật</button >
                                         <Modal show={showProfile} onHide={handleCloseProfile}
                                             size="lg"
                                             aria-labelledby="contained-modal-title-vcenter"
@@ -816,7 +842,7 @@ const Profile = () => {
                                                                 {city &&
                                                                     city.map((item, index) => (
                                                                         <>
-                                                                            {item.label === addressJson.city
+                                                                            {item.label === addressUserEdit.city
                                                                                 ? <option value={index} selected>{item.label}</option>
                                                                                 : <option value={index}>{item.label}</option>
                                                                             }
@@ -842,7 +868,7 @@ const Profile = () => {
                                                                 {district &&
                                                                     district.map((item, index) => (
                                                                         <>
-                                                                            {item.label === addressJson.district
+                                                                            {item.label === addressUserEdit.district
                                                                                 ? <option value={index} selected>{item.label}</option>
                                                                                 : <option value={index}>{item.label}</option>
                                                                             }
@@ -868,7 +894,7 @@ const Profile = () => {
                                                                 {ward &&
                                                                     ward.map((item, index) => (
                                                                         <>
-                                                                            {item.label === addressJson.ward
+                                                                            {item.label === addressUserEdit.ward
                                                                                 ? <option value={index} selected>{item.label}</option>
                                                                                 : <option value={index}>{item.label}</option>
                                                                             }
@@ -890,7 +916,7 @@ const Profile = () => {
                                                                 onChange={(e) => saveAddressJsonUser(e.target.value)}
                                                                 required
                                                                 className="form-control"
-                                                                value={addressJson.street} />
+                                                                value={street} />
                                                         </div>
                                                     </div>
                                                 </Modal.Body>
@@ -907,7 +933,7 @@ const Profile = () => {
 
                                     </div>
                                 </div>
-                                {/*End: Chnage account details*/}
+                                {/*End: Change account details*/}
                             </div>
                         </div>
                     </div>
@@ -949,44 +975,12 @@ const Profile = () => {
                                                     <p id="licenseNumber">{facilityInformation.businessLicenseNumber}</p>
                                                 </div>
                                             </div>
-                                            {/* <div className="row">
-                                                <div className="col-md-6">
-                                                    <p>Số nhà</p>
-                                                </div>
-                                                <div className="col-md-6">
-                                                    <p id="street">{faciAddress.street}</p>
-                                                </div>
-                                            </div>
-                                            <div className="row">
-                                                <div className="col-md-6">
-                                                    <p>Xã</p>
-                                                </div>
-                                                <div className="col-md-6">
-                                                    <p id="ward">{faciAddress.ward}</p>
-                                                </div>
-                                            </div>
-                                            <div className="row">
-                                                <div className="col-md-6">
-                                                    <p>Quận/Huyện</p>
-                                                </div>
-                                                <div className="col-md-6">
-                                                    <p id="state">{faciAddress.district}</p>
-                                                </div>
-                                            </div>
-                                            <div className="row">
-                                                <div className="col-md-6">
-                                                    <p>Thành phố</p>
-                                                </div>
-                                                <div className="col-md-6">
-                                                    <p id="city">{faciAddress.city}</p>
-                                                </div>
-                                            </div> */}
                                             <div className="row">
                                                 <div className="col-md-6">
                                                     <p>Địa chỉ</p>
                                                 </div>
                                                 <div className="col-md-6">
-                                                    <p id="userAddress">{userAddress.street + ", " + userAddress.ward + ", " + userAddress.district + ", " + userAddress.city}</p>
+                                                    <p id="faciAddress">{addressFaciShow.street + ", " + addressFaciShow.ward + ", " + addressFaciShow.district + ", " + addressFaciShow.city}</p>
                                                 </div>
                                             </div>
                                             <div className="row">
@@ -1076,7 +1070,7 @@ const Profile = () => {
                                                             {city1 &&
                                                                 city1.map((item, index) => (
                                                                     <>
-                                                                        {item.label === addressJson1.city
+                                                                        {item.label === addressFaciEdit.city
                                                                             ? <option value={index} selected>{item.label}</option>
                                                                             : <option value={index}>{item.label}</option>
                                                                         }
@@ -1102,7 +1096,7 @@ const Profile = () => {
                                                             {district1 &&
                                                                 district1.map((item, index) => (
                                                                     <>
-                                                                        {item.label === addressJson1.district
+                                                                        {item.label === addressFaciEdit.district
                                                                             ? <option value={index} selected>{item.label}</option>
                                                                             : <option value={index}>{item.label}</option>
                                                                         }
@@ -1128,7 +1122,7 @@ const Profile = () => {
                                                             {ward1 &&
                                                                 ward1.map((item, index) => (
                                                                     <>
-                                                                        {item.label === addressJson1.ward
+                                                                        {item.label === addressFaciEdit.ward
                                                                             ? <option value={index} selected>{item.label}</option>
                                                                             : <option value={index}>{item.label}</option>
                                                                         }
@@ -1150,7 +1144,7 @@ const Profile = () => {
                                                             onChange={(e) => saveAddressJsonFacility(e.target.value)}
                                                             required
                                                             className="form-control"
-                                                            value={addressJson1.street} />
+                                                            value={street1} />
                                                     </div>
                                                 </div>
                                             </Modal.Body>
@@ -1184,6 +1178,5 @@ const Profile = () => {
         </div>
     )
 }
-
 
 export default Profile
