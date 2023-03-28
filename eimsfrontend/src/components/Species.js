@@ -450,9 +450,7 @@ const Species = () => {
                               <input placeholder='Gà, Ngan, Vịt, v.v' id="editSpecieName"
                                 onChange={e => handleEditSpecieChange(e, "specieName")}
                                 value={editSpecieDTO.specieName}
-                                required
-                                className='form-control mt-1'
-                                maxLength="32" />
+                                className='form-control mt-1'/>
                             </div>
                           </div>
                           <div className="row">
@@ -464,10 +462,7 @@ const Species = () => {
                                 id="editIncubationPeriod"
                                 onChange={e => handleEditSpecieChange(e, "incubationPeriod")}
                                 value={editSpecieDTO.incubationPeriod}
-                                required
                                 type="number"
-                                min="0"
-                                max="1000"
                                 className='form-control mt-1' />
                             </div>
                           </div>
@@ -491,9 +486,6 @@ const Species = () => {
                                 onChange={e => handleEditSpecieChange(e, "embryolessDate")}
                                 value={editSpecieDTO.embryolessDate}
                                 type="number"
-                                min="0"
-                                max={editSpecieDTO.incubationPeriod}
-                                required
                                 className="form-control mt-1" />
                             </div>
                           </div>
@@ -511,9 +503,6 @@ const Species = () => {
                                 onChange={e => handleEditSpecieChange(e, "diedEmbryoDate")}
                                 value={editSpecieDTO.diedEmbryoDate}
                                 type="number"
-                                min={editSpecieDTO.embryolessDate}
-                                max={editSpecieDTO.incubationPeriod}
-                                required
                                 className="form-control mt-1" />
                             </div>
                           </div>
@@ -530,10 +519,7 @@ const Species = () => {
                               <input placeholder='Ngày thứ ...'
                                 onChange={e => handleEditSpecieChange(e, "balutDate")}
                                 type="number"
-                                min={editSpecieDTO.diedEmbryoDate}
-                                max={editSpecieDTO.incubationPeriod}
                                 value={editSpecieDTO.balutDate}
-                                required
                                 className="form-control mt-1" />
                             </div>
                           </div>
@@ -550,10 +536,7 @@ const Species = () => {
                               <input placeholder='Ngày thứ ...'
                                 onChange={e => handleEditSpecieChange(e, "hatchingDate")}
                                 type="number"
-                                min={editSpecieDTO.balutDate}
-                                max={editSpecieDTO.incubationPeriod}
                                 value={editSpecieDTO.hatchingDate}
-                                required
                                 className="form-control mt-1" />
                             </div>
                           </div>

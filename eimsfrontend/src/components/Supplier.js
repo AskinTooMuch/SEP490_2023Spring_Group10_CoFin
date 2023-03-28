@@ -158,7 +158,11 @@ const Supplier = () => {
       if (!err?.response) {
         toast.error('Server không phản hồi');
       } else {
-        toast.error(err.response.data);
+        if ((err.response.data === null) || (err.response.data === '') ) {
+          toast.error('Có lỗi xảy ra, vui lòng thử lại');
+        } else {
+          toast.error(err.response.data);
+        }
       }
     }
   }
@@ -187,7 +191,11 @@ const Supplier = () => {
       if (!err?.response) {
         toast.error('Server không phản hồi');
       } else {
-        toast.error(err.response.data);
+        if ((err.response.data === null) || (err.response.data === '') ) {
+          toast.error('Có lỗi xảy ra, vui lòng thử lại');
+        } else {
+          toast.error(err.response.data);
+        }
       }
     }
   }
@@ -219,7 +227,6 @@ const Supplier = () => {
                     <input id="supplierName"
                       className="form-control mt-1"
                       style={{ width: "100%" }}
-                      required
                       placeholder='Tên/biệt danh gợi nhớ'
                       onChange={e => handleNewSupplierChange(e, "supplierName")} />
                   </div>

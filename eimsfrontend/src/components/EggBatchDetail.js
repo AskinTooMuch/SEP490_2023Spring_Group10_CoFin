@@ -304,7 +304,11 @@ export default function BasicTabs() {
             if (!err?.response) {
                 toast.error('Server không phản hồi');
             } else {
-                toast.error(err.response.data);
+                if ((err.response.data === null) || (err.response.data === '') ) {
+          toast.error('Có lỗi xảy ra, vui lòng thử lại');
+        } else {
+          toast.error(err.response.data);
+        }
                 console.log(err.response.data);
             }
         }
@@ -340,7 +344,11 @@ export default function BasicTabs() {
             if (!err?.response) {
                 toast.error('Server không phản hồi');
             } else {
-                toast.error(err.response.data);
+                if ((err.response.data === null) || (err.response.data === '') ) {
+          toast.error('Có lỗi xảy ra, vui lòng thử lại');
+        } else {
+          toast.error(err.response.data);
+        }
                 console.log(err.response.data);
             }
         }
