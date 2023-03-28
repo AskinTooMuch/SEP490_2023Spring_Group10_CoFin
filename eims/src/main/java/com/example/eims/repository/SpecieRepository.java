@@ -27,11 +27,11 @@ public interface SpecieRepository extends JpaRepository<Specie, Long> {
 
     @Query(value = "CALL create_new_specie(?1, ?2, ?3, ?4, ?5, ?6, ?7)"
     , nativeQuery = true)
-    Optional<?> createNewSpecie(Long userId, String specieName, int incubationPeriod, int embryoless, int diedEmbryo, int hatching, int balut);
+    Optional<?> createNewSpecie(Long userId, String specieName, int incubationPeriod, int embryoless, int diedEmbryo, int balut, int hatching);
 
     @Query(value = "CALL update_existing_specie(?1, ?2, ?3, ?4, ?5, ?6, ?7)"
             , nativeQuery = true)
-    Optional<?> updateSpecie(Long specieId, String specieName, int incubationPeriod, int embryoless, int diedEmbryo, int hatching, int balut);
+    Optional<?> updateSpecie(Long specieId, String specieName, int incubationPeriod, int embryoless, int diedEmbryo, int balut, int hatching);
 
     @Query(value = "CALL deactivate_existing_specie(?1)"
             , nativeQuery = true)

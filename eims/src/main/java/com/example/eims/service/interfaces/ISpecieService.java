@@ -35,7 +35,7 @@ public interface ISpecieService {
      * @param userId the id of current logged-in user
      * @return
      */
-    public ResponseEntity<List<DetailSpecieDTO>> listSpecie(Long userId);
+    public ResponseEntity<?> listSpecie(Long userId);
 
     /**
      * Edit specie's information : Getting the original values

@@ -98,7 +98,11 @@ const Species = () => {
       if (!err?.response) {
         toast.error('Server không phản hồi');
       } else {
-        toast.error(err.response.data);
+        if ((err.response.data === null) || (err.response.data === '') ) {
+          toast.error('Vui lòng đăng nhập lại');
+        } else {
+          toast.error(err.response.data);
+        }
       }
     }
   }
@@ -133,7 +137,11 @@ const Species = () => {
       if (!err?.response) {
         toast.error('Server không phản hồi');
       } else {
-        toast.error(err.response.data);
+        if ((err.response.data === null) || (err.response.data === '') ) {
+          toast.error('Vui lòng đăng nhập lại');
+        } else {
+          toast.error(err.response.data);
+        }
       }
     }
   }
@@ -159,7 +167,11 @@ const Species = () => {
       if (!err?.response) {
         toast.error('Server không phản hồi');
       } else {
-        toast.error(err.response.data);
+        if ((err.response.data === null) || (err.response.data === '') ) {
+          toast.error('Vui lòng đăng nhập lại');
+        } else {
+          toast.error(err.response.data);
+        }
       }
     }
   }
@@ -188,7 +200,11 @@ const Species = () => {
       if (!err?.response) {
         toast.error('Server không phản hồi');
       } else {
-        toast.error(err.response.data);
+        if ((err.response.data === null) || (err.response.data === '') ) {
+          toast.error('Vui lòng đăng nhập lại');
+        } else {
+          toast.error(err.response.data);
+        }
       }
     }
   }
@@ -211,7 +227,11 @@ const Species = () => {
       if (!err?.response) {
         toast.error('Server không phản hồi');
       } else {
-        toast.error(err.response.data);
+        if ((err.response.data === null) || (err.response.data === '') ) {
+          toast.error('Vui lòng đăng nhập lại');
+        } else {
+          toast.error(err.response.data);
+        }
       }
     }
 
@@ -286,6 +306,7 @@ const Species = () => {
                       value={newSpecieDTO.incubationPeriod}
                       type="number"
                       min="0"
+                      max="1000"
                       required
                       className="form-control mt-1" />
                   </div>
@@ -464,6 +485,7 @@ const Species = () => {
                                 required
                                 type="number"
                                 min="0"
+                                max="1000"
                                 className='form-control mt-1' />
                             </div>
                           </div>

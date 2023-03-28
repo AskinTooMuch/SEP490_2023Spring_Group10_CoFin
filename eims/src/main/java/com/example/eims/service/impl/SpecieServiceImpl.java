@@ -22,6 +22,7 @@ import com.example.eims.repository.IncubationPhaseRepository;
 import com.example.eims.repository.SpecieRepository;
 import com.example.eims.repository.UserRepository;
 import com.example.eims.service.interfaces.ISpecieService;
+import com.example.eims.utils.StringDealer;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,6 +54,7 @@ public class SpecieServiceImpl implements ISpecieService {
     private final IncubationPhaseRepository incubationPhaseRepository;
     @PersistenceContext
     private final EntityManager em;
+    private final StringDealer stringDealer = new StringDealer();
 
     public SpecieServiceImpl(SpecieRepository specieRepository, UserRepository userRepository, IncubationPhaseRepository incubationPhaseRepository, EntityManager em) {
         this.specieRepository = specieRepository;
@@ -69,26 +71,41 @@ public class SpecieServiceImpl implements ISpecieService {
      */
     @Override
     public ResponseEntity<String> newSpecie(NewSpecieDTO newSpecieDTO) {
-        System.out.println(newSpecieDTO);
         Optional<User> userOpt = userRepository.findById(newSpecieDTO.getUserId());
-        if (userOpt.isPresent()) {
-            User user = userOpt.get();
-            Specie specie = new Specie();
-            try {
-                specieRepository.createNewSpecie(
-                        user.getUserId(),
-                        newSpecieDTO.getSpecieName(),
-                        newSpecieDTO.getIncubationPeriod(),
-                        newSpecieDTO.getEmbryolessDate(),
-                        newSpecieDTO.getDiedEmbryoDate(),
-                        newSpecieDTO.getHatchingDate(),
-                        newSpecieDTO.getBalutDate());
-            } catch (IllegalArgumentException iae) {
-                return null;
-            }
-            return new ResponseEntity<>("Specie added successfully", HttpStatus.OK);
+        //Get attributes
+        String specieName = stringDealer.trimMax(newSpecieDTO.getSpecieName());
+        int incubationPeriod = newSpecieDTO.getIncubationPeriod();
+        int embryolessDate = newSpecieDTO.getEmbryolessDate();
+        int diedEmbryoDate = newSpecieDTO.getDiedEmbryoDate();
+        int balutDate = newSpecieDTO.getBalutDate();
+        int hatchingDate = newSpecieDTO.getHatchingDate();
+        //Check and return false conditions
+        if (specieName.equals("")) { return new ResponseEntity<>("Tên loài không được để trống", HttpStatus.BAD_REQUEST); }
+        if (specieName.length() > 32) { return new ResponseEntity<>("Tên loài không được dài hơn 32 ký tự", HttpStatus.BAD_REQUEST); }
+        if ((incubationPeriod < 0) || (incubationPeriod > 1000)) { return new ResponseEntity<>("Tổng thời gian ấp không được nhỏ hơn 0 và lớn hơn 1000 ngày", HttpStatus.BAD_REQUEST); }
+        if ((embryolessDate < 0) || (embryolessDate > incubationPeriod)) { return new ResponseEntity<>("Mốc xác định trứng trắng không được nhỏ hơn 0 và lớn hơn tổng thời gian ấp", HttpStatus.BAD_REQUEST); }
+        if ((diedEmbryoDate < embryolessDate) || (diedEmbryoDate > incubationPeriod)) { return new ResponseEntity<>("Mốc xác định trứng loãng không được nhỏ hơn mốc xác định trứng trắng và lớn hơn tổng thời gian ấp", HttpStatus.BAD_REQUEST); }
+        if ((balutDate < diedEmbryoDate) || (balutDate > incubationPeriod)) { return new ResponseEntity<>("Mốc xác định trứng lộn không được nhỏ hơn mốc xác định trứng loãng và lớn hơn tổng thời gian ấp", HttpStatus.BAD_REQUEST); }
+        if ((hatchingDate < balutDate) || (hatchingDate > incubationPeriod)) { return new ResponseEntity<>("Mốc chuyển trứng sang máy nở không được nhỏ hơn mốc xác định trứng lộn và lớn hơn tổng thời gian ấp", HttpStatus.BAD_REQUEST); }
+        //Done; start adding the specie
+        User user = null;
+        if (userOpt.isPresent()) { user = userOpt.get(); }
+        if ((user == null) || (user.getStatus() != 2)) {
+            return new ResponseEntity<>("Không tìm thấy tài khoản hoặc tài khoản đã bị vô hiệu hóa", HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>("Account not found with Id number " + newSpecieDTO.getUserId(), HttpStatus.BAD_REQUEST);
+        try {
+            specieRepository.createNewSpecie(
+                    user.getUserId(),
+                    specieName,
+                    incubationPeriod,
+                    embryolessDate,
+                    diedEmbryoDate,
+                    balutDate,
+                    hatchingDate);
+            return new ResponseEntity<>("Tạo loài mới thành công", HttpStatus.OK);
+        } catch (IllegalArgumentException iae) {
+            return new ResponseEntity<>("Có lỗi xảy ra, vui lòng thử lại", HttpStatus.BAD_REQUEST);
+        }
     }
 
     /**
@@ -98,9 +115,16 @@ public class SpecieServiceImpl implements ISpecieService {
      * @return
      */
     @Override
-    public ResponseEntity<List<DetailSpecieDTO>> listSpecie(Long userId) {
-        System.out.println("Requesting user id: " + userId);
+    public ResponseEntity<?> listSpecie(Long userId) {
+        //Prevent getting null species
+        User user = null;
+        Optional<User> userOpt = userRepository.findById(userId);
+        if (userOpt.isPresent()) { user = userOpt.get(); }
+        if ((user == null) || (user.getStatus() != 2)) {
+            return new ResponseEntity<>("Không tìm thấy tài khoản hoặc tài khoản đã bị vô hiệu hóa", HttpStatus.BAD_REQUEST);
+        }
         Optional<List<Specie>> speciesOpt = specieRepository.findByUserId(userId);
+        //Get species
         if (speciesOpt.isPresent()) {
             List<Specie> specieList = speciesOpt.get();
             List<IncubationPhase> incubationPhases = incubationPhaseRepository.findAll();
@@ -115,7 +139,7 @@ public class SpecieServiceImpl implements ISpecieService {
             }
             return new ResponseEntity<>(detailSpecieDTOList, HttpStatus.OK);
         }
-        return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>("Tài khoản chưa thêm loài", HttpStatus.BAD_REQUEST);
     }
 
     /**
@@ -126,28 +150,32 @@ public class SpecieServiceImpl implements ISpecieService {
      */
     @Override
     public ResponseEntity<?> getSpecie(Long specieId) {
+        //Prevent getting null specie
         Optional<Specie> specieOpt = specieRepository.findById(specieId);
+        Specie specie = null;
         EditSpecieDTO editSpecieDTO;
-        if (specieOpt.isPresent()) {
-            Specie specie = specieOpt.get();
-            editSpecieDTO = new EditSpecieDTO();
-            editSpecieDTO.setSpecieId(specie.getSpecieId());
-            editSpecieDTO.setSpecieName(specie.getSpecieName());
-            editSpecieDTO.setIncubationPeriod(specie.getIncubationPeriod());
-            Optional<List<IncubationPhase>> incubationPhasesOpt = incubationPhaseRepository.findIncubationPhasesBySpecieId(specieId);
-            if (incubationPhasesOpt.isPresent()) {
-                List<IncubationPhase> incubationPhases = incubationPhasesOpt.get();
-                for (IncubationPhase phase : incubationPhases) {
-                    switch (phase.getPhaseNumber()) {
-                        case 2 -> editSpecieDTO.setEmbryolessDate(phase.getPhasePeriod());
-                        case 3 -> editSpecieDTO.setDiedEmbryoDate(phase.getPhasePeriod());
-                        case 4 -> editSpecieDTO.setBalutDate(phase.getPhasePeriod());
-                        case 5 -> editSpecieDTO.setHatchingDate(phase.getPhasePeriod());
-                    }
+        if (specieOpt.isPresent()) { specie = specieOpt.get(); }
+        if ((specie == null) || (!specie.isStatus())) {
+            return new ResponseEntity<>("Không tìm thấy loài hoặc loài đã bị vô hiệu hóa", HttpStatus.BAD_REQUEST);
+        }
+        //Get specie
+        editSpecieDTO = new EditSpecieDTO();
+        editSpecieDTO.setSpecieId(specie.getSpecieId());
+        editSpecieDTO.setSpecieName(specie.getSpecieName());
+        editSpecieDTO.setIncubationPeriod(specie.getIncubationPeriod());
+        Optional<List<IncubationPhase>> incubationPhasesOpt = incubationPhaseRepository.findIncubationPhasesBySpecieId(specieId);
+        if (incubationPhasesOpt.isPresent()) {
+            List<IncubationPhase> incubationPhases = incubationPhasesOpt.get();
+            for (IncubationPhase phase : incubationPhases) {
+                switch (phase.getPhaseNumber()) {
+                    case 2 -> editSpecieDTO.setEmbryolessDate(phase.getPhasePeriod());
+                    case 3 -> editSpecieDTO.setDiedEmbryoDate(phase.getPhasePeriod());
+                    case 4 -> editSpecieDTO.setBalutDate(phase.getPhasePeriod());
+                    case 5 -> editSpecieDTO.setHatchingDate(phase.getPhasePeriod());
                 }
             }
-            return new ResponseEntity<>(editSpecieDTO, HttpStatus.OK);
-        } else return new ResponseEntity<>("Không tìm thấy loài", HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(editSpecieDTO, HttpStatus.OK);
     }
 
     /**
@@ -158,20 +186,37 @@ public class SpecieServiceImpl implements ISpecieService {
      */
     @Override
     public ResponseEntity<?> saveSpecie(EditSpecieDTO editSpecieDTO) {
-        System.out.println("Requesting specie id: " + editSpecieDTO.getSpecieId());
+        //Get attributes
+        String specieName = stringDealer.trimMax(editSpecieDTO.getSpecieName());
+        int incubationPeriod = editSpecieDTO.getIncubationPeriod();
+        int embryolessDate = editSpecieDTO.getEmbryolessDate();
+        int diedEmbryoDate = editSpecieDTO.getDiedEmbryoDate();
+        int balutDate = editSpecieDTO.getBalutDate();
+        int hatchingDate = editSpecieDTO.getHatchingDate();
+        //Check and return false conditions
+        if (specieName.equals("")) { return new ResponseEntity<>("Tên loài không được để trống", HttpStatus.BAD_REQUEST); }
+        if (specieName.length() > 32) { return new ResponseEntity<>("Tên loài không được dài hơn 32 ký tự", HttpStatus.BAD_REQUEST); }
+        if ((incubationPeriod < 0) || (incubationPeriod > 1000)) { return new ResponseEntity<>("Tổng thời gian ấp không được nhỏ hơn 0 và lớn hơn 1000 ngày", HttpStatus.BAD_REQUEST); }
+        if ((embryolessDate < 0) || (embryolessDate > incubationPeriod)) { return new ResponseEntity<>("Mốc xác định trứng trắng không được nhỏ hơn 0 và lớn hơn tổng thời gian ấp", HttpStatus.BAD_REQUEST); }
+        if ((diedEmbryoDate < embryolessDate) || (diedEmbryoDate > incubationPeriod)) { return new ResponseEntity<>("Mốc xác định trứng loãng không được nhỏ hơn mốc xác định trứng trắng và lớn hơn tổng thời gian ấp", HttpStatus.BAD_REQUEST); }
+        if ((balutDate < diedEmbryoDate) || (balutDate > incubationPeriod)) { return new ResponseEntity<>("Mốc xác định trứng lộn không được nhỏ hơn mốc xác định trứng loãng và lớn hơn tổng thời gian ấp", HttpStatus.BAD_REQUEST); }
+        if ((hatchingDate < balutDate) || (hatchingDate > incubationPeriod)) { return new ResponseEntity<>("Mốc chuyển trứng sang máy nở không được nhỏ hơn mốc xác định trứng lộn và lớn hơn tổng thời gian ấp", HttpStatus.BAD_REQUEST); }
+        //Prevent getting and saving null specie
         Optional<Specie> specieOpt = specieRepository.findById(editSpecieDTO.getSpecieId());
-        if (specieOpt.isPresent()) {
-            specieRepository.updateSpecie(
-                    editSpecieDTO.getSpecieId(),
-                    editSpecieDTO.getSpecieName(),
-                    editSpecieDTO.getIncubationPeriod(),
-                    editSpecieDTO.getEmbryolessDate(),
-                    editSpecieDTO.getDiedEmbryoDate(),
-                    editSpecieDTO.getHatchingDate(),
-                    editSpecieDTO.getBalutDate());
-            return new ResponseEntity<>("Saved specie successfully", HttpStatus.OK);
+        Specie specie = null;
+        if (specieOpt.isPresent()) { specie = specieOpt.get(); }
+        if ((specie == null) || (!specie.isStatus())) {
+            return new ResponseEntity<>("Không tìm thấy loài hoặc loài đã bị vô hiệu hóa", HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        specieRepository.updateSpecie(
+                editSpecieDTO.getSpecieId(),
+                specieName,
+                incubationPeriod,
+                embryolessDate,
+                diedEmbryoDate,
+                balutDate,
+                hatchingDate);
+        return new ResponseEntity<>("Lưu thông tin loài thành công", HttpStatus.OK);
     }
 
     /**
@@ -184,8 +229,8 @@ public class SpecieServiceImpl implements ISpecieService {
     public ResponseEntity<String> deleteSpecie(Long specieId) {
         if (specieRepository.findById(specieId).isPresent()) {
             specieRepository.deactivateById(specieId);
-            return new ResponseEntity<>("Specie delete successfully", HttpStatus.OK);
+            return new ResponseEntity<>("Xóa loài thành công", HttpStatus.OK);
         }
-        return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>("Không tìm thấy loài", HttpStatus.BAD_REQUEST);
     }
 }
