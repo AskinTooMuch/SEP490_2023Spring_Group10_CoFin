@@ -7,6 +7,7 @@
  * Record of change:<br>
  * DATE          Version    Author      DESCRIPTION<br>
  * 05/03/2023    1.0        ChucNV      First Deploy<br>
+ * 28/03/2023    2.0        ChucNV      Add code for edit/get<br>
  */
 package com.example.eims.repository;
 
@@ -25,4 +26,5 @@ public interface IncubationPhaseRepository extends JpaRepository<IncubationPhase
             "JOIN eims.incubation_phase ip ON s.specie_id = ip.specie_id " +
             "WHERE eb.egg_batch_id = ?1", nativeQuery = true)
     List<IncubationPhase> getListIncubationPhaseForEggBatch(Long eggProductId);
+    Optional<List<IncubationPhase>> findIncubationPhasesBySpecieId(Long specieId);
 }

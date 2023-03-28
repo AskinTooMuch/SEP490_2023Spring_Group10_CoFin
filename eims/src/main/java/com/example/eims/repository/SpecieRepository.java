@@ -8,6 +8,7 @@
  * DATE          Version    Author      DESCRIPTION<br>
  * 22/02/2023    1.0        ChucNV      First Deploy<br>
  * 05/03/2023    2.0        ChucNV      Implement create new specie<br>
+ * 28/03/2023    3.0        ChucNV      Modify code for createNewSpecie and updateSpecie<br>
  */
 
 package com.example.eims.repository;
@@ -24,13 +25,13 @@ import java.util.Optional;
 public interface SpecieRepository extends JpaRepository<Specie, Long> {
     Optional<List<Specie>> findByUserId(Long userId);
 
-    @Query(value = "CALL create_new_specie(?1, ?2, ?3, ?4, ?5, ?6)"
+    @Query(value = "CALL create_new_specie(?1, ?2, ?3, ?4, ?5, ?6, ?7)"
     , nativeQuery = true)
-    Optional<?> createNewSpecie(Long userId, String specieName, int incubationPeriod, int embryoless, int diedEmbryo, int hatching);
+    Optional<?> createNewSpecie(Long userId, String specieName, int incubationPeriod, int embryoless, int diedEmbryo, int hatching, int balut);
 
-    @Query(value = "CALL update_existing_specie(?1, ?2, ?3, ?4, ?5, ?6)"
+    @Query(value = "CALL update_existing_specie(?1, ?2, ?3, ?4, ?5, ?6, ?7)"
             , nativeQuery = true)
-    Optional<?> updateSpecie(Long specieId, String specieName, int incubationPeriod, int embryoless, int diedEmbryo, int hatching);
+    Optional<?> updateSpecie(Long specieId, String specieName, int incubationPeriod, int embryoless, int diedEmbryo, int hatching, int balut);
 
     @Query(value = "CALL deactivate_existing_specie(?1)"
             , nativeQuery = true)

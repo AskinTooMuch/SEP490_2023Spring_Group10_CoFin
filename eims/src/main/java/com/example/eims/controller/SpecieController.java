@@ -11,6 +11,7 @@
  * 23/02/2023    2.0        ChucNV      Add edit, list, delete specie API<br>
  * 26/02/2023    2.1        ChucNV      Fix API to work with userId<br>
  * 02/03/2023    3.0        DuongVV     New code structure<br>
+ * 28/03/2023    4.0        ChucNV      Add code for edit/get<br>
  */
 
 package com.example.eims.controller;
@@ -61,7 +62,7 @@ public class SpecieController {
      * @param specieId the id of the specie
      * @return
      */
-    @PostMapping("/edit/get")
+    @GetMapping("/edit/get")
     public ResponseEntity<?> getSpecie(@RequestParam Long specieId){
         return specieService.getSpecie(specieId);
     }

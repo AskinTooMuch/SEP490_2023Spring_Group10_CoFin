@@ -1,3 +1,4 @@
+-- V0.11.0: Modify specie stored procedures
 -- V0.10.0: Modify field lengths
 -- V0.9.0: Modify the stored procedure user_and_facility
 -- V0.8.2: Roll back to V0.8.0
@@ -395,7 +396,7 @@ DELIMITER ;
 
 -- Add new specie and it's incubation phase
 DELIMITER //
-CREATE PROCEDURE create_new_specie(u_id integer, s_name varchar(63), i_period integer, embryoless integer, died_embryo integer, hatching integer) 
+CREATE PROCEDURE create_new_specie(u_id integer, s_name varchar(63), i_period integer, embryoless integer, died_embryo integer, balut integer, hatching integer) 
 BEGIN
 	DECLARE s_id integer DEFAULT 0;
 	INSERT INTO specie(user_id, specie_name, incubation_period, status) VALUE (u_id, s_name, i_period, 1);
@@ -405,11 +406,12 @@ BEGIN
                 ORDER BY specie_id DESC
                 LIMIT 1);
     INSERT INTO incubation_phase(specie_id, phase_number, phase_period, phase_description, status)
-	VALUES 	(s_id, 0, 0,'Trứng vỡ/dập', 1),
+	VALUES 	(s_id, -1, 0,'Trứng hư tổn, hao hụt', 1),
+			(s_id, 0, 0,'Trứng vỡ/dập', 1),
 			(s_id, 1, 0,'Trứng đang ấp', 1),
 			(s_id, 2, embryoless,'Trứng trắng/tròn, trứng không có phôi', 1),
 			(s_id, 3, died_embryo,'Trứng loãng/tàu, phôi chết non', 1),
-			(s_id, 4, (died_embryo+1),'Trứng lộn', 1),
+			(s_id, 4, (balut),'Trứng lộn', 1),
 			(s_id, 5, hatching,'Trứng đang nở', 1),
 			(s_id, 6, (i_period-1),'Trứng tắc', 1),
 			(s_id, 7, (i_period-1),'Con nở', 1),
@@ -421,7 +423,7 @@ DELIMITER ;
 
 -- Update specie and its phases
 DELIMITER //
-CREATE PROCEDURE update_existing_specie(s_id integer, s_name varchar(63), i_period integer, embryoless integer, died_embryo integer, hatching integer) 
+CREATE PROCEDURE update_existing_specie(s_id integer, s_name varchar(63), i_period integer, embryoless integer, died_embryo integer, balut integer, hatching integer) 
 BEGIN
     UPDATE specie
 	SET specie_name = s_name, incubation_period = i_period
@@ -429,7 +431,7 @@ BEGIN
     
     UPDATE incubation_phase SET phase_period = embryoless WHERE specie_id = s_id AND phase_number = 2;
     UPDATE incubation_phase SET phase_period = died_embryo WHERE specie_id = s_id AND phase_number = 3;
-    UPDATE incubation_phase SET phase_period = died_embryo+1 WHERE specie_id = s_id AND phase_number = 4;
+    UPDATE incubation_phase SET phase_period = balut WHERE specie_id = s_id AND phase_number = 4;
     UPDATE incubation_phase SET phase_period = hatching WHERE specie_id = s_id AND phase_number = 5;
     UPDATE incubation_phase SET phase_period = i_period-1 WHERE specie_id = s_id AND phase_number >= 6;
 	SELECT * FROM specie WHERE specie_id = s_id;

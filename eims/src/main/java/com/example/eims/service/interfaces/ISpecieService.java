@@ -7,6 +7,7 @@
  * Record of change:<br>
  * DATE         Version     Author      DESCRIPTION<br>
  * 02/03/2023   1.0         DuongVV     First Deploy<br>
+ * 28/03/2023   2.0         ChucNV      Modify code for edit/get<br>
  */
 
 package com.example.eims.service.interfaces;
@@ -42,7 +43,7 @@ public interface ISpecieService {
      * @param specieId the id of the specie
      * @return
      */
-    public ResponseEntity<Specie> getSpecie(Long specieId);
+    public ResponseEntity<?> getSpecie(Long specieId);
 
     /**
      * Edit specie's information : Saving the data
