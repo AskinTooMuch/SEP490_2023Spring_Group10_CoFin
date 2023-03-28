@@ -99,7 +99,7 @@ const Species = () => {
         toast.error('Server không phản hồi');
       } else {
         if ((err.response.data === null) || (err.response.data === '') ) {
-          toast.error('Vui lòng đăng nhập lại');
+          toast.error('Có lỗi xảy ra, vui lòng thử lại');
         } else {
           toast.error(err.response.data);
         }
@@ -138,7 +138,7 @@ const Species = () => {
         toast.error('Server không phản hồi');
       } else {
         if ((err.response.data === null) || (err.response.data === '') ) {
-          toast.error('Vui lòng đăng nhập lại');
+          toast.error('Có lỗi xảy ra, vui lòng thử lại');
         } else {
           toast.error(err.response.data);
         }
@@ -168,7 +168,7 @@ const Species = () => {
         toast.error('Server không phản hồi');
       } else {
         if ((err.response.data === null) || (err.response.data === '') ) {
-          toast.error('Vui lòng đăng nhập lại');
+          toast.error('Có lỗi xảy ra, vui lòng thử lại');
         } else {
           toast.error(err.response.data);
         }
@@ -201,7 +201,7 @@ const Species = () => {
         toast.error('Server không phản hồi');
       } else {
         if ((err.response.data === null) || (err.response.data === '') ) {
-          toast.error('Vui lòng đăng nhập lại');
+          toast.error('Có lỗi xảy ra, vui lòng thử lại');
         } else {
           toast.error(err.response.data);
         }
@@ -228,7 +228,7 @@ const Species = () => {
         toast.error('Server không phản hồi');
       } else {
         if ((err.response.data === null) || (err.response.data === '') ) {
-          toast.error('Vui lòng đăng nhập lại');
+          toast.error('Có lỗi xảy ra, vui lòng thử lại');
         } else {
           toast.error(err.response.data);
         }
@@ -248,7 +248,6 @@ const Species = () => {
       hatchingDate: "",
       balutDate: ""
     });
-    
   }
 
   const handleEditCancel = () => {
@@ -291,9 +290,7 @@ const Species = () => {
                     <input placeholder='Gà, Ngan, Vịt, v.v'
                       onChange={e => handleNewSpecieChange(e, "specieName")}
                       value={newSpecieDTO.specieName}
-                      required
-                      className="form-control mt-1"
-                      maxLength="32" />
+                      className="form-control mt-1"/>
                   </div>
                 </div>
                 <div className="row">
@@ -305,9 +302,6 @@ const Species = () => {
                       onChange={e => handleNewSpecieChange(e, "incubationPeriod")}
                       value={newSpecieDTO.incubationPeriod}
                       type="number"
-                      min="0"
-                      max="1000"
-                      required
                       className="form-control mt-1" />
                   </div>
                 </div>
@@ -331,10 +325,7 @@ const Species = () => {
                       onChange={e => handleNewSpecieChange(e, "embryolessDate")}
                       value={newSpecieDTO.embryolessDate}
                       type="number"
-                      min="0"
-                      max={newSpecieDTO.incubationPeriod}
-                      required
-                      className="form-control mt-1" />
+                      className="form-control mt-1"/>
                   </div>
                 </div>
                 <div className="row align-items-center">
@@ -351,9 +342,6 @@ const Species = () => {
                       onChange={e => handleNewSpecieChange(e, "diedEmbryoDate")}
                       value={newSpecieDTO.diedEmbryoDate}
                       type="number"
-                      min={newSpecieDTO.embryolessDate}
-                      max={newSpecieDTO.incubationPeriod}
-                      required
                       className="form-control mt-1" />
                   </div>
                 </div>
@@ -370,10 +358,7 @@ const Species = () => {
                     <input placeholder='Ngày thứ ...'
                       onChange={e => handleNewSpecieChange(e, "balutDate")}
                       type="number"
-                      min={newSpecieDTO.diedEmbryoDate}
-                      max={newSpecieDTO.incubationPeriod}
                       value={newSpecieDTO.balutDate}
-                      required
                       className="form-control mt-1" />
                   </div>
                 </div>
@@ -390,10 +375,7 @@ const Species = () => {
                     <input placeholder='Ngày thứ ...'
                       onChange={e => handleNewSpecieChange(e, "hatchingDate")}
                       type="number"
-                      min={newSpecieDTO.balutDate}
-                      max={newSpecieDTO.incubationPeriod}
                       value={newSpecieDTO.hatchingDate}
-                      required
                       className="form-control mt-1" />
                   </div>
                 </div>

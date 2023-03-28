@@ -213,7 +213,7 @@ const Supplier = () => {
               <div className="changepass">
                 <div className="row">
                   <div className="col-md-4">
-                    <label htmlFor='supplierName' className='col-form-label'>Họ và tên&nbsp;<FontAwesomeIcon className="star" icon={faStarOfLife} /></label>
+                    <label htmlFor='supplierName' className='col-form-label'>Họ và tên&nbsp;<FontAwesomeIcon className="star" icon={faStarOfLife}/></label>
                   </div>
                   <div className="col-md-8">
                     <input id="supplierName"
