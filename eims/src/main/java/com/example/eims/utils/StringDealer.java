@@ -7,6 +7,7 @@
  * Record of change:<br>
  * DATE          Version    Author           DESCRIPTION<br>
  * 24/02/2023    1.0        DuongVV          First Deploy<br>
+ * 29/03/2023    1.1        ChucNV           Modify trimMax<br>
  */
 
 package com.example.eims.utils;
@@ -29,6 +30,7 @@ public class StringDealer {
      * @return String after be trimmed
      */
     public String trimMax(String str) {
+        if (str == null) return "";
         return str.trim().replaceAll("\\s+"," ");
     }
 

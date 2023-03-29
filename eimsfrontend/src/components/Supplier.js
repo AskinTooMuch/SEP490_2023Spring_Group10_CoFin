@@ -115,10 +115,21 @@ const Supplier = () => {
   }
 
   function saveAddressJson(s) {
+    if (cityIndex === '' || districtIndex === '' || wardIndex === '') {
+      return;
+    }
     setStreet(s);
-    addressJson.city = fullAddresses[cityIndex].Name;
-    addressJson.district = fullAddresses[cityIndex].Districts[districtIndex].Name;
-    addressJson.ward = fullAddresses[cityIndex].Districts[districtIndex].Wards[wardIndex].Name;
+    if (cityIndex >= 0) {
+      addressJson.city = fullAddresses[cityIndex].Name;
+    }
+    setStreet(s);
+    if (districtIndex >= 0) {
+      addressJson.district = fullAddresses[cityIndex].Districts[districtIndex].Name;
+    }
+    setStreet(s);
+    if (wardIndex >= 0) {
+      addressJson.ward = fullAddresses[cityIndex].Districts[districtIndex].Wards[wardIndex].Name;
+    }
     addressJson.street = street;
     newSupplierDTO.supplierAddress = JSON.stringify(addressJson);
   }
@@ -158,7 +169,7 @@ const Supplier = () => {
       if (!err?.response) {
         toast.error('Server không phản hồi');
       } else {
-        if ((err.response.data === null) || (err.response.data === '') ) {
+        if ((err.response.data === null) || (err.response.data === '')) {
           toast.error('Có lỗi xảy ra, vui lòng thử lại');
         } else {
           toast.error(err.response.data);
@@ -191,7 +202,7 @@ const Supplier = () => {
       if (!err?.response) {
         toast.error('Server không phản hồi');
       } else {
-        if ((err.response.data === null) || (err.response.data === '') ) {
+        if ((err.response.data === null) || (err.response.data === '')) {
           toast.error('Có lỗi xảy ra, vui lòng thử lại');
         } else {
           toast.error(err.response.data);
@@ -221,7 +232,7 @@ const Supplier = () => {
               <div className="changepass">
                 <div className="row">
                   <div className="col-md-4">
-                    <label htmlFor='supplierName' className='col-form-label'>Họ và tên&nbsp;<FontAwesomeIcon className="star" icon={faStarOfLife}/></label>
+                    <label htmlFor='supplierName' className='col-form-label'>Họ và tên&nbsp;<FontAwesomeIcon className="star" icon={faStarOfLife} /></label>
                   </div>
                   <div className="col-md-8">
                     <input id="supplierName"
@@ -264,7 +275,6 @@ const Supplier = () => {
                       className="form-control mt-1"
                       style={{ width: "100%" }}
                       onChange={e => handleNewSupplierChange(e, "facilityName")}
-                      required
                       placeholder='Tên cơ sở cung cấp' />
                   </div>
                 </div>
@@ -278,8 +288,7 @@ const Supplier = () => {
                       ref={userRef}
                       autoComplete="off"
                       onChange={(e) => loadDistrict(e.target.value)}
-                      value={cityIndex}
-                      required>
+                      value={cityIndex}>
                       <option value="" disabled selected>Chọn Tỉnh/Thành phố</option>
                       {city &&
                         city.map((item, index) => (
@@ -299,8 +308,7 @@ const Supplier = () => {
                       ref={userRef}
                       autoComplete="off"
                       onChange={(e) => loadWard(e.target.value)}
-                      value={districtIndex}
-                      required>
+                      value={districtIndex}>
                       <option value="" disabled selected>Chọn Quận/Huyện</option>
                       {district &&
                         district.map((item, index) => (
@@ -320,8 +328,7 @@ const Supplier = () => {
                       ref={userRef}
                       autoComplete="off"
                       onChange={(e) => saveWard(e.target.value)}
-                      value={wardIndex}
-                      required>
+                      value={wardIndex}>
                       <option value="" disabled selected>Chọn Phường/Xã</option>
                       {ward &&
                         ward.map((item, index) => (
@@ -341,7 +348,6 @@ const Supplier = () => {
                       ref={userRef}
                       autoComplete="off"
                       onChange={(e) => saveAddressJson(e.target.value)}
-                      required
                       className="form-control mt-1"
                       placeholder='Địa chỉ cụ thể' />
                   </div>
@@ -352,7 +358,7 @@ const Supplier = () => {
               <button style={{ width: "20%" }} type="submit" className="col-md-6 btn-light" id="confirmCreateSupplier">
                 Tạo
               </button>
-              <button className='btn btn-light' style={{ width: "20%" }} onClick={handleClose} id="cancelCreateSupplier">
+              <button className='btn btn-light' type='button' style={{ width: "20%" }} onClick={handleClose} id="cancelCreateSupplier">
                 Huỷ
               </button>
             </div>

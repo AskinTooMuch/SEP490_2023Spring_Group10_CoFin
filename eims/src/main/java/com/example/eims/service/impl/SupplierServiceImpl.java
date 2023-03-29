@@ -24,7 +24,10 @@ import com.example.eims.repository.ImportReceiptRepository;
 import com.example.eims.repository.SupplierRepository;
 import com.example.eims.repository.UserRepository;
 import com.example.eims.service.interfaces.ISupplierService;
+import com.example.eims.utils.AddressPojo;
 import com.example.eims.utils.StringDealer;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.configurationprocessor.json.JSONException;
 import org.springframework.boot.configurationprocessor.json.JSONObject;
@@ -49,6 +52,7 @@ public class SupplierServiceImpl implements ISupplierService {
     @Autowired
     private final FacilityRepository facilityRepository;
     private final StringDealer stringDealer = new StringDealer();
+    private final ObjectMapper objectMapper = new ObjectMapper();
     public SupplierServiceImpl(UserRepository userRepository, SupplierRepository supplierRepository,
                                ImportReceiptRepository importReceiptRepository, FacilityRepository facilityRepository) {
         this.userRepository = userRepository;
@@ -177,15 +181,20 @@ public class SupplierServiceImpl implements ISupplierService {
         if ((!createSupplierDTO.getSupplierMail().equals("")) && (!stringDealer.checkEmailRegex(supplierMail))) { /* Email is not valid */
             return new ResponseEntity<>("Email không hợp lệ.", HttpStatus.BAD_REQUEST);
         }
-        JSONObject addressObj;
+        // Address
         try {
-            addressObj = new JSONObject(supplierAddress);
-            String street = (String) addressObj.get("street");
-            System.out.println(street);
-            if (street == null || stringDealer.trimMax(street).equals("") || stringDealer.chechValidStreetString(street)){
-                return new ResponseEntity<>("Số nhà sai định dạng", HttpStatus.BAD_REQUEST);
-            }
-        } catch (JSONException e) {
+            AddressPojo address = objectMapper.readValue(supplierAddress, AddressPojo.class);
+            address.city = stringDealer.trimMax(address.city);
+            address.district = stringDealer.trimMax(address.district);
+            address.ward = stringDealer.trimMax(address.ward);
+            address.street = stringDealer.trimMax(address.street);
+            if (address.street.equals("")){ return new ResponseEntity<>("Số nhà không được để trống", HttpStatus.BAD_REQUEST); }
+            if (address.street.length() > 30) { return new ResponseEntity<>("Số nhà không được dài hơn 30 ký tự", HttpStatus.BAD_REQUEST);}
+            if (address.city.equals("")){ return new ResponseEntity<>("Thành phố không được để trống", HttpStatus.BAD_REQUEST); }
+            if (address.district.equals("")){ return new ResponseEntity<>("Huyện không được để trống", HttpStatus.BAD_REQUEST); }
+            if (address.ward.equals("")){ return new ResponseEntity<>("Xã không được để trống", HttpStatus.BAD_REQUEST); }
+            supplierAddress = objectMapper.writeValueAsString(address);
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
         // Set attribute
@@ -268,15 +277,20 @@ public class SupplierServiceImpl implements ISupplierService {
         if ((!supplierMail.equals("")) && (!stringDealer.checkEmailRegex(supplierMail))) { /* Email is not valid */
             return new ResponseEntity<>("Email không hợp lệ.", HttpStatus.BAD_REQUEST);
         }
-        JSONObject addressObj;
+        // Address
         try {
-            addressObj = new JSONObject(supplierAddress);
-            String street = (String) addressObj.get("street");
-            System.out.println(street);
-            if (street == null || stringDealer.trimMax(street).equals("") || stringDealer.chechValidStreetString(street)){
-                return new ResponseEntity<>("Số nhà sai định dạng", HttpStatus.BAD_REQUEST);
-            }
-        } catch (JSONException e) {
+            AddressPojo address = objectMapper.readValue(supplierAddress, AddressPojo.class);
+            address.city = stringDealer.trimMax(address.city);
+            address.district = stringDealer.trimMax(address.district);
+            address.ward = stringDealer.trimMax(address.ward);
+            address.street = stringDealer.trimMax(address.street);
+            if (address.street.equals("")){ return new ResponseEntity<>("Số nhà không được để trống", HttpStatus.BAD_REQUEST); }
+            if (address.street.length() > 30) { return new ResponseEntity<>("Số nhà không được dài hơn 30 ký tự", HttpStatus.BAD_REQUEST);}
+            if (address.city.equals("")){ return new ResponseEntity<>("Thành phố không được để trống", HttpStatus.BAD_REQUEST); }
+            if (address.district.equals("")){ return new ResponseEntity<>("Huyện không được để trống", HttpStatus.BAD_REQUEST); }
+            if (address.ward.equals("")){ return new ResponseEntity<>("Xã không được để trống", HttpStatus.BAD_REQUEST); }
+            supplierAddress = objectMapper.writeValueAsString(address);
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
         // Status
