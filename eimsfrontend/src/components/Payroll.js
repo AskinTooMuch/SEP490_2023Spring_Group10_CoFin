@@ -312,11 +312,8 @@ const Payroll = () => {
                                     </div>
                                     <div className="col-md-6">
                                         <select
-                                            id="select" className="form-control mt-1" >
-                                            <option defaultValue="Chọn nhân viên">Chọn nhân viên</option>
-                                            <option value="1">Nguyễn Hoàng Dương</option>
                                             id="select" className="form-control mt-1" required
-                                            onChange={(e) => handleCreatePayrollChange(e, "employeeId")}>
+                                            onChange={(e) => handleCreatePayrollChange(e, "employeeId")} >
                                             <option defaultValue="-1" disabled selected>Chọn nhân viên</option>
                                             {
                                                 employeeList.map((emItem, emIndex) =>
@@ -330,7 +327,6 @@ const Payroll = () => {
                                         <p>Ngày trả <FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                     </div>
                                     <div className="col-md-6">
-                                        <input type="date" style={{ width: "100%" }} placeholder="0" />
                                         <input required type="date" style={{ width: "100%" }} placeholder="0"
                                             onChange={(e) => handleCreatePayrollChange(e, "issueDate")} />
                                     </div>
@@ -340,7 +336,6 @@ const Payroll = () => {
                                         <p>Khoản tiền <FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                     </div>
                                     <div className="col-md-6">
-                                        <input style={{ width: "100%" }} placeholder="Tiền thưởng " />
                                         <input required style={{ width: "100%" }} placeholder="Tiền thưởng "
                                             onChange={(e) => handleCreatePayrollChange(e, "payrollItem")} />
                                     </div>
@@ -452,7 +447,6 @@ const Payroll = () => {
                                     <p>Ngày trả <FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                 </div>
                                 <div className="col-md-6">
-                                    <input type="date" style={{ width: "100%" }} placeholder="0" />
                                     <input required type="date" style={{ width: "100%" }} placeholder="0"
                                         value={payrollDetailDTO.issueDate}
                                         onChange={(e) => handleEditPayrollChange(e, "issueDate")} />
@@ -463,7 +457,6 @@ const Payroll = () => {
                                     <p>Khoản tiền <FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                 </div>
                                 <div className="col-md-6">
-                                    <input style={{ width: "100%" }} placeholder="Tiền thưởng " />
                                     <input required style={{ width: "100%" }} placeholder="Tiền thưởng "
                                         value={payrollDetailDTO.payrollItem}
                                         onChange={(e) => handleEditPayrollChange(e, "payrollItem")} />
