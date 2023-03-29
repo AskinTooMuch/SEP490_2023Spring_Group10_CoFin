@@ -411,7 +411,7 @@ BEGIN
 			(s_id, 1, 0,'Trứng đang ấp', 1),
 			(s_id, 2, embryoless,'Trứng trắng/tròn, trứng không có phôi', 1),
 			(s_id, 3, died_embryo,'Trứng loãng/tàu, phôi chết non', 1),
-			(s_id, 4, (balut),'Trứng lộn', 1),
+			(s_id, 4, balut,'Trứng lộn', 1),
 			(s_id, 5, hatching,'Trứng đang nở', 1),
 			(s_id, 6, (i_period-1),'Trứng tắc', 1),
 			(s_id, 7, (i_period-1),'Con nở', 1),

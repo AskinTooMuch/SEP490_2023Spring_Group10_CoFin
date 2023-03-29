@@ -115,9 +115,6 @@ const Supplier = () => {
   }
 
   function saveAddressJson(s) {
-    if (cityIndex === '' || districtIndex === '' || wardIndex === '') {
-      return;
-    }
     setStreet(s);
     if (cityIndex >= 0) {
       addressJson.city = fullAddresses[cityIndex].Name;
@@ -160,6 +157,12 @@ const Supplier = () => {
         supplierAddress: "",
         facilityName: "",
         supplierMail: ""
+      });
+      setAddressJson({
+        city: "",
+        district: "",
+        ward: "",
+        street: ""
       });
       console.log(response);
       loadSupplerList();
