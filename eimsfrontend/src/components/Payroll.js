@@ -312,7 +312,7 @@ const Payroll = () => {
                                     </div>
                                     <div className="col-md-6">
                                         <select
-                                            id="select" className="form-control mt-1" required
+                                            id="select" className="form-control mt-1" 
                                             onChange={(e) => handleCreatePayrollChange(e, "employeeId")} >
                                             <option defaultValue="-1" disabled selected>Chọn nhân viên</option>
                                             {
@@ -327,7 +327,7 @@ const Payroll = () => {
                                         <p>Ngày trả <FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                     </div>
                                     <div className="col-md-6">
-                                        <input required type="date" style={{ width: "100%" }} placeholder="0"
+                                        <input type="date" style={{ width: "100%" }} placeholder="0"
                                             onChange={(e) => handleCreatePayrollChange(e, "issueDate")} />
                                     </div>
                                 </div>
@@ -336,7 +336,7 @@ const Payroll = () => {
                                         <p>Khoản tiền <FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                     </div>
                                     <div className="col-md-6">
-                                        <input required style={{ width: "100%" }} placeholder="Tiền thưởng "
+                                        <input style={{ width: "100%" }} placeholder="Tiền thưởng "
                                             onChange={(e) => handleCreatePayrollChange(e, "payrollItem")} />
                                     </div>
                                     <div className="col-md-6">
@@ -375,7 +375,7 @@ const Payroll = () => {
                             <div className="input-group-prepend">
                                 <button type='submit'><span className="input-group-text" ><SearchIcon /></span></button>
                             </div>
-                            <input type="text" className="form-control" placeholder="Tìm kiếm" aria-label="Username" aria-describedby="basic-addon1" required
+                            <input type="text" className="form-control" placeholder="Tìm kiếm" aria-label="Username" aria-describedby="basic-addon1" 
                                 onChange={(e) => handleSearchPayrollChange((e))} />
                         </div>
                     </form>
@@ -447,7 +447,7 @@ const Payroll = () => {
                                     <p>Ngày trả <FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                 </div>
                                 <div className="col-md-6">
-                                    <input required type="date" style={{ width: "100%" }} placeholder="0"
+                                    <input type="date" style={{ width: "100%" }} placeholder="0"
                                         value={payrollDetailDTO.issueDate}
                                         onChange={(e) => handleEditPayrollChange(e, "issueDate")} />
                                 </div>
@@ -457,7 +457,7 @@ const Payroll = () => {
                                     <p>Khoản tiền <FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                 </div>
                                 <div className="col-md-6">
-                                    <input required style={{ width: "100%" }} placeholder="Tiền thưởng "
+                                    <input  style={{ width: "100%" }} placeholder="Tiền thưởng "
                                         value={payrollDetailDTO.payrollItem}
                                         onChange={(e) => handleEditPayrollChange(e, "payrollItem")} />
                                 </div>
