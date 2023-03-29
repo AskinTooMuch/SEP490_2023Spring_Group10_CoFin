@@ -20,4 +20,5 @@ import java.util.Optional;
 public interface WorkInRepository extends JpaRepository<WorkIn, Long> {
     Optional<WorkIn> findByUserId(Long userId);
     Optional<List<WorkIn>> findAllByFacilityId(Long facilityId);
+    Optional<List<WorkIn>> findAllWorkInsByFacilityIdIn(Long[] facilityIdList);
 }

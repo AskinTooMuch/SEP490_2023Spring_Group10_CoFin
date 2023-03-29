@@ -107,6 +107,9 @@ public class CostServiceImpl implements ICostService {
             return new ResponseEntity<>("Tên chi phí không thể để trống", HttpStatus.BAD_REQUEST);
         }
         String costItem = stringDealer.trimMax(createCostDTO.getCostItem());
+        if(costItem.length() > 50){
+            return new ResponseEntity<>("Tên chi phí không dài quá 50 ký tự", HttpStatus.BAD_REQUEST);
+        }
         // check cost amount
         Float costAmount = createCostDTO.getCostAmount();
         if(costAmount <= 0){
@@ -124,6 +127,9 @@ public class CostServiceImpl implements ICostService {
         String note = "";
         if(createCostDTO.getNote() != null && !stringDealer.trimMax(createCostDTO.getNote()).equals("")){
             note = createCostDTO.getNote();
+        }
+        if(note.length() > 255){
+            return new ResponseEntity<>("Ghi chú không quá 255 ký tự", HttpStatus.BAD_REQUEST);
         }
         // Set cost information
         Date issueDate = Date.valueOf(LocalDate.now());
@@ -166,6 +172,9 @@ public class CostServiceImpl implements ICostService {
             return new ResponseEntity<>("Tên chi phí không thể để trống", HttpStatus.BAD_REQUEST);
         }
         String costItem = stringDealer.trimMax(updateCostDTO.getCostItem());
+        if(costItem.length() > 50){
+            return new ResponseEntity<>("Tên chi phí không dài quá 50 ký tự", HttpStatus.BAD_REQUEST);
+        }
         // check cost amount
         Float costAmount = updateCostDTO.getCostAmount();
         if(costAmount <= 0){
@@ -183,6 +192,9 @@ public class CostServiceImpl implements ICostService {
         String note = "";
         if(updateCostDTO.getNote() != null && !stringDealer.trimMax(updateCostDTO.getNote()).equals("")){
             note = updateCostDTO.getNote();
+        }
+        if(note.length() > 255){
+            return new ResponseEntity<>("Ghi chú không quá 255 ký tự", HttpStatus.BAD_REQUEST);
         }
         // Set cost information
         Date issueDate = Date.valueOf(LocalDate.now());

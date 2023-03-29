@@ -202,7 +202,9 @@ CREATE TABLE egg_location(
 
 CREATE TABLE payroll(
 	payroll_id		integer		AUTO_INCREMENT PRIMARY KEY,
-	user_id			integer			NOT NULL,
+    owner_id		integer			NOT NULL,
+	employee_id			integer			NOT NULL,
+    phone		varchar(11)		NOT NULL,
     payroll_item	varchar(50)	NOT NULL,
     payroll_amount	decimal(15,2)	NOT NULL,
 	issue_date		date			NOT NULL,
@@ -343,7 +345,8 @@ ADD FOREIGN KEY (machine_id)		REFERENCES machine(machine_id),
 ADD CHECK (amount > 0);
 
 ALTER TABLE payroll
-ADD FOREIGN KEY (user_id)		REFERENCES user(user_id),
+ADD FOREIGN KEY (owner_id)		REFERENCES user(user_id),
+ADD FOREIGN KEY (employee_id)		REFERENCES user(user_id),
 ADD CHECK (payroll_amount != 0);
 
 ALTER TABLE cost

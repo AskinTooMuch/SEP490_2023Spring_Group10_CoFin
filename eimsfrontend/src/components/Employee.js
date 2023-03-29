@@ -206,7 +206,7 @@ export default function BasicTabs() {
             });
             console.log(response);
             loadEmployeeList();
-            toast.success("Tạo thành công");
+            toast.success(response.data);
             setShow(false);
         } catch (err) {
             if (!err?.response) {

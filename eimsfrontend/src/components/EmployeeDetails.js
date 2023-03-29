@@ -342,7 +342,7 @@ export default function BasicTabs() {
             })
             loadEmployee();
             console.log(response);
-            toast.success("Cập nhật thành công");
+            toast.success(response.data);
             setShow(false);
         } catch (err) {
             if (!err?.response) {
@@ -564,7 +564,7 @@ export default function BasicTabs() {
                                             <select className="form-select" aria-label="Default select example" required
                                                 onChange={(e) => handleUpdateEmployeeChange(e, "status")}>
                                                 <option disabled>Chọn trạng thái hoạt động</option>
-                                                {updateEmployeeDTO.status === 1
+                                                {updateEmployeeDTO.status === 2
                                                     ? <><option value="2" className='text-green' selected>Đang hoạt động </option><option value="0" className='text-red'>Nghỉ việc</option></>
                                                     : <><option value="2" className='text-green'>Đang hoạt động </option><option value="0" className='text-red' selected>Nghỉ việc</option></>
                                                 }
@@ -578,7 +578,7 @@ export default function BasicTabs() {
                                 <button style={{ width: "30%" }} className="col-md-6 btn-light" onClick={handleUpdateEmployeeSubmit}>
                                     Cập nhật
                                 </button>
-                                <button style={{ width: "20%" }} onClick={handleClose} className="btn btn-light">
+                                <button style={{ width: "20%" }} type='button' onClick={handleClose} className="btn btn-light">
                                     Huỷ
                                 </button>
                             </div>
@@ -611,6 +611,14 @@ export default function BasicTabs() {
                         </div>
                         <div className="row">
                             <div className="col-md-4">
+                                <p>Ngày sinh</p>
+                            </div>
+                            <div className="col-md-4">
+                                <p>{employeeDetailDTO.employeeDob}</p>
+                            </div>
+                        </div>
+                        <div className="row">
+                            <div className="col-md-4">
                                 <p>Địa chỉ</p>
                             </div>
                             <div className="col-md-4">
@@ -638,7 +646,7 @@ export default function BasicTabs() {
                                 <p>Trạng thái</p>
                             </div>
                             <div className="col-md-4">
-                                {employeeDetailDTO.status === 1
+                                {employeeDetailDTO.status === 2
                                     ? <p className="text-green">Hoạt động </p>
                                     : <p className="text-red">Nghỉ </p>
                                 }
