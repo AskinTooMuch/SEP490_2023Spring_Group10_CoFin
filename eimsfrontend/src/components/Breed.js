@@ -173,7 +173,6 @@ const Breed = () => {
                                     </div>
                                     <div className="col-md-6">
                                         <select className="form-control mt-1" aria-label="Default select example"
-
                                             onChange={e => handleChange(e, "specieId")}>
                                             <option disabled value="" selected>Open this select menu</option>
                                             { /**JSX to load options */}

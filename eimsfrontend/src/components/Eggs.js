@@ -56,25 +56,25 @@ export default function BasicTabs() {
             '& .MuiTabs-indicator': { backgroundColor: "#d25d19" },
             '& .Mui-selected': { color: "#d25d19" },
           }} value={value} onChange={handleChange} aria-label="basic tabs example">
-            <Tab id="speciesTab" style={{ textTransform: "capitalize" }} label="Loài" {...a11yProps(0)} />
-            <Tab id="breedTab" style={{ textTransform: "capitalize" }} label="Loại" {...a11yProps(1)} />
-            <Tab id="eggBatchTab" style={{ textTransform: "capitalize" }} label="Lô trứng" {...a11yProps(2)} />
-            <Tab id="eggStockTab" style={{ textTransform: "capitalize" }} label="Kho trứng" {...a11yProps(3)} />
-            <Tab id="monitorPriceTab" style={{ textTransform: "capitalize" }} label="Theo dõi giá" {...a11yProps(4)} />
+            <Tab id="eggBatchTab" style={{ textTransform: "capitalize" }} label="Lô trứng" {...a11yProps(0)} />
+            <Tab id="eggStockTab" style={{ textTransform: "capitalize" }} label="Kho trứng" {...a11yProps(1)} />
+            <Tab id="monitorPriceTab" style={{ textTransform: "capitalize" }} label="Theo dõi giá" {...a11yProps(2)} />
+            <Tab id="speciesTab" style={{ textTransform: "capitalize" }} label="Loài" {...a11yProps(3)} />
+            <Tab id="breedTab" style={{ textTransform: "capitalize" }} label="Loại" {...a11yProps(4)} />
           </Tabs>
         </Box>
         <Egg value={value} index={0}>
-          <Species />
-        </Egg>
-        <Egg value={value} index={1}>
-          <Breed />
-        </Egg>
-        <Egg value={value} index={2}>
           <EggBatch />
         </Egg>
+        <Egg value={value} index={1}>
+        </Egg>
+        <Egg value={value} index={2}>
+        </Egg>
         <Egg value={value} index={3}>
+          <Species />
         </Egg>
         <Egg value={value} index={4}>
+          <Breed />
         </Egg>
       </WithPermission>
       <WithPermission roleRequired="3">
@@ -84,7 +84,7 @@ export default function BasicTabs() {
             '& .Mui-selected': { color: "#d25d19" },
           }} value={value} onChange={handleChange} aria-label="basic tabs example">
             <Tab id="eggBatchTab" style={{ textTransform: "capitalize" }} label="Lô trứng" {...a11yProps(0)} />
-           
+
           </Tabs>
         </Box>
         <Egg value={value} index={0}>

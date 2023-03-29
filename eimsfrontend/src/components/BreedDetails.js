@@ -11,10 +11,9 @@ import '../css/machine.css'
 import { faStarOfLife } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Modal } from 'react-bootstrap'
+import ConfirmBox from './ConfirmBox';
 function BreedDetails(props) {
     const { children, value, index, ...other } = props;
-
-
     return (
         <div
             role="tabpanel"
@@ -46,6 +45,11 @@ function a11yProps(index) {
 }
 
 export default function BasicTabs() {
+    //Confirm Delete
+    const [open, setOpen] = useState(false);
+    function openDelete() {
+        setOpen(true);
+    }
     //Dependency
     const [breedLoaded, setBreedLoaded] = useState(false);
     const [imageLoaded, setImageLoaded] = useState(false);
@@ -201,7 +205,8 @@ export default function BasicTabs() {
                     },
                     withCredentials: true
                 });
-            toast.success("Xóa loại thành công");
+            setOpen(false);
+            toast.success(response.data);
             navigate("/egg");
         } catch (err) {
             if (!err?.response) {
@@ -399,7 +404,8 @@ export default function BasicTabs() {
                             <div className="col-md-4 ">
                                 <div className='button'>
                                     <button id="startEditBreed" className='btn btn-light ' onClick={handleShow}>Sửa</button>
-                                    <button id="startDeleteBreed" className='btn btn-light ' onClick={() => submitDeteteBreed()} >Xoá</button>
+                                    <button id="startDeleteBreed" className='btn btn-light ' onClick={() => openDelete()} >Xoá</button>
+                                    <ConfirmBox open={open} closeDialog={() => setOpen(false)} deleteFunction={() => submitDeteteBreed()} />
                                 </div>
                             </div>
                         </div>
