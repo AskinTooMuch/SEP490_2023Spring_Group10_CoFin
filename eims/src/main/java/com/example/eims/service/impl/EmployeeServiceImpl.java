@@ -359,8 +359,22 @@ public class EmployeeServiceImpl implements IEmployeeService {
      * @return employee list
      */
     @Override
-    public ResponseEntity<?> searchEmployeeByNameOrPhone(Long facilityId, String employeePhone) {
-        return null;
+    public ResponseEntity<?> searchEmployeeByNameOrPhone(Long facilityId, String searchKey) {
+        if(searchKey == null || stringDealer.trimMax(searchKey).equals("")){
+            return new ResponseEntity<>("Nhập từ khóa để tìm kiếm",HttpStatus.BAD_REQUEST);
+        }
+        Optional<List<User>> employeeOpt = userRepository.searchEmployeeByPhoneOrName(facilityId,searchKey);
+        if(!employeeOpt.isPresent() || employeeOpt.get().isEmpty()){
+            return new ResponseEntity<>("Không tìm thấy nhân viên phù hợp",HttpStatus.BAD_REQUEST);
+        }
+        List<User> employeeList = employeeOpt.get();
+        List<EmployeeListItemDTO> listEmployee = new ArrayList<>();
+        for (User employee: employeeList) {
+            EmployeeListItemDTO employeeListItemDTO = new EmployeeListItemDTO();
+            employeeListItemDTO.getFromUser(employee);
+            listEmployee.add(employeeListItemDTO);
+        }
+        return new ResponseEntity<>(listEmployee,HttpStatus.OK);
     }
 
 }

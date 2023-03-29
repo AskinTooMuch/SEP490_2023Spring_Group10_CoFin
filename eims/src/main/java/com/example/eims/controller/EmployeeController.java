@@ -39,6 +39,18 @@ public class EmployeeController {
     }
 
     /**
+     * function to search for employee
+     * @param facilityId faccility id
+     * @param searchKey keyword for search
+     * @return list of employee
+     */
+    @GetMapping("/search")
+    @Secured({"ROLE_OWNER"})
+    public ResponseEntity<?> searchEmployeeByPhoneOrName(@RequestParam Long facilityId, @RequestParam String searchKey){
+        return employeeService.searchEmployeeByNameOrPhone(facilityId,searchKey);
+    }
+
+    /**
      * Create new employee
      * @param createEmployeeDTO contain all employee's information
      * @return response message

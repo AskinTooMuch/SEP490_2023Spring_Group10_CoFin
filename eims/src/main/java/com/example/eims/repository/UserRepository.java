@@ -34,4 +34,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
 //    Optional<List<User>> findAllByRoleIdAndStatus(Long roleId, int status);
     @Query(value = "SELECT status FROM eims.user WHERE user_id = ?1", nativeQuery = true)
     boolean getStatusByUserId(Long userId);
+
+    @Query(value = "select * from eims.user\n" +
+            "where user_id in (select user_id from eims.work_in where facility_id = ?1)\n" +
+            "and (username like %?2% or phone like %?2%)", nativeQuery = true)
+    Optional<List<User>> searchEmployeeByPhoneOrName(Long facilityId,String searchKey);
 }

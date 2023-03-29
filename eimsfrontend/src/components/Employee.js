@@ -74,7 +74,8 @@ export default function BasicTabs() {
 
     //URL
     const EMPLOYEE_CREATE = "/api/employee/create";
-    const MACHINE_ALL = "/api/employee/all";
+    const EMPLOYEE_ALL = "/api/employee/all";
+    const EMPLOYEE_SEARCH = "/api/employee/search"
 
     const [value, setValue] = React.useState(0);
 
@@ -229,7 +230,7 @@ export default function BasicTabs() {
 
     // Request Machine list and load the Employee list into the table rows
     const loadEmployeeList = async () => {
-        const result = await axios.get(MACHINE_ALL,
+        const result = await axios.get(EMPLOYEE_ALL,
             {
                 params: { facilityId: sessionStorage.getItem("facilityId") },
                 headers: {
@@ -245,6 +246,43 @@ export default function BasicTabs() {
         if (state != null) toast.success(state);
     }
 
+    //search function
+
+    const [searchKey, setSearchKey] = useState("");
+
+    //Search
+    const handleSearchEmployeeChange = (event) => {
+        let actualValue = event.target.value;
+        setSearchKey(actualValue);
+    }
+
+    // Request Employee list that meet search keyword
+    const searchEmployeeList = async (event) => {
+        event.preventDefault();
+        let response;
+        try {
+            response = await axios.get(EMPLOYEE_SEARCH,
+                {
+                    params: {
+                        facilityId: sessionStorage.getItem("facilityId"),
+                        searchKey: searchKey
+                    },
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Access-Control-Allow-Origin': '*'
+                    },
+                    withCredentials: true
+                });
+            setEmployeeList(response.data);
+            console.log(employeeList.length)
+        } catch (err) {
+            if (!err?.response) {
+                toast.error('Server không phản hồi');
+            } else {
+                toast.error(err.response.data);
+            }
+        }
+    }
 
 
     return (
@@ -408,12 +446,13 @@ export default function BasicTabs() {
                     <div className='filter my-2 my-lg-0'>
                         <p><FilterAltIcon />Lọc</p>
                         <p><ImportExportIcon />Sắp xếp</p>
-                        <form className="form-inline">
+                        <form className="form-inline" onSubmit={searchEmployeeList}>
                             <div className="input-group">
                                 <div className="input-group-prepend">
-                                    <button ><span className="input-group-text" ><SearchIcon /></span></button>
+                                    <button type='submit'><span className="input-group-text" ><SearchIcon /></span></button>
                                 </div>
-                                <input type="text" className="form-control" placeholder="Tìm kiếm" aria-label="Username" aria-describedby="basic-addon1" />
+                                <input type="text" className="form-control" placeholder="Tìm kiếm" aria-label="Username" aria-describedby="basic-addon1"
+                                onChange={(e) => handleSearchEmployeeChange((e))}   />
                             </div>
                         </form>
                     </div>

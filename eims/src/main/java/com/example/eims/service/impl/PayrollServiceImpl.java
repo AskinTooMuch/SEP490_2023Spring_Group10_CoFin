@@ -236,7 +236,7 @@ public class PayrollServiceImpl implements IPayrollService {
         }
 
         if(searchKey == null || stringDealer.trimMax(searchKey).equals("")){
-            return new ResponseEntity<>("Hãy nhập từ khóa để tìm kiếm", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Nhập từ khóa để tìm kiếm", HttpStatus.BAD_REQUEST);
         }
         String searchKey2 = stringDealer.trimMax(searchKey);
         Optional<List<Payroll>> payrollListOtp = payrollRepository.searchPayroll(ownerId,searchKey2);

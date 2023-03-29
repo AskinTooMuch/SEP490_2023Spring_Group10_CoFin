@@ -227,9 +227,12 @@ public class CostServiceImpl implements ICostService {
         if(!userRepository.existsById(userId)){
             return new ResponseEntity<>("Tài khoản không hợp lệ", HttpStatus.BAD_REQUEST);
         }
+        if(costName == null || stringDealer.trimMax(costName).equals("")){
+            return new ResponseEntity<>("Nhập từ khóa để tìm kiếm", HttpStatus.BAD_REQUEST);
+        }
         Optional<List<Cost>> costList = costRepository.searchCostByName(userId,costName);
-        if(!costList.isPresent()){
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        if(!costList.isPresent() || costList.get().isEmpty()){
+            return new ResponseEntity<>("Không tìm thấy khoản chi phí phù hợp", HttpStatus.BAD_REQUEST);
         }
         List<Cost> cost = costList.get();
         List<CostDetailDTO> costDetailList = new ArrayList<>();

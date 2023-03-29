@@ -24,6 +24,7 @@ const Cost = () => {
     const COST_ALL = "/api/cost/all";
     const COST_GET = "/api/cost/get";
     const COST_UPDATE_SAVE = "/api/cost/update/save"
+    const COST_SEARCH = "/api/cost/search"
 
     //Data holding objects
     const [costList, setCostList] = useState([]);
@@ -197,6 +198,43 @@ const Cost = () => {
         }
     }
 
+    //search function
+
+    const [searchKey, setSearchKey] = useState("");
+
+    //Search
+    const handleSearchCostChange = (event) => {
+        let actualValue = event.target.value;
+        setSearchKey(actualValue);
+    }
+
+    // Request Cost list that meet search keyword
+    const searchCostList = async (event) => {
+        event.preventDefault();
+        let response;
+        try {
+            response = await axios.get(COST_SEARCH,
+                {
+                    params: {
+                        userId: sessionStorage.getItem("curUserId"),
+                        costName: searchKey
+                    },
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Access-Control-Allow-Origin': '*'
+                    },
+                    withCredentials: true
+                });
+            setCostList(response.data);
+            console.log(costList.length)
+        } catch (err) {
+            if (!err?.response) {
+                toast.error('Server không phản hồi');
+            } else {
+                toast.error(err.response.data);
+            }
+        }
+    }
 
     return (
         <div>
@@ -262,12 +300,13 @@ const Cost = () => {
                 <div className='filter my-2 my-lg-0'>
                     <p><FilterAltIcon />Lọc</p>
                     <p><ImportExportIcon />Sắp xếp</p>
-                    <form className="form-inline">
+                    <form className="form-inline" onSubmit={searchCostList}>
                         <div className="input-group">
                             <div className="input-group-prepend">
-                                <button ><span className="input-group-text" ><SearchIcon /></span></button>
+                                <button type='submit' ><span className="input-group-text" ><SearchIcon /></span></button>
                             </div>
-                            <input type="text" className="form-control" placeholder="Tìm kiếm" aria-label="Username" aria-describedby="basic-addon1" />
+                            <input type="text" className="form-control" placeholder="Tìm kiếm" aria-label="Username" aria-describedby="basic-addon1"
+                            onChange={(e) => handleSearchCostChange((e))}  />
                         </div>
                     </form>
                 </div>
