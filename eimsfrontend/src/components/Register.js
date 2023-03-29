@@ -292,7 +292,7 @@ const Register = () => {
                                                                         autoComplete="off"
                                                                         onChange={e => handleSignUpChange(e, "username")}
                                                                         value={signUpDTO.username}
-                                                                        required
+
                                                                         className="form-control " />
                                                                 </div>
                                                             </div>
@@ -305,7 +305,7 @@ const Register = () => {
                                                                         autoComplete="off"
                                                                         onChange={(e) => handleSignUpChange(e, "userDob")}
                                                                         value={signUpDTO.userDob}
-                                                                        required
+
                                                                         className="form-control " pattern="\d{4}-\d{2}-\d{2}" />
                                                                 </div>
                                                             </div>
@@ -323,7 +323,7 @@ const Register = () => {
                                                                         autoComplete="off"
                                                                         onChange={(e) => handleSignUpChange(e, "userPhone")}
                                                                         value={signUpDTO.userPhone}
-                                                                        required
+
                                                                         aria-invalid={validPhone ? "false" : "true"}
                                                                         aria-describedby="phonenote"
                                                                         className="form-control " disabled />
@@ -342,7 +342,7 @@ const Register = () => {
                                                                         autoComplete="off"
                                                                         onChange={(e) => handleSignUpChange(e, "userEmail")}
                                                                         value={signUpDTO.userEmail}
-                                                                        required
+
                                                                         aria-invalid={validEmail ? "false" : "true"}
                                                                         aria-describedby="emailnote" className="form-control " />
                                                                 </div>
@@ -356,7 +356,7 @@ const Register = () => {
                                                                         autoComplete="off"
                                                                         onChange={(e) => loadUserDistrict(e.target.value)}
                                                                         value={userCityIndex}
-                                                                        required>
+                                                                    >
                                                                         <option value="" disabled selected>Chọn Tỉnh/Thành phố của bạn</option>
                                                                         {city &&
                                                                             city.map((item, index) => (
@@ -375,7 +375,7 @@ const Register = () => {
                                                                         autoComplete="off"
                                                                         onChange={(e) => loadUserWard(e.target.value)}
                                                                         value={userDistrictIndex}
-                                                                        required>
+                                                                    >
                                                                         <option value="" disabled selected>Chọn Quận/Huyện của bạn</option>
                                                                         {userDistrict &&
                                                                             userDistrict.map((item, index) => (
@@ -394,7 +394,7 @@ const Register = () => {
                                                                         autoComplete="off"
                                                                         onChange={(e) => saveUserWard(e.target.value)}
                                                                         value={userWardIndex}
-                                                                        required>
+                                                                    >
                                                                         <option value="" disabled selected>Chọn Phường của bạn</option>
                                                                         {userWard &&
                                                                             userWard.map((item, index) => (
@@ -412,7 +412,7 @@ const Register = () => {
                                                                         ref={userRef}
                                                                         autoComplete="off"
                                                                         onChange={(e) => loadUserAddress(e.target.value)}
-                                                                        required
+
                                                                         className="form-control " />
                                                                 </div>
                                                             </div>
@@ -426,7 +426,7 @@ const Register = () => {
                                                                     <input type={passwordShown ? "text" : "password"} id="password"
                                                                         onChange={(e) => setPwd(e.target.value)}
                                                                         value={password}
-                                                                        required minLength="8" maxLength="20"
+                                                                        minLength="8" maxLength="20"
                                                                         aria-invalid={validPwd ? "false" : "true"}
                                                                         aria-describedby="pwdnote"
                                                                         className="form-control " />
@@ -442,7 +442,7 @@ const Register = () => {
                                                                         className="tip invalid" ><FontAwesomeIcon icon={faInfoCircle} /></span>
                                                                     <input type={passwordShown2 ? "text" : "password"} id="confirm_pwd"
                                                                         onChange={(e) => setMatchPwd(e.target.value)}
-                                                                        required minLength="8" maxLength="20"
+                                                                        minLength="8" maxLength="20"
                                                                         aria-invalid={validMatch ? "false" : "true"}
                                                                         aria-describedby="confirmnote" className="form-control " />
                                                                     <i onClick={togglePasswordVisiblity2}>{eye}</i>
@@ -462,7 +462,7 @@ const Register = () => {
                                                                         autoComplete="off"
                                                                         onChange={(e) => handleSignUpChange(e, "facilityName")}
                                                                         value={signUpDTO.facilityName}
-                                                                        required
+
                                                                         className="form-control " />
                                                                 </div>
                                                             </div>
@@ -474,7 +474,7 @@ const Register = () => {
                                                                         autoComplete="off"
                                                                         onChange={(e) => handleSignUpChange(e, "facilityFoundDate")}
                                                                         value={signUpDTO.facilityFoundDate}
-                                                                        required
+
                                                                         className="form-control " pattern="\d{4}-\d{2}-\d{2}" />
                                                                 </div>
                                                             </div>
@@ -489,7 +489,7 @@ const Register = () => {
                                                                         autoComplete="off"
                                                                         onChange={(e) => handleSignUpChange(e, "facilityHotline")}
                                                                         value={signUpDTO.facilityHotline}
-                                                                        required
+
                                                                         className="form-control " />
                                                                 </div>
                                                             </div>
@@ -502,7 +502,7 @@ const Register = () => {
                                                                         autoComplete="off"
                                                                         onChange={(e) => loadFaciDistrict(e.target.value)}
                                                                         value={faciCityIndex}
-                                                                        required>
+                                                                    >
                                                                         <option value="" disabled selected>Chọn Tỉnh/Thành phố của bạn</option>
                                                                         {city &&
                                                                             city.map((item, index) => (
@@ -521,7 +521,7 @@ const Register = () => {
                                                                         autoComplete="off"
                                                                         onChange={(e) => loadFaciWard(e.target.value)}
                                                                         value={faciDistrictIndex}
-                                                                        required>
+                                                                    >
                                                                         <option value="" disabled selected>Chọn Quận/Huyện của bạn</option>
                                                                         {faciDistrict &&
                                                                             faciDistrict.map((item, index) => (
@@ -540,7 +540,7 @@ const Register = () => {
                                                                         autoComplete="off"
                                                                         onChange={(e) => saveFaciWard(e.target.value)}
                                                                         value={faciWardIndex}
-                                                                        required>
+                                                                    >
                                                                         <option value="" disabled selected>Chọn Phường của bạn</option>
                                                                         {faciWard &&
                                                                             faciWard.map((item, index) => (
@@ -559,7 +559,7 @@ const Register = () => {
                                                                         autoComplete="off"
                                                                         onChange={(e) => loadFaciAddress(e.target.value)}
                                                                         defaultValue={faciStreet}
-                                                                        required
+
                                                                         className="form-control " />
                                                                 </div>
                                                             </div>
@@ -571,7 +571,7 @@ const Register = () => {
                                                                         autoComplete="off"
                                                                         onChange={(e) => handleSignUpChange(e, "businessLicenseNumber")}
                                                                         value={signUpDTO.businessLicenseNumber}
-                                                                        required
+
                                                                         className="form-control " />
                                                                 </div>
                                                             </div>

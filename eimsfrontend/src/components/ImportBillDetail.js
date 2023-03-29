@@ -148,15 +148,15 @@ export default function BasicTabs() {
             if (!err?.response) {
                 toast.error('Server không phản hồi');
             } else {
-                if ((err.response.data === null) || (err.response.data === '') ) {
-          toast.error('Có lỗi xảy ra, vui lòng thử lại');
-        } else {
-          toast.error(err.response.data);
-        }
+                if ((err.response.data === null) || (err.response.data === '')) {
+                    toast.error('Có lỗi xảy ra, vui lòng thử lại');
+                } else {
+                    toast.error(err.response.data);
+                }
             }
         }
     }
-    
+
     const routeChange = (ebi) => {
         navigate('/eggbatchdetail', { state: { id: ebi } });
     }
@@ -267,7 +267,7 @@ export default function BasicTabs() {
                                             <p>Số tiền đã thanh toán</p>
                                         </div>
                                         <div className="col-md-6">
-                                            <input required style={{ width: "100%" }} type="number" 
+                                            <input style={{ width: "100%" }} type="number"
                                                 value={paid.paid} onChange={(e) => handleUpdatePaidChange(e, "paid")}
                                             />
                                         </div>

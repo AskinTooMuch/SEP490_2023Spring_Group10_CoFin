@@ -98,7 +98,7 @@ const Species = () => {
       if (!err?.response) {
         toast.error('Server không phản hồi');
       } else {
-        if ((err.response.data === null) || (err.response.data === '') ) {
+        if ((err.response.data === null) || (err.response.data === '')) {
           toast.error('Có lỗi xảy ra, vui lòng thử lại');
         } else {
           toast.error(err.response.data);
@@ -137,7 +137,7 @@ const Species = () => {
       if (!err?.response) {
         toast.error('Server không phản hồi');
       } else {
-        if ((err.response.data === null) || (err.response.data === '') ) {
+        if ((err.response.data === null) || (err.response.data === '')) {
           toast.error('Có lỗi xảy ra, vui lòng thử lại');
         } else {
           toast.error(err.response.data);
@@ -167,7 +167,7 @@ const Species = () => {
       if (!err?.response) {
         toast.error('Server không phản hồi');
       } else {
-        if ((err.response.data === null) || (err.response.data === '') ) {
+        if ((err.response.data === null) || (err.response.data === '')) {
           toast.error('Có lỗi xảy ra, vui lòng thử lại');
         } else {
           toast.error(err.response.data);
@@ -200,7 +200,7 @@ const Species = () => {
       if (!err?.response) {
         toast.error('Server không phản hồi');
       } else {
-        if ((err.response.data === null) || (err.response.data === '') ) {
+        if ((err.response.data === null) || (err.response.data === '')) {
           toast.error('Có lỗi xảy ra, vui lòng thử lại');
         } else {
           toast.error(err.response.data);
@@ -227,7 +227,7 @@ const Species = () => {
       if (!err?.response) {
         toast.error('Server không phản hồi');
       } else {
-        if ((err.response.data === null) || (err.response.data === '') ) {
+        if ((err.response.data === null) || (err.response.data === '')) {
           toast.error('Có lỗi xảy ra, vui lòng thử lại');
         } else {
           toast.error(err.response.data);
@@ -257,6 +257,7 @@ const Species = () => {
   return (
     <div>
       <nav className="navbar justify-content-between">
+        <button id="startCreateSpecie" className='btn btn-light' onClick={handleShow}>+ Thêm</button>
         <div className='filter my-2 my-lg-0'>
           <p><FilterAltIcon />Lọc</p>
           <p><ImportExportIcon />Sắp xếp</p>
@@ -269,7 +270,7 @@ const Species = () => {
             </div>
           </form>
         </div>
-        <button id="startCreateSpecie" className='btn btn-light' onClick={handleShow}>+ Thêm</button>
+
         <Modal show={show} onHide={handleClose}
           size="lg"
           aria-labelledby="contained-modal-title-vcenter"
@@ -290,7 +291,7 @@ const Species = () => {
                     <input placeholder='Gà, Ngan, Vịt, v.v'
                       onChange={e => handleNewSpecieChange(e, "specieName")}
                       value={newSpecieDTO.specieName}
-                      className="form-control mt-1"/>
+                      className="form-control mt-1" />
                   </div>
                 </div>
                 <div className="row">
@@ -325,7 +326,7 @@ const Species = () => {
                       onChange={e => handleNewSpecieChange(e, "embryolessDate")}
                       value={newSpecieDTO.embryolessDate}
                       type="number"
-                      className="form-control mt-1"/>
+                      className="form-control mt-1" />
                   </div>
                 </div>
                 <div className="row align-items-center">
@@ -450,7 +451,7 @@ const Species = () => {
                               <input placeholder='Gà, Ngan, Vịt, v.v' id="editSpecieName"
                                 onChange={e => handleEditSpecieChange(e, "specieName")}
                                 value={editSpecieDTO.specieName}
-                                className='form-control mt-1'/>
+                                className='form-control mt-1' />
                             </div>
                           </div>
                           <div className="row">

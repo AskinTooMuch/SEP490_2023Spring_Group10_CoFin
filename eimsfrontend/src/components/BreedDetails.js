@@ -291,7 +291,7 @@ export default function BasicTabs() {
                                         <div className="col-md-6">
                                             <select class="form-select" aria-label="Default select example"
                                                 onChange={e => handleEditChange(e, "specieId")}
-                                                required>
+                                            >
                                                 <option disabled>Open this select menu</option>
                                                 { /**JSX to load options */}
                                                 {specieList &&
@@ -309,7 +309,6 @@ export default function BasicTabs() {
                                         </div>
                                         <div className="col-md-6">
                                             <input
-                                                required
                                                 value={editBreedDTO.breedName}
                                                 placeholder="Gà tre/Gà ri/Gà Đông Cảo/..."
                                                 onChange={e => handleEditChange(e, "breedName")} />
@@ -320,11 +319,10 @@ export default function BasicTabs() {
                                             <p>Cân nặng trung bình con đực<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                         </div>
                                         <div className="col-md-6">
-                                            <input required style={{ width: "100%" }}
+                                            <input style={{ width: "100%" }}
                                                 value={editBreedDTO.averageWeightMale}
                                                 placeholder="(kg)"
                                                 type='number'
-                                                min='0'
                                                 step='0.01'
                                                 onChange={e => handleEditChange(e, "averageWeightMale")} />
                                         </div>
@@ -334,11 +332,10 @@ export default function BasicTabs() {
                                             <p>Cân nặng trung bình con cái<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                         </div>
                                         <div className="col-md-6">
-                                            <input required style={{ width: "100%" }}
+                                            <input style={{ width: "100%" }}
                                                 value={editBreedDTO.averageWeightFemale}
                                                 placeholder="(kg)"
                                                 type='number'
-                                                min='0'
                                                 step='0.01'
                                                 onChange={e => handleEditChange(e, "averageWeightFemale")} />
                                         </div>
@@ -349,11 +346,9 @@ export default function BasicTabs() {
                                         </div>
                                         <div className="col-md-6">
                                             <input
-                                                required
                                                 value={editBreedDTO.growthTime}
                                                 placeholder="Số ngày"
                                                 type='number'
-                                                min='0'
                                                 onChange={e => handleEditChange(e, "growthTime")} />
                                         </div>
                                     </div>

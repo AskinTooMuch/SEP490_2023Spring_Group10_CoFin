@@ -1,13 +1,10 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from '../api/axios';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import SearchIcon from '@mui/icons-material/Search';
 import ImportExportIcon from '@mui/icons-material/ImportExport';
 import { useNavigate } from 'react-router-dom';
 const EggBatch = () => {
-    const userRef = useRef();
     const [dataLoaded, setDataLoaded] = useState(false);
     //API URLs
     const EGGBATCH_ALL = '/api/eggBatch/all'
@@ -84,7 +81,7 @@ const EggBatch = () => {
                                         <td>{item.importDate}</td>
                                         <td>{item.progress}</td>
                                         {
-                                            item.status == 1
+                                            item.status === 1
                                             ?<td>Chưa hoàn thành</td>
                                             :<td>Đã hoàn thành</td>
                                         }

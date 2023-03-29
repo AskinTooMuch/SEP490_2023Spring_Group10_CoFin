@@ -37,7 +37,7 @@ const Nav = () => {
     }
     const [notify, setNotify] = React.useState(null);
     const open = Boolean(notify);
-    const handleClickNoti = (event: React.MouseEvent<HTMLElement> ) => {
+    const handleClickNoti = (event: React.MouseEvent<HTMLElement>) => {
         setNotify(event.currentTarget);
     };
     const handleCloseNoti = () => {
@@ -136,11 +136,13 @@ const Nav = () => {
                     <p>Quản lý tài khoản</p>
                 </MenuItem>
             </WithPermission>
-            <MenuItem>
+            <MenuItem onClick={handleClickNoti}>
                 <IconButton
                     size="large"
+                    aria-controls={open ? 'notify-menu' : undefined}
+                    aria-haspopup="true"
+                    aria-expanded={open ? 'true' : undefined}
                     color="inherit"
-                    onClick={handleClickNoti}
                 >
                     <Badge badgeContent={<FiberManualRecordIcon color="error" />} >
                         <NotificationsIcon />
@@ -167,9 +169,7 @@ const Nav = () => {
     const handleClosePopup = () => setShow(false);
     const handleShowPopup = () => setShow(true);
     return (
-
         <div>
-
             <Box sx={{ flexGrow: 1 }}>
                 <AppBar position="static">
                     <Toolbar>
@@ -179,7 +179,6 @@ const Nav = () => {
                             component="div"
                             sx={{ display: { xs: 'none', sm: 'block' } }}
                         >
-
                             <Link className='title' to="/"><img src={logo} alt="logo" height={70}></img>EIMS</Link>
                         </Typography>
                         {
@@ -248,8 +247,8 @@ const Nav = () => {
                                 </>
                                 :
                                 <Box sx={{ flexGrow: 1 }}>
-                                    <Button className="signupbutton" color="inherit"><Link style={{ textDecoration: "none" }} to="/registerotp">Đăng ký</Link></Button>
-                                    <Button className="loginbutton" color="inherit"><Link style={{ textDecoration: "none" }} to="/login">Đăng nhập</Link></Button>
+                                    <Link style={{ textDecoration: "none", color: "white" }} to="/registerotp"><Button className="signupbutton" color="inherit">Đăng ký</Button></Link>
+                                    <Link style={{ textDecoration: "none", color: "white" }} to="/login"><Button className="loginbutton" color="inherit">Đăng nhập</Button></Link>
                                 </Box>
                         }
 
@@ -268,7 +267,7 @@ const Nav = () => {
                     sx: {
                         overflow: 'hidden',
                         filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
-                        
+
                     },
                     style: {
                         width: '350px',

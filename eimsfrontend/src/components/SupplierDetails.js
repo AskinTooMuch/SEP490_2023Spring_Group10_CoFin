@@ -8,7 +8,7 @@ import Box from '@mui/material/Box';
 import '../css/machine.css'
 import { faStarOfLife } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Modal, Button } from 'react-bootstrap'
+import { Modal } from 'react-bootstrap'
 import axios from 'axios';
 //Toast
 import { ToastContainer, toast } from 'react-toastify';
@@ -156,11 +156,11 @@ export default function BasicTabs() {
             if (!err?.response) {
                 toast.error('Server không phản hồi');
             } else {
-                if ((err.response.data === null) || (err.response.data === '') ) {
-          toast.error('Có lỗi xảy ra, vui lòng thử lại');
-        } else {
-          toast.error(err.response.data);
-        }
+                if ((err.response.data === null) || (err.response.data === '')) {
+                    toast.error('Có lỗi xảy ra, vui lòng thử lại');
+                } else {
+                    toast.error(err.response.data);
+                }
             }
         }
     }
@@ -249,7 +249,7 @@ export default function BasicTabs() {
             district: fullAddresses[cityIndex].Districts[districtIndex].Name,
             ward: fullAddresses[cityIndex].Districts[districtIndex].Wards[wardIndex].Name,
             street: s
-          });
+        });
         updateSupplierDTO.supplierAddress = JSON.stringify(updateAddressJson);
         console.log(updateAddressJson.street);
         console.log(addressJson.street);
@@ -293,16 +293,16 @@ export default function BasicTabs() {
             console.log(response);
             toast.success(response.data);
             setShow(false);
-            
+
         } catch (err) {
             if (!err?.response) {
                 toast.error('Server không phản hồi');
             } else {
-                if ((err.response.data === null) || (err.response.data === '') ) {
-          toast.error('Có lỗi xảy ra, vui lòng thử lại');
-        } else {
-          toast.error(err.response.data);
-        }
+                if ((err.response.data === null) || (err.response.data === '')) {
+                    toast.error('Có lỗi xảy ra, vui lòng thử lại');
+                } else {
+                    toast.error(err.response.data);
+                }
             }
         }
     }
@@ -332,7 +332,7 @@ export default function BasicTabs() {
                                         <label htmlFor='updateSupplierName' className='col-form-label'>Họ và tên&nbsp;<FontAwesomeIcon className="star" icon={faStarOfLife} /></label>
                                     </div>
                                     <div className="col-md-8">
-                                        <input required id="updateSupplierName"
+                                        <input id="updateSupplierName"
                                             value={updateSupplierDTO.supplierName}
                                             onChange={(e) => handleUpdateSupplierChange(e, "supplierName")}
                                             className="form-control mt-1"
@@ -344,7 +344,7 @@ export default function BasicTabs() {
                                         <label htmlFor='updateSupplierPhoneNumber' className='col-form-label'>Số điện thoại&nbsp;<FontAwesomeIcon className="star" icon={faStarOfLife} /></label>
                                     </div>
                                     <div className="col-md-8">
-                                        <input required id="updateSupplierPhoneNumber"
+                                        <input id="updateSupplierPhoneNumber"
                                             value={updateSupplierDTO.supplierPhone}
                                             onChange={(e) => handleUpdateSupplierChange(e, "supplierPhone")}
                                             className="form-control mt-1"
@@ -368,7 +368,7 @@ export default function BasicTabs() {
                                         <label htmlFor='updateSupplierFacilityName' className='col-form-label'>Tên cơ sở&nbsp;<FontAwesomeIcon className="star" icon={faStarOfLife} /></label>
                                     </div>
                                     <div className="col-md-8">
-                                        <input required id="updateSupplierFacilityName"
+                                        <input id="updateSupplierFacilityName"
                                             value={updateSupplierDTO.facilityName}
                                             onChange={(e) => handleUpdateSupplierChange(e, "facilityName")}
                                             className="form-control mt-1"
@@ -386,7 +386,7 @@ export default function BasicTabs() {
                                             autoComplete="off"
                                             onChange={(e) => loadDistrict(e.target.value)}
                                             value={cityIndex}
-                                            required>
+                                        >
                                             <option value="" disabled>Chọn Tỉnh/Thành phố</option>
                                             {city &&
                                                 city.map((item, index) => (
@@ -412,7 +412,7 @@ export default function BasicTabs() {
                                             autoComplete="off"
                                             onChange={(e) => loadWard(e.target.value, -1)}
                                             value={districtIndex}
-                                            required>
+                                        >
                                             <option value="" disabled>Chọn Quận/Huyện</option>
                                             {district &&
                                                 district.map((item, index) => (
@@ -438,7 +438,7 @@ export default function BasicTabs() {
                                             autoComplete="off"
                                             onChange={(e) => saveWard(e.target.value)}
                                             value={wardIndex}
-                                            required>
+                                        >
                                             <option value="" disabled>Chọn Phường/Xã</option>
                                             {ward &&
                                                 ward.map((item, index) => (
@@ -463,10 +463,10 @@ export default function BasicTabs() {
                                             ref={userRef}
                                             autoComplete="off"
                                             onChange={(e) => saveAddressJson(e.target.value)}
-                                            required
+
                                             className="form-control mt-1"
                                             value={street}
-                                            placeholder='Địa chỉ cụ thể'/>
+                                            placeholder='Địa chỉ cụ thể' />
                                     </div>
                                 </div>
                                 <div className="row">

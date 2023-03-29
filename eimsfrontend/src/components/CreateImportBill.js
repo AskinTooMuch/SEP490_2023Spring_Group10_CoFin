@@ -1,9 +1,7 @@
-import { ImportantDevicesTwoTone } from '@mui/icons-material';
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
-import { display } from '@mui/system';
 
 function TableRows({ rowsData, deleteTableRows, handleChange, breedList }) {
     return (
@@ -13,7 +11,7 @@ function TableRows({ rowsData, deleteTableRows, handleChange, breedList }) {
                 <tr key={index}>
                     <td>
                         <select onChange={(evnt) => (handleChange(index, evnt))} name="breedId"
-                            id="selectBreed" className="form-control mt-1" required>
+                            id="selectBreed" className="form-control mt-1" >
                             <option defaultValue="chọn loại">Chọn loại</option>
                             {
                                 breedList &&
@@ -25,8 +23,8 @@ function TableRows({ rowsData, deleteTableRows, handleChange, breedList }) {
                             }
                         </select>
                     </td>
-                    <td><input type="number" value={amount} onChange={(evnt) => (handleChange(index, evnt))} name="amount" className="form-control" required/> </td>
-                    <td><input type="number" max="9999999999999.99" value={price} onChange={(evnt) => (handleChange(index, evnt))} name="price" className="form-control" required/> </td>
+                    <td><input type="number" value={amount} onChange={(evnt) => (handleChange(index, evnt))} name="amount" className="form-control" /> </td>
+                    <td><input type="number" value={price} onChange={(evnt) => (handleChange(index, evnt))} name="price" className="form-control" /> </td>
                     <td><input disabled type="text" value={(amount * price).toLocaleString('vi', { style: 'currency', currency: 'VND' })} name="total" className="form-control" /> </td>
                     <td><button className="btn btn-outline-danger" type='button' onClick={() => (deleteTableRows(index))}>x</button></td>
                 </tr>
@@ -66,7 +64,7 @@ const CreateImportBill = () => {
         const rowsInput = [...rowsData];
         rowsInput[index][name] = value;
         setRowsData(rowsInput);
-        if (name == "amount" || name == "price") {
+        if (name === "amount" || name === "price") {
             cal();
         }
     }
@@ -95,7 +93,7 @@ const CreateImportBill = () => {
             ...createImportDTO,
             [field]: actualValue
         })
-        if (field == "supplierId") {
+        if (field === "supplierId") {
             show();
         }
 
@@ -121,16 +119,16 @@ const CreateImportBill = () => {
                 });
             setSupplierList(response.data);
             setDataLoaded(true)
-            console.log("list:"+ response.data);
+            console.log("list:" + response.data);
         } catch (err) {
             if (!err?.response) {
                 toast.error('Server không phản hồi');
             } else {
-                if ((err.response.data === null) || (err.response.data === '') ) {
-          toast.error('Có lỗi xảy ra, vui lòng thử lại');
-        } else {
-          toast.error(err.response.data);
-        }
+                if ((err.response.data === null) || (err.response.data === '')) {
+                    toast.error('Có lỗi xảy ra, vui lòng thử lại');
+                } else {
+                    toast.error(err.response.data);
+                }
             }
         }
     }
@@ -155,11 +153,11 @@ const CreateImportBill = () => {
             if (!err?.response) {
                 toast.error('Server không phản hồi');
             } else {
-                if ((err.response.data === null) || (err.response.data === '') ) {
-          toast.error('Có lỗi xảy ra, vui lòng thử lại');
-        } else {
-          toast.error(err.response.data);
-        }
+                if ((err.response.data === null) || (err.response.data === '')) {
+                    toast.error('Có lỗi xảy ra, vui lòng thử lại');
+                } else {
+                    toast.error(err.response.data);
+                }
             }
         }
     }
@@ -193,11 +191,11 @@ const CreateImportBill = () => {
             if (!err?.response) {
                 toast.error('Server không phản hồi');
             } else {
-                if ((err.response.data === null) || (err.response.data === '') ) {
-          toast.error('Có lỗi xảy ra, vui lòng thử lại');
-        } else {
-          toast.error(err.response.data);
-        }
+                if ((err.response.data === null) || (err.response.data === '')) {
+                    toast.error('Có lỗi xảy ra, vui lòng thử lại');
+                } else {
+                    toast.error(err.response.data);
+                }
             }
         }
     }
@@ -207,7 +205,7 @@ const CreateImportBill = () => {
         var select = document.getElementById('select');
         var id = select.options[select.selectedIndex].value;
         supplierList.map((item) => {
-            item.supplierId == id
+            item.supplierId === id
                 ? document.getElementById('phone').innerHTML = item.supplierPhone
                 : console.log("");
         }
@@ -219,10 +217,10 @@ const CreateImportBill = () => {
         rowsData.map((item) => {
             total += item.amount * item.price;
         }
-        
+
         )
         var s = total.toLocaleString('vi', { style: 'currency', currency: 'VND' });
-        document.getElementById('total').innerHTML ="Tổng hóa đơn: " + s;
+        document.getElementById('total').innerHTML = "Tổng hóa đơn: " + s;
     }
 
     function curTime() {
@@ -242,7 +240,7 @@ const CreateImportBill = () => {
                             </div>
                             <div className="col-md-3">
                                 <select onChange={(e) => handleCreateImportChange(e, "supplierId")}
-                                    id="select" className="form-control mt-1" required>
+                                    id="select" className="form-control mt-1" >
                                     <option defaultValue="Chọn nhà cung cấp">Chọn nhà cung cấp</option>
                                     {
                                         supplierList &&
@@ -266,7 +264,7 @@ const CreateImportBill = () => {
                                 <p>Ngày nhập</p>
                             </div>
                             <div className="col-md-3 ">
-                                <input required type="datetime-local" max={curTime()} id="datetime" name="datetime"
+                                <input type="datetime-local" max={curTime()} id="datetime" name="datetime"
                                     onChange={(e) => handleCreateImportChange(e, "importDate")} />
                             </div>
                             <div className="col-md-3">

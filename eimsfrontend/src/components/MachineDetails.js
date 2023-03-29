@@ -166,11 +166,11 @@ export default function BasicTabs() {
             if (!err?.response) {
                 toast.error('Server không phản hồi');
             } else {
-                if ((err.response.data === null) || (err.response.data === '') ) {
-          toast.error('Có lỗi xảy ra, vui lòng thử lại');
-        } else {
-          toast.error(err.response.data);
-        }
+                if ((err.response.data === null) || (err.response.data === '')) {
+                    toast.error('Có lỗi xảy ra, vui lòng thử lại');
+                } else {
+                    toast.error(err.response.data);
+                }
             }
         }
     }
@@ -234,7 +234,7 @@ export default function BasicTabs() {
                                             <p>Tên máy<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                         </div>
                                         <div className="col-md-6">
-                                            <input id="updateMachineName" style={{ width: "100%" }} required
+                                            <input id="updateMachineName" style={{ width: "100%" }}
                                                 value={updateMachineDTO.machineName}
                                                 onChange={(e) => handleUpdateMachineChange(e, "machineName")} />
                                         </div>
@@ -342,15 +342,15 @@ export default function BasicTabs() {
                         </thead>
                         <tbody>
                             {
-                            listEggLocation && listEggLocation.length > 0 ?
-                                listEggLocation.map((item, index) =>
-                                    <tr>
-                                        <th scope="row">{item.eggBatchId}</th>
-                                        <th scope="row">{item.breedName}</th>
-                                        <td scope="row">Ngày {item.incubationDateToNow}/{item.growthTime} </td>
-                                        <td scope="row">{item.amount}</td>
-                                    </tr>
-                                ) : "Nothing"
+                                listEggLocation && listEggLocation.length > 0 ?
+                                    listEggLocation.map((item, index) =>
+                                        <tr>
+                                            <th scope="row">{item.eggBatchId}</th>
+                                            <th scope="row">{item.breedName}</th>
+                                            <td scope="row">Ngày {item.incubationDateToNow}/{item.growthTime} </td>
+                                            <td scope="row">{item.amount}</td>
+                                        </tr>
+                                    ) : "Nothing"
                             }
                         </tbody>
                     </table>

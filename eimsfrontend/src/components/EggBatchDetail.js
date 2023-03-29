@@ -304,11 +304,11 @@ export default function BasicTabs() {
             if (!err?.response) {
                 toast.error('Server không phản hồi');
             } else {
-                if ((err.response.data === null) || (err.response.data === '') ) {
-          toast.error('Có lỗi xảy ra, vui lòng thử lại');
-        } else {
-          toast.error(err.response.data);
-        }
+                if ((err.response.data === null) || (err.response.data === '')) {
+                    toast.error('Có lỗi xảy ra, vui lòng thử lại');
+                } else {
+                    toast.error(err.response.data);
+                }
                 console.log(err.response.data);
             }
         }
@@ -344,11 +344,11 @@ export default function BasicTabs() {
             if (!err?.response) {
                 toast.error('Server không phản hồi');
             } else {
-                if ((err.response.data === null) || (err.response.data === '') ) {
-          toast.error('Có lỗi xảy ra, vui lòng thử lại');
-        } else {
-          toast.error(err.response.data);
-        }
+                if ((err.response.data === null) || (err.response.data === '')) {
+                    toast.error('Có lỗi xảy ra, vui lòng thử lại');
+                } else {
+                    toast.error(err.response.data);
+                }
                 console.log(err.response.data);
             }
         }
@@ -438,13 +438,13 @@ export default function BasicTabs() {
                             <div className="col-md-3">
                                 {
                                     eggBatchDetail.status == 1
-                                    ?
-                                    <p className="text-red">Chưa hoàn thành</p>
-                                    :
-                                    <p className="text-green">Đã hoàn thành </p>
+                                        ?
+                                        <p className="text-red">Chưa hoàn thành</p>
+                                        :
+                                        <p className="text-green">Đã hoàn thành </p>
 
                                 }
-                                
+
                             </div>
                         </div>
                     </div>
@@ -589,7 +589,7 @@ export default function BasicTabs() {
                                             </div>
                                             <div className="col-md-3">
                                                 <input className='form-control' id="eggWasted" name="eggWasted" type="number"
-                                                    required onChange={(e) => handleUpdateEggBatchChange(e, "eggWasted")} />
+                                                    onChange={(e) => handleUpdateEggBatchChange(e, "eggWasted")} />
                                             </div>
                                             {
                                                 eggBatchDetail.eggProductList && eggBatchDetail.eggProductList.length > 0
@@ -612,7 +612,7 @@ export default function BasicTabs() {
                                                 <label>Loại trứng cập nhật</label>
                                             </div>
                                             <div className="col-md-3">
-                                                <select required onChange={(e) => handleUpdateEggBatchChange(e, "phaseNumber")} id="select" className="form-select" aria-label="Default select example">
+                                                <select onChange={(e) => handleUpdateEggBatchChange(e, "phaseNumber")} id="select" className="form-select" aria-label="Default select example">
                                                     <option value="">Chọn</option>
                                                     <option value="0">Trứng vỡ/dập</option>
                                                     <option value="2">Trứng trắng/tròn, trứng không có phôi</option>
@@ -646,7 +646,7 @@ export default function BasicTabs() {
                                             </div>
                                             <div className="col-md-3">
                                                 <input disabled className='form-control' id="amount" name="amount" type="number"
-                                                    required onChange={(e) => handleUpdateEggBatchChange(e, "amount")} />
+                                                    onChange={(e) => handleUpdateEggBatchChange(e, "amount")} />
                                             </div>
                                             {
                                                 eggBatchDetail.progress == 0
@@ -735,14 +735,14 @@ export default function BasicTabs() {
                                 </div>
                             </Modal.Body>
                             <div className='model-footer'>
-                                
+
                                 <button style={{ width: "20%" }} className="col-md-6 btn-light" type="submit">
                                     Xác nhận
                                 </button>
                                 <button style={{ width: "10%" }} onClick={handleClose} type='button' className="btn btn-light">
                                     Huỷ
                                 </button>
-                                <button style={{ width: "20%", float:"left" }} onClick={handleUpdateEggBatchDone} className="col-md-6 btn-light" type="button">
+                                <button style={{ width: "20%", float: "left" }} onClick={handleUpdateEggBatchDone} className="col-md-6 btn-light" type="button">
                                     Hoàn thành
                                 </button>
                             </div>
@@ -786,7 +786,7 @@ function TableRows({ rowsData, deleteTableRows, handleChangeData }) {
                             {(capacity - amountCurrent).toLocaleString()}
                         </div>
                     </td>
-                    <td><input required type="number" value={amountUpdate} onChange={(evnt) => (handleChangeData(index, evnt))} name="amountUpdate" className="form-control" /> </td>
+                    <td><input type="number" value={amountUpdate} onChange={(evnt) => (handleChangeData(index, evnt))} name="amountUpdate" className="form-control" /> </td>
                     <td className='td'><button className="btn btn-outline-danger" type='button' onClick={() => (deleteTableRows(index))}><ClearIcon /></button></td>
                 </tr>
             )

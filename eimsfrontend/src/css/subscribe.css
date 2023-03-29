@@ -80,7 +80,7 @@
   color: #2db94d;
 }
 .features li .icon.cross{
-  color: #cd3241;
+  color: #F46110;
 }
 .table .btn{
   width: 100%;
@@ -102,53 +102,53 @@
   border-radius: 5px;
 }
 .basic .features li::selection{
-  background: #61cdff;
+  background: #a26bfa;
 }
 .basic ::selection,
 .basic .price-area,
 .basic .inner-area{
-  background: #61cdff;
+  background: #a26bfa;
 }
 .basic .btn button{
-  border: 2px solid #61cdff;
+  border: 2px solid #a26bfa;
   background: #fff;
-  color: #61cdff;
+  color: #a26bfa;
 }
 .basic .btn button:hover{
-  background: #61cdff;
+  background: #a26bfa;
   color: #fff;
 }
 .premium ::selection,
 .premium .price-area,
 .premium .inner-area,
 .premium .btn button{
-  background: #fd5757;
+  background: #F46110;
 }
 .premium .btn button:hover{
-  background: #ff0000;
+  background: #F46110;
 }
 .ultimate ::selection,
 .ultimate .price-area,
 .ultimate .inner-area{
-  background: #f700ff;
+  background: #a26bfa;
 }
 .ultimate .btn button{
-  border: 2px solid #f700ff;
-  color: #f700ff;
+  border: 2px solid #a26bfa;
+  color: #a26bfa;
   background: #fff;
 }
 .ultimate .btn button:hover{
-  background: #f700ff;
+  background: #a26bfa;
   color: #fff;
 }
 .basic .package-name{
-  background: #61cdff;
+  background: #a26bfa;
 }
 .premium .package-name{
-  background: #ff0000;
+  background: #F46110;
 }
 .ultimate .package-name{
-  background: #00ff2a;
+  background: #a26bfa;
 }
 .basic .package-name::before{
   content: "Gói 1";
@@ -189,7 +189,7 @@
   content: "";
   z-index: -1;
   display: block;
-  border: 7px solid #4606ac;
+  border: 7px solid #a26bfa;
   border-top-color: transparent;
   border-left-color: transparent;
 }

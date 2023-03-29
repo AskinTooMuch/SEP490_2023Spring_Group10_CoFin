@@ -173,7 +173,7 @@ const Breed = () => {
                                     </div>
                                     <div className="col-md-6">
                                         <select className="form-control mt-1" aria-label="Default select example"
-                                            required
+
                                             onChange={e => handleChange(e, "specieId")}>
                                             <option disabled value="" selected>Open this select menu</option>
                                             { /**JSX to load options */}
@@ -191,7 +191,7 @@ const Breed = () => {
                                         <p>Tên loại<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                     </div>
                                     <div className="col-md-6">
-                                        <input required id="createSpecieName"
+                                        <input id="createSpecieName"
                                             style={{ width: "100%" }}
                                             onChange={e => handleChange(e, "breedName")} />
                                     </div>
@@ -201,10 +201,9 @@ const Breed = () => {
                                         <p>Cân nặng trung bình con đực<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                     </div>
                                     <div className="col-md-6">
-                                        <input id="createBreedMaleAvg" required style={{ width: "100%" }}
+                                        <input id="createBreedMaleAvg" style={{ width: "100%" }}
                                             placeholder="kg"
                                             type='number'
-                                            min='0'
                                             step='0.01'
                                             onChange={e => handleChange(e, "averageWeightMale")} />
                                     </div>
@@ -214,10 +213,9 @@ const Breed = () => {
                                         <p>Cân nặng trung bình con cái<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                     </div>
                                     <div className="col-md-6">
-                                        <input id="createBreedFemaleAvg" required style={{ width: "100%" }}
+                                        <input id="createBreedFemaleAvg" style={{ width: "100%" }}
                                             placeholder="kg"
                                             type='number'
-                                            min='0'
                                             step='0.01'
                                             onChange={e => handleChange(e, "averageWeightFemale")} />
                                     </div>
@@ -227,10 +225,9 @@ const Breed = () => {
                                         <p>Thời gian lớn lên<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                     </div>
                                     <div className="col-md-6">
-                                        <input id="createBreedGrownTime" required style={{ width: "100%" }}
+                                        <input id="createBreedGrownTime" style={{ width: "100%" }}
                                             placeholder="ngày"
                                             type='number'
-                                            min='0'
                                             step='1'
                                             onChange={e => handleChange(e, "growthTime")} />
                                     </div>

@@ -39,7 +39,7 @@ const Payroll = () => {
                                     </div>
                                     <div className="col-md-6">
                                         <select
-                                            id="select" className="form-control mt-1" required>
+                                            id="select" className="form-control mt-1" >
                                             <option defaultValue="Chọn nhân viên">Chọn nhân viên</option>
                                             <option value="1">Nguyễn Hoàng Dương</option>
                                         </select>
@@ -49,7 +49,7 @@ const Payroll = () => {
                                         <p>Ngày nhập <FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                     </div>
                                     <div className="col-md-6">
-                                        <input required type="date" style={{ width: "100%" }} placeholder="0" />
+                                        <input type="date" style={{ width: "100%" }} placeholder="0" />
                                     </div>
                                 </div>
                                 <div className="row">
@@ -57,7 +57,7 @@ const Payroll = () => {
                                         <p>Khoản tiền <FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                     </div>
                                     <div className="col-md-6">
-                                        <input required style={{ width: "100%" }} placeholder="Tiền thưởng " />
+                                        <input style={{ width: "100%" }} placeholder="Tiền thưởng " />
                                     </div>
                                     <div className="col-md-6">
                                         <p>Số tiền </p>
@@ -158,7 +158,7 @@ const Payroll = () => {
                                     <p>Ngày nhập <FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                 </div>
                                 <div className="col-md-6">
-                                    <input required type="date" style={{ width: "100%" }} placeholder="0" />
+                                    <input type="date" style={{ width: "100%" }} placeholder="0" />
                                 </div>
                             </div>
                             <div className="row">
@@ -166,7 +166,7 @@ const Payroll = () => {
                                     <p>Khoản tiền <FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                 </div>
                                 <div className="col-md-6">
-                                    <input required style={{ width: "100%" }} placeholder="Tiền thưởng " />
+                                    <input style={{ width: "100%" }} placeholder="Tiền thưởng " />
                                 </div>
                                 <div className="col-md-6">
                                     <p>Số tiền </p>

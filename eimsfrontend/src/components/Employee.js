@@ -212,11 +212,11 @@ export default function BasicTabs() {
             if (!err?.response) {
                 toast.error('Server không phản hồi');
             } else {
-                if ((err.response.data === null) || (err.response.data === '') ) {
-          toast.error('Có lỗi xảy ra, vui lòng thử lại');
-        } else {
-          toast.error(err.response.data);
-        }
+                if ((err.response.data === null) || (err.response.data === '')) {
+                    toast.error('Có lỗi xảy ra, vui lòng thử lại');
+                } else {
+                    toast.error(err.response.data);
+                }
             }
         }
     }
@@ -274,7 +274,7 @@ export default function BasicTabs() {
                                         <p>Tên nhân viên<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                     </div>
                                     <div className="col-md-6">
-                                        <input required style={{ width: "100%" }}
+                                        <input style={{ width: "100%" }}
                                             onChange={(e) => handleCreateEmployeeChange(e, "employeeName")} />
                                     </div>
                                     {/*Date of birth*/}
@@ -286,13 +286,13 @@ export default function BasicTabs() {
                                             ref={userRef}
                                             autoComplete="off"
                                             onChange={(e) => handleCreateEmployeeChange(e, "employeeDob")}
-                                            required />
+                                        />
                                     </div>
                                     <div className="col-md-6">
                                         <p>Số điện thoại<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                     </div>
                                     <div className="col-md-6">
-                                        <input required style={{ width: "100%" }} placeholder="0"
+                                        <input style={{ width: "100%" }} placeholder="0"
                                             onChange={(e) => handleCreateEmployeeChange(e, "employeePhone")} />
                                     </div>
                                 </div>
@@ -301,7 +301,7 @@ export default function BasicTabs() {
                                         <p>Mật khẩu<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                     </div>
                                     <div className="col-md-6">
-                                        <input required style={{ width: "100%" }} placeholder="0"
+                                        <input style={{ width: "100%" }} placeholder="0"
                                             onChange={(e) => handleCreateEmployeeChange(e, "employeePassword")} />
                                     </div>
 
@@ -315,7 +315,7 @@ export default function BasicTabs() {
                                             autoComplete="off"
                                             onChange={(e) => loadDistrict(e.target.value)}
                                             value={cityIndex}
-                                            required>
+                                        >
                                             <option value="" disabled selected>Chọn Tỉnh/Thành phố</option>
                                             {city &&
                                                 city.map((item, index) => (
@@ -335,7 +335,7 @@ export default function BasicTabs() {
                                             autoComplete="off"
                                             onChange={(e) => loadWard(e.target.value)}
                                             value={districtIndex}
-                                            required>
+                                        >
                                             <option value="" disable>Chọn Quận/Huyện</option>
                                             {district &&
                                                 district.map((item, index) => (
@@ -355,7 +355,7 @@ export default function BasicTabs() {
                                             autoComplete="off"
                                             onChange={(e) => saveWard(e.target.value)}
                                             value={wardIndex}
-                                            required>
+                                        >
                                             <option value="" disable>Chọn Phường/Xã</option>
                                             {ward &&
                                                 ward.map((item, index) => (
@@ -373,7 +373,7 @@ export default function BasicTabs() {
                                             ref={userRef}
                                             autoComplete="off"
                                             onChange={(e) => saveAddressJson(e.target.value)}
-                                            required />
+                                        />
                                     </div>
 
                                 </div>
@@ -389,9 +389,8 @@ export default function BasicTabs() {
                                         <p>Lương<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                     </div>
                                     <div className="col-md-6">
-                                        <input required style={{ width: "100%" }} placeholder="0" 
+                                        <input style={{ width: "100%" }} placeholder="0"
                                             type='number'
-                                            min='0'
                                             onChange={(e) => handleCreateEmployeeChange(e, "salary")} />
                                     </div>
                                 </div>
