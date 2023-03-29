@@ -51,17 +51,28 @@ const Breed = () => {
 
     // Request specie list and load the specie list into the dropdowns
     const loadSpecieList = async () => {
-        const result = await axios.get(SPECIE_LIST,
-            {
-                params: { userId: sessionStorage.getItem("curUserId") },
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Access-Control-Allow-Origin': '*'
-                },
-                withCredentials: true
-            });
-        setSpecieList(result.data);
-        console.log(specieList);
+        try {
+            const result = await axios.get(SPECIE_LIST,
+                {
+                    params: { userId: sessionStorage.getItem("curUserId") },
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Access-Control-Allow-Origin': '*'
+                    },
+                    withCredentials: true
+                });
+            setSpecieList(result.data);
+        } catch (err) {
+            if (!err?.response) {
+                toast.error('Server không phản hồi');
+            } else {
+                if ((err.response.data === null) || (err.response.data === '')) {
+                    toast.error('Có lỗi xảy ra, vui lòng thử lại');
+                } else {
+                    toast.error(err.response.data);
+                }
+            }
+        }
     }
 
     //Get breed list
@@ -73,17 +84,29 @@ const Breed = () => {
 
     // Request breed list and load the breed list into the table rows
     const loadBreedList = async () => {
-        const result = await axios.get(BREED_LIST,
-            {
-                params: { userId: sessionStorage.getItem("curUserId") },
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Access-Control-Allow-Origin': '*'
-                },
-                withCredentials: true
-            });
-        setBreedList(result.data);
-        console.log(breedList);
+        try {
+            const result = await axios.get(BREED_LIST,
+                {
+                    params: { userId: sessionStorage.getItem("curUserId") },
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Access-Control-Allow-Origin': '*'
+                    },
+                    withCredentials: true
+                });
+            setBreedList(result.data);
+            console.log(breedList);
+        } catch (err) {
+            if (!err?.response) {
+                toast.error('Server không phản hồi');
+            } else {
+                if ((err.response.data === null) || (err.response.data === '')) {
+                    toast.error('Có lỗi xảy ra, vui lòng thử lại');
+                } else {
+                    toast.error(err.response.data);
+                }
+            }
+        }
     }
 
     //Handle on image change
@@ -108,7 +131,6 @@ const Breed = () => {
             ...newBreedDTO,
             [field]: actualValue
         })
-        console.log(newBreedDTO);
     }
 
     //Send request new breed through Axios
@@ -117,10 +139,22 @@ const Breed = () => {
         const formData = new FormData();
         formData.append('specieId', newBreedDTO.specieId);
         formData.append('breedName', newBreedDTO.breedName);
-        formData.append('averageWeightMale', newBreedDTO.averageWeightMale);
-        formData.append('averageWeightFemale', newBreedDTO.averageWeightFemale);
+        if (newBreedDTO.averageWeightMale === '') {
+            formData.append('averageWeightMale', 0);
+        } else {
+            formData.append('averageWeightMale', newBreedDTO.averageWeightMale);
+        }
+        if (newBreedDTO.averageWeightFemale === '') {
+            formData.append('averageWeightFemale', 0);
+        } else {
+            formData.append('averageWeightFemale', newBreedDTO.averageWeightFemale);
+        }
+        if (newBreedDTO.growthTime === '') {
+            formData.append('growthTime', 0);
+        } else {
+            formData.append('growthTime', newBreedDTO.growthTime);
+        }
         formData.append('commonDisease', newBreedDTO.commonDisease);
-        formData.append('growthTime', newBreedDTO.growthTime);
         if (newBreedDTO.image !== null) {
             formData.append('image', newBreedDTO.image);
         }
@@ -135,22 +169,44 @@ const Breed = () => {
                     withCredentials: true
                 }
             );
-            console.log(JSON.stringify(response?.data));
             loadBreedList();
-            toast.success("Tạo loài mới thành công")
-            setShow(false)
+            toast.success("Tạo loài mới thành công");
+            setShow(false);
+            setNewBreedDTO({
+                specieId: "",
+                breedName: "",
+                averageWeightMale: "",
+                averageWeightFemale: "",
+                commonDisease: "",
+                growthTime: "",
+                image: null
+            });
+            setImageURLs([]);
         } catch (err) {
             if (!err?.response) {
                 toast.error('Server không phản hồi');
-            } else if (err.response?.status === 400) {
-                toast.error('Yêu cầu không đúng định dạng');
-            } else if (err.response?.status === 401) {
-                toast.error('Unauthorized');
-            }
-            else {
-                toast.error('Yêu cầu không đúng định dạng');
+            } else {
+                if ((err.response.data === null) || (err.response.data === '')) {
+                    toast.error('Có lỗi xảy ra, vui lòng thử lại');
+                } else {
+                    toast.error(err.response.data);
+                }
             }
         }
+    }
+
+    const handleNewCancel = () => {
+        handleClose();
+        setNewBreedDTO({
+            specieId: "",
+            breedName: "",
+            averageWeightMale: "",
+            averageWeightFemale: "",
+            commonDisease: "",
+            growthTime: "",
+            image: null
+        });
+        setImageURLs([]);
     }
 
     return (
@@ -168,13 +224,13 @@ const Breed = () => {
                         <Modal.Body>
                             <div className="changepass">
                                 <div className="row">
-                                    <div className="col-md-6 ">
-                                        <p>Loài<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
+                                    <div className="col-md-4">
+                                        <label className='col-form-label'>Loài&nbsp;<FontAwesomeIcon className="star" icon={faStarOfLife} /></label>
                                     </div>
-                                    <div className="col-md-6">
+                                    <div className="col-md-8">
                                         <select className="form-control mt-1" aria-label="Default select example"
                                             onChange={e => handleChange(e, "specieId")}>
-                                            <option disabled value="" selected>Open this select menu</option>
+                                            <option disabled value="" selected>Chọn loài</option>
                                             { /**JSX to load options */}
                                             {specieList &&
                                                 specieList.map((item, index) => (
@@ -186,21 +242,28 @@ const Breed = () => {
                                     </div>
                                 </div>
                                 <div className="row">
-                                    <div className="col-md-6 ">
-                                        <p>Tên loại<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
+                                    <div className="col-md-4">
+                                        <label className='col-form-label'>Tên loại&nbsp;<FontAwesomeIcon className="star" icon={faStarOfLife} /></label>
                                     </div>
-                                    <div className="col-md-6">
-                                        <input id="createSpecieName"
+                                    <div className="col-md-8">
+                                        <input className="form-control mt-1" id="createSpecieName"
                                             style={{ width: "100%" }}
-                                            onChange={e => handleChange(e, "breedName")} />
+                                            onChange={e => handleChange(e, "breedName")}
+                                            placeholder="Tre, Cỏ, ..."
+                                        />
+                                    </div>
+                                </div>
+                                <div className='row'>
+                                    <div className='col-md-12'>
+                                        <label className='col-form-label'>Cân nặng trung bình: </label>
                                     </div>
                                 </div>
                                 <div className="row">
-                                    <div className="col-md-6">
-                                        <p>Cân nặng trung bình con đực<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
+                                    <div className="col-md-4">
+                                        <span className='col-form-label'>Con đực (kg)&nbsp;<FontAwesomeIcon className="star" icon={faStarOfLife} /></span>
                                     </div>
-                                    <div className="col-md-6">
-                                        <input id="createBreedMaleAvg" style={{ width: "100%" }}
+                                    <div className="col-md-8">
+                                        <input className="form-control mt-1" id="createBreedMaleAvg" style={{ width: "100%" }}
                                             placeholder="kg"
                                             type='number'
                                             step='0.01'
@@ -208,11 +271,11 @@ const Breed = () => {
                                     </div>
                                 </div>
                                 <div className="row">
-                                    <div className="col-md-6">
-                                        <p>Cân nặng trung bình con cái<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
+                                    <div className="col-md-4">
+                                        <span className='col-form-label'>Con cái (kg)&nbsp;<FontAwesomeIcon className="star" icon={faStarOfLife} /></span>
                                     </div>
-                                    <div className="col-md-6">
-                                        <input id="createBreedFemaleAvg" style={{ width: "100%" }}
+                                    <div className="col-md-8">
+                                        <input className="form-control mt-1" id="createBreedFemaleAvg" style={{ width: "100%" }}
                                             placeholder="kg"
                                             type='number'
                                             step='0.01'
@@ -220,34 +283,33 @@ const Breed = () => {
                                     </div>
                                 </div>
                                 <div className="row">
-                                    <div className="col-md-6 ">
-                                        <p>Thời gian lớn lên<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
+                                    <div className="col-md-4">
+                                        <label className='col-form-label'>Thời gian lớn lên (ngày)&nbsp;<FontAwesomeIcon className="star" icon={faStarOfLife} /></label>
                                     </div>
-                                    <div className="col-md-6">
-                                        <input id="createBreedGrownTime" style={{ width: "100%" }}
+                                    <div className="col-md-8">
+                                        <input className="form-control mt-1" id="createBreedGrownTime" style={{ width: "100%" }}
                                             placeholder="ngày"
                                             type='number'
-                                            step='1'
                                             onChange={e => handleChange(e, "growthTime")} />
                                     </div>
                                 </div>
                                 <div className="row">
-                                    <div className="col-md-6 ">
-                                        <p>Các bệnh thường gặp</p>
+                                    <div className="col-md-4">
+                                        <label className='col-form-label'>Các bệnh thường gặp</label>
                                     </div>
-                                    <div className="col-md-6">
-                                        <textarea id="createBreedCommondisease" style={{ width: "100%" }}
+                                    <div className="col-md-8">
+                                        <textarea className="form-control mt-1" id="createBreedCommondisease" style={{ width: "100%" }}
                                             onChange={e => handleChange(e, "commonDisease")}
                                             placeholder="Đậu gà, cúm gà, khô chân, giun sán,..."
                                         />
                                     </div>
                                 </div>
                                 <div className="row">
-                                    <div className="col-md-6 ">
-                                        <p>Hình ảnh</p>
+                                    <div className="col-md-4">
+                                        <label className='col-form-label'>Hình ảnh</label>
                                     </div>
-                                    <div className="col-md-6">
-                                        <input id="createBreedImg" type="file" multiple accept="image/*" onChange={onImageChange} />
+                                    <div className="col-md-8">
+                                        <input className="form-control mt-1" id="createBreedImg" type="file" multiple accept="image/*" onChange={onImageChange} />
                                         {imageURLs.map(imageSrc => <img style={{ width: "100%", minHeight: "100%" }} alt='' src={imageSrc} />)}
                                     </div>
                                 </div>
@@ -257,7 +319,7 @@ const Breed = () => {
                             <button style={{ width: "20%" }} type="submit" className="col-md-6 btn-light" id="confirmCreateBreed">
                                 Tạo
                             </button>
-                            <button className='btn btn-light' style={{ width: "20%" }} onClick={handleClose} id="cancelCreateBreed">
+                            <button className='btn btn-light' type="button" style={{ width: "20%" }} onClick={handleNewCancel} id="cancelCreateBreed">
                                 Huỷ
                             </button>
                         </div>
@@ -282,6 +344,7 @@ const Breed = () => {
                     <thead>
                         <tr>
                             <th scope="col">STT</th>
+                            <th scope="col">Tên loài</th>
                             <th scope="col">Tên loại</th>
                             <th scope="col">Cân nặng con đực</th>
                             <th scope="col">Cân nặng con cái</th>
@@ -295,6 +358,7 @@ const Breed = () => {
                                 item.status &&
                                 <tr className='trclick' onClick={() => routeChange(item.breedId)} key={item.breedId}>
                                     <th scope="row">{index + 1}</th>
+                                    <td>{item.specieName}</td>
                                     <td>{item.breedName}</td>
                                     <td>{item.averageWeightMale}</td>
                                     <td>{item.averageWeightFemale}</td>

@@ -26,5 +26,4 @@ public interface BreedRepository extends JpaRepository<Breed, Long> {
             "JOIN eims.breed b ON eb.breed_id = b.breed_id " +
             "WHERE ep.product_id = ?1", nativeQuery = true)
     Breed getBreedOfProduct(Long productId);
-
 }

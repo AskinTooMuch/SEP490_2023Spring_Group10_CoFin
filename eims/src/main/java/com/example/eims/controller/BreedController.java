@@ -8,6 +8,7 @@
  * DATE          Version    Author           DESCRIPTION<br>
  * 07/03/2023    1.0        ChucNV           First Deploy<br>
  * 12/03/2023    1.1        ChucNV           Fix notation<br>
+ * 29/03/2023    2.0        ChucNV           Remove pre-service checks<br>
  */
 package com.example.eims.controller;
 
@@ -38,19 +39,6 @@ public class BreedController {
      */
     @PostMapping("/new")
     public ResponseEntity<?> createNewBreed(@ModelAttribute NewBreedDTO newBreedDTO) {
-        System.out.println(newBreedDTO.getBreedName());
-        //Check data and trim
-        if ((newBreedDTO.getAverageWeightFemale() <= 0) ||
-                (newBreedDTO.getAverageWeightMale() <= 0) ||
-                (newBreedDTO.getGrowthTime() <= 0)) {
-            return new ResponseEntity<>("Invalid request", HttpStatus.BAD_REQUEST);
-        }
-        try {
-            newBreedDTO.setBreedName(validator.advanceTrim(newBreedDTO.getBreedName(), true));
-            newBreedDTO.setCommonDisease(validator.advanceTrim(newBreedDTO.getCommonDisease(), false));
-        } catch (RuntimeException runtimeException) {
-            return new ResponseEntity<>("Invalid request", HttpStatus.BAD_REQUEST);
-        }
         //Create new breed
         return breedService. createNewBreed(newBreedDTO);
     }
@@ -108,19 +96,6 @@ public class BreedController {
      */
     @PostMapping("/edit")
     public ResponseEntity<?> editBreed(@ModelAttribute EditBreedDTO editBreedDTO){
-        System.out.println(editBreedDTO);
-        //Check data and trim
-        if ((editBreedDTO.getAverageWeightFemale() <= 0) ||
-                (editBreedDTO.getAverageWeightMale() <= 0) ||
-                (editBreedDTO.getGrowthTime() <= 0)) {
-            return new ResponseEntity<>("Invalid request", HttpStatus.BAD_REQUEST);
-        }
-        try {
-            editBreedDTO.setBreedName(validator.advanceTrim(editBreedDTO.getBreedName(), true));
-            editBreedDTO.setCommonDisease(validator.advanceTrim(editBreedDTO.getCommonDisease(), false));
-        } catch (RuntimeException runtimeException) {
-            return new ResponseEntity<>("Invalid request", HttpStatus.BAD_REQUEST);
-        }
         //Update breed info
         return breedService.updateBreed(editBreedDTO);
     }
