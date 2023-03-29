@@ -149,9 +149,9 @@ const Payroll = () => {
     // Request Payroll list that meet search keyword
     const searchPayrollList = async (event) => {
         event.preventDefault();
-        let result;
+        let response;
         try {
-            result = await axios.get(PAYROLL_SEARCH,
+            response = await axios.get(PAYROLL_SEARCH,
                 {
                     params: {
                         ownerId: sessionStorage.getItem("curUserId"),
@@ -163,13 +163,13 @@ const Payroll = () => {
                     },
                     withCredentials: true
                 });
-            setPayrollList(result.data);
+            setPayrollList(response.data);
             console.log(payrollList.length)
         } catch (err) {
-            if (!err?.result) {
+            if (!err?.response) {
                 toast.error('Server không phản hồi');
             } else {
-                toast.error(err.result.data);
+                toast.error(err.response.data);
             }
         }
     }
