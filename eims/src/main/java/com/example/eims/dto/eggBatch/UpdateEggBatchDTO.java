@@ -7,6 +7,7 @@
  * Record of change:<br>
  * DATE          Version    Author           DESCRIPTION<br>
  * 15/03/2023    1.0        DuongVV          First Deploy<br>
+ * 28/03/2023    1.1        DuongVV          Update attributes<br>
  */
 
 package com.example.eims.dto.eggBatch;
@@ -23,5 +24,6 @@ public class UpdateEggBatchDTO {
     private int eggWasted;
     private int amount;
     private List<EggLocationUpdateEggBatchDTO> eggLocationUpdateEggBatchDTOS;
+    private int needAction;
     private boolean done;
 }

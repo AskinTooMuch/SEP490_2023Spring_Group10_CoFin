@@ -347,7 +347,7 @@ export default function BasicTabs() {
                                         <tr>
                                             <th scope="row">{item.eggBatchId}</th>
                                             <th scope="row">{item.breedName}</th>
-                                            <td scope="row">Ngày {item.incubationDateToNow}/{item.growthTime} </td>
+                                            <td scope="row">Ngày {item.incubationDateToNow}/{item.incubationPeriod} </td>
                                             <td scope="row">{item.amount}</td>
                                         </tr>
                                     ) : "Nothing"

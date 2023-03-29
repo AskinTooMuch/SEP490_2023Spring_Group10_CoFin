@@ -63,7 +63,7 @@ const EggBatch = () => {
                             <th scope="col">Nhà cung cấp</th>
                             <th scope="col">Số lượng</th>
                             <th scope="col">Ngày nhập</th>
-                            <th scope="col">Giai đoạn</th>
+                            <th scope="col">Tiến trình</th>
                             <th scope="col">Trạng thái</th>
                         </tr>
                     </thead>
@@ -78,12 +78,27 @@ const EggBatch = () => {
                                         <td>{item.importId}</td>
                                         <td>{item.supplierName}</td>
                                         <td>{item.amount.toLocaleString()}</td>
-                                        <td>{item.importDate}</td>
-                                        <td>{item.progress}</td>
+                                        <td>{item.importDate.replace("T"," ")}</td>
+                                        <td>({item.progress}) Ngày {item.progressInDays}/{item.incubationPeriod}</td>
                                         {
-                                            item.status === 1
-                                            ?<td>Chưa hoàn thành</td>
-                                            :<td>Đã hoàn thành</td>
+                                            item.status === 0
+                                            ?<td className=''>Đã hoàn thành</td>
+                                            :''
+                                        }
+                                        {
+                                            item.status === 1 && item.needAction === 1
+                                            ?<td className='text-red'>Cần cập nhật</td>
+                                            :''
+                                        }
+                                        {
+                                            item.status === 1 && item.needAction === 0 && item.progress < 5
+                                            ?<td className='text-green'>Đang ấp</td>
+                                            :''
+                                        }
+                                       {
+                                            item.status === 1 && item.needAction === 0 && item.progress >= 5
+                                            ?<td className='text-green'>Đang nở</td>
+                                            :''
                                         }
                                     </tr>
                                 ) : 'Nothing'

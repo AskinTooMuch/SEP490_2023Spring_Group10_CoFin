@@ -46,15 +46,7 @@ const ImportBill = () => {
     const routeChange = (iid) => {
         navigate('/importbilldetail', { state: { id: iid } });
     }
-
-    function formatNumber(number) {
-        var text = number.toString();
-        var n = text.length / 3;
-        for (let i = 1; i < n ; i++) {
-            text.slice(text.length - 3 * i,0, ".")
-        }
-        return text;
-    }
+    
     return (
         <>
             <nav className="navbar justify-content-between">
@@ -105,7 +97,7 @@ const ImportBill = () => {
                                                     <td className="u-border-1 u-border-grey-30 u-first-column u-grey-5 u-table-cell u-table-cell-5">{index + 1}</td>
                                                     <td className="u-border-1 u-border-grey-30 u-table-cell">{item.importId}</td>
                                                     <td className="u-border-1 u-border-grey-30 u-table-cell">{item.supplierName}</td>
-                                                    <td className="u-border-1 u-border-grey-30 u-table-cell">{item.importDate}</td>
+                                                    <td className="u-border-1 u-border-grey-30 u-table-cell">{item.importDate.replace("T"," ")}</td>
                                                     <td className="u-border-1 u-border-grey-30 u-table-cell">{item.total.toLocaleString()}</td>
                                                     <td className="u-border-1 u-border-grey-30 u-table-cell">{item.paid.toLocaleString()}</td>
                                                     {

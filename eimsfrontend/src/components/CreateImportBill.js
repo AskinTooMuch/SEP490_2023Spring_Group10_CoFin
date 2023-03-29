@@ -204,12 +204,17 @@ const CreateImportBill = () => {
     function show() {
         var select = document.getElementById('select');
         var id = select.options[select.selectedIndex].value;
-        supplierList.map((item) => {
-            item.supplierId === id
-                ? document.getElementById('phone').innerHTML = item.supplierPhone
-                : console.log("");
+        if (id == 0) {
+            document.getElementById('phone').innerHTML = "";
+        } else {
+            supplierList.map((item) => {
+                if (item.supplierId == id) {
+                    document.getElementById('phone').innerHTML = item.supplierPhone;
+                }
+            })
         }
-        )
+
+
     }
     // calculate total
     function cal() {
@@ -241,7 +246,7 @@ const CreateImportBill = () => {
                             <div className="col-md-3">
                                 <select onChange={(e) => handleCreateImportChange(e, "supplierId")}
                                     id="select" className="form-control mt-1" >
-                                    <option defaultValue="Chọn nhà cung cấp">Chọn nhà cung cấp</option>
+                                    <option value="0">Chọn nhà cung cấp</option>
                                     {
                                         supplierList &&
                                             supplierList.length > 0 ?

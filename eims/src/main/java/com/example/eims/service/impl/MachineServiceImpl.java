@@ -7,6 +7,7 @@
  * Record of change:<br>
  * DATE         Version     Author      DESCRIPTION<br>
  * 02/03/2023   1.0         DuongVV     First Deploy<br>
+ * 29/03/2023   1.1         DuongVV     Update function<br>
  */
 
 package com.example.eims.service.impl;
@@ -51,17 +52,24 @@ public class MachineServiceImpl implements IMachineService {
     private final EggProductRepository eggProductRepository;
     @Autowired
     private final BreedRepository breedRepository;
+    @Autowired
+    private final SpecieRepository specieRepository;
+    @Autowired
+    private final IncubationPhaseRepository incubationPhaseRepository;
     private final StringDealer stringDealer;
 
     public MachineServiceImpl(MachineRepository machineRepository, FacilityRepository facilityRepository,
                               EggLocationRepository eggLocationRepository, MachineTypeRepository machineTypeRepository,
-                              EggProductRepository eggProductRepository, BreedRepository breedRepository) {
+                              EggProductRepository eggProductRepository, BreedRepository breedRepository,
+                              SpecieRepository specieRepository, IncubationPhaseRepository incubationPhaseRepository) {
         this.machineRepository = machineRepository;
         this.facilityRepository = facilityRepository;
         this.eggLocationRepository = eggLocationRepository;
         this.machineTypeRepository = machineTypeRepository;
         this.eggProductRepository = eggProductRepository;
         this.breedRepository = breedRepository;
+        this.specieRepository = specieRepository;
+        this.incubationPhaseRepository = incubationPhaseRepository;
         this.stringDealer = new StringDealer();
     }
 
@@ -112,22 +120,33 @@ public class MachineServiceImpl implements IMachineService {
             machineDetailDTO.setMachineTypeName(machineType.getMachineTypeName());
             List<EggLocationMachineDetailDTO> eggLocations = new ArrayList<>();
             Optional<List<EggLocation>> eggsOpt = eggLocationRepository.getAllByMachineId(machineId);
-            if (eggsOpt.isPresent()){
+            if (eggsOpt.isPresent()) {
                 List<EggLocation> eggs = eggsOpt.get();
                 for (EggLocation eggLocation : eggs) {
                     EggLocationMachineDetailDTO eggLocationMachineDetailDTO = new EggLocationMachineDetailDTO();
                     eggLocationMachineDetailDTO.getFromEntity(eggLocation);
                     EggProduct eggProduct = eggProductRepository.getByProductId(eggLocation.getProductId()).get();
+                    LocalDateTime dateTime = LocalDateTime.now();
 
-                    LocalDateTime dateTime = eggProduct.getIncubationDate();
+                    List<EggProduct> eggProductList = eggProductRepository.findByEggBatchId(eggProduct.getEggBatchId()).get();
+                    for (EggProduct item : eggProductList) {
+                        IncubationPhase incubationPhase = incubationPhaseRepository.
+                                findByIncubationPhaseId(item.getIncubationPhaseId()).get();
+                        if (incubationPhase.getPhaseNumber() == 1) {
+                            dateTime = item.getIncubationDate();
+                            break;
+                        }
+                    }
                     Date startDate = Date.valueOf(dateTime.toLocalDate());
                     Date endDate = Date.valueOf(LocalDate.now());
-
+                    // Breed
                     Breed breed = breedRepository.getBreedOfProduct(eggProduct.getProductId());
-                    int growthTime = breed.getGrowthTime();
                     String breedName = breed.getBreedName();
-                    eggLocationMachineDetailDTO.setGrowthTime(growthTime);
                     eggLocationMachineDetailDTO.setBreedName(breedName);
+                    // Specie
+                    Specie specie = specieRepository.findById(breed.getSpecieId()).get();
+                    eggLocationMachineDetailDTO.setIncubationPeriod(specie.getIncubationPeriod());
+
                     eggLocationMachineDetailDTO.setIncubationDateToNow(stringDealer.dateDiff(startDate, endDate));
                     eggLocationMachineDetailDTO.setEggBatchId(eggProduct.getEggBatchId());
                     eggLocations.add(eggLocationMachineDetailDTO);
@@ -177,7 +196,7 @@ public class MachineServiceImpl implements IMachineService {
     public ResponseEntity<?> createMachine(CreateMachineDTO createMachineDTO) {
         // Check if facility is not running
         Long facilityId = createMachineDTO.getFacilityId();
-        if (!facilityRepository.findByFacilityId(facilityId).isPresent()){
+        if (!facilityRepository.findByFacilityId(facilityId).isPresent()) {
             return new ResponseEntity<>("Cơ sở không tồn tại", HttpStatus.BAD_REQUEST);
         }
         if (!facilityRepository.getStatusById(facilityId)) { /*Facility stopped running*/
@@ -194,9 +213,9 @@ public class MachineServiceImpl implements IMachineService {
             // Machine type
             Long machineType = createMachineDTO.getMachineTypeId();
             Optional<MachineType> machineTypeOpt = machineTypeRepository.findById(machineType);
-            if(!machineTypeOpt.isPresent()){
+            if (!machineTypeOpt.isPresent()) {
                 return new ResponseEntity<>("Loại máy không tồn tại", HttpStatus.BAD_REQUEST);
-            } else if (!machineTypeOpt.get().isStatus()){
+            } else if (!machineTypeOpt.get().isStatus()) {
                 return new ResponseEntity<>("Loại máy không tồn tại", HttpStatus.BAD_REQUEST);
             }
             // Max capacity
@@ -257,7 +276,7 @@ public class MachineServiceImpl implements IMachineService {
             }
             String name = stringDealer.trimMax(updateMachineDTO.getMachineName());
             machine.setMachineName(name);
-            if(updateMachineDTO.getStatus() != 1 && updateMachineDTO.getStatus() != 0){
+            if (updateMachineDTO.getStatus() != 1 && updateMachineDTO.getStatus() != 0) {
                 return new ResponseEntity<>("Trạng thái không hợp lệ", HttpStatus.BAD_REQUEST);
             }
             machine.setStatus(updateMachineDTO.getStatus());
@@ -304,7 +323,7 @@ public class MachineServiceImpl implements IMachineService {
     @Override
     public ResponseEntity<?> getAllMachinePaging(Long facilityId, Integer page, Integer size, String sort) {
         // Get sorting type
-        if(!facilityRepository.existsByFacilityId(facilityId)){
+        if (!facilityRepository.existsByFacilityId(facilityId)) {
             return new ResponseEntity<>("Cơ sở không tồn tại", HttpStatus.BAD_REQUEST);
         }
         Sort sortable = null;

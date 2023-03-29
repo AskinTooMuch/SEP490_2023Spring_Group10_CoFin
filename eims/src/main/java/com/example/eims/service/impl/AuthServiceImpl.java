@@ -8,8 +8,10 @@
  * DATE         Version     Author      DESCRIPTION<br>
  * 02/03/2023   1.0         ChucNV      First Deploy<br>
  * 02/03/2023   2.0         ChucNV      Implement signup service<br>
- * 23/03/2023   3.0        ChucNV      Update signin code according to new security feature<br>
+ * 23/03/2023   3.0         ChucNV      Update signin code according to new security feature<br>
+ * 29/03/2023   3.1         DuongVV     Disable sms <br>
  */
+
 package com.example.eims.service.impl;
 
 import com.example.eims.dto.auth.*;
@@ -378,11 +380,12 @@ public class AuthServiceImpl implements IAuthService {
         otp.setOtp(OTP);
         otp.setTime(LocalDateTime.now());
         otp.setStatus(true);
-        otpRepository.save(otp);
+        Otp otpCreated = otpRepository.save(otp);
 
         // Send OTP
-        String userInfo = speedSMS.getUserInfo();
-        String response = speedSMS.sendSMS(phone, content, 5, SENDER);
+        //String userInfo = speedSMS.getUserInfo();
+        //String response = speedSMS.sendSMS(phone, content, 5, SENDER);
+        System.out.println(otpCreated.toString());
         //
         return new ResponseEntity<>("Đã gửi mã OTP", HttpStatus.OK);
     }
@@ -454,11 +457,12 @@ public class AuthServiceImpl implements IAuthService {
         otp.setOtp(OTP);
         otp.setTime(LocalDateTime.now());
         otp.setStatus(true);
-        otpRepository.save(otp);
+        Otp otpCreated = otpRepository.save(otp);
 
         // Send OTP
-        String userInfo = speedSMS.getUserInfo();
-        String response = speedSMS.sendSMS(phone, content, 5, SENDER);
+        //String userInfo = speedSMS.getUserInfo();
+        //String response = speedSMS.sendSMS(phone, content, 5, SENDER);
+        System.out.println(otpCreated.toString());
         //
         return new ResponseEntity<>("Đã gửi lại mã OTP", HttpStatus.OK);
 
@@ -536,11 +540,12 @@ public class AuthServiceImpl implements IAuthService {
         otp.setOtp(OTP);
         otp.setTime(LocalDateTime.now());
         otp.setStatus(true);
-        otpRepository.save(otp);
+        Otp otpCreated = otpRepository.save(otp);
 
         // Send OTP
-        String userInfo = speedSMS.getUserInfo();
-        String response = speedSMS.sendSMS(phone, content, 5, SENDER);
+        //String userInfo = speedSMS.getUserInfo();
+        //String response = speedSMS.sendSMS(phone, content, 5, SENDER);
+        System.out.println(otpCreated.toString());
         //
         return new ResponseEntity<>("Đã gửi mã OTP", HttpStatus.OK);
     }
@@ -615,11 +620,12 @@ public class AuthServiceImpl implements IAuthService {
         otp.setOtp(OTP);
         otp.setTime(LocalDateTime.now());
         otp.setStatus(true);
-        otpRepository.save(otp);
+        Otp otpCreated = otpRepository.save(otp);
 
         // Send OTP
-        String userInfo = speedSMS.getUserInfo();
-        String response = speedSMS.sendSMS(phone, content, 5, SENDER);
+        //String userInfo = speedSMS.getUserInfo();
+        //String response = speedSMS.sendSMS(phone, content, 5, SENDER);
+        System.out.println(otpCreated.toString());
         //
         return new ResponseEntity<>("Đã gửi mã OTP", HttpStatus.OK);
     }

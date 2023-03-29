@@ -7,6 +7,7 @@
  * Record of change:<br>
  * DATE          Version    Author           DESCRIPTION<br>
  * 05/03/2023    1.0        DuongVV          First Deploy<br>
+ * 29/03/2023    1.1        DuongVV          Update attributes<br>
  */
 
 package com.example.eims.dto.eggLocation;
@@ -22,7 +23,7 @@ public class EggLocationMachineDetailDTO {
     private Long eggBatchId;
     private Long machineId;
     private Long incubationDateToNow;
-    private int growthTime;
+    private int incubationPeriod;
     private String breedName;
     private int amount;
     private int status;

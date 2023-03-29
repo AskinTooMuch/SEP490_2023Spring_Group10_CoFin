@@ -194,7 +194,7 @@ export default function BasicTabs() {
                                 <p>Ngày nhập</p>
                             </div>
                             <div className="col-md-3" >
-                                <p>{importDetail.importDate}</p>
+                                <p>{importDetail.importDate.replace("T"," ")}</p>
                             </div>
                             <div className="col-md-3 ">
                                 <p>Mã hoá đơn</p>

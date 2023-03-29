@@ -7,6 +7,7 @@
  * Record of change:<br>
  * DATE         Version     Author      DESCRIPTION<br>
  * 04/03/2023   1.0         DuongVV     First Deploy<br>
+ * 29/03/2023   3.1         DuongVV     Disable sms <br>
  */
 
 package com.example.eims.service.impl;
@@ -123,8 +124,9 @@ public class RegistrationServiceImpl implements IRegistrationService {
             }
             //  Send message to Owner
             String content = "Đơn đăng ký của bạn đã được chấp thuận! Chào mừng đến với EIMS.";
-            String userInfo = speedSMS.getUserInfo();
-            String response = speedSMS.sendSMS(user.getPhone(), content, 5, SENDER);
+            //String userInfo = speedSMS.getUserInfo();
+            //String response = speedSMS.sendSMS(user.getPhone(), content, 5, SENDER);
+            System.out.println(content);
             //
             return new ResponseEntity<>("Đã chấp thuận đơn đăng ký", HttpStatus.OK);
         } else { /* Decline registration */
@@ -141,10 +143,11 @@ public class RegistrationServiceImpl implements IRegistrationService {
             if (userOptional.isPresent()){
                 user = userOptional.get();
                 //  Send mess to Owner
-                String content = "Đơn đăng ký của bạn đã bị từ chối! Vui lòng liên hệ eims.contact để biết thêm thông tin " +
-                        "chi tiết.";
-                String userInfo = speedSMS.getUserInfo();
-                String response = speedSMS.sendSMS(user.getPhone(), content, 5, SENDER);
+                String content = "Đơn đăng ký của bạn với hệ thống EIMS đã bị từ chối! Vui lòng liên hệ eims.contact " +
+                        "để biết thêm thông tin chi tiết.";
+                //String userInfo = speedSMS.getUserInfo();
+                //String response = speedSMS.sendSMS(user.getPhone(), content, 5, SENDER);
+                System.out.println(content);
                 //
                 return new ResponseEntity<>("Đã từ chối đơn đăng ký", HttpStatus.OK);
             } else {

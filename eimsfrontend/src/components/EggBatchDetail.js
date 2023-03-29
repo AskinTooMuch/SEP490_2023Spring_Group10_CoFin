@@ -61,7 +61,7 @@ export default function BasicTabs() {
     const handleClose = () => setShow(false);
 
     const handleShow = () => {
-        if (eggBatchDetail.status == 1) {
+        if (eggBatchDetail.status == 1 && eggBatchDetail.needAction == 1) {
             const rows = [...rowsData];
             rows.splice(0, rows.length);
 
@@ -78,8 +78,10 @@ export default function BasicTabs() {
 
             setRowsData(rows);
             setShow(true);
-        } else {
-            toast.error("Lô trứng đã hoàn thành, không thể cập nhật")
+        } else if (eggBatchDetail.status == 0) {
+            toast.warning("Lô trứng đã hoàn thành, không thể cập nhật")
+        } else if (eggBatchDetail.status == 1 && eggBatchDetail.needAction == 0) {
+            toast.warning("Chưa đến giai đoạn cập nhật lô trứng")
         }
 
     }
@@ -137,9 +139,14 @@ export default function BasicTabs() {
         specieName: "",
         breedId: "",
         breedName: "",
-        growthTime: "",
+        startDate: "",
+        progressInDays: "",
+        incubationPeriod: "",
         amount: "",
         progress: "",
+        phase: "",
+        needAction: "",
+        dateAction: "",
         status: "",
         eggProductList: [],
         machineList: [],
@@ -152,6 +159,7 @@ export default function BasicTabs() {
         phaseNumber: "",
         eggWasted: "",
         amount: "",
+        needAction: eggBatchDetail.needAction,
         eggLocationUpdateEggBatchDTOS: []
     })
 
@@ -193,10 +201,15 @@ export default function BasicTabs() {
         eggBatchDetail.specieName = result.data.specieName;
         eggBatchDetail.breedId = result.data.breedId;
         eggBatchDetail.breedName = result.data.breedName;
-        eggBatchDetail.growthTime = result.data.growthTime;
+        eggBatchDetail.startDate = result.data.startDate;
+        eggBatchDetail.progressInDays = result.data.progressInDays;
+        eggBatchDetail.incubationPeriod = result.data.incubationPeriod;
         eggBatchDetail.amount = result.data.amount;
         eggBatchDetail.progress = result.data.progress;
+        eggBatchDetail.phase = result.data.phase;
         eggBatchDetail.status = result.data.status;
+        eggBatchDetail.needAction = result.data.needAction;
+        eggBatchDetail.dateAction = result.data.dateAction;
         eggBatchDetail.eggProductList = result.data.eggProductList;
         eggBatchDetail.machineList = result.data.machineList;
         eggBatchDetail.machineNotFullList = result.data.machineNotFullList;
@@ -243,6 +256,20 @@ export default function BasicTabs() {
         }
 
     }
+
+    // Variable check done
+    var needAction = 0;
+    function setCheck() {
+        if (document.querySelector('#needActionTrue:checked')) {
+            needAction = 0;
+            updateEggBatchDTO.needAction = needAction;
+        } else {
+            needAction = 1;
+            updateEggBatchDTO.needAction = needAction;
+        }
+    }
+
+
     //Handle Change functions:
     //Update EggBatch
     const handleUpdateEggBatchChange = (event, field) => {
@@ -353,6 +380,7 @@ export default function BasicTabs() {
             }
         }
     }
+
     return (
 
         <Box sx={{ width: '100%' }}>
@@ -394,7 +422,7 @@ export default function BasicTabs() {
                                 <p>Ngày nhập</p>
                             </div>
                             <div className="col-md-3">
-                                <p>{eggBatchDetail.importDate}</p>
+                                <p>{eggBatchDetail.importDate.replace("T", " ")}</p>
                             </div>
                         </div>
                         <div className="row">
@@ -404,14 +432,45 @@ export default function BasicTabs() {
                             <div className="col-md-3">
                                 <p>{eggBatchDetail.specieName}</p>
                             </div>
+                            {
+                                eggBatchDetail.startDate !== null
+                                    ? <>
+                                        <div className="col-md-3 ">
+                                            <p>Thời gian bắt đầu ấp</p>
+                                        </div>
+                                        <div className="col-md-3">
+                                            <p>{eggBatchDetail.startDate.replace("T", " ")}</p>
+                                        </div>
+                                    </>
+                                    : ''
+                            }
+
+
+                        </div>
+                        <div className="row">
                             <div className="col-md-3 ">
                                 <p>Tên loại</p>
                             </div>
                             <div className="col-md-3">
                                 <p>{eggBatchDetail.breedName}</p>
                             </div>
+                            {
+                                eggBatchDetail.progress !== 0
+                                    ?
+                                    <>
+                                        <div className="col-md-3 ">
+                                            <p>Ngày dự tính giai đoạn tiếp theo</p>
+                                        </div>
+                                        <div className="col-md-3">
+                                            <p>{eggBatchDetail.dateAction.slice(0, 10)}</p>
+                                        </div>
+                                    </>
+                                    : ''
+                            }
+
                         </div>
                         <div className="row">
+
                             <div className="col-md-3">
                                 <p>Số lượng</p>
                             </div>
@@ -430,21 +489,32 @@ export default function BasicTabs() {
                                 <p>Giai đoạn hiện tại:  </p>
                             </div>
                             <div className="col-md-3">
-                                <p>{eggBatchDetail.progress}
+                                <p>({eggBatchDetail.progress}){eggBatchDetail.phase}
                                 </p>
                             </div>
                             <div className="col-md-3">
                             </div>
                             <div className="col-md-3">
                                 {
-                                    eggBatchDetail.status == 1
-                                        ?
-                                        <p className="text-red">Chưa hoàn thành</p>
-                                        :
-                                        <p className="text-green">Đã hoàn thành </p>
-
+                                    eggBatchDetail.status === 0
+                                        ? <td className=''>Đã hoàn thành</td>
+                                        : ''
                                 }
-
+                                {
+                                    eggBatchDetail.status === 1 && eggBatchDetail.needAction === 1
+                                        ? <td className='text-red'>Cần cập nhật</td>
+                                        : ''
+                                }
+                                {
+                                    eggBatchDetail.status === 1 && eggBatchDetail.needAction === 0 && eggBatchDetail.progress < 5
+                                        ? <td className='text-green'>Đang ấp</td>
+                                        : ''
+                                }
+                                {
+                                    eggBatchDetail.status === 1 && eggBatchDetail.needAction === 0 && eggBatchDetail.progress >= 5
+                                        ? <td className='text-green'>Đang nở</td>
+                                        : ''
+                                }
                             </div>
                         </div>
                     </div>
@@ -585,6 +655,15 @@ export default function BasicTabs() {
                                         <br />
                                         <div className="row">
                                             <div className="col-md-3" >
+                                                <label>Giai đoạn hiện tại: </label>
+                                            </div>
+                                            <div className="col-md-3" >
+                                                <label>({eggBatchDetail.progress}) {eggBatchDetail.phase}</label>
+                                            </div>
+                                        </div>
+                                        <br />
+                                        <div className="row">
+                                            <div className="col-md-3" >
                                                 <label>Trứng hao hụt: </label>
                                             </div>
                                             <div className="col-md-3">
@@ -676,8 +755,18 @@ export default function BasicTabs() {
                                                     </>
                                                     : ''
                                             }
-
-
+                                            {
+                                                eggBatchDetail.progress !== 6
+                                                    ? <div className='row'>
+                                                        <div className="col-md-3" >
+                                                            <label for="needActionTrue">Xác nhận hoàn thành giai đoạn</label>
+                                                        </div>
+                                                        <div className="col-md-3" >
+                                                            <input type="checkbox" id="needActionTrue" name="needActionTrue" checked onChange={setCheck} />
+                                                        </div>
+                                                    </div>
+                                                    : ''
+                                            }
                                         </div>
                                     </div>
                                     <br />
@@ -735,7 +824,6 @@ export default function BasicTabs() {
                                 </div>
                             </Modal.Body>
                             <div className='model-footer'>
-
                                 <button style={{ width: "20%" }} className="col-md-6 btn-light" type="submit">
                                     Xác nhận
                                 </button>

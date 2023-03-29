@@ -1,3 +1,4 @@
+-- V0.11.1: Add event need_action (update need_action when the time comes), add egg_batch attribute
 -- V0.11.0: Modify specie stored procedures
 -- V0.10.0: Modify field lengths
 -- V0.9.0: Modify the stored procedure user_and_facility
@@ -148,6 +149,8 @@ CREATE TABLE egg_batch(
 	breed_id		integer			NOT NULL,
     amount			integer 		NOT NULL,
     price			decimal(15,2)	NOT NULL,
+    need_action		boolean			NOT NULL,
+    date_action		datetime		NOT NULL,
     status			boolean 		NOT NULL
 );
 
@@ -201,15 +204,15 @@ CREATE TABLE egg_location(
 );
 
 CREATE TABLE payroll(
-	payroll_id		integer		AUTO_INCREMENT PRIMARY KEY,
+	payroll_id		integer			AUTO_INCREMENT PRIMARY KEY,
     owner_id		integer			NOT NULL,
-	employee_id			integer			NOT NULL,
-    phone		varchar(11)		NOT NULL,
-    payroll_item	varchar(50)	NOT NULL,
+	employee_id		integer			NOT NULL,
+    phone			varchar(11)		NOT NULL,
+    payroll_item	varchar(50)		NOT NULL,
     payroll_amount	decimal(15,2)	NOT NULL,
 	issue_date		date			NOT NULL,
     note			varchar(255),
-    status		boolean 		NOT NULL
+    status			boolean 		NOT NULL
 );
 
 CREATE TABLE cost(
@@ -250,7 +253,7 @@ CREATE TABLE notification(
 	notification_id		integer		AUTO_INCREMENT PRIMARY KEY,
     facility_id		    integer		NOT NULL,
     notification_brief	varchar(255),
-    product_id			integer,
+    egg_batch_id		integer,
     status				boolean
 );
 
@@ -259,7 +262,7 @@ CREATE TABLE otp(
     phone_number	varchar(11)		NOT NULL,
     otp				varchar(10) 	DEFAULT "",
     time 			datetime,
-    status				boolean
+    status			boolean
 );
 
 
@@ -331,12 +334,12 @@ ADD CHECK (amount > 0);
 
 ALTER TABLE machine
 ADD FOREIGN KEY (machine_type_id)	REFERENCES machine_type(machine_type_id),
-ADD FOREIGN KEY (facility_id)	REFERENCES facility(facility_id),
+ADD FOREIGN KEY (facility_id)		REFERENCES facility(facility_id),
 ADD CHECK (max_capacity >= 0),
 ADD CHECK (cur_capacity >= 0);
 
 ALTER TABLE egg_product
-ADD FOREIGN KEY (egg_batch_id)	REFERENCES egg_batch(egg_batch_id),
+ADD FOREIGN KEY (egg_batch_id)			REFERENCES egg_batch(egg_batch_id),
 ADD FOREIGN KEY (incubation_phase_id)	REFERENCES incubation_phase(incubation_phase_id);
 
 ALTER TABLE egg_location
@@ -345,7 +348,7 @@ ADD FOREIGN KEY (machine_id)		REFERENCES machine(machine_id),
 ADD CHECK (amount > 0);
 
 ALTER TABLE payroll
-ADD FOREIGN KEY (owner_id)		REFERENCES user(user_id),
+ADD FOREIGN KEY (owner_id)			REFERENCES user(user_id),
 ADD FOREIGN KEY (employee_id)		REFERENCES user(user_id),
 ADD CHECK (payroll_amount != 0);
 
@@ -360,15 +363,15 @@ ADD CHECK (duration >= 0),
 ADD CHECK (machine_quota >= 0);
 
 ALTER TABLE user_subsription
-ADD FOREIGN KEY (facility_id)	REFERENCES facility(facility_id),
-ADD FOREIGN KEY (subscription_id)REFERENCES subscription(subscription_id);
+ADD FOREIGN KEY (facility_id)		REFERENCES facility(facility_id),
+ADD FOREIGN KEY (subscription_id)	REFERENCES subscription(subscription_id);
 
 ALTER TABLE registration
-ADD FOREIGN KEY (user_id)	REFERENCES user(user_id);
+ADD FOREIGN KEY (user_id)		REFERENCES user(user_id);
 
 ALTER TABLE notification
 ADD FOREIGN KEY (facility_id)	REFERENCES facility(facility_id),
-ADD FOREIGN KEY (product_id)REFERENCES egg_product(product_id);
+ADD FOREIGN KEY (egg_batch_id)	REFERENCES egg_batch(egg_batch_id);
 
 -- Create Procedures:
 -- Select user and facility of an user
@@ -453,6 +456,21 @@ BEGIN
     SELECT * FROM specie WHERE specie_id = s_id;
 END //
 DELIMITER ;
+
+-- Event update need_action
+SET SQL_SAFE_UPDATES = 0; -- turn off safe update to update multiple rows without using primary key in WHERE clause
+
+SET GLOBAL event_scheduler = ON;  -- enable event scheduler.
+SELECT @@event_scheduler; -- check whether event scheduler is ON/OFF
+
+CREATE EVENT need_action  -- create event if not exist
+ON SCHEDULE EVERY 24 HOUR -- run every day
+STARTS (TIMESTAMP(CURRENT_DATE) + INTERVAL 1 DAY) -- the day after today
+DO  -- process
+UPDATE eims.egg_batch
+SET  need_action = 1 
+WHERE DATEDIFF(date_action, now()) = 0 -- date_action is the next day
+OR date_action < now(); -- date_action is previous days (forget to update)
 
 -- Insert Data into tables
 -- role

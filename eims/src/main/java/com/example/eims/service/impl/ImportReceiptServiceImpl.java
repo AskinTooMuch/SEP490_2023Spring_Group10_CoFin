@@ -7,6 +7,7 @@
  * Record of change:<br>
  * DATE         Version     Author      DESCRIPTION<br>
  * 02/03/2023   1.0         DuongVV     First Deploy<br>
+ * 29/03/2023   1.1         DuongVV     Update checks<br>
  */
 
 package com.example.eims.service.impl;
@@ -26,6 +27,7 @@ import com.example.eims.repository.EggBatchRepository;
 import com.example.eims.repository.ImportReceiptRepository;
 import com.example.eims.repository.SupplierRepository;
 import com.example.eims.service.interfaces.IImportReceiptService;
+import com.example.eims.utils.StringDealer;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;
@@ -38,6 +40,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.sql.Date;
+import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -52,6 +57,7 @@ public class ImportReceiptServiceImpl implements IImportReceiptService {
     private final EggBatchRepository eggBatchRepository;
     @Autowired
     private final BreedRepository breedRepository;
+    private final StringDealer stringDealer;
     @PersistenceContext
     private final EntityManager em;
 
@@ -62,6 +68,7 @@ public class ImportReceiptServiceImpl implements IImportReceiptService {
         this.eggBatchRepository = eggBatchRepository;
         this.supplierRepository = supplierRepository;
         this.breedRepository = breedRepository;
+        this.stringDealer = new StringDealer();
         this.em = em;
     }
 
@@ -205,14 +212,19 @@ public class ImportReceiptServiceImpl implements IImportReceiptService {
         }
         // Import date
         if (createImportDTO.getImportDate() == null || createImportDTO.getImportDate().equals("")) { // Import date empty
-            return new ResponseEntity<>("Hãy nhập ngày nhập đơn hàng", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Hãy nhập ngày nhập hóa đơn", HttpStatus.BAD_REQUEST);
         }
         LocalDateTime now = LocalDateTime.now();
         if (createImportDTO.getImportDate().isAfter(now)) { // Import date must be before today
-            String time = now.toString().replace("T"," ");
+            String time = now.toString().replace("T", " ");
             String timeNow = time.subSequence(0, 18).toString();
-            return new ResponseEntity<>("Ngày nhập đơn hàng phải trước bây giờ (" + timeNow + ")",
+            return new ResponseEntity<>("Ngày nhập hóa đơn phải trước bây giờ (" + timeNow + ")",
                     HttpStatus.BAD_REQUEST);
+        }
+        Long dateDiff = stringDealer.dateDiff(Date.valueOf(createImportDTO.getImportDate().toLocalDate()),
+                Date.valueOf(LocalDate.now()));
+        if (dateDiff > 3) { // Import date must be less than 3 days before today
+            return new ResponseEntity<>("Hãy nhập ngày nhập hóa đơn không cách hiện tại quá 3 ngày", HttpStatus.BAD_REQUEST);
         }
         // Egg batch list
         List<CreateEggBatchDTO> eggBatchDTOList = createImportDTO.getEggBatchList();
@@ -228,11 +240,15 @@ public class ImportReceiptServiceImpl implements IImportReceiptService {
             if (eggBatch.getAmount() <= 0) { // Amount negative
                 return new ResponseEntity<>("Số lượng trứng phải lớn hơn 0", HttpStatus.BAD_REQUEST);
             }
-            if (eggBatch.getPrice() <= 0) { // Price negative
-                return new ResponseEntity<>("Đơn giá phải lớn hơn 0", HttpStatus.BAD_REQUEST);
+            if (eggBatch.getPrice() < 0) { // Price negative
+                return new ResponseEntity<>("Đơn giá phải lớn hơn hoặc bằng 0", HttpStatus.BAD_REQUEST);
             }
             if (eggBatch.getPrice() > 9999999999999.99) { // Price over limit
-                return new ResponseEntity<>("Đơn giá phải lớn hơn 0", HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>("Đơn giá không được vượt quá 9999999999999.99", HttpStatus.BAD_REQUEST);
+            }
+            if (eggBatch.getPrice() * eggBatch.getAmount() > 9999999999999.99) { // Price over limit
+                return new ResponseEntity<>("Giá trị lô trứng không được vượt quá 9999999999999.99",
+                        HttpStatus.BAD_REQUEST);
             }
             total += eggBatch.getPrice() * eggBatch.getAmount();
         }
@@ -255,6 +271,8 @@ public class ImportReceiptServiceImpl implements IImportReceiptService {
                 eggBatch.setBreedId(eggBatchDTO.getBreedId());
                 eggBatch.setAmount(eggBatchDTO.getAmount());
                 eggBatch.setPrice(eggBatchDTO.getPrice());
+                eggBatch.setNeedAction(1);
+                eggBatch.setDateAction(now);
                 eggBatch.setStatus(1);
                 eggBatchRepository.save(eggBatch);
             }
