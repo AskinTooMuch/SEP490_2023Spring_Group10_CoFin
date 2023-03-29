@@ -55,7 +55,7 @@ const ForgotPassword = () => {
       if (!err?.response) {
         toast.error('Server không phản hồi');
       } else {
-        if ((err.response.data === null) || (err.response.data === '') ) {
+        if ((err.response.data === null) || (err.response.data === '')) {
           toast.error('Có lỗi xảy ra, vui lòng thử lại');
         } else {
           toast.error(err.response.data);
@@ -84,7 +84,7 @@ const ForgotPassword = () => {
       if (!err?.response) {
         toast.error('Server không phản hồi');
       } else {
-        if ((err.response.data === null) || (err.response.data === '') ) {
+        if ((err.response.data === null) || (err.response.data === '')) {
           toast.error('Có lỗi xảy ra, vui lòng thử lại');
         } else {
           toast.error(err.response.data);
@@ -118,7 +118,7 @@ const ForgotPassword = () => {
       if (!err?.response) {
         toast.error('Server không phản hồi');
       } else {
-        if ((err.response.data === null) || (err.response.data === '') ) {
+        if ((err.response.data === null) || (err.response.data === '')) {
           toast.error('Có lỗi xảy ra, vui lòng thử lại');
         } else {
           toast.error(err.response.data);
@@ -139,7 +139,7 @@ const ForgotPassword = () => {
                 <form onSubmit={handleSubmit} className="u-clearfix u-form-custom-backend u-form-spacing-10 u-form-vertical u-inner-form" source="custom" name="form" style={{ padding: "0px" }}>
                   <div className="u-form-group u-form-name">
                     <label for="username-a30d" className="u-label u-text-grey-25 u-label-1">Nhập mã xác thực </label>
-                    <input type="text" name="otp" value={verifyOtpDTO.otp} placeholder="Nhập mã" required ref={userRef} onChange={(e) => handleChange(e, "otp")}
+                    <input type="text" name="otp" value={verifyOtpDTO.otp} placeholder="Nhập mã" ref={userRef} onChange={(e) => handleChange(e, "otp")}
                       className="u-border-2 u-border-grey-10 u-grey-10 u-input u-input-rectangle u-input-1" />
                     <i><button style={{ border: "none", backgroundColor: "transparent" }} onClick={handleResend}>Gửi lại mã</button></i>
                   </div>
@@ -172,7 +172,7 @@ const ForgotPassword = () => {
                 <form onSubmit={handleSend} className="u-clearfix u-form-custom-backend u-form-spacing-10 u-form-vertical u-inner-form" source="custom" name="form" style={{ padding: "0px" }}>
                   <div className="u-form-group u-form-name">
                     <label for="username-a30d" className="u-label u-text-grey-25 u-label-1">Số điện thoại</label>
-                    <input type="text" name="account" value={verifyOtpDTO.phone} placeholder="Nhập số điện thoại" required ref={userRef} onChange={(e) => handleChange(e, "phone")}
+                    <input type="text" name="account" value={verifyOtpDTO.phone} placeholder="Nhập số điện thoại" ref={userRef} onChange={(e) => handleChange(e, "phone")}
                       className="u-border-2 u-border-grey-10 u-grey-10 u-input u-input-rectangle u-input-1" />
                   </div>
                   <div className="u-align-left u-form-group u-form-submit">

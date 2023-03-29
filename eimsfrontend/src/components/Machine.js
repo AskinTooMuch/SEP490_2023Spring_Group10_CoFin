@@ -117,11 +117,11 @@ export default function BasicTabs() {
             if (!err?.response) {
                 toast.error('Server không phản hồi');
             } else {
-                if ((err.response.data === null) || (err.response.data === '') ) {
-          toast.error('Có lỗi xảy ra, vui lòng thử lại');
-        } else {
-          toast.error(err.response.data);
-        }
+                if ((err.response.data === null) || (err.response.data === '')) {
+                    toast.error('Có lỗi xảy ra, vui lòng thử lại');
+                } else {
+                    toast.error(err.response.data);
+                }
             }
         }
     }
@@ -149,7 +149,7 @@ export default function BasicTabs() {
         if (mess) {
             toast.success(state);
             mess = false;
-        } 
+        }
     }
 
     //Navigate to detail Page
@@ -191,7 +191,7 @@ export default function BasicTabs() {
                                             <p>Tên máy<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                         </div>
                                         <div className="col-md-6">
-                                            <input id="createMachineName" required style={{ width: "100%" }}
+                                            <input id="createMachineName" style={{ width: "100%" }}
                                                 onChange={(e) => handleCreateMachineChange(e, "machineName")} />
                                         </div>
                                     </div>
@@ -213,7 +213,7 @@ export default function BasicTabs() {
                                             <p>Sức chứa<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                         </div>
                                         <div className="col-md-6">
-                                            <input id="createMachineCapacity" required style={{ width: "100%" }} type="number" min="0"
+                                            <input id="createMachineCapacity" style={{ width: "100%" }} type="number"
                                                 onChange={(e) => handleCreateMachineChange(e, "maxCapacity")} />
                                         </div>
                                     </div>

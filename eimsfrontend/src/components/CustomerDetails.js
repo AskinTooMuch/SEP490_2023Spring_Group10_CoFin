@@ -152,11 +152,11 @@ export default function BasicTabs() {
             if (!err?.response) {
                 toast.error('Server không phản hồi')
             } else {
-                if ((err.response.data === null) || (err.response.data === '') ) {
-          toast.error('Có lỗi xảy ra, vui lòng thử lại');
-        } else {
-          toast.error(err.response.data);
-        }
+                if ((err.response.data === null) || (err.response.data === '')) {
+                    toast.error('Có lỗi xảy ra, vui lòng thử lại');
+                } else {
+                    toast.error(err.response.data);
+                }
             }
         }
 
@@ -249,7 +249,7 @@ export default function BasicTabs() {
             district: fullAddresses[cityIndex].Districts[districtIndex].Name,
             ward: fullAddresses[cityIndex].Districts[districtIndex].Wards[wardIndex].Name,
             street: s
-          });
+        });
         updateCustomerDTO.customerAddress = JSON.stringify(updateAddressJson);
     }
 
@@ -295,11 +295,11 @@ export default function BasicTabs() {
             if (!err?.response) {
                 toast.error('Server không phản hồi');
             } else {
-                if ((err.response.data === null) || (err.response.data === '') ) {
-          toast.error('Có lỗi xảy ra, vui lòng thử lại');
-        } else {
-          toast.error(err.response.data);
-        }
+                if ((err.response.data === null) || (err.response.data === '')) {
+                    toast.error('Có lỗi xảy ra, vui lòng thử lại');
+                } else {
+                    toast.error(err.response.data);
+                }
             }
         }
     }
@@ -328,126 +328,124 @@ export default function BasicTabs() {
                             </Modal.Header>
                             <Modal.Body>
                                 <div className="">
-                                <div className="row">
-                                    <div className="col-md-4">
-                                        <label htmlFor='customerName' className='col-form-label'>Họ và tên&nbsp;<FontAwesomeIcon className="star" icon={faStarOfLife} /></label>
+                                    <div className="row">
+                                        <div className="col-md-4">
+                                            <label htmlFor='customerName' className='col-form-label'>Họ và tên&nbsp;<FontAwesomeIcon className="star" icon={faStarOfLife} /></label>
+                                        </div>
+                                        <div className="col-md-8">
+                                            <input id="customerName"
+                                                className="form-control mt-1"
+                                                style={{ width: "100%" }}
+                                                placeholder='Tên/biệt danh gợi nhớ'
+                                                value={updateCustomerDTO.customerName}
+                                                onChange={e => handleUpdateCustomerChange(e, "customerName")} />
+                                        </div>
                                     </div>
-                                    <div className="col-md-8">
-                                        <input id="customerName"
-                                            className="form-control mt-1"
-                                            style={{ width: "100%" }}
-                                            required
-                                            placeholder='Tên/biệt danh gợi nhớ'
-                                            value={updateCustomerDTO.customerName}
-                                            onChange={e => handleUpdateCustomerChange(e, "customerName")} />
+                                    <div className="row">
+                                        <div className="col-md-4">
+                                            <label htmlFor='customerPhoneNumber' className='col-form-label'>Điện thoại&nbsp;<FontAwesomeIcon className="star" icon={faStarOfLife} /></label>
+                                        </div>
+                                        <div className="col-md-8">
+                                            <input id="customerPhoneNumber"
+                                                className="form-control mt-1"
+                                                style={{ width: "100%" }}
+                                                placeholder='Số điện thoại Việt Nam'
+                                                value={updateCustomerDTO.customerPhone}
+                                                onChange={e => handleUpdateCustomerChange(e, "customerPhone")} />
+                                        </div>
                                     </div>
-                                </div>
-                                <div className="row">
-                                    <div className="col-md-4">
-                                        <label htmlFor='customerPhoneNumber' className='col-form-label'>Điện thoại&nbsp;<FontAwesomeIcon className="star" icon={faStarOfLife} /></label>
+                                    <div className="row">
+                                        <div className="col-md-4">
+                                            <label htmlFor='customerEmail' className='col-form-label'>Email</label>
+                                        </div>
+                                        <div className="col-md-8">
+                                            <input id="customerEmail"
+                                                className="form-control mt-1"
+                                                style={{ width: "100%" }}
+                                                placeholder='Địa chỉ thư điện tử'
+                                                value={updateCustomerDTO.customerMail}
+                                                onChange={e => handleUpdateCustomerChange(e, "customerEmail")} />
+                                        </div>
                                     </div>
-                                    <div className="col-md-8">
-                                        <input id="customerPhoneNumber"
-                                            className="form-control mt-1"
-                                            style={{ width: "100%" }}
-                                            placeholder='Số điện thoại Việt Nam'
-                                            value={updateCustomerDTO.customerPhone}
-                                            onChange={e => handleUpdateCustomerChange(e, "customerPhone")} />
+                                    <div className='row'>
+                                        {/*City*/}
+                                        <div className="col-md-4">
+                                            <label htmlFor="uprovince" className='col-form-label'>Tỉnh/Thành Phố&nbsp;<FontAwesomeIcon className="star" icon={faStarOfLife} /></label>
+                                        </div>
+                                        <div className="col-md-8">
+                                            <select className="form-control mt-1" id="uprovince"
+                                                ref={userRef}
+                                                autoComplete="off"
+                                                onChange={(e) => loadDistrict(e.target.value)}
+                                                value={cityIndex}
+                                            >
+                                                <option value="" disabled selected>Chọn Tỉnh/Thành phố</option>
+                                                {city &&
+                                                    city.map((item, index) => (
+                                                        <option value={index}>{item.label}</option>
+                                                    ))
+                                                }
+                                            </select>
+                                        </div>
                                     </div>
-                                </div>
-                                <div className="row">
-                                    <div className="col-md-4">
-                                        <label htmlFor='customerEmail' className='col-form-label'>Email</label>
+                                    <div className='row'>
+                                        {/*District*/}
+                                        <div className="col-md-4">
+                                            <label htmlFor="udistrict" className='col-form-label'>Quận/Huyện&nbsp;<FontAwesomeIcon className="star" icon={faStarOfLife} /></label>
+                                        </div>
+                                        <div className="col-md-8">
+                                            <select className="form-control mt-1" id="udistrict" name="supplierDistrict"
+                                                ref={userRef}
+                                                autoComplete="off"
+                                                onChange={(e) => loadWard(e.target.value)}
+                                                value={districtIndex}
+                                            >
+                                                <option value="" disabled selected>Chọn Quận/Huyện</option>
+                                                {district &&
+                                                    district.map((item, index) => (
+                                                        <option value={index}>{item.label}</option>
+                                                    ))
+                                                }
+                                            </select>
+                                        </div>
                                     </div>
-                                    <div className="col-md-8">
-                                        <input id="customerEmail"
-                                            className="form-control mt-1"
-                                            style={{ width: "100%" }}
-                                            placeholder='Địa chỉ thư điện tử'
-                                            value={updateCustomerDTO.customerMail}
-                                            onChange={e => handleUpdateCustomerChange(e, "customerEmail")} />
+                                    <div className='row'>
+                                        {/*User ward*/}
+                                        <div className="col-md-4">
+                                            <label htmlFor="uward" className='col-form-label'>Phường/Xã&nbsp;<FontAwesomeIcon className="star" icon={faStarOfLife} /></label>
+                                        </div>
+                                        <div className="col-md-8">
+                                            <select className="form-control mt-1" id="uward" name="supplierWard"
+                                                ref={userRef}
+                                                autoComplete="off"
+                                                onChange={(e) => saveWard(e.target.value)}
+                                                value={wardIndex}
+                                            >
+                                                <option value="" disabled selected>Chọn Phường/Xã</option>
+                                                {ward &&
+                                                    ward.map((item, index) => (
+                                                        <option value={index}>{item.label}</option>
+                                                    ))
+                                                }
+                                            </select>
+                                        </div>
                                     </div>
-                                </div>
-                                <div className='row'>
-                                    {/*City*/}
-                                    <div className="col-md-4">
-                                        <label htmlFor="uprovince" className='col-form-label'>Tỉnh/Thành Phố&nbsp;<FontAwesomeIcon className="star" icon={faStarOfLife} /></label>
+                                    <div className='row'>
+                                        {/*User Street*/}
+                                        <div className="col-md-4">
+                                            <label htmlFor="uhomenum" className='col-form-label'>Số nhà&nbsp;<FontAwesomeIcon className="star" icon={faStarOfLife} /></label>
+                                        </div>
+                                        <div className="col-md-8">
+                                            <input type="text" id="uhomenum"
+                                                ref={userRef}
+                                                autoComplete="off"
+                                                onChange={(e) => saveAddressJson(e.target.value)}
+                                                className="form-control mt-1"
+                                                value={street}
+                                                placeholder='Địa chỉ cụ thể' />
+                                        </div>
                                     </div>
-                                    <div className="col-md-8">
-                                        <select className="form-control mt-1" id="uprovince"
-                                            ref={userRef}
-                                            autoComplete="off"
-                                            onChange={(e) => loadDistrict(e.target.value)}
-                                            value={cityIndex}
-                                            required>
-                                            <option value="" disabled selected>Chọn Tỉnh/Thành phố</option>
-                                            {city &&
-                                                city.map((item, index) => (
-                                                    <option value={index}>{item.label}</option>
-                                                ))
-                                            }
-                                        </select>
-                                    </div>
-                                </div>
-                                <div className='row'>
-                                    {/*District*/}
-                                    <div className="col-md-4">
-                                        <label htmlFor="udistrict" className='col-form-label'>Quận/Huyện&nbsp;<FontAwesomeIcon className="star" icon={faStarOfLife} /></label>
-                                    </div>
-                                    <div className="col-md-8">
-                                        <select className="form-control mt-1" id="udistrict" name="supplierDistrict"
-                                            ref={userRef}
-                                            autoComplete="off"
-                                            onChange={(e) => loadWard(e.target.value)}
-                                            value={districtIndex}
-                                            required>
-                                            <option value="" disabled selected>Chọn Quận/Huyện</option>
-                                            {district &&
-                                                district.map((item, index) => (
-                                                    <option value={index}>{item.label}</option>
-                                                ))
-                                            }
-                                        </select>
-                                    </div>
-                                </div>
-                                <div className='row'>
-                                    {/*User ward*/}
-                                    <div className="col-md-4">
-                                        <label htmlFor="uward" className='col-form-label'>Phường/Xã&nbsp;<FontAwesomeIcon className="star" icon={faStarOfLife} /></label>
-                                    </div>
-                                    <div className="col-md-8">
-                                        <select className="form-control mt-1" id="uward" name="supplierWard"
-                                            ref={userRef}
-                                            autoComplete="off"
-                                            onChange={(e) => saveWard(e.target.value)}
-                                            value={wardIndex}
-                                            required>
-                                            <option value="" disabled selected>Chọn Phường/Xã</option>
-                                            {ward &&
-                                                ward.map((item, index) => (
-                                                    <option value={index}>{item.label}</option>
-                                                ))
-                                            }
-                                        </select>
-                                    </div>
-                                </div>
-                                <div className='row'>
-                                    {/*User Street*/}
-                                    <div className="col-md-4">
-                                        <label htmlFor="uhomenum" className='col-form-label'>Số nhà&nbsp;<FontAwesomeIcon className="star" icon={faStarOfLife} /></label>
-                                    </div>
-                                    <div className="col-md-8">
-                                        <input type="text" id="uhomenum"
-                                            ref={userRef}
-                                            autoComplete="off"
-                                            onChange={(e) => saveAddressJson(e.target.value)}
-                                            required
-                                            className="form-control mt-1"
-                                            value={street}
-                                            placeholder='Địa chỉ cụ thể' />
-                                    </div>
-                                </div>
-                                <div className="row">
+                                    <div className="row">
                                         <div className="col-md-4">
                                             <label htmlFor='updateCustomerStatus'>Trạng thái&nbsp;<FontAwesomeIcon className="star" icon={faStarOfLife} /></label>
                                         </div>

@@ -48,7 +48,7 @@ const ExportReport = () => {
                                 <br />
                                 <label>Năm </label>
                                 <select
-                                    id="select" className='form-control m-3 mt-0' style={{ display: "inline-block", width: "20%" }} required>
+                                    id="select" className='form-control m-3 mt-0' style={{ display: "inline-block", width: "20%" }} >
                                     <option defaultValue="Chọn Năm">Chọn năm</option>
                                     <option value='2022'>2022</option>
                                 </select>

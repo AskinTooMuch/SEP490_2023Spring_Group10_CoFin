@@ -276,11 +276,11 @@ const Profile = () => {
                 if (err.response.data === '' || err.response.data === null) {
                     toast.error('Lỗi không xác định');
                 } else {
-                    if ((err.response.data === null) || (err.response.data === '') ) {
-          toast.error('Có lỗi xảy ra, vui lòng thử lại');
-        } else {
-          toast.error(err.response.data);
-        }
+                    if ((err.response.data === null) || (err.response.data === '')) {
+                        toast.error('Có lỗi xảy ra, vui lòng thử lại');
+                    } else {
+                        toast.error(err.response.data);
+                    }
                 }
             }
         }
@@ -436,11 +436,11 @@ const Profile = () => {
             if (!err?.response) {
                 toast.error('Server không phản hồi');
             } else {
-                if ((err.response.data === null) || (err.response.data === '') ) {
-          toast.error('Có lỗi xảy ra, vui lòng thử lại');
-        } else {
-          toast.error(err.response.data);
-        }
+                if ((err.response.data === null) || (err.response.data === '')) {
+                    toast.error('Có lỗi xảy ra, vui lòng thử lại');
+                } else {
+                    toast.error(err.response.data);
+                }
             }
         }
     }
@@ -524,11 +524,11 @@ const Profile = () => {
             if (!err?.response) {
                 toast.error('Server không phản hồi');
             } else {
-                if ((err.response.data === null) || (err.response.data === '') ) {
-          toast.error('Có lỗi xảy ra, vui lòng thử lại');
-        } else {
-          toast.error(err.response.data);
-        }
+                if ((err.response.data === null) || (err.response.data === '')) {
+                    toast.error('Có lỗi xảy ra, vui lòng thử lại');
+                } else {
+                    toast.error(err.response.data);
+                }
             }
         }
     }
@@ -561,11 +561,11 @@ const Profile = () => {
             if (!err?.response) {
                 toast.error('Server không phản hồi');
             } else {
-                if ((err.response.data === null) || (err.response.data === '') ) {
-          toast.error('Có lỗi xảy ra, vui lòng thử lại');
-        } else {
-          toast.error(err.response.data);
-        }
+                if ((err.response.data === null) || (err.response.data === '')) {
+                    toast.error('Có lỗi xảy ra, vui lòng thử lại');
+                } else {
+                    toast.error(err.response.data);
+                }
             }
         }
     }
@@ -599,11 +599,11 @@ const Profile = () => {
             if (!err?.response) {
                 toast.error('Server không phản hồi');
             } else {
-                if ((err.response.data === null) || (err.response.data === '') ) {
-          toast.error('Có lỗi xảy ra, vui lòng thử lại');
-        } else {
-          toast.error(err.response.data);
-        }
+                if ((err.response.data === null) || (err.response.data === '')) {
+                    toast.error('Có lỗi xảy ra, vui lòng thử lại');
+                } else {
+                    toast.error(err.response.data);
+                }
             }
         }
     }
@@ -668,11 +668,11 @@ const Profile = () => {
             if (!err?.response) {
                 toast.error('Server không phản hồi');
             } else {
-                if ((err.response.data === null) || (err.response.data === '') ) {
-          toast.error('Có lỗi xảy ra, vui lòng thử lại');
-        } else {
-          toast.error(err.response.data);
-        }
+                if ((err.response.data === null) || (err.response.data === '')) {
+                    toast.error('Có lỗi xảy ra, vui lòng thử lại');
+                } else {
+                    toast.error(err.response.data);
+                }
             }
         }
 
@@ -747,7 +747,7 @@ const Profile = () => {
                                                         </div>
                                                         <div className="col-md-6 pass-wrapper ">
                                                             <input ref={userRef} id="oldPassword" onChange={e => handleChange(e, "password")}
-                                                                value={changePasswordDTO.password} required
+                                                                value={changePasswordDTO.password}
                                                                 type={passwordShown ? "text" : "password"}
                                                                 minLength="8" maxLength="20"
                                                                 className="form-control " />
@@ -764,7 +764,7 @@ const Profile = () => {
                                                         <div className="col-md-6 pass-wrapper">
 
                                                             <input ref={userRef} onChange={e => handleChange(e, "newPassword")}
-                                                                value={changePasswordDTO.newPassword} required
+                                                                value={changePasswordDTO.newPassword}
                                                                 id="newPassword"
                                                                 aria-invalid={validPwd ? "false" : "true"}
                                                                 aria-describedby="pwdnote"
@@ -788,7 +788,7 @@ const Profile = () => {
                                                                 id="confirm_pwd"
                                                                 onChange={(e) => setMatchPwd(e.target.value)}
                                                                 value={matchPwd}
-                                                                required
+
                                                                 aria-invalid={validMatch ? "false" : "true"}
                                                                 aria-describedby="confirmnote"
                                                                 type={passwordShown3 ? "text" : "password"}
@@ -826,7 +826,7 @@ const Profile = () => {
                                                         <div className="col-md-6">
                                                             <input type="text" className="form-control" name="username" id="updateUsername"
                                                                 ref={userRef} onChange={e => handleUpdateUser(e, "username")}
-                                                                value={updateUserDTO.username} required />
+                                                                value={updateUserDTO.username} />
                                                         </div>
                                                     </div>
                                                     <div className="row">
@@ -836,7 +836,7 @@ const Profile = () => {
                                                         <div className="col-md-6">
                                                             <input type="date" className="form-control" name="dob" id="updateDob"
                                                                 ref={userRef} onChange={e => handleUpdateUser(e, "dob")}
-                                                                value={updateUserDTO.dob} required pattern="\d{4}-\d{2}-\d{2}" />
+                                                                value={updateUserDTO.dob} pattern="\d{4}-\d{2}-\d{2}" />
                                                         </div>
                                                     </div>
 
@@ -861,7 +861,7 @@ const Profile = () => {
                                                                 autoComplete="off"
                                                                 onChange={(e) => loadDistrict(e.target.value)}
                                                                 value={cityIndex}
-                                                                required>
+                                                            >
                                                                 <option value="" disabled>Chọn Tỉnh/Thành phố</option>
                                                                 {city &&
                                                                     city.map((item, index) => (
@@ -887,7 +887,7 @@ const Profile = () => {
                                                                 autoComplete="off"
                                                                 onChange={(e) => loadWard(e.target.value, -1)}
                                                                 value={districtIndex}
-                                                                required>
+                                                            >
                                                                 <option value="" disabled>Chọn Quận/Huyện</option>
                                                                 {district &&
                                                                     district.map((item, index) => (
@@ -913,7 +913,7 @@ const Profile = () => {
                                                                 autoComplete="off"
                                                                 onChange={(e) => saveWard(e.target.value)}
                                                                 value={wardIndex}
-                                                                required>
+                                                            >
                                                                 <option value="" disabled>Chọn Phường/Xã</option>
                                                                 {ward &&
                                                                     ward.map((item, index) => (
@@ -938,7 +938,7 @@ const Profile = () => {
                                                                 ref={userRef}
                                                                 autoComplete="off"
                                                                 onChange={(e) => saveAddressJsonUser(e.target.value)}
-                                                                required
+
                                                                 className="form-control"
                                                                 value={street} />
                                                         </div>
@@ -1045,7 +1045,7 @@ const Profile = () => {
                                                     <div className="col-md-6 ">
                                                         <input type="text" className="form-control" name="username" id="updateFacilityName"
                                                             ref={userRef} onChange={e => handleUpdateFacility(e, "facilityName")}
-                                                            value={updateFacilityDTO.facilityName} required />
+                                                            value={updateFacilityDTO.facilityName} />
                                                     </div>
                                                 </div>
                                                 <div className="row">
@@ -1055,7 +1055,7 @@ const Profile = () => {
                                                     <div className="col-md-6 ">
                                                         <input type="text" className="form-control" name="foundDate" id="updateFoundDate"
                                                             ref={userRef} onChange={e => handleUpdateFacility(e, "foundDate")}
-                                                            value={updateFacilityDTO.foundDate} required />
+                                                            value={updateFacilityDTO.foundDate} />
                                                     </div>
                                                 </div>
                                                 <div className="row">
@@ -1065,7 +1065,7 @@ const Profile = () => {
                                                     <div className="col-md-6 ">
                                                         <input type="text" className="form-control" name="businessLicenseNumber" id="updateBusinessLicenseNumber"
                                                             ref={userRef} onChange={e => handleUpdateFacility(e, "businessLicenseNumber")}
-                                                            value={updateFacilityDTO.businessLicenseNumber} required />
+                                                            value={updateFacilityDTO.businessLicenseNumber} />
                                                     </div>
                                                 </div>
                                                 <div className="row">
@@ -1075,7 +1075,7 @@ const Profile = () => {
                                                     <div className="col-md-6 ">
                                                         <input type="text" className="form-control" name="Hotline" id="updateHotline"
                                                             ref={userRef} onChange={e => handleUpdateFacility(e, "hotline")}
-                                                            value={updateFacilityDTO.hotline} required />
+                                                            value={updateFacilityDTO.hotline} />
                                                     </div>
                                                 </div>
                                                 {/*City*/}
@@ -1089,7 +1089,7 @@ const Profile = () => {
                                                             autoComplete="off"
                                                             onChange={(e) => loadDistrict1(e.target.value)}
                                                             value={cityIndex1}
-                                                            required>
+                                                        >
                                                             <option value="" disabled>Chọn Tỉnh/Thành phố</option>
                                                             {city1 &&
                                                                 city1.map((item, index) => (
@@ -1115,7 +1115,7 @@ const Profile = () => {
                                                             autoComplete="off"
                                                             onChange={(e) => loadWard1(e.target.value, -1)}
                                                             value={districtIndex1}
-                                                            required>
+                                                        >
                                                             <option value="" disabled>Chọn Quận/Huyện</option>
                                                             {district1 &&
                                                                 district1.map((item, index) => (
@@ -1141,7 +1141,7 @@ const Profile = () => {
                                                             autoComplete="off"
                                                             onChange={(e) => saveWard1(e.target.value)}
                                                             value={wardIndex1}
-                                                            required>
+                                                        >
                                                             <option value="" disabled>Chọn Phường/Xã</option>
                                                             {ward1 &&
                                                                 ward1.map((item, index) => (
@@ -1166,7 +1166,7 @@ const Profile = () => {
                                                             ref={userRef}
                                                             autoComplete="off"
                                                             onChange={(e) => saveAddressJsonFacility(e.target.value)}
-                                                            required
+
                                                             className="form-control"
                                                             value={street1} />
                                                     </div>

@@ -348,11 +348,11 @@ export default function BasicTabs() {
             if (!err?.response) {
                 toast.error('Server không phản hồi');
             } else {
-                if ((err.response.data === null) || (err.response.data === '') ) {
-          toast.error('Có lỗi xảy ra, vui lòng thử lại');
-        } else {
-          toast.error(err.response.data);
-        }
+                if ((err.response.data === null) || (err.response.data === '')) {
+                    toast.error('Có lỗi xảy ra, vui lòng thử lại');
+                } else {
+                    toast.error(err.response.data);
+                }
             }
         }
     }
@@ -412,7 +412,7 @@ export default function BasicTabs() {
                                             <p>Họ và tên<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                         </div>
                                         <div className="col-md-6">
-                                            <input style={{ width: "100%" }} required
+                                            <input style={{ width: "100%" }}
                                                 value={updateEmployeeDTO.employeeName}
                                                 onChange={(e) => handleUpdateEmployeeChange(e, "employeeName")} />
                                         </div>
@@ -428,14 +428,14 @@ export default function BasicTabs() {
                                                 autoComplete="off"
                                                 onChange={(e) => handleUpdateEmployeeChange(e, "employeeDob")}
                                                 value={updateEmployeeDTO.employeeDob}
-                                                required />
+                                            />
                                         </div></div>
                                     <div className="row">
                                         <div className="col-md-6">
                                             <p>Số điện thoại<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                         </div>
                                         <div className="col-md-6">
-                                            <input style={{ width: "100%" }} required
+                                            <input style={{ width: "100%" }}
                                                 onChange={(e) => handleUpdateEmployeeChange(e, "employeePhone")}
                                                 value={updateEmployeeDTO.employeePhone} />
                                         </div>
@@ -451,7 +451,7 @@ export default function BasicTabs() {
                                                 autoComplete="off"
                                                 onChange={(e) => loadDistrict(e.target.value)}
                                                 value={cityIndex}
-                                                required>
+                                            >
                                                 <option value="" disabled>Chọn Tỉnh/Thành phố</option>
                                                 {city &&
                                                     city.map((item, index) => (
@@ -477,7 +477,7 @@ export default function BasicTabs() {
                                                 autoComplete="off"
                                                 onChange={(e) => loadWard(e.target.value, -1)}
                                                 value={districtIndex}
-                                                required>
+                                            >
                                                 <option value="" disabled>Chọn Quận/Huyện</option>
                                                 {district &&
                                                     district.map((item, index) => (
@@ -503,7 +503,7 @@ export default function BasicTabs() {
                                                 autoComplete="off"
                                                 onChange={(e) => saveWard(e.target.value)}
                                                 value={wardIndex}
-                                                required>
+                                            >
                                                 <option value="" disabled>Chọn Phường/Xã</option>
                                                 {ward &&
                                                     ward.map((item, index) => (
@@ -528,7 +528,7 @@ export default function BasicTabs() {
                                                 ref={userRef}
                                                 autoComplete="off"
                                                 onChange={(e) => saveEmployeeAddress(e.target.value)}
-                                                required
+
                                                 className="form-control"
                                                 value={employeeAddress.street} />
                                         </div>
@@ -549,9 +549,8 @@ export default function BasicTabs() {
                                             <p>Tiền lương<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                         </div>
                                         <div className="col-md-6">
-                                            <input style={{ width: "100%" }} required
+                                            <input style={{ width: "100%" }}
                                                 type='number'
-                                                min='0'
                                                 onChange={(e) => handleUpdateEmployeeChange(e, "salary")}
                                                 value={updateEmployeeDTO.salary} />
                                         </div>
@@ -561,7 +560,7 @@ export default function BasicTabs() {
                                             <p>Trạng thái<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                         </div>
                                         <div className="col-md-6">
-                                            <select className="form-select" aria-label="Default select example" required
+                                            <select className="form-select" aria-label="Default select example"
                                                 onChange={(e) => handleUpdateEmployeeChange(e, "status")}>
                                                 <option disabled>Chọn trạng thái hoạt động</option>
                                                 {updateEmployeeDTO.status === 2

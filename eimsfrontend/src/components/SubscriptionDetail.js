@@ -111,7 +111,7 @@ export default function BasicTabs() {
                             <p>Nội dung</p>
                         </div>
                         <div className="col-md-4">
-                            <textarea style={{ width: "100%", height:"200px" }} className="form-control " />
+                            <textarea style={{ width: "100%", height: "200px" }} className="form-control " />
                         </div>
                         <div className="col-md-4">
                         </div>
@@ -141,13 +141,13 @@ export default function BasicTabs() {
                                     <p>Tên gói<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                 </div>
                                 <div className="col-md-6">
-                                    <input required style={{ width: "100%" }} className="form-control " />
+                                    <input style={{ width: "100%" }} className="form-control " />
                                 </div>
                                 <div className="col-md-6">
                                     <p>Giá gói<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                 </div>
                                 <div className="col-md-6">
-                                    <input required style={{ width: "100%" }} placeholder="0" className="form-control " />
+                                    <input style={{ width: "100%" }} placeholder="0" className="form-control " />
                                 </div>
                             </div>
                             <div className="row">
@@ -155,7 +155,7 @@ export default function BasicTabs() {
                                     <p>Thời gian hiệu lực<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                 </div>
                                 <div className="col-md-6">
-                                    <input required style={{ width: "100%" }} placeholder="0" className="form-control " />
+                                    <input style={{ width: "100%" }} placeholder="0" className="form-control " />
                                 </div>
                                 <div className="col-md-6">
                                     <p>Nội dung chi tiết</p>
@@ -169,7 +169,7 @@ export default function BasicTabs() {
                                     <p>Trạng thái<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                 </div>
                                 <div className="col-md-6">
-                                    <select required className="form-control " >
+                                    <select className="form-control " >
                                         <option defaultValue="default">Chọn trạng thái</option>
                                         <option value="1" className='text-green'>Có hiệu lực</option>
                                     </select>

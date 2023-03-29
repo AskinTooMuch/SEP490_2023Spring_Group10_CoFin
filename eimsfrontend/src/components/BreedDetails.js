@@ -11,10 +11,9 @@ import '../css/machine.css'
 import { faStarOfLife } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Modal } from 'react-bootstrap'
+import ConfirmBox from './ConfirmBox';
 function BreedDetails(props) {
     const { children, value, index, ...other } = props;
-
-
     return (
         <div
             role="tabpanel"
@@ -46,6 +45,11 @@ function a11yProps(index) {
 }
 
 export default function BasicTabs() {
+    //Confirm Delete
+    const [open, setOpen] = useState(false);
+    function openDelete() {
+        setOpen(true);
+    }
     //Dependency
     const [breedLoaded, setBreedLoaded] = useState(false);
     const [imageLoaded, setImageLoaded] = useState(false);
@@ -201,7 +205,8 @@ export default function BasicTabs() {
                     },
                     withCredentials: true
                 });
-            toast.success("Xóa loại thành công");
+            setOpen(false);
+            toast.success(response.data);
             navigate("/egg");
         } catch (err) {
             if (!err?.response) {
@@ -291,7 +296,7 @@ export default function BasicTabs() {
                                         <div className="col-md-6">
                                             <select class="form-select" aria-label="Default select example"
                                                 onChange={e => handleEditChange(e, "specieId")}
-                                                required>
+                                            >
                                                 <option disabled>Open this select menu</option>
                                                 { /**JSX to load options */}
                                                 {specieList &&
@@ -309,7 +314,6 @@ export default function BasicTabs() {
                                         </div>
                                         <div className="col-md-6">
                                             <input
-                                                required
                                                 value={editBreedDTO.breedName}
                                                 placeholder="Gà tre/Gà ri/Gà Đông Cảo/..."
                                                 onChange={e => handleEditChange(e, "breedName")} />
@@ -320,11 +324,10 @@ export default function BasicTabs() {
                                             <p>Cân nặng trung bình con đực<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                         </div>
                                         <div className="col-md-6">
-                                            <input required style={{ width: "100%" }}
+                                            <input style={{ width: "100%" }}
                                                 value={editBreedDTO.averageWeightMale}
                                                 placeholder="(kg)"
                                                 type='number'
-                                                min='0'
                                                 step='0.01'
                                                 onChange={e => handleEditChange(e, "averageWeightMale")} />
                                         </div>
@@ -334,11 +337,10 @@ export default function BasicTabs() {
                                             <p>Cân nặng trung bình con cái<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                         </div>
                                         <div className="col-md-6">
-                                            <input required style={{ width: "100%" }}
+                                            <input style={{ width: "100%" }}
                                                 value={editBreedDTO.averageWeightFemale}
                                                 placeholder="(kg)"
                                                 type='number'
-                                                min='0'
                                                 step='0.01'
                                                 onChange={e => handleEditChange(e, "averageWeightFemale")} />
                                         </div>
@@ -349,11 +351,9 @@ export default function BasicTabs() {
                                         </div>
                                         <div className="col-md-6">
                                             <input
-                                                required
                                                 value={editBreedDTO.growthTime}
                                                 placeholder="Số ngày"
                                                 type='number'
-                                                min='0'
                                                 onChange={e => handleEditChange(e, "growthTime")} />
                                         </div>
                                     </div>
@@ -404,7 +404,8 @@ export default function BasicTabs() {
                             <div className="col-md-4 ">
                                 <div className='button'>
                                     <button id="startEditBreed" className='btn btn-light ' onClick={handleShow}>Sửa</button>
-                                    <button id="startDeleteBreed" className='btn btn-light ' onClick={() => submitDeteteBreed()} >Xoá</button>
+                                    <button id="startDeleteBreed" className='btn btn-light ' onClick={() => openDelete()} >Xoá</button>
+                                    <ConfirmBox open={open} closeDialog={() => setOpen(false)} deleteFunction={() => submitDeteteBreed()} />
                                 </div>
                             </div>
                         </div>

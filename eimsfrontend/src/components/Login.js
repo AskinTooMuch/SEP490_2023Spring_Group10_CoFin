@@ -67,7 +67,7 @@ const Login = () => {
       if (!err?.response) {
         toast.error('Server không phản hồi');
       } else {
-        if ((err.response.data === null) || (err.response.data === '') ) {
+        if ((err.response.data === null) || (err.response.data === '')) {
           toast.error('Có lỗi xảy ra, vui lòng thử lại');
         } else {
           toast.error(err.response.data);
@@ -91,13 +91,13 @@ const Login = () => {
                   <label htmlFor="username-a30d" className="u-label u-text-grey-25 u-label-1">Tài khoản </label>
                   <input type="text" name="phone" placeholder="Nhập số điện thoại"
                     ref={userRef} onChange={e => handleChange(e, "phone")} value={loginDetail.phone}
-                    className="u-border-2 u-border-grey-10 u-grey-10 u-input u-input-rectangle u-input-1" required />
+                    className="u-border-2 u-border-grey-10 u-grey-10 u-input u-input-rectangle u-input-1" />
                 </div>
                 <div className="u-form-group u-form-password login-wrapper">
                   <label htmlFor="password-a30d" className="u-label u-text-grey-25 u-label-2">Mật khẩu </label>
                   <input type={passwordShown ? "text" : "password"} name="password" placeholder="Nhập mật khẩu"
                     ref={userRef} onChange={e => handleChange(e, "password")} value={loginDetail.password}
-                    className="u-border-2 u-border-grey-10 u-grey-10 u-input u-input-rectangle u-input-2" required />
+                    className="u-border-2 u-border-grey-10 u-grey-10 u-input u-input-rectangle u-input-2" />
                   <i onClick={togglePasswordVisiblity}>{eye}</i>
                 </div>
                 {/* <div className="u-form-checkbox u-form-group ">

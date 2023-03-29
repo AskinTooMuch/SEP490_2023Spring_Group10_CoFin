@@ -88,7 +88,7 @@ CREATE TABLE breed(
     breed_name				varchar(32)	NOT NULL,
     average_weight_male		double,
     average_weight_female	double,
-    common_disease			varchar(1027),
+    common_disease			varchar(1000),
     growth_time				integer		NOT NULL,
     image_src				varchar(1027),
     status 					boolean		NOT NULL

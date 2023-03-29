@@ -1,16 +1,14 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { useNavigate, useLocation } from "react-router-dom";
+import React, { useState, useEffect } from 'react';
+import { useLocation } from "react-router-dom";
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import SearchIcon from '@mui/icons-material/Search';
 import ImportExportIcon from '@mui/icons-material/ImportExport';
-import { Modal, button } from 'react-bootstrap'
+import { Modal } from 'react-bootstrap'
 import { faStarOfLife } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from 'axios';
 //Toast
 import { ToastContainer, toast } from 'react-toastify';
-import { EditOff } from '@mui/icons-material';
-import { hover } from '@testing-library/user-event/dist/hover';
 const Cost = () => {
     //Show-hide Popup
     const [show, setShow] = useState(false);
@@ -26,11 +24,6 @@ const Cost = () => {
     const COST_ALL = "/api/cost/all";
     const COST_GET = "/api/cost/get";
     const COST_UPDATE_SAVE = "/api/cost/update/save"
-
-    const [value, setValue] = React.useState(0);
-    const handleChange = (event, newValue) => {
-        setValue(newValue);
-    };
 
     //Data holding objects
     const [costList, setCostList] = useState([]);
@@ -99,11 +92,11 @@ const Cost = () => {
             if (!err?.response) {
                 toast.error('Server không phản hồi');
             } else {
-                if ((err.response.data === null) || (err.response.data === '') ) {
-          toast.error('Có lỗi xảy ra, vui lòng thử lại');
-        } else {
-          toast.error(err.response.data);
-        }
+                if ((err.response.data === null) || (err.response.data === '')) {
+                    toast.error('Có lỗi xảy ra, vui lòng thử lại');
+                } else {
+                    toast.error(err.response.data);
+                }
             }
         }
     }
@@ -195,11 +188,11 @@ const Cost = () => {
             if (!err?.response) {
                 toast.error('Server không phản hồi');
             } else {
-                if ((err.response.data === null) || (err.response.data === '') ) {
-          toast.error('Có lỗi xảy ra, vui lòng thử lại');
-        } else {
-          toast.error(err.response.data);
-        }
+                if ((err.response.data === null) || (err.response.data === '')) {
+                    toast.error('Có lỗi xảy ra, vui lòng thử lại');
+                } else {
+                    toast.error(err.response.data);
+                }
             }
         }
     }
@@ -223,16 +216,15 @@ const Cost = () => {
                                         <p>Tên chi phí<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                     </div>
                                     <div className="col-md-6">
-                                        <input required style={{ width: "100%" }} placeholder="Tiền sửa máy tháng 1/2023"
+                                        <input style={{ width: "100%" }} placeholder="Tiền sửa máy tháng 1/2023"
                                             onChange={(e) => handleCreateCostChange(e, "costItem")} />
                                     </div>
                                     <div className="col-md-6">
                                         <p>Tổng chi phí <FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                     </div>
                                     <div className="col-md-6">
-                                        <input required style={{ width: "100%" }} placeholder="0"
+                                        <input style={{ width: "100%" }} placeholder="0"
                                             type='number'
-                                            min='0'
                                             onChange={(e) => handleCreateCostChange(e, "costAmount")} />
                                     </div>
                                 </div>
@@ -243,9 +235,7 @@ const Cost = () => {
                                     <div className="col-md-6">
                                         <input style={{ width: "100%" }} placeholder="0"
                                             type='number'
-                                            min="0"
-                                            onChange={(e) => handleCreateCostChange(e, "paidAmount")}
-                                            max={createCostDTO.costAmount} />
+                                            onChange={(e) => handleCreateCostChange(e, "paidAmount")} />
                                     </div>
                                     <div className="col-md-6">
                                         <p>Ghi chú </p>
@@ -347,7 +337,7 @@ const Cost = () => {
                                     <p>Tên chi phí<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                 </div>
                                 <div className="col-md-6">
-                                    <input required style={{ width: "100%" }} placeholder="Tiền mua máy nở"
+                                    <input style={{ width: "100%" }} placeholder="Tiền mua máy nở"
                                         value={editCostDTO.costItem}
                                         onChange={(e) => handleEditCostChange(e, "costItem")} />
                                 </div>
@@ -356,10 +346,9 @@ const Cost = () => {
                                     /></p>
                                 </div>
                                 <div className="col-md-6">
-                                    <input required style={{ width: "100%" }} placeholder="0"
+                                    <input style={{ width: "100%" }} placeholder="0"
                                         type='number'
                                         step='0.000000000000000001'
-                                        min='0'
                                         onChange={(e) => handleEditCostChange(e, "costAmount")}
                                         value={editCostDTO.costAmount} />
                                 </div>
@@ -373,7 +362,6 @@ const Cost = () => {
                                     <input style={{ width: "100%" }}
                                         type='number'
                                         step='0.000000000000000001'
-                                        min='0'
                                         value={editCostDTO.paidAmount}
                                         onChange={(e) => handleEditCostChange(e, "paidAmount")} />
                                 </div>

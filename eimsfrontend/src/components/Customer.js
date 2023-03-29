@@ -225,7 +225,6 @@ const Customer = () => {
                                         <input id="customerName"
                                             className="form-control mt-1"
                                             style={{ width: "100%" }}
-                                            required
                                             placeholder='Tên/biệt danh gợi nhớ'
                                             onChange={e => handleCreateCustomerChange(e, "customerName")} />
                                     </div>
@@ -265,7 +264,7 @@ const Customer = () => {
                                             autoComplete="off"
                                             onChange={(e) => loadDistrict(e.target.value)}
                                             value={cityIndex}
-                                            required>
+                                            >
                                             <option value="" disabled selected>Chọn Tỉnh/Thành phố</option>
                                             {city &&
                                                 city.map((item, index) => (
@@ -286,7 +285,7 @@ const Customer = () => {
                                             autoComplete="off"
                                             onChange={(e) => loadWard(e.target.value)}
                                             value={districtIndex}
-                                            required>
+                                            >
                                             <option value="" disabled selected>Chọn Quận/Huyện</option>
                                             {district &&
                                                 district.map((item, index) => (
@@ -307,7 +306,7 @@ const Customer = () => {
                                             autoComplete="off"
                                             onChange={(e) => saveWard(e.target.value)}
                                             value={wardIndex}
-                                            required>
+                                            >
                                             <option value="" disabled selected>Chọn Phường/Xã</option>
                                             {ward &&
                                                 ward.map((item, index) => (
@@ -326,8 +325,7 @@ const Customer = () => {
                                         <input type="text" id="uhomenum"
                                             ref={userRef}
                                             autoComplete="off"
-                                            onChange={(e) => saveAddressJson(e.target.value)}
-                                            required
+                                            onChange={(e) => saveAddressJson(e.target.value)}                                  
                                             className="form-control mt-1"
                                             placeholder='Địa chỉ cụ thể' />
                                     </div>

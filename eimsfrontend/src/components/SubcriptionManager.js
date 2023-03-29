@@ -85,13 +85,13 @@ export default function BasicTabs() {
                                         <p>Tên gói<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                     </div>
                                     <div className="col-md-6">
-                                        <input required style={{ width: "100%" }} className="form-control " />
+                                        <input style={{ width: "100%" }} className="form-control " />
                                     </div>
                                     <div className="col-md-6">
                                         <p>Giá gói<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                     </div>
                                     <div className="col-md-6">
-                                        <input required style={{ width: "100%" }} placeholder="0" className="form-control " />
+                                        <input style={{ width: "100%" }} placeholder="0" className="form-control " />
                                     </div>
                                 </div>
                                 <div className="row">
@@ -99,7 +99,7 @@ export default function BasicTabs() {
                                         <p>Thời gian hiệu lực<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                     </div>
                                     <div className="col-md-6">
-                                        <input required style={{ width: "100%" }} placeholder="0" className="form-control " />
+                                        <input style={{ width: "100%" }} placeholder="0" className="form-control " />
                                     </div>
                                     <div className="col-md-6">
                                         <p>Nội dung chi tiết</p>
