@@ -86,7 +86,7 @@ const Cost = () => {
             });
             console.log(response);
             loadCostList();
-            toast.success("Tạo thành công");
+            toast.success(response.data);
             setShow(false);
         } catch (err) {
             if (!err?.response) {
@@ -309,8 +309,12 @@ const Cost = () => {
                                                         item.paidAmount === item.costAmount
                                                             ? <td className="u-border-1 u-border-grey-30 u-table-cell text-green">Đã thanh toán đủ</td>
                                                             : <td className="u-border-1 u-border-grey-30 u-table-cell text-red">Chưa thanh toán đủ</td>
-                                                    }</tr>
-                                            ) : "Nothing"
+                                                    }
+                                                </tr>
+                                            ) : 
+                                            <tr>
+                                            <td colSpan='5'>Chưa có chi phí nào được lưu trên hệ thống</td>
+                                            </tr>
                                     }
                                 </tbody>
                             </table>
@@ -322,7 +326,7 @@ const Cost = () => {
 
             <Modal show={show2} onHide={handleClose2}
                 size="lg" aria-labelledby="contained-modal-title-vcenter" centered >
-                <form >
+                <form onSubmit={handleEditCostSubmit}>
                     <Modal.Header closeButton onClick={handleClose2}>
                         <Modal.Title>Cập nhật thông tin chi phí</Modal.Title>
                     </Modal.Header>
@@ -373,7 +377,7 @@ const Cost = () => {
                         </div>
                     </Modal.Body>
                     <div className='model-footer'>
-                        <button style={{ width: "30%" }} onClick={handleEditCostSubmit} className="col-md-6 btn-light" type='submit'>
+                        <button style={{ width: "30%" }} className="col-md-6 btn-light" type='submit'>
                             Cập nhật
                         </button>
                         <button style={{ width: "20%" }} type='button' onClick={handleClose2} className="btn btn-light">

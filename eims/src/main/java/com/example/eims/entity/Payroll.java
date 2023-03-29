@@ -19,15 +19,16 @@ import java.sql.Date;
 
 @Data
 @Entity
-@Table(name = "salary")
-public class Salary {
+@Table(name = "payroll")
+public class Payroll {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long salaryId;
-    private Long userId;
-    private Float baseSalary;
-    private Float bonus;
-    private Float fine;
+    private Long payrollId;
+    private Long ownerId;
+    private Long employeeId;
+    private String phone;
+    private String payrollItem;
+    private Float payrollAmount;
     private Date issueDate;
     private String note;
     private boolean status;

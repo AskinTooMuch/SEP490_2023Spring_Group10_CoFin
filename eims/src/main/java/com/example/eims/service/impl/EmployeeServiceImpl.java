@@ -76,6 +76,9 @@ public class EmployeeServiceImpl implements IEmployeeService {
             return new ResponseEntity<>("Tên không được để trống", HttpStatus.BAD_REQUEST);
         }
         String employeeName = stringDealer.trimMax(createEmployeeDTO.getEmployeeName());
+        if(employeeName.length() > 32){
+            return new ResponseEntity<>("Tên không được dài quá 32 ký tự", HttpStatus.BAD_REQUEST);
+        }
         // Date of birth
         if (createEmployeeDTO.getEmployeeDob() == null || stringDealer.trimMax(createEmployeeDTO.getEmployeeDob()).equals("")) { /* Date of birth is empty */
             return new ResponseEntity<>("Ngày sinh không được để trống", HttpStatus.BAD_REQUEST);
@@ -100,6 +103,9 @@ public class EmployeeServiceImpl implements IEmployeeService {
                 return new ResponseEntity<>("Email không đúng định dạng", HttpStatus.BAD_REQUEST);
             }
         }
+        if(email.length() > 64){
+            return new ResponseEntity<>("Email không được dài quá 64 ký tự", HttpStatus.BAD_REQUEST);
+        }
         // Address
         if (createEmployeeDTO.getEmployeeAddress() == null || stringDealer.trimMax(createEmployeeDTO.getEmployeeAddress()).equals("")) { /* Address is empty */
             return new ResponseEntity<>("Địa chỉ không được để trống", HttpStatus.BAD_REQUEST);
@@ -112,6 +118,9 @@ public class EmployeeServiceImpl implements IEmployeeService {
         String password = stringDealer.trimMax(createEmployeeDTO.getEmployeePassword());
         if (!stringDealer.checkPasswordRegex(password)) { /* Password is not valid */
             return new ResponseEntity<>("Mật khẩu không đúng định dạng", HttpStatus.BAD_REQUEST);
+        }
+        if(password.length() > 20){
+            return new ResponseEntity<>("Mật khẩu không được dài quá 20 ký tự", HttpStatus.BAD_REQUEST);
         }
         Float salary = createEmployeeDTO.getSalary();
 
@@ -189,6 +198,9 @@ public class EmployeeServiceImpl implements IEmployeeService {
             return new ResponseEntity<>("Tên không được để trống", HttpStatus.BAD_REQUEST);
         }
         String employeeName = stringDealer.trimMax(updateEmployeeDTO.getEmployeeName());
+        if(employeeName.length() > 32){
+            return new ResponseEntity<>("Tên không được dài quá 32 ký tự", HttpStatus.BAD_REQUEST);
+        }
         // Date of birth
         if (updateEmployeeDTO.getEmployeeDob() == null || stringDealer.trimMax(updateEmployeeDTO.getEmployeeDob()).equals("")) { /* Date of birth is empty */
             return new ResponseEntity<>("Ngày sinh không được để trống", HttpStatus.BAD_REQUEST);
@@ -209,6 +221,9 @@ public class EmployeeServiceImpl implements IEmployeeService {
             if ((!email.equals("")) && !stringDealer.checkEmailRegex(email)) { /* Email is not valid */
                 return new ResponseEntity<>("Email không đúng định dạng", HttpStatus.BAD_REQUEST);
             }
+        }
+        if(email.length() > 64){
+            return new ResponseEntity<>("Email không được dài quá 64 ký tự", HttpStatus.BAD_REQUEST);
         }
         // Address
         if (updateEmployeeDTO.getEmployeeAddress() == null || stringDealer.trimMax(updateEmployeeDTO.getEmployeeAddress()).equals("")) { /* Address is empty */
@@ -278,7 +293,9 @@ public class EmployeeServiceImpl implements IEmployeeService {
         Optional<User> employeeOtp = userRepository.findByUserId(workIn.getUserId());
         if(employeeOtp.isPresent()){
             User employee = employeeOtp.get();
-            employee.setPhone("Không");
+            String name = employee.getUsername() + "(Đã nghỉ)";
+            employee.setUsername(name);
+            employee.setPhone("Đã nghỉ");
             employee.setStatus(0);
             userRepository.save(employee);
         }
