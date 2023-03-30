@@ -47,7 +47,7 @@ const NotificationList = () => {
             eggBatchId: item.eggBatchId,
             date: item.date,
             notificationBrief: item.notificationBrief
-        })
+        });
         setShow(true);
     }
 
@@ -72,18 +72,15 @@ const NotificationList = () => {
                     withCredentials: true
                 });
             setListNotiNew(result.data);
+        loadListNotiOld();
         } catch (err) {
             if (!err?.response) {
                 toast.error('Server không phản hồi');
             } else {
-                if (err.response.data === '' || err.response.data === null) {
-                    toast.error('Lỗi không xác định');
+                if ((err.response.data === null) || (err.response.data === '')) {
+                    toast.error('Có lỗi xảy ra, vui lòng thử lại');
                 } else {
-                    if ((err.response.data === null) || (err.response.data === '')) {
-                        toast.error('Có lỗi xảy ra, vui lòng thử lại');
-                    } else {
-                        toast.error(err.response.data);
-                    }
+                    toast.error(err.response.data);
                 }
             }
         }
@@ -106,14 +103,10 @@ const NotificationList = () => {
             if (!err?.response) {
                 toast.error('Server không phản hồi');
             } else {
-                if (err.response.data === '' || err.response.data === null) {
-                    toast.error('Lỗi không xác định');
+                if ((err.response.data === null) || (err.response.data === '')) {
+                    toast.error('Có lỗi xảy ra, vui lòng thử lại');
                 } else {
-                    if ((err.response.data === null) || (err.response.data === '')) {
-                        toast.error('Có lỗi xảy ra, vui lòng thử lại');
-                    } else {
-                        toast.error(err.response.data);
-                    }
+                    toast.error(err.response.data);
                 }
             }
         }
@@ -132,19 +125,14 @@ const NotificationList = () => {
                     },
                     withCredentials: true
                 });
-
         } catch (err) {
             if (!err?.response) {
                 toast.error('Server không phản hồi');
             } else {
-                if (err.response.data === '' || err.response.data === null) {
-                    toast.error('Lỗi không xác định');
+                if ((err.response.data === null) || (err.response.data === '')) {
+                    toast.error('Có lỗi xảy ra, vui lòng thử lại');
                 } else {
-                    if ((err.response.data === null) || (err.response.data === '')) {
-                        toast.error('Có lỗi xảy ra, vui lòng thử lại');
-                    } else {
-                        toast.error(err.response.data);
-                    }
+                    toast.error(err.response.data);
                 }
             }
         }
@@ -154,20 +142,20 @@ const NotificationList = () => {
 
     return (
         <div>
-            <section class="section-50">
-                <div class="container">
-                    <h3 class="m-b-50 heading-line">Thông báo <FontAwesomeIcon icon={faBell} /></h3>
-                    <div class="notification-ui_dd-content">
+            <section className="section-50">
+                <div className="container">
+                    <h3 className="m-b-50 heading-line">Thông báo <FontAwesomeIcon icon={faBell} /></h3>
+                    <div className="notification-ui_dd-content">
                         {/* unread notification */}
                         {
                             listNotiNew && listNotiNew.length > 0
                                 ?
                                 listNotiNew.map((item) =>
-                                    <div class="notification-list notification-list--unread" onClick={handleShowPopup(item)}>
-                                        <div class="notification-list_content">
-                                            <div class="notification-list_detail">
+                                    <div className="notification-list notification-list--unread" onClick={() => handleShowPopup(item)}>
+                                        <div className="notification-list_content">
+                                            <div className="notification-list_detail">
                                                 <p><b>{"Lô " + item.eggBatchId + ":"}</b> {item.notificationBrief}</p>
-                                                <p class="text-muted"><small>{item.date}</small></p>
+                                                <p className="text-muted"><small>{item.date}</small></p>
                                             </div>
                                         </div>
                                     </div>
@@ -180,11 +168,11 @@ const NotificationList = () => {
                             listNotiOld && listNotiOld.length > 0
                                 ?
                                 listNotiOld.map((item) =>
-                                    <div class="notification-list" onClick={handleShowPopup(item)}>
-                                        <div class="notification-list_content">
-                                            <div class="notification-list_detail">
+                                    <div className="notification-list" onClick={() => handleShowPopup(item)}>
+                                        <div className="notification-list_content">
+                                            <div className="notification-list_detail">
                                                 <p><b>{"Lô " + item.eggBatchId + ": "}</b> {item.notificationBrief}</p>
-                                                <p class="text-muted"><small>{item.date}</small></p>
+                                                <p className="text-muted"><small>{item.date}</small></p>
                                             </div>
                                         </div>
                                     </div>
@@ -221,8 +209,8 @@ const NotificationList = () => {
                         </Modal>
 
 
-                        <div class="text-center">
-                            <Link class="dark-link">Load more activity</Link>
+                        <div className="text-center">
+                            <Link className="dark-link">Load more activity</Link>
                         </div>
                     </div>
                 </div>
