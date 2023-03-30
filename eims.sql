@@ -620,6 +620,12 @@ VALUES 	(1, -1, 0,'Trứng hư tổn, hao hụt', 1),
 		(6, 7, 35,'Con nở', 1),
 		(6, 8, 35,'Con đực', 1),
 		(6, 9, 35,'Con cái', 1);
+        
+-- breed
+INSERT INTO breed(breed_id, specie_id, user_id, breed_name, average_weight_male, average_weight_female, common_disease, growth_time, image_src, status) 
+VALUES	(1, 1, 2, "Gà Ri", 4.5, 4.0, "Marek","50","",1),
+		(2, 1, 2, "Gà Lai chọi", 4.5, 4.0, "Marek","50","",1);
+        
 -- machine_type
 INSERT INTO machine_type(machine_type_id, machine_type_name, description, status)
 VALUES 	(1, 'Máy ấp', 'Máy dùng cho giai đoạn vừa mới ấp cho tới khi sắp nở, nhiệt cao, sức chứa cao', 1),
@@ -652,7 +658,4 @@ VALUES 	(1, 2, '2022-05-31', 2),
 		(2, 1, '2022-05-31', 2),
 		(3, 5, '2022-05-31', 0);
    
--- breed
-INSERT INTO breed(breed_id, specie_id, user_id, breed_name, average_weight_male, average_weight_female, common_disease, growth_time, image_src, status) 
-VALUES	(1, 1, 2, "Gà ri", 4.5, 4.0, "Marek","50","",1),
-		(2, 1, 2, "Gà lai chọi", 4.5, 4.0, "Marek","50","",1);
+
