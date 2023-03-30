@@ -249,7 +249,7 @@ const Breed = () => {
                                         <input className="form-control mt-1" id="createSpecieName"
                                             style={{ width: "100%" }}
                                             onChange={e => handleChange(e, "breedName")}
-                                            placeholder="Tre, Cỏ, ..."
+                                            placeholder="Gà tre/Gà ri/Gà Đông Cảo/..."
                                         />
                                     </div>
                                 </div>
