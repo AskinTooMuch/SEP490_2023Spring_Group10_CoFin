@@ -1053,7 +1053,7 @@ const Profile = () => {
                                                         <p>Ngày thành lập<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                                     </div>
                                                     <div className="col-md-6 ">
-                                                        <input type="text" className="form-control" name="foundDate" id="updateFoundDate"
+                                                        <input type="date" className="form-control" name="foundDate" id="updateFoundDate"
                                                             ref={userRef} onChange={e => handleUpdateFacility(e, "foundDate")}
                                                             value={updateFacilityDTO.foundDate} />
                                                     </div>

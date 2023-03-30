@@ -14,7 +14,7 @@ const Transition = forwardRef(function Transition(props, ref) {
     return <Fade ref={ref} {...props} />;
 });
 
-function ConfirmBox({ open, closeDialog, title, deleteFunction }) {
+function ConfirmBox({ open, closeDialog, title, content, deleteFunction }) {
     return (
         <Dialog
             fullWidth
@@ -43,10 +43,10 @@ function ConfirmBox({ open, closeDialog, title, deleteFunction }) {
                                 flexDirection: "column",
                             }}
                         >
-                            <Typography variant="h5">Xoá </Typography>
-
-                            <Typography variant="body1">
-                                Bạn có chắc chắn muốn xoá không?
+                            <Typography variant="h5">{title} </Typography>
+                            <br/><br/>
+                            <Typography variant="body1 h4">
+                                {content}
                             </Typography>
                         </Box>
                     </Grid>

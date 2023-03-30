@@ -423,7 +423,8 @@ const Species = () => {
                         <td className="u-border-1 u-border-grey-30 u-table-cell" onClick={() => LoadData(index)}>{item.specieName}</td>
                         <td className="u-border-1 u-border-grey-30 u-table-cell" onClick={() => LoadData(index)}>{item.incubationPeriod} (ngày)</td>
                         <td className="u-border-1 u-border-grey-30 u-table-cell" style={{ textAlign: "center" }}><button className='btn btn-light' style={{ width: "50%" }} onClick={() => openDelete()}>Xoá</button>
-                          <ConfirmBox open={open} closeDialog={() => setOpen(false)} title={item.specieName} deleteFunction={() => handleDelete(index)}
+                          <ConfirmBox open={open} closeDialog={() => setOpen(false)} title={"Xóa loài"} 
+                          content={"Xác nhận xóa loài: "+item.specieName} deleteFunction={() => handleDelete(index)}
                           />
                         </td>
                       </tr>

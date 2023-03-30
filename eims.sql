@@ -1,4 +1,4 @@
--- V0.11.1: Add event need_action (update need_action when the time comes), add egg_batch attribute
+-- V0.11.1: Add event need_action, add egg_batch attribute
 -- V0.11.0: Modify specie stored procedures
 -- V0.10.0: Modify field lengths
 -- V0.9.0: Modify the stored procedure user_and_facility
@@ -17,7 +17,7 @@
 -- V0.2.0: Add foreign key constraint
 -- V0.2.1: Change attribute _name, re-route foreign key constraint
 -- V0.2.2: Add CHECK constraint
--- Last update: 24/03/2023
+-- Last update: 29/03/2023
 -- Script for generating EIMS - Eggs Incubating Management System.
 -- Check if database already exist. If yes then drop the database to ensure the script runs successfully with no variations.
 DROP DATABASE IF EXISTS eims;
@@ -254,6 +254,7 @@ CREATE TABLE notification(
     facility_id		    integer		NOT NULL,
     notification_brief	varchar(255),
     egg_batch_id		integer,
+    date				date,
     status				boolean
 );
 
@@ -457,12 +458,12 @@ BEGIN
 END //
 DELIMITER ;
 
--- Event update need_action
+-- Event set up
 SET SQL_SAFE_UPDATES = 0; -- turn off safe update to update multiple rows without using primary key in WHERE clause
-
 SET GLOBAL event_scheduler = ON;  -- enable event scheduler.
-SELECT @@event_scheduler; -- check whether event scheduler is ON/OFF
+-- SELECT @@event_scheduler; -- check whether event scheduler is ON/OFF
 
+-- Event update need_action
 CREATE EVENT need_action  -- create event if not exist
 ON SCHEDULE EVERY 24 HOUR -- run every day
 STARTS (TIMESTAMP(CURRENT_DATE) + INTERVAL 1 DAY) -- the day after today
@@ -472,6 +473,36 @@ SET  need_action = 1
 WHERE DATEDIFF(date_action, now()) = 0 -- date_action is the next day
 OR date_action < now(); -- date_action is previous days (forget to update)
 
+-- Create notification
+-- After update
+DELIMITER //
+CREATE TRIGGER createNotificationAfterUpdate AFTER UPDATE ON eims.egg_batch
+FOR EACH ROW
+BEGIN
+   IF (NEW.need_action <> OLD.need_action) THEN
+		INSERT INTO eims.notification (facility_id, notification_brief, egg_batch_id, date,status)
+		VALUES( (
+		SELECT ir.facility_id FROM eims.egg_batch eb
+		JOIN eims.import_receipt ir ON eb.import_id = ir.import_id
+		WHERE eb.egg_batch_id = NEW.egg_batch_id
+    ), "" , NEW.egg_batch_id , DATE(NEW.date_action), 1);
+   END IF;
+END;//
+DELIMITER ;
+
+-- After insert
+DELIMITER //
+CREATE TRIGGER createNotificationAfterInsert AFTER INSERT ON eims.egg_batch
+FOR EACH ROW
+BEGIN
+		INSERT INTO eims.notification (facility_id, notification_brief, egg_batch_id, date,status)
+		VALUES( (
+		SELECT ir.facility_id FROM eims.egg_batch eb
+		JOIN eims.import_receipt ir ON eb.import_id = ir.import_id
+		WHERE eb.egg_batch_id = NEW.egg_batch_id
+    ), "" , NEW.egg_batch_id , DATE(NEW.date_action), 1);
+END;//
+DELIMITER ;
 -- Insert Data into tables
 -- role
 INSERT INTO role (role_id, role_name, status)

@@ -22,10 +22,17 @@ import logo from '../pics/EIMSlogo.png'
 import WithPermission from '../utils.js/WithPermission';
 import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
 import { Modal } from 'react-bootstrap';
+import axios from '../api/axios';
+import { ToastContainer, toast } from 'react-toastify';
 const Nav = () => {
+    // Auth
     const auth = sessionStorage.getItem("curUserId");
     const navigate = useNavigate();
 
+    // API URL
+    const NOTIFICATION_NEWEST = '/api/notification/top'
+
+    // Navigate
     const dashboard = () => {
         navigate("/dashboard")
     }
@@ -35,10 +42,12 @@ const Nav = () => {
     const egg = () => {
         navigate("/egg")
     }
+    // Handle
     const [notify, setNotify] = React.useState(null);
     const open = Boolean(notify);
-    const handleClickNoti = (event: React.MouseEvent<HTMLElement>) => {
-        setNotify(event.currentTarget);
+    const handleClickNoti = () => {
+        loadNotificationList();
+        setNotify(notificationList);
     };
     const handleCloseNoti = () => {
         setNotify(null);
@@ -71,6 +80,7 @@ const Nav = () => {
         setMobileMoreAnchorEl(event.currentTarget);
     };
 
+    // Menu
     const menuId = 'primary-search-account-menu';
     const renderMenu = (
         <Menu
@@ -168,6 +178,52 @@ const Nav = () => {
     const [show, setShow] = useState(false);
     const handleClosePopup = () => setShow(false);
     const handleShowPopup = () => setShow(true);
+
+    // DTO
+    // top 5 newest notification
+    const [notificationList, setNotificationList] = useState([]);
+    // Get top 5 
+    const loadNotificationList = async () => {
+        try {
+            const result = await axios.get(NOTIFICATION_NEWEST,
+            {
+                params: { facilityId: sessionStorage.getItem("facilityId") },
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Access-Control-Allow-Origin': '*'
+                },
+                withCredentials: true
+            });
+        setNotificationList(result.data);
+        } catch (err) {
+            if (!err?.response) {
+                toast.error('Server không phản hồi');
+            } else {
+                if (err.response.data === '' || err.response.data === null) {
+                    toast.error('Lỗi không xác định');
+                } else {
+                    if ((err.response.data === null) || (err.response.data === '')) {
+                        toast.error('Có lỗi xảy ra, vui lòng thử lại');
+                    } else {
+                        toast.error(err.response.data);
+                    }
+                }
+            }
+        }
+    }
+
+    // View all notification
+    const viewAllNoti = () => {
+        handleCloseNoti();
+        navigate("/notificationlist");
+    }
+
+    // Go to update egg batch
+    const goUpdateEggBatch = (item) => {
+        handleCloseNoti();
+        navigate("/eggbatchdetail", { state: { id: item.eggBatchId } })
+    }
+
     return (
         <div>
             <Box sx={{ flexGrow: 1 }}>
@@ -283,69 +339,38 @@ const Nav = () => {
                         <h3 >Thông báo</h3>
                     </div>
                     <button className='close' onClick={handleCloseNoti}><CloseIcon /></button>
-                    <div className="notifi-item" onClick={handleShowPopup}>
-                        <div className="text">
-                            <h4>Lô GFJ816 hoàn thành giai đoạn ấp lần 2 cần chiếu trứng</h4>
-                            <p>(30p trước)</p>
-                        </div>
-                    </div>
-                    {/* Popup detail notification */}
-                    <Modal show={show} onHide={handleClosePopup}
-                        size="lg"
-                        aria-labelledby="contained-modal-title-vcenter"
-                        centered >
-                        <Modal.Header closeButton onClick={handleClosePopup}>
-                            <Modal.Title>Thông báo</Modal.Title>
-                        </Modal.Header>
-                        <Modal.Body>
-                            <div className="row">
-                                <div className="">
-                                    <p>Lô trứng 01 có 800 quả ở máy số 1, 200 quả ở máy số 2, 300 quả ở máy số 3.
-                                        Hiện đang cần thực hiện soi trứng lần 1
-                                    </p>
-                                    <p className='ptime'>30 phút trước</p>
+                    {
+                        notificationList && notificationList.length > 0
+                            ?
+                            notificationList.map((item) =>
+                            <div className="notifi-item" onClick={() => goUpdateEggBatch(item)}>
+                                <div className="text">
+                                    <h4>{item.notificationBrief}</h4>
+                                    <p>({item.date})</p>
                                 </div>
                             </div>
-                        </Modal.Body>
-                        <div className='model-footer'>
-                            <button style={{ width: "30%" }} className="col-md-6 btn-light" type="submit">
-                                Cập nhật lô
-                            </button>
-                            <button style={{ width: "20%" }} onClick={handleClosePopup} className="btn btn-light" type="button">
-                                Thoát
-                            </button>
-                        </div>
-                    </Modal>
-                    <div className="notifi-item">
-                        <div className="text">
-                            <h4>Lô GFJ816 hoàn thành giai đoạn ấp lần 2 cần chiếu trứng</h4>
-                            <p>(1 giờ trước)</p>
-                        </div>
-                    </div>
-
-                    <div className="notifi-item">
-                        <div className="text">
-                            <h4>Lô GFJ816 hoàn thành giai đoạn ấp lần 2 cần chiếu trứng</h4>
-                            <p>(1 giờ  trước)</p>
-                        </div>
-                    </div>
-
-                    <div className="notifi-item">
-                        <div className="text">
-                            <h4>Lô GFJ816 hoàn thành giai đoạn ấp lần 2 cần chiếu trứng</h4>
-                            <p>(2 giờ  trước)</p>
-                        </div>
-                    </div>
-
-                    <div className="notifi-item">
-                        <div className="text">
-                            <h4>Lô GFJ816 hoàn thành giai đoạn ấp lần 2 cần chiếu trứng</h4>
-                            <p>(3 giờ  trước)</p>
-                        </div>
-                    </div>
-                    <i><button className='mybtn' onClick={() => navigate("/notificationlist")} >Xem tất cả</button></i>
+                            )
+                            :
+                            <div className="notifi-item">
+                                <div className="text">
+                                    <h4>Hiện tại không có thông báo nào</h4>
+                                </div>
+                            </div>
+                    }
+                    <br/><br/>
+                    <i><button className='mybtn' onClick={() => viewAllNoti()} >Xem tất cả</button></i>
                 </div>
             </Menu>
+            <ToastContainer position="top-left"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="colored" />
         </div>
 
     )

@@ -115,9 +115,17 @@ const Customer = () => {
 
     function saveAddressJson(s) {
         setStreet(s);
-        addressJson.city = fullAddresses[cityIndex].Name;
-        addressJson.district = fullAddresses[cityIndex].Districts[districtIndex].Name;
-        addressJson.ward = fullAddresses[cityIndex].Districts[districtIndex].Wards[wardIndex].Name;
+        if (cityIndex >= 0) {
+            addressJson.city = fullAddresses[cityIndex].Name;
+        }
+        setStreet(s);
+        if (districtIndex >= 0) {
+            addressJson.district = fullAddresses[cityIndex].Districts[districtIndex].Name;
+        }
+        setStreet(s);
+        if (wardIndex >= 0) {
+            addressJson.ward = fullAddresses[cityIndex].Districts[districtIndex].Wards[wardIndex].Name;
+        }
         addressJson.street = street;
         createCustomerDTO.customerAddress = JSON.stringify(addressJson);
     }
@@ -148,18 +156,23 @@ const Customer = () => {
             });
             console.log(response);
             loadCustomerList();
-            setAddressJson('');
+            setAddressJson({
+                city: "",
+                district: "",
+                ward: "",
+                street: ""
+              });
             toast.success(response.data);
             setShow(false);
         } catch (err) {
             if (!err?.response) {
                 toast.error('Server không phản hồi');
             } else {
-                if ((err.response.data === null) || (err.response.data === '') ) {
-          toast.error('Có lỗi xảy ra, vui lòng thử lại');
-        } else {
-          toast.error(err.response.data);
-        }
+                if ((err.response.data === null) || (err.response.data === '')) {
+                    toast.error('Có lỗi xảy ra, vui lòng thử lại');
+                } else {
+                    toast.error(err.response.data);
+                }
             }
         }
     }
@@ -188,11 +201,11 @@ const Customer = () => {
             if (!err?.response) {
                 toast.error('Server không phản hồi');
             } else {
-                if ((err.response.data === null) || (err.response.data === '') ) {
-          toast.error('Có lỗi xảy ra, vui lòng thử lại');
-        } else {
-          toast.error(err.response.data);
-        }
+                if ((err.response.data === null) || (err.response.data === '')) {
+                    toast.error('Có lỗi xảy ra, vui lòng thử lại');
+                } else {
+                    toast.error(err.response.data);
+                }
             }
         }
     }
@@ -264,7 +277,7 @@ const Customer = () => {
                                             autoComplete="off"
                                             onChange={(e) => loadDistrict(e.target.value)}
                                             value={cityIndex}
-                                            >
+                                        >
                                             <option value="" disabled selected>Chọn Tỉnh/Thành phố</option>
                                             {city &&
                                                 city.map((item, index) => (
@@ -285,7 +298,7 @@ const Customer = () => {
                                             autoComplete="off"
                                             onChange={(e) => loadWard(e.target.value)}
                                             value={districtIndex}
-                                            >
+                                        >
                                             <option value="" disabled selected>Chọn Quận/Huyện</option>
                                             {district &&
                                                 district.map((item, index) => (
@@ -306,7 +319,7 @@ const Customer = () => {
                                             autoComplete="off"
                                             onChange={(e) => saveWard(e.target.value)}
                                             value={wardIndex}
-                                            >
+                                        >
                                             <option value="" disabled selected>Chọn Phường/Xã</option>
                                             {ward &&
                                                 ward.map((item, index) => (
@@ -325,7 +338,7 @@ const Customer = () => {
                                         <input type="text" id="uhomenum"
                                             ref={userRef}
                                             autoComplete="off"
-                                            onChange={(e) => saveAddressJson(e.target.value)}                                  
+                                            onChange={(e) => saveAddressJson(e.target.value)}
                                             className="form-control mt-1"
                                             placeholder='Địa chỉ cụ thể' />
                                     </div>

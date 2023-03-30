@@ -12,7 +12,7 @@ const Registrators = () => {
     const REGISTRATION_APPROVE = '/api/registration/approve';
 
     // Dependency
-    const [registrationLoaded, setRegistrationLoaded] = useState(false);
+    const [dataLoaded, setDataLoaded] = useState(false);
     // Show-hide popup
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
@@ -57,8 +57,10 @@ const Registrators = () => {
     // Get list of Registration and show
     // Get Registration list
     useEffect(() => {
+        if (dataLoaded) return;
         loadRegistrationList();
-    }, [registrationLoaded]);
+        setDataLoaded(true)
+    }, []);
 
     // Request Registration list and load the Registration list into the table rows
     const loadRegistrationList = async () => {
@@ -71,7 +73,6 @@ const Registrators = () => {
                 withCredentials: true
             });
         setRegistrationList(result.data);
-        setRegistrationLoaded(true);
     }
 
     // Handle get Registration detail

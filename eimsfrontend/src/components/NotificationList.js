@@ -1,15 +1,157 @@
 import { faBell } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from "react-router-dom";
 import { Modal } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import "../css/notification.css"
+import axios from '../api/axios';
+import { ToastContainer, toast } from 'react-toastify';
 
 const NotificationList = () => {
-    //Show-hide Popup
+    // Dependency
+    const [dataLoaded, setDataLoaded] = useState(false);
+
+    // API URLs
+    const NOTIFICATION_NEW = '/api/notification/all/new'
+    const NOTIFICATION_OLD = '/api/notification/all/old'
+    const NOTIFICATION_DELETE = '/api/notification/delete'
+
+
+    // DTOs
+    const [listNotiNew, setListNotiNew] = useState([]);
+    const [listNotiOld, setListNotiOld] = useState([]);
+    const [notiDetail, setNotiDetail] = useState({
+        notificationId: "",
+        eggBatchId: "",
+        date: "",
+        notificationBrief: ""
+    });
+
+    // Show-hide Popup
     const [show, setShow] = useState(false);
-    const handleClosePopup = () => setShow(false);
-    const handleShowPopup = () => setShow(true);
+
+    const handleClosePopup = () => {
+        setNotiDetail({
+            notificationId: "",
+            eggBatchId: "",
+            date: "",
+            notificationBrief: ""
+        })
+        setShow(false);
+    }
+
+    const handleShowPopup = (item) => {
+        setNotiDetail({
+            notificationId: item.notificationId,
+            eggBatchId: item.eggBatchId,
+            date: item.date,
+            notificationBrief: item.notificationBrief
+        })
+        setShow(true);
+    }
+
+    useEffect(() => {
+        if (dataLoaded) return;
+        loadListNotiNew();
+        loadListNotiOld();
+        setDataLoaded(true);
+    },[]);
+
+    // Get 2 lists of noti
+    // List new notification
+    const loadListNotiNew = async () => {
+        try {
+            const result = await axios.get(NOTIFICATION_NEW,
+                {
+                    params: { facilityId: sessionStorage.getItem("facilityId") },
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Access-Control-Allow-Origin': '*'
+                    },
+                    withCredentials: true
+                });
+            setListNotiNew(result.data);
+        } catch (err) {
+            if (!err?.response) {
+                toast.error('Server không phản hồi');
+            } else {
+                if (err.response.data === '' || err.response.data === null) {
+                    toast.error('Lỗi không xác định');
+                } else {
+                    if ((err.response.data === null) || (err.response.data === '')) {
+                        toast.error('Có lỗi xảy ra, vui lòng thử lại');
+                    } else {
+                        toast.error(err.response.data);
+                    }
+                }
+            }
+        }
+    }
+
+    // List old notification
+    const loadListNotiOld = async () => {
+        try {
+            const result = await axios.get(NOTIFICATION_OLD,
+                {
+                    params: { facilityId: sessionStorage.getItem("facilityId") },
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Access-Control-Allow-Origin': '*'
+                    },
+                    withCredentials: true
+                });
+            setListNotiOld(result.data);
+        } catch (err) {
+            if (!err?.response) {
+                toast.error('Server không phản hồi');
+            } else {
+                if (err.response.data === '' || err.response.data === null) {
+                    toast.error('Lỗi không xác định');
+                } else {
+                    if ((err.response.data === null) || (err.response.data === '')) {
+                        toast.error('Có lỗi xảy ra, vui lòng thử lại');
+                    } else {
+                        toast.error(err.response.data);
+                    }
+                }
+            }
+        }
+    }
+
+
+    // Hanlde mark as done (delete noti)
+    const deleteNoti = async (notificationId) => {
+        try {
+            const result = await axios.delete(NOTIFICATION_DELETE,
+                {
+                    params: { notificationId: notificationId },
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Access-Control-Allow-Origin': '*'
+                    },
+                    withCredentials: true
+                });
+
+        } catch (err) {
+            if (!err?.response) {
+                toast.error('Server không phản hồi');
+            } else {
+                if (err.response.data === '' || err.response.data === null) {
+                    toast.error('Lỗi không xác định');
+                } else {
+                    if ((err.response.data === null) || (err.response.data === '')) {
+                        toast.error('Có lỗi xảy ra, vui lòng thử lại');
+                    } else {
+                        toast.error(err.response.data);
+                    }
+                }
+            }
+        }
+    }
+
+    let navigate = useNavigate();
+
     return (
         <div>
             <section class="section-50">
@@ -17,14 +159,39 @@ const NotificationList = () => {
                     <h3 class="m-b-50 heading-line">Thông báo <FontAwesomeIcon icon={faBell} /></h3>
                     <div class="notification-ui_dd-content">
                         {/* unread notification */}
-                        <div class="notification-list notification-list--unread" onClick={handleShowPopup}>
-                            <div class="notification-list_content">
-                                <div class="notification-list_detail">
-                                    <p><b>Lô GFJ816</b> hoàn thành giai đoạn ấp lần 2 cần chiếu trứng</p>
-                                    <p class="text-muted"><small>30 phút trước</small></p>
-                                </div>
-                            </div>
-                        </div>
+                        {
+                            listNotiNew && listNotiNew.length > 0
+                                ?
+                                listNotiNew.map((item) =>
+                                    <div class="notification-list notification-list--unread" onClick={handleShowPopup(item)}>
+                                        <div class="notification-list_content">
+                                            <div class="notification-list_detail">
+                                                <p><b>{"Lô " + item.eggBatchId + ":"}</b> {item.notificationBrief}</p>
+                                                <p class="text-muted"><small>{item.date}</small></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )
+                                : ''
+                        }
+
+                        {/* read notification */}
+                        {
+                            listNotiOld && listNotiOld.length > 0
+                                ?
+                                listNotiOld.map((item) =>
+                                    <div class="notification-list" onClick={handleShowPopup(item)}>
+                                        <div class="notification-list_content">
+                                            <div class="notification-list_detail">
+                                                <p><b>{"Lô " + item.eggBatchId + ": "}</b> {item.notificationBrief}</p>
+                                                <p class="text-muted"><small>{item.date}</small></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )
+                                : ''
+                        }
+
                         {/* Popup detail notification */}
                         <Modal show={show} onHide={handleClosePopup}
                             size="lg"
@@ -36,15 +203,15 @@ const NotificationList = () => {
                             <Modal.Body>
                                 <div className="row">
                                     <div className="">
-                                        <p>Lô trứng 01 có 800 quả ở máy số 1, 200 quả ở máy số 2, 300 quả ở máy số 3.
-                                            Hiện đang cần thực hiện soi trứng lần 1
+                                        <p>{notiDetail.notificationBrief}
                                         </p>
-                                        <p className='ptime'>30 phút trước</p>
+                                        <p className='ptime'>{notiDetail.date}</p>
                                     </div>
                                 </div>
                             </Modal.Body>
                             <div className='model-footer'>
-                                <button style={{ width: "30%" }} className="col-md-6 btn-light" type="submit">
+                                <button style={{ width: "30%" }} className="col-md-6 btn-light" type="button"
+                                    onClick={() => navigate('/eggbatchdetail', { state: { id: notiDetail.eggBatchId } })}>
                                     Cập nhật lô
                                 </button>
                                 <button style={{ width: "20%" }} onClick={handleClosePopup} className="btn btn-light" type="button">
@@ -52,67 +219,15 @@ const NotificationList = () => {
                                 </button>
                             </div>
                         </Modal>
-                        <div class="notification-list notification-list--unread">
-                            <div class="notification-list_content">
-                                <div class="notification-list_detail">
-                                    <p><b>Lô HFS173</b> hoàn thành giai đoạn ấp lần 1 cần chiếu trứng</p>
-                                    <p class="text-muted"><small>1 giờ trước</small></p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="notification-list notification-list--unread">
-                            <div class="notification-list_content">
-                                <div class="notification-list_detail">
-                                    <p><b>Lô GFJ816</b> hoàn thành giai đoạn ấp lần 1 cần chiếu trứng</p>
-                                    <p class="text-muted"><small>2 giờ trước</small></p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="notification-list notification-list--unread">
-                            <div class="notification-list_content">
-                                <div class="notification-list_detail">
-                                    <p><b>Lô HCD712</b> hoàn thành giai đoạn ấp lần 1 cần chiếu trứng</p>
-                                    <p class="text-muted"><small>2 giờ trước</small></p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="notification-list notification-list--unread">
-                            <div class="notification-list_content">
-                                <div class="notification-list_detail">
-                                    <p><b>Lô HCK081</b> hoàn thành giai đoạn ấp lần 1 cần chiếu trứng</p>
-                                    <p class="text-muted"><small>3 giờ trước</small></p>
-                                </div>
-                            </div>
-                        </div>
 
-                        {/* read notification */}
-                        <div class="notification-list">
-                            <div class="notification-list_content">
-                                <div class="notification-list_detail">
-                                    <p><b>Lô GFJ816</b> hoàn thành giai đoạn ấp lần 1 cần chiếu trứng</p>
-                                    <p class="text-muted"><small>2 giờ trước</small></p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="notification-list">
-                            <div class="notification-list_content">
-                                <div class="notification-list_detail">
-                                    <p><b>Lô GFJ816</b> hoàn thành giai đoạn ấp lần 1 cần chiếu trứng</p>
-                                    <p class="text-muted"><small>2 giờ trước</small></p>
-                                </div>
-                            </div>
 
+                        <div class="text-center">
+                            <Link class="dark-link">Load more activity</Link>
                         </div>
                     </div>
-
-                    <div class="text-center">
-                        <Link class="dark-link">Load more activity</Link>
-                    </div>
-
                 </div>
-            </section>
-
-        </div>
+            </section >
+        </div >
     );
 }
 

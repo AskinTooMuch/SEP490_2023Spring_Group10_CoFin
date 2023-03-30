@@ -598,7 +598,9 @@ export default function BasicTabs() {
                                 </div>
                             </div>
                         </div>
-                        <ConfirmBox open={open} closeDialog={() => setOpen(false)} title={employeeDetailDTO.employeeName} deleteFunction={() => hanldeDeleteEmployee(employeeDetailDTO.employeeId)}
+                        <ConfirmBox open={open} closeDialog={() => setOpen(false)} title={"Xóa nhân viên"} 
+                        content={"Xác nhận xóa nhân viên: " + employeeDetailDTO.employeeName}
+                        deleteFunction={() => hanldeDeleteEmployee(employeeDetailDTO.employeeId)}
                         />
                         <div className="row">
                             <div className="col-md-4">

@@ -25,5 +25,11 @@ public interface EggProductRepository extends JpaRepository<EggProduct, Long> {
     @Query(value = "SELECT * FROM eims.egg_product WHERE egg_batch_id = ?1 ORDER BY incubation_phase_id DESC LIMIT 1",
             nativeQuery = true)
     Optional<EggProduct> findEggProductLastPhase(Long eggBatchId);
-    Optional<EggProduct> findByEggBatchIdOrderByIncubationPhaseIdDesc(Long eggBatchId);
+    @Query(value = "SELECT ep.* FROM eims.egg_batch eb " +
+            "JOIN eims.egg_product ep ON eb.egg_batch_id = ep.egg_batch_id " +
+            "JOIN eims.incubation_phase ip ON ep.incubation_phase_id = ip.incubation_phase_id " +
+            "WHERE eb.egg_batch_id = ?1 " +
+            "AND ip.phase_number = ?2 ",
+            nativeQuery = true)
+    Optional<EggProduct> findEggProductByPhaseNumber(Long eggBatchId, int phaseNumber);
 }

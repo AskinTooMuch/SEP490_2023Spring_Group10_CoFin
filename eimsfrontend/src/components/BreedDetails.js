@@ -405,7 +405,9 @@ export default function BasicTabs() {
                                 <div className='button'>
                                     <button id="startEditBreed" className='btn btn-light ' onClick={handleShow}>Sửa</button>
                                     <button id="startDeleteBreed" className='btn btn-light ' onClick={() => openDelete()} >Xoá</button>
-                                    <ConfirmBox open={open} closeDialog={() => setOpen(false)} deleteFunction={() => submitDeteteBreed()} />
+                                    <ConfirmBox open={open} closeDialog={() => setOpen(false)} title={"Xóa Loại"}
+                                    content={"Xác nhận xóa loại: " + editBreedDTO.breedName}
+                                     deleteFunction={() => submitDeteteBreed()} />
                                 </div>
                             </div>
                         </div>

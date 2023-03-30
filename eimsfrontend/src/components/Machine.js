@@ -50,6 +50,8 @@ function a11yProps(index) {
 }
 
 export default function BasicTabs() {
+    // Dependency
+    const [dataLoaded, setDataLoaded] = useState(false);
     //URL
     const MACHINE_ALL = "/api/machine/all";
     const MACHINE_CREATE = "/api/machine/create";
@@ -129,7 +131,9 @@ export default function BasicTabs() {
     // Get list of Machine and show
     // Get Machine list
     useEffect(() => {
+        if (dataLoaded) return;
         loadMachineList();
+        setDataLoaded(true);
     }, []);
 
     // Request Machine list and load the Machine list into the table rows
@@ -223,7 +227,7 @@ export default function BasicTabs() {
                                 <button style={{ width: "20%" }} type="submit" className="col-md-6 btn-light" id="confirmCreateMachine">
                                     Tạo
                                 </button>
-                                <button className='btn btn-light' style={{ width: "20%" }} onClick={handleClose} id="cancelCreateMachine">
+                                <button className='btn btn-light' style={{ width: "20%" }} onClick={handleClose} id="cancelCreateMachine" type="button">
                                     Huỷ
                                 </button>
                             </div>

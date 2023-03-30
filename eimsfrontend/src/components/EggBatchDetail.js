@@ -61,7 +61,7 @@ export default function BasicTabs() {
     const handleClose = () => setShow(false);
 
     const handleShow = () => {
-        if (eggBatchDetail.status == 1 && eggBatchDetail.needAction == 1) {
+        if (eggBatchDetail.status == 1 && eggBatchDetail.needAction == 1 && eggBatchDetail.progress < 7) {
             const rows = [...rowsData];
             rows.splice(0, rows.length);
 
@@ -78,11 +78,16 @@ export default function BasicTabs() {
 
             setRowsData(rows);
             setShow(true);
-        } else if (eggBatchDetail.status == 0) {
-            toast.warning("Lô trứng đã hoàn thành, không thể cập nhật")
-        } else if (eggBatchDetail.status == 1 && eggBatchDetail.needAction == 0) {
-            toast.warning("Chưa đến giai đoạn cập nhật lô trứng")
-        }
+        } else
+            if (eggBatchDetail.status == 1 && eggBatchDetail.needAction == 1 && eggBatchDetail.progress >= 7) {
+                const rows = [...rowsData];
+                setRowsData(rows);
+                setShow(true);
+            } else if (eggBatchDetail.status == 0) {
+                toast.warning("Lô trứng đã hoàn thành, không thể cập nhật")
+            } else if (eggBatchDetail.status == 1 && eggBatchDetail.needAction == 0) {
+                toast.warning("Chưa đến giai đoạn cập nhật lô trứng")
+            }
 
     }
     const [show2, setShow2] = useState(false);

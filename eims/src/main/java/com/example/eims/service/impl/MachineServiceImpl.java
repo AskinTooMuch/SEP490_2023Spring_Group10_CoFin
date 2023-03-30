@@ -220,8 +220,8 @@ public class MachineServiceImpl implements IMachineService {
             }
             // Max capacity
             int maxCapacity = createMachineDTO.getMaxCapacity();
-            if (maxCapacity <= 0) { /* Capacity must bigger than 0 */
-                return new ResponseEntity<>("Sức chứa của máy phải lớn hơn 0", HttpStatus.BAD_REQUEST);
+            if (maxCapacity <= 0 || maxCapacity > 20000) { /* Capacity must be in range 1 - 20000 */
+                return new ResponseEntity<>("Sức chứa của máy phải trong khoảng 1 - 20.000", HttpStatus.BAD_REQUEST);
             }
             // Set attribute
             machine.setFacilityId(facilityId);

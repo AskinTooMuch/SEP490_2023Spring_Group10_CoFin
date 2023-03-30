@@ -8,7 +8,9 @@ import { ToastContainer, toast } from 'react-toastify';
 
 const ImportBill = () => {
     const userRef = useRef();
+    // Dependency
     const [dataLoaded, setDataLoaded] = useState(false);
+
     //API URLs
     const IMPORT_ALL = '/api/import/allByOwner'
 
@@ -20,7 +22,9 @@ const ImportBill = () => {
     var mess = true;
     //
     useEffect(() => {
+        if (dataLoaded) return;
         loadImportList();
+        setDataLoaded(true);
     }, []);
 
     // Get import list
@@ -39,14 +43,14 @@ const ImportBill = () => {
         if (mess) {
             toast.success(state);
             mess = false;
-        } 
+        }
     }
 
     let navigate = useNavigate();
     const routeChange = (iid) => {
         navigate('/importbilldetail', { state: { id: iid } });
     }
-    
+
     return (
         <>
             <nav className="navbar justify-content-between">
@@ -97,7 +101,7 @@ const ImportBill = () => {
                                                     <td className="u-border-1 u-border-grey-30 u-first-column u-grey-5 u-table-cell u-table-cell-5">{index + 1}</td>
                                                     <td className="u-border-1 u-border-grey-30 u-table-cell">{item.importId}</td>
                                                     <td className="u-border-1 u-border-grey-30 u-table-cell">{item.supplierName}</td>
-                                                    <td className="u-border-1 u-border-grey-30 u-table-cell">{item.importDate.replace("T"," ")}</td>
+                                                    <td className="u-border-1 u-border-grey-30 u-table-cell">{item.importDate.replace("T", " ")}</td>
                                                     <td className="u-border-1 u-border-grey-30 u-table-cell">{item.total.toLocaleString()}</td>
                                                     <td className="u-border-1 u-border-grey-30 u-table-cell">{item.paid.toLocaleString()}</td>
                                                     {

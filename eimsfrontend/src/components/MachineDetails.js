@@ -46,8 +46,8 @@ function a11yProps(index) {
 }
 
 export default function BasicTabs() {
-    //Dependency
-    const [machineLoaded, setMachineLoaded] = useState(false);
+    // Dependency
+    const [dataLoaded, setDataLoaded] = useState(false);
     //URL
     const MACHINE_UPDATE_SAVE = "/api/machine/update/save";
     const MACHINE_UPDATE_GET = "/api/machine/update/get";
@@ -98,9 +98,10 @@ export default function BasicTabs() {
 
     //Get customer details
     useEffect(() => {
-        console.log("Get machine");
+        if (dataLoaded) return;
         loadMachine();
-    }, [machineLoaded]);
+        setDataLoaded(true);
+    }, []);
 
     const loadMachine = async () => {
         const result = await axios.get(MACHINE_GET,
@@ -128,7 +129,6 @@ export default function BasicTabs() {
         machineDetailDTO.listEggLocation = result.data.eggs;
         machineDetailDTO.status = result.data.status;
         setListEggLocation(result.data.eggs);
-        setMachineLoaded(true);
     }
 
     //Handle Change functions:
@@ -289,7 +289,8 @@ export default function BasicTabs() {
                                 </div>
                             </div>
                         </div>
-                        <ConfirmBox open={open} closeDialog={() => setOpen(false)} title={machineDetailDTO.machineName} deleteFunction={() => hanldeDeleteMachine(machineDetailDTO.machineId)}
+                        <ConfirmBox open={open} closeDialog={() => setOpen(false)} title={"Xóa máy"}
+                            content={"Xác nhận xóa máy: " + machineDetailDTO.machineName} deleteFunction={() => hanldeDeleteMachine(machineDetailDTO.machineId)}
                         />
                         <div className="row">
                             <div className="col-md-4">
@@ -344,7 +345,7 @@ export default function BasicTabs() {
                             {
                                 listEggLocation && listEggLocation.length > 0 ?
                                     listEggLocation.map((item, index) =>
-                                        <tr>
+                                        <tr onClick={() => navigate("/eggbatchdetail", { state: { id: item.eggBatchId } })}>
                                             <th scope="row">{item.eggBatchId}</th>
                                             <th scope="row">{item.breedName}</th>
                                             <td scope="row">Ngày {item.incubationDateToNow}/{item.incubationPeriod} </td>

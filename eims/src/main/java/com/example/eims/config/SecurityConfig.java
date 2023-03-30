@@ -149,6 +149,7 @@ public class SecurityConfig{
                 "/api/employee/**",
                 "/api/import/**",
                 "/api/eggBatch/**",
+                "/api/notification/**",
                 "/api/cost/**",
                 "/api/payroll/**"
         };

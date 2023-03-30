@@ -43,7 +43,7 @@ function a11yProps(index) {
 
 export default function BasicTabs() {
     // Dependency
-    const [importLoaded, setImportLoaded] = useState(false);
+    const [dataLoaded, setDataLoaded] = useState(false);
 
     //URL
     const IMPORT_GET = "/api/import/get";
@@ -81,8 +81,10 @@ export default function BasicTabs() {
 
     //Get import details
     useEffect(() => {
+        if (dataLoaded) return;
         loadImport();
-    }, [importLoaded]);
+        setDataLoaded(true);
+    }, []);
 
     const loadImport = async () => {
         const result = await axios.get(IMPORT_GET,
@@ -105,7 +107,6 @@ export default function BasicTabs() {
         importDetail.paid = result.data.paid;
         paid.paid = result.data.paid;
         setEggBatchList(result.data.eggBatchList);
-        setImportLoaded(true);
     }
 
     //Handle Change functions:
@@ -194,7 +195,7 @@ export default function BasicTabs() {
                                 <p>Ngày nhập</p>
                             </div>
                             <div className="col-md-3" >
-                                <p>{importDetail.importDate.replace("T"," ")}</p>
+                                <p>{importDetail.importDate.replace("T", " ")}</p>
                             </div>
                             <div className="col-md-3 ">
                                 <p>Mã hoá đơn</p>

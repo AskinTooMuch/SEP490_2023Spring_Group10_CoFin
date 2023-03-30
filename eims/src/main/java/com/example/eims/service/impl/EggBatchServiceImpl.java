@@ -635,7 +635,9 @@ public class EggBatchServiceImpl implements IEggBatchService {
                 if (progress > 5) {
                     return new ResponseEntity<>("Đã qua giai đoạn cập nhật Trứng đang nở", HttpStatus.BAD_REQUEST);
                 }
-
+                if (needActionEggBatch == 0) {
+                    return new ResponseEntity<>("Chưa đến giai đoạn cần cập nhật", HttpStatus.BAD_REQUEST);
+                }
                 IncubationPhase incubationPhase = incubationPhaseList.get(phaseNumber + 1);
                 // Trứng hao hụt
                 EggProduct eggWasted = eggProductRepository.
@@ -870,6 +872,10 @@ public class EggBatchServiceImpl implements IEggBatchService {
                 }
                 if (progress >= 7) {
                     return new ResponseEntity<>("Đã qua giai đoạn cập nhật Trứng tắc", HttpStatus.BAD_REQUEST);
+                }
+
+                if (needActionEggBatch == 0) {
+                    return new ResponseEntity<>("Chưa đến giai đoạn cần cập nhật", HttpStatus.BAD_REQUEST);
                 }
                 IncubationPhase incubationPhase = incubationPhaseList.get(phaseNumber + 1);
 
