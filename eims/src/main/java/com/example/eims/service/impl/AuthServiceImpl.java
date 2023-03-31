@@ -8,8 +8,9 @@
  * DATE         Version     Author      DESCRIPTION<br>
  * 02/03/2023   1.0         ChucNV      First Deploy<br>
  * 02/03/2023   2.0         ChucNV      Implement signup service<br>
- * 23/03/2023   3.0         ChucNV      Update signin code according to new security feature<br>
+ * 23/03/2023   3.0         ChucNV      Update sign in code according to new security feature<br>
  * 29/03/2023   3.1         DuongVV     Disable sms <br>
+ * 29/03/2023   3.2         ChucNV      Fix change password bugs and messages<br>
  */
 
 package com.example.eims.service.impl;
@@ -314,33 +315,37 @@ public class AuthServiceImpl implements IAuthService {
      */
     @Override
     public ResponseEntity<?> changePassword(ChangePasswordDTO changePasswordDTO) {
-        // Check blank input
-        if (changePasswordDTO.getPassword() == null || stringDealer.trimMax(changePasswordDTO.getPassword()).equals("")) { /* Password is empty */
-            return new ResponseEntity<>("Mật khẩu không được để trống", HttpStatus.BAD_REQUEST);
-        }
-        String password = stringDealer.trimMax(changePasswordDTO.getPassword());
-        if (changePasswordDTO.getNewPassword() == null || stringDealer.trimMax(changePasswordDTO.getNewPassword()).equals("")) { /* New password is empty */
-            return new ResponseEntity<>("Mật khẩu mới không được để trống", HttpStatus.BAD_REQUEST);
-        }
+        //Get passwords:
+        String oldPassword = stringDealer.trimMax(changePasswordDTO.getPassword());
         String newPassword = stringDealer.trimMax(changePasswordDTO.getNewPassword());
-        if (!stringDealer.checkPasswordRegex(newPassword)) { /* New password is not valid */
-            return new ResponseEntity<>("Mật khẩu mới không đúng định dạng", HttpStatus.BAD_REQUEST);
-        }
+        String reNewPassword = stringDealer.trimMax(changePasswordDTO.getReNewPassword());
         //Local variable for the user
         Optional<User> userOpt;
         //Check credentials, if not valid then return Bad request (403)
         userOpt = userRepository.findByUserId(changePasswordDTO.getUserId());
         if (userOpt.isEmpty() ||
-                !passwordEncoder.matches(password, userOpt.get().getPassword())) { /* Old password not match*/
+                !passwordEncoder.matches(oldPassword, userOpt.get().getPassword())) { /* Old password not match*/
             return new ResponseEntity<>("Mật khẩu cũ sai", HttpStatus.BAD_REQUEST);
-        } else { /* Old password is correct */
-            //Encode the passwords
-            newPassword = passwordEncoder.encode(newPassword);
-            User user = userOpt.get();
-            user.setPassword(newPassword);
-            userRepository.save(user);
-            return new ResponseEntity<>("Thay đổi mật khẩu thành công", HttpStatus.OK);
         }
+        if (!newPassword.equals(reNewPassword)) {
+            return new ResponseEntity<>("Mật khẩu được nhập lại không trùng với mật khẩu mới", HttpStatus.BAD_REQUEST);
+        }
+        if (newPassword.equals("")) { /* Password is empty */
+            return new ResponseEntity<>("Mật khẩu mới không được để trống", HttpStatus.BAD_REQUEST);
+        }
+        if ((newPassword.length() < 8) || (newPassword.length() > 20)) {
+            return new ResponseEntity<>("Mật khẩu mới có độ dài từ 8 đến 20 ký tự", HttpStatus.BAD_REQUEST);
+        }
+        if (!stringDealer.checkPasswordRegex(newPassword)) { /* New password is not valid */
+            return new ResponseEntity<>("Mật khẩu mới không đúng định dạng", HttpStatus.BAD_REQUEST);
+        }
+
+        //Encode the passwords
+        newPassword = passwordEncoder.encode(newPassword);
+        User user = userOpt.get();
+        user.setPassword(newPassword);
+        userRepository.save(user);
+        return new ResponseEntity<>("Thay đổi mật khẩu thành công", HttpStatus.OK);
     }
 
     /**

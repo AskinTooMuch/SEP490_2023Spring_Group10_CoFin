@@ -43,7 +43,8 @@ const Profile = () => {
     const [changePasswordDTO, setChangePasswordDTO] = useState({
         userId: sessionStorage.getItem("curUserId"),
         password: "",
-        newPassword: ""
+        newPassword: "",
+        reNewPassword: ""
     });
 
     // DTO for updating user's information
@@ -570,7 +571,6 @@ const Profile = () => {
         }
     }
 
-
     // Update facility's information
     const handleUpdateFacilitySave = async (event) => {
         event.preventDefault();
@@ -644,11 +644,11 @@ const Profile = () => {
     //Change password through Axios
     const handleSubmit = async (event) => {
         event.preventDefault();
-        const v2 = PWD_REGEX.test(changePasswordDTO.newPassword);
-        if (!v2) {
-            toast.error("Mật khẩu sai định dạng");
-            return;
-        }
+        // const v2 = PWD_REGEX.test(changePasswordDTO.newPassword);
+        // if (!v2) {
+        //     toast.error("Mật khẩu mới sai định dạng");
+        //     return;
+        // }
         try {
             const response = await axios.post(CHANGE_PASS_URL,
                 changePasswordDTO,
@@ -661,7 +661,12 @@ const Profile = () => {
                 }
             );
             console.log(JSON.stringify(response?.data));
-            setChangePasswordDTO('');
+            setChangePasswordDTO({
+                userId: sessionStorage.getItem("curUserId"),
+                password: "",
+                newPassword: "",
+                reNewPassword: ""
+            });
             toast.success("Đổi mật khẩu thành công");
             setShow(false);
         } catch (err) {
@@ -675,7 +680,16 @@ const Profile = () => {
                 }
             }
         }
+    }
 
+    const handleChangePassCancel = () => {
+        setShow(false);
+        setChangePasswordDTO({
+            userId: sessionStorage.getItem("curUserId"),
+            password: "",
+            newPassword: "",
+            reNewPassword: ""
+        });
     }
 
     return (
@@ -736,8 +750,8 @@ const Profile = () => {
                                             aria-labelledby="contained-modal-title-vcenter"
                                             centered >
                                             <Modal.Header closeButton onClick={handleClose}>
-                                                <Modal.Title>Thay đổi mật khẩu <p style={{ color: "grey", fontSize: "20px" }} id="pwdnote" data-text=" 8 - 20 kí tự. Bao gồm 1 chữ cái viết hoa, 1 số và 1 kí tự đặc biệt (!,@,#,$,%)"
-                                                    className="tip invalid" ><FontAwesomeIcon icon={faInfoCircle} /></p></Modal.Title>
+                                                <Modal.Title>Thay đổi mật khẩu <span style={{ color: "grey", fontSize: "20px" }} id="pwdnote" data-text=" 8 - 20 kí tự. Bao gồm 1 chữ cái viết hoa, 1 số và 1 kí tự đặc biệt (!,@,#,$,%)"
+                                                    className="tip invalid" ><FontAwesomeIcon icon={faInfoCircle} /></span></Modal.Title>
                                             </Modal.Header>
                                             <form onSubmit={handleSubmit} style={{ margin: "10px" }}>
                                                 <div className="changepass">
@@ -746,10 +760,10 @@ const Profile = () => {
                                                             <p>Mật khẩu cũ</p>
                                                         </div>
                                                         <div className="col-md-6 pass-wrapper ">
-                                                            <input ref={userRef} id="oldPassword" onChange={e => handleChange(e, "password")}
+                                                            <input ref={userRef} id="oldPassword"
+                                                                onChange={e => handleChange(e, "password")}
                                                                 value={changePasswordDTO.password}
                                                                 type={passwordShown ? "text" : "password"}
-                                                                minLength="8" maxLength="20"
                                                                 className="form-control " />
                                                             <i onClick={togglePasswordVisiblity}>{eye}</i>
                                                         </div>
@@ -758,19 +772,16 @@ const Profile = () => {
                                                         <div className="col-md-6">
                                                             <p>Mật khẩu mới <FontAwesomeIcon className="star" icon={faStarOfLife} />
                                                                 <FontAwesomeIcon icon={faCheck} className={validPwd ? "valid" : "hide"} />
-                                                                <FontAwesomeIcon icon={faTimes} className={validPwd || !changePasswordDTO.newPassword ? "hide" : "invalid"} />
+                                                                {/* <FontAwesomeIcon icon={faTimes} className={validPwd || !changePasswordDTO.newPassword ? "hide" : "invalid"} /> */}
                                                             </p>
                                                         </div>
                                                         <div className="col-md-6 pass-wrapper">
-
                                                             <input ref={userRef} onChange={e => handleChange(e, "newPassword")}
                                                                 value={changePasswordDTO.newPassword}
                                                                 id="newPassword"
-                                                                aria-invalid={validPwd ? "false" : "true"}
-                                                                aria-describedby="pwdnote"
                                                                 type={passwordShown2 ? "text" : "password"}
                                                                 className="form-control"
-                                                                minLength="8" maxLength="20" onFocus={() => setPassFocus(true)}
+                                                                onFocus={() => setPassFocus(true)}
                                                                 onBlur={() => setPassFocus(false)}
                                                             />
                                                             <i onClick={togglePasswordVisiblity2}>{eye}</i>
@@ -786,24 +797,20 @@ const Profile = () => {
                                                         <div className="col-md-6 pass-wrapper">
                                                             <input ref={userRef}
                                                                 id="confirm_pwd"
-                                                                onChange={(e) => setMatchPwd(e.target.value)}
-                                                                value={matchPwd}
-
-                                                                aria-invalid={validMatch ? "false" : "true"}
-                                                                aria-describedby="confirmnote"
+                                                                onChange={e => handleChange(e, "reNewPassword")}
+                                                                value={changePasswordDTO.reNewPassword}
                                                                 type={passwordShown3 ? "text" : "password"}
-                                                                className="form-control "
-                                                                minLength="8" />
+                                                                className="form-control " />
                                                             <i onClick={togglePasswordVisiblity3}>{eye}</i>
                                                         </div>
 
                                                     </div>
                                                 </div>
                                                 <div className='model-footer'>
-                                                    <button className="btn btn-light" style={{ width: "30%" }} id="confirmChangePassword">
+                                                    <button className="btn btn-light" type='submit' style={{ width: "30%" }} id="confirmChangePassword">
                                                         Đổi mật khẩu
                                                     </button>
-                                                    <button className="btn btn-light" style={{ width: "20%" }} onClick={handleClose} id="cancelChangePassword">
+                                                    <button className="btn btn-light" type='button' style={{ width: "20%" }} onClick={handleChangePassCancel} id="cancelChangePassword">
                                                         Huỷ
                                                     </button>
                                                 </div>

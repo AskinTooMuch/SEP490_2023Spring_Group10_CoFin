@@ -18,4 +18,5 @@ public class ChangePasswordDTO {
     private Long userId;
     private String password;
     private String newPassword;
+    private String reNewPassword;
 }
