@@ -31,6 +31,9 @@ import CreateImportBill from './components/CreateImportBill';
 import ImportBillDetail from './components/ImportBillDetail';
 import NotificationList from './components/NotificationList';
 import SubscriptionDetail from './components/SubscriptionDetail';
+import CreateExportBill from './components/CreateExportBill';
+import ExportBill from './components/ExportBill';
+import ExportBillDetail from './components/ExportBillDetail';
 function App() {
   return (
     <>
@@ -47,8 +50,10 @@ function App() {
           <Route path="/finance" element={<FinanManage />} />
           <Route path="/employee" element={<Employee />} />
           <Route path="/importbill" element={<ImportBill />} />
+          <Route path="/exportbill" element={<ExportBill />} />
           <Route path="/notificationlist" element={<NotificationList />} />
           <Route path="/createimportbill" element={<CreateImportBill />} />
+          <Route path="/createexportbill" element={<CreateExportBill />} />
           {/*Details pages */}
           <Route path="/employeedetail" element={<EmployeeDetails />} />
           <Route path="/eggbatchdetail" element={<EggBatchDetail />} />
@@ -57,6 +62,7 @@ function App() {
           <Route path="/supplierdetail" element={<SupplierDetails />} />
           <Route path="/customerdetail" element={<CustomerDetails />} />
           <Route path="/importbilldetail" element={<ImportBillDetail />} />
+          <Route path="/exportbilldetail" element={<ExportBillDetail />} />
         </Route>
 
         {/*Moderator pages */}

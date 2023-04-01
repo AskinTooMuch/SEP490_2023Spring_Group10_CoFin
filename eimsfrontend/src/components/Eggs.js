@@ -8,6 +8,7 @@ import Species from './Species';
 import Breed from './Breed';
 import EggBatch from './EggBatch';
 import WithPermission from '../utils.js/WithPermission';
+import StockReport from './StockReport';
 function Egg(props) {
   const { children, value, index, ...other } = props;
 
@@ -57,7 +58,7 @@ export default function BasicTabs() {
             '& .Mui-selected': { color: "#d25d19" },
           }} value={value} onChange={handleChange} aria-label="basic tabs example">
             <Tab id="eggBatchTab" style={{ textTransform: "capitalize" }} label="Lô trứng" {...a11yProps(0)} />
-            <Tab id="eggStockTab" style={{ textTransform: "capitalize" }} label="Kho trứng" {...a11yProps(1)} />
+            <Tab id="eggStockTab" style={{ textTransform: "capitalize" }} label="Sản phẩm" {...a11yProps(1)} />
             <Tab id="monitorPriceTab" style={{ textTransform: "capitalize" }} label="Theo dõi giá" {...a11yProps(2)} />
             <Tab id="speciesTab" style={{ textTransform: "capitalize" }} label="Loài" {...a11yProps(3)} />
             <Tab id="breedTab" style={{ textTransform: "capitalize" }} label="Loại" {...a11yProps(4)} />
@@ -67,6 +68,7 @@ export default function BasicTabs() {
           <EggBatch />
         </Egg>
         <Egg value={value} index={1}>
+          <StockReport/>
         </Egg>
         <Egg value={value} index={2}>
         </Egg>
@@ -84,7 +86,6 @@ export default function BasicTabs() {
             '& .Mui-selected': { color: "#d25d19" },
           }} value={value} onChange={handleChange} aria-label="basic tabs example">
             <Tab id="eggBatchTab" style={{ textTransform: "capitalize" }} label="Lô trứng" {...a11yProps(0)} />
-
           </Tabs>
         </Box>
         <Egg value={value} index={0}>

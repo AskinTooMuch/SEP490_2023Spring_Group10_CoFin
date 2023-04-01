@@ -7,6 +7,7 @@ import Box from '@mui/material/Box';
 import Supplier from './Supplier'
 import Customer from './Customer'
 import ImportBill from './ImportBill';
+import ExportBill from './ExportBill';
 function Order(props) {
   const { children, value, index, ...other } = props;
 
@@ -64,7 +65,7 @@ export default function BasicTabs() {
         <ImportBill/>
       </Order>
       <Order value={value} index={1}>
-        Item Two
+        <ExportBill/>
       </Order>
       <Order value={value} index={2}>
         <Supplier/>
