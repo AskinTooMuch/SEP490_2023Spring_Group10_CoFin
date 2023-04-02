@@ -16,12 +16,12 @@ import org.springframework.http.ResponseEntity;
 
 public interface IImportReceiptService {
     /**
-     * Get all import bill from suppliers of an Owner.
+     * Get all import bill a facility.
      *
-     * @param userId the id of supplier
+     * @param facilityId the id of facility
      * @return list of import receipts
      */
-    public ResponseEntity<?> viewImportsByOwner(Long userId);
+    public ResponseEntity<?> viewImportsByFacility(Long facilityId);
 
     /**
      * Get all import bill from suppliers of an Owner with paging.
@@ -64,8 +64,7 @@ public interface IImportReceiptService {
     /**
      * Create an import.
      *
-     * @param createImportDTO contains supplier's id, user's id who create the import, facility's id, import date,
-     *                        total, paid, status, list of import items.
+     * @param createImportDTO contains supplier's id, user's id who create the import, facility's id, import date
      * @return
      */
     public ResponseEntity<?> createImport(CreateImportDTO createImportDTO);

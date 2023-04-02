@@ -16,6 +16,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.sql.Date;
+import java.time.LocalDateTime;
 
 @Data
 @Entity
@@ -27,8 +28,8 @@ public class ExportReceipt {
     private Long customerId;
     private Long userId;
     private Long facilityId;
-    private Date exportDate;
+    private LocalDateTime exportDate;
     private Float total;
     private Float paid;
-    private boolean status;
+    private int status;
 }

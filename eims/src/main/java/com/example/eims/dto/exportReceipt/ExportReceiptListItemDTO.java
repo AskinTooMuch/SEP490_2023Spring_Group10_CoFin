@@ -9,20 +9,19 @@
  * 15/03/2023    1.0        DuongVV          First Deploy<br>
  */
 
-package com.example.eims.dto.importReceipt;
+package com.example.eims.dto.exportReceipt;
 
-import com.example.eims.entity.EggBatch;
 import lombok.Data;
 
-import java.sql.Date;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Data
-public class ViewImportDTO {
-    private Long supplierId;
-    private String supplierName;
-    private LocalDateTime importDate;
+public class ExportReceiptListItemDTO {
     private Long importId;
-    private List<EggBatch> eggBatchList;
+    private Long customerId;
+    private String customerName;
+    private LocalDateTime exportDate;
+    private Float total;
+    private Float paid;
+    private int status;
 }

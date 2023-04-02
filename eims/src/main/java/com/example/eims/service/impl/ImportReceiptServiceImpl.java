@@ -72,14 +72,14 @@ public class ImportReceiptServiceImpl implements IImportReceiptService {
     }
 
     /**
-     * Get all import bill from suppliers of an Owner.
+     * Get all import bill a facility.
      *
-     * @param userId the id of supplier
+     * @param facilityId the id of facility
      * @return list of import receipts
      */
     @Override
-    public ResponseEntity<?> viewImportsByOwner(Long userId) {
-        Optional<List<ImportReceipt>> importReceiptListOptional = importReceiptRepository.findByUserId(userId);
+    public ResponseEntity<?> viewImportsByFacility(Long facilityId) {
+        Optional<List<ImportReceipt>> importReceiptListOptional = importReceiptRepository.findByFacilityId(facilityId);
         if (importReceiptListOptional.isPresent()) {
             List<ImportReceipt> importReceiptList = importReceiptListOptional.get();
             List<ImportReceiptListItemDTO> listDTO = new ArrayList<>();

@@ -12,7 +12,7 @@ const ImportBill = () => {
     const [dataLoaded, setDataLoaded] = useState(false);
 
     //API URLs
-    const IMPORT_ALL = '/api/import/allByOwner'
+    const IMPORT_ALL = '/api/import/allByFacility'
 
     //Data holding objects
     const [importList, setImportList] = useState([]);
@@ -30,7 +30,7 @@ const ImportBill = () => {
     // Get import list
     const loadImportList = async () => {
         const result = await axios.get(IMPORT_ALL,
-            { params: { userId: sessionStorage.getItem("curUserId") } },
+            { params: { facilityId: sessionStorage.getItem("facilityId") } },
             {
                 headers: {
                     'Content-Type': 'application/json',

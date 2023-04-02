@@ -34,15 +34,15 @@ public class ImportReceiptController {
     private IImportReceiptService importReceiptService;
 
     /**
-     * Get all import bill from suppliers of an Owner.
+     * Get all import bill a facility.
      *
-     * @param userId the id of supplier
+     * @param facilityId the id of facility
      * @return list of import receipts
      */
     @Secured({"ROLE_OWNER"})
-    @GetMapping("/allByOwner")
-    public ResponseEntity<?> viewImportsByOwner(@RequestParam Long userId) {
-        return importReceiptService.viewImportsByOwner(userId);
+    @GetMapping("/allByFacility")
+    public ResponseEntity<?> viewImportsByFacility(@RequestParam Long facilityId) {
+        return importReceiptService.viewImportsByFacility(facilityId);
     }
 
     /**
