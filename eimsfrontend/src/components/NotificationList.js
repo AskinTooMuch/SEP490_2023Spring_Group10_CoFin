@@ -56,7 +56,7 @@ const NotificationList = () => {
         loadListNotiNew();
         loadListNotiOld();
         setDataLoaded(true);
-    },[]);
+    }, []);
 
     // Get 2 lists of noti
     // List new notification
@@ -72,7 +72,7 @@ const NotificationList = () => {
                     withCredentials: true
                 });
             setListNotiNew(result.data);
-        loadListNotiOld();
+            loadListNotiOld();
         } catch (err) {
             if (!err?.response) {
                 toast.error('Server không phản hồi');
@@ -125,6 +125,9 @@ const NotificationList = () => {
                     },
                     withCredentials: true
                 });
+            handleClosePopup();
+            loadListNotiNew();
+        loadListNotiOld();
         } catch (err) {
             if (!err?.response) {
                 toast.error('Server không phản hồi');
@@ -204,6 +207,10 @@ const NotificationList = () => {
                                 </button>
                                 <button style={{ width: "20%" }} onClick={handleClosePopup} className="btn btn-light" type="button">
                                     Thoát
+                                </button>
+                                <button style={{ width: "30%", float: "left" }} className="col-md-6 btn-light" type="button"
+                                    onClick={() => deleteNoti(notiDetail.notificationId)}>
+                                    Xác nhận xong
                                 </button>
                             </div>
                         </Modal>

@@ -20,7 +20,6 @@ import com.example.eims.repository.EggProductRepository;
 import com.example.eims.repository.IncubationPhaseRepository;
 import com.example.eims.repository.NotificationRepository;
 import com.example.eims.service.interfaces.INotificationService;
-import org.aspectj.weaver.ast.Not;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -60,41 +59,13 @@ public class NotificationServiceImpl implements INotificationService {
     @Override
     public ResponseEntity<?> getNewNotification(Long facilityId) {
         // Get today's notification
-        Date date = Date.valueOf(LocalDate.now());
+        Date today = Date.valueOf(LocalDate.now());
         Optional<List<Notification>> notificationListOptional = notificationRepository
-                .findAllByFacilityIdAndDate(facilityId, date);
-
+                .findAllByFacilityIdAndDate(facilityId, today);
         if (notificationListOptional.isEmpty()) {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
-        List<Notification> notificationList = notificationListOptional.get();
-        for (Notification notification : notificationList) {
-            String brief = "";
-            EggBatch eggBatch = eggBatchRepository.findByEggBatchId(notification.getEggBatchId()).get();
-            Optional<EggProduct> eggProductOptional = eggProductRepository
-                    .findEggProductByPhaseNumber(eggBatch.getEggBatchId(), 1);
-
-            // Get latest phase
-            int progress = 0;
-            String phaseDescription = "";
-            Optional<EggProduct> eggProductLastPhaseOptional = eggProductRepository.
-                    findEggProductLastPhase(eggBatch.getEggBatchId());
-            if (eggProductLastPhaseOptional.isPresent()) {
-                Long incubationPhaseId = eggProductLastPhaseOptional.get().getIncubationPhaseId();
-                IncubationPhase phase = incubationPhaseRepository.findByIncubationPhaseId(incubationPhaseId).get();
-                progress = phase.getPhaseNumber();
-                phaseDescription = phase.getPhaseDescription();
-            }
-            if (progress == 0) {
-                brief = "Lô trứng mã " + eggBatch.getEggBatchId() + " chưa bắt đầu ấp";
-            } else {
-                brief = "Lô trứng mã " + eggBatch.getEggBatchId() + " ,giai đoạn " +
-                        progress + " (" + phaseDescription + ") cần cập nhật";
-            }
-            // Set notification's brief
-            notification.setNotificationBrief(brief);
-        }
-        return new ResponseEntity<>(notificationList, HttpStatus.OK);
+        return new ResponseEntity<>(notificationListOptional.get(), HttpStatus.OK);
     }
 
     /**
@@ -106,41 +77,13 @@ public class NotificationServiceImpl implements INotificationService {
     @Override
     public ResponseEntity<?> getOldNotification(Long facilityId) {
         // Get before today's notification
-        Date date = Date.valueOf(LocalDate.now());
+        Date today = Date.valueOf(LocalDate.now());
         Optional<List<Notification>> notificationListOptional = notificationRepository
-                .findAllByFacilityIdAndDateBefore(facilityId, date);
+                .findAllByFacilityIdAndDateBefore(facilityId, today);
         if (notificationListOptional.isEmpty()) {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
-
-        List<Notification> notificationList = notificationListOptional.get();
-        for (Notification notification : notificationList) {
-            String brief = "";
-            EggBatch eggBatch = eggBatchRepository.findByEggBatchId(notification.getEggBatchId()).get();
-            Optional<EggProduct> eggProductOptional = eggProductRepository
-                    .findEggProductByPhaseNumber(eggBatch.getEggBatchId(), 1);
-
-            // Get latest phase
-            int progress = 0;
-            String phaseDescription = "";
-            Optional<EggProduct> eggProductLastPhaseOptional = eggProductRepository.
-                    findEggProductLastPhase(eggBatch.getEggBatchId());
-            if (eggProductLastPhaseOptional.isPresent()) {
-                Long incubationPhaseId = eggProductLastPhaseOptional.get().getIncubationPhaseId();
-                IncubationPhase phase = incubationPhaseRepository.findByIncubationPhaseId(incubationPhaseId).get();
-                progress = phase.getPhaseNumber();
-                phaseDescription = phase.getPhaseDescription();
-            }
-            if (progress == 0) {
-                brief = "Lô trứng mã " + eggBatch.getEggBatchId() + " chưa bắt đầu ấp";
-            } else {
-                brief = "Lô trứng mã " + eggBatch.getEggBatchId() + " ,giai đoạn " +
-                        progress + " (" + phaseDescription + ") cần cập nhật";
-            }
-            // Set notification's brief
-            notification.setNotificationBrief(brief);
-        }
-        return new ResponseEntity<>(notificationList, HttpStatus.OK);
+        return new ResponseEntity<>(notificationListOptional.get(), HttpStatus.OK);
     }
 
     /**
@@ -151,10 +94,9 @@ public class NotificationServiceImpl implements INotificationService {
      */
     @Override
     public ResponseEntity<?> getTopNewNotification(Long facilityId) {
-        // Get top 5 newest notification
-        Date date = Date.valueOf(LocalDate.now());
+        Date today = Date.valueOf(LocalDate.now());
         Optional<List<Notification>> notificationListOptional = notificationRepository
-                .getTopNotification(facilityId);
+                .findAllByFacilityIdAndDate(facilityId, today);
 
         if (notificationListOptional.isEmpty()) {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
@@ -162,7 +104,7 @@ public class NotificationServiceImpl implements INotificationService {
         List<Notification> notificationList = notificationListOptional.get();
         for (Notification notification : notificationList) {
             // Skip old notification
-            if (!notification.getNotificationBrief().equals("")){
+            if (!notification.getNotificationBrief().equals("")) {
                 continue;
             }
             // Set new notification's brief
@@ -190,8 +132,12 @@ public class NotificationServiceImpl implements INotificationService {
             }
             // Set notification's brief
             notification.setNotificationBrief(brief);
+            notificationRepository.save(notification);
         }
-        return new ResponseEntity<>(notificationList, HttpStatus.OK);
+        if (notificationList.size() <= 5){
+            return new ResponseEntity<>(notificationList, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(notificationList.subList(0, 4), HttpStatus.OK);
     }
 
     /**

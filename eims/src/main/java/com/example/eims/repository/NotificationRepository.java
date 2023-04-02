@@ -22,7 +22,7 @@ import java.util.Optional;
 public interface NotificationRepository extends JpaRepository<Notification, Long> {
     Optional<List<Notification>> findAllByFacilityIdAndDate(Long facilityId, Date date);
     Optional<List<Notification>> findAllByFacilityIdAndDateBefore(Long facilityId, Date date);
-    @Query(value = "SELECT * FROM eims.notification WHERE facility_id = ?1 ORDER BY date DESC LIMIT 5"
+    @Query(value = "SELECT * FROM eims.notification WHERE facility_id = ?1 AND date <= ?2 ORDER BY date DESC LIMIT 5"
             , nativeQuery = true)
-    Optional<List<Notification>> getTopNotification(Long facilityId);
+    Optional<List<Notification>> getTopNotification(Long facilityId, Date date);
 }
