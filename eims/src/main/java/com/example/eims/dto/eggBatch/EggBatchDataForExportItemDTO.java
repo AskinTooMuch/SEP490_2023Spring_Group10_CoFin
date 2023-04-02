@@ -14,24 +14,11 @@ package com.example.eims.dto.eggBatch;
 
 import lombok.Data;
 
-import java.sql.Date;
 import java.time.LocalDateTime;
 
 @Data
-public class EggBatchListItemDTO {
+public class EggBatchDataForExportItemDTO {
     private Long eggBatchId;
-    private Long importId;
-    private LocalDateTime importDate;
     private Long breedId;
     private String breedName;
-    private Long supplierId;
-    private String supplierName;
-    private int amount;
-    private int progress;
-    private Long progressInDays;
-    private int incubationPeriod;
-    private String phase;
-    private int needAction;
-    private LocalDateTime dateAction;
-    private int status;
 }

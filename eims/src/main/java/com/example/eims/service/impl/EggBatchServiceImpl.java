@@ -15,7 +15,7 @@
 package com.example.eims.service.impl;
 
 import com.example.eims.dto.eggBatch.EggBatchDetailDTO;
-import com.example.eims.dto.eggBatch.EggBatchListItemDTO;
+import com.example.eims.dto.eggBatch.EggBatchViewListItemDTO;
 import com.example.eims.dto.eggBatch.UpdateEggBatchDTO;
 import com.example.eims.dto.eggLocation.EggLocationEggBatchDetailDTO;
 import com.example.eims.dto.eggLocation.EggLocationUpdateEggBatchDTO;
@@ -31,7 +31,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
-import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -234,12 +233,12 @@ public class EggBatchServiceImpl implements IEggBatchService {
         Optional<List<ImportReceipt>> importReceiptListOptional = importReceiptRepository.findByFacilityId(facilityId);
         if (importReceiptListOptional.isPresent()) {
             List<ImportReceipt> importReceiptList = importReceiptListOptional.get();
-            List<EggBatchListItemDTO> dtoList = new ArrayList<>();
+            List<EggBatchViewListItemDTO> dtoList = new ArrayList<>();
             for (ImportReceipt importReceipt : importReceiptList) {
                 List<EggBatch> eggBatchList = eggBatchRepository.findByImportId(importReceipt.getImportId()).get();
                 for (EggBatch eggBatch : eggBatchList) {
                     // List egg batch
-                    EggBatchListItemDTO dto = new EggBatchListItemDTO();
+                    EggBatchViewListItemDTO dto = new EggBatchViewListItemDTO();
                     // Egg batch
                     dto.setEggBatchId(eggBatch.getEggBatchId());
                     dto.setImportId(importReceipt.getImportId());

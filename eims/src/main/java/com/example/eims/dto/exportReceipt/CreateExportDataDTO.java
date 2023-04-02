@@ -1,13 +1,13 @@
 package com.example.eims.dto.exportReceipt;
 
-import com.example.eims.entity.EggBatch;
-import com.example.eims.entity.EggProduct;
+import com.example.eims.dto.eggBatch.EggBatchDataForExportItemDTO;
+import com.example.eims.dto.eggProduct.EggProductDataForExportItemDTO;
 import lombok.Data;
 
 import java.util.List;
 
 @Data
 public class CreateExportDataDTO {
-    private List<EggBatch> eggBatchList;
-    private List<List<EggProduct>> eggProductsList;
+    private List<EggBatchDataForExportItemDTO> eggBatchList;
+    private List<List<EggProductDataForExportItemDTO>> eggProductsList;
 }

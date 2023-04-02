@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 public class ExportReceiptController {
     @Autowired
     private IExportReceiptService exportReceiptService;
+
     /**
      * Get all export bill of a facility.
      *
@@ -21,6 +22,17 @@ public class ExportReceiptController {
     @GetMapping("/allByFacility")
     public ResponseEntity<?> viewExportsByFacility(Long facilityId) {
         return exportReceiptService.viewExportsByFacility(facilityId);
+    }
+
+    /**
+     * Get all egg batch's available egg products.
+     *
+     * @param facilityId the id of the facility.
+     * @return
+     */
+    @GetMapping("/getData")
+    public ResponseEntity<?> getExportData(@RequestParam Long facilityId) {
+        return exportReceiptService.getExportData(facilityId);
     }
 
     /**
@@ -52,7 +64,7 @@ public class ExportReceiptController {
      * @param paid
      * @return
      */
-    @PutMapping("update")
+    @PutMapping("/update")
     public ResponseEntity<?> updatePaidOfExport(@RequestParam Long exportId, @RequestParam Float paid) {
         return exportReceiptService.updatePaidOfExport(exportId, paid);
     }

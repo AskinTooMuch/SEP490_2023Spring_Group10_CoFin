@@ -1,12 +1,71 @@
 package com.example.eims.service.impl;
 
+import com.example.eims.dto.eggBatch.EggBatchDataForExportItemDTO;
+import com.example.eims.dto.eggProduct.EggProductCreateExportDTO;
+import com.example.eims.dto.eggProduct.EggProductDataForExportItemDTO;
+import com.example.eims.dto.eggProduct.EggProductViewExportDetailDTO;
 import com.example.eims.dto.exportReceipt.CreateExportDTO;
+import com.example.eims.dto.exportReceipt.CreateExportDataDTO;
+import com.example.eims.dto.exportReceipt.ExportReceiptDetailDTO;
+import com.example.eims.dto.exportReceipt.ExportReceiptListItemDTO;
+import com.example.eims.entity.*;
+import com.example.eims.repository.*;
 import com.example.eims.service.interfaces.IExportReceiptService;
+import com.example.eims.utils.StringDealer;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+import java.time.LocalDateTime;
+
 @Service
 public class ExportReceiptServiceImpl implements IExportReceiptService {
+    @Autowired
+    private final ExportReceiptRepository exportReceiptRepository;
+    @Autowired
+    private final ExportDetailRepository exportDetailRepository;
+    @Autowired
+    private final ImportReceiptRepository importReceiptRepository;
+    @Autowired
+    private final EggBatchRepository eggBatchRepository;
+    @Autowired
+    private final EggProductRepository eggProductRepository;
+    @Autowired
+    private final BreedRepository breedRepository;
+    @Autowired
+    private final CustomerRepository customerRepository;
+    @Autowired
+    private final IncubationPhaseRepository incubationPhaseRepository;
+    private final StringDealer stringDealer;
+    @PersistenceContext
+    private final EntityManager em;
+
+    public ExportReceiptServiceImpl(ExportReceiptRepository exportReceiptRepository,
+                                    ExportDetailRepository exportDetailRepository,
+                                    ImportReceiptRepository importReceiptRepository,
+                                    EggBatchRepository eggBatchRepository, EggProductRepository eggProductRepository,
+                                    BreedRepository breedRepository, CustomerRepository customerRepository,
+                                    IncubationPhaseRepository incubationPhaseRepository, EntityManager em) {
+        this.exportReceiptRepository = exportReceiptRepository;
+        this.exportDetailRepository = exportDetailRepository;
+        this.importReceiptRepository = importReceiptRepository;
+        this.eggBatchRepository = eggBatchRepository;
+        this.eggProductRepository = eggProductRepository;
+        this.breedRepository = breedRepository;
+        this.customerRepository = customerRepository;
+        this.incubationPhaseRepository = incubationPhaseRepository;
+        this.stringDealer = new StringDealer();
+        this.em = em;
+    }
+
     /**
      * Get all export bill of a facility.
      *
@@ -15,7 +74,113 @@ public class ExportReceiptServiceImpl implements IExportReceiptService {
      */
     @Override
     public ResponseEntity<?> viewExportsByFacility(Long facilityId) {
-        return null;
+        Optional<List<ExportReceipt>> exportReceiptListOptional = exportReceiptRepository.findByFacilityId(facilityId);
+        if (exportReceiptListOptional.isPresent()) {
+            List<ExportReceipt> exportReceiptList = exportReceiptListOptional.get();
+            List<ExportReceiptListItemDTO> listDTO = new ArrayList<>();
+            for (ExportReceipt receipt : exportReceiptList) {
+                ExportReceiptListItemDTO exportReceiptListItemDTO = new ExportReceiptListItemDTO();
+                exportReceiptListItemDTO.setImportId(receipt.getExportId());
+                exportReceiptListItemDTO.setCustomerId(receipt.getCustomerId());
+                Customer customer = customerRepository.findByCustomerId(receipt.getCustomerId()).get();
+                exportReceiptListItemDTO.setCustomerName(customer.getCustomerName());
+                exportReceiptListItemDTO.setExportDate(receipt.getExportDate());
+                exportReceiptListItemDTO.setTotal(receipt.getTotal());
+                exportReceiptListItemDTO.setPaid(receipt.getPaid());
+                exportReceiptListItemDTO.setStatus(receipt.getStatus());
+                listDTO.add(exportReceiptListItemDTO);
+            }
+            return new ResponseEntity<>(listDTO, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    /**
+     * Get all egg batch's available egg products.
+     *
+     * @param facilityId the id of the facility.
+     * @return
+     */
+    @Override
+    public ResponseEntity<?> getExportData(Long facilityId) {
+        // List dto
+        List<EggBatchDataForExportItemDTO> eggBatchListDto = new ArrayList<>();
+        List<List<EggProductDataForExportItemDTO>> eggProductListDto = new ArrayList<>();
+        CreateExportDataDTO dto = new CreateExportDataDTO();
+
+        // Process
+        List<EggBatch> eggBatchList = new ArrayList<>();
+        Optional<List<ImportReceipt>> importReceiptListOptional = importReceiptRepository.findByFacilityId(facilityId);
+        if (importReceiptListOptional.isEmpty()) {
+            return new ResponseEntity<>("Không có sản phầm nào", HttpStatus.BAD_REQUEST);
+        }
+        // Find egg batches
+        for (ImportReceipt importReceipt : importReceiptListOptional.get()) {
+            Optional<List<EggBatch>> eggBatchListOptional = eggBatchRepository.findByImportId(importReceipt.getImportId());
+            eggBatchListOptional.ifPresent(eggBatchList::addAll);
+        }
+        // Add egg batches to dto
+        for (EggBatch eggBatch : eggBatchList) {
+            // Remove new egg batch
+            int progress = 0;
+            Optional<EggProduct> eggProductOptional = eggProductRepository.
+                    findEggProductLastPhase(eggBatch.getEggBatchId());
+            if (eggProductOptional.isPresent()) {
+                Long incubationPhaseId = eggProductOptional.get().getIncubationPhaseId();
+                IncubationPhase incubationPhase = incubationPhaseRepository.findByIncubationPhaseId(incubationPhaseId).get();
+                progress = incubationPhase.getPhaseNumber();
+            }
+            if (progress == 0) continue;
+            // Add egg batch to dto
+            EggBatchDataForExportItemDTO dtoItem = new EggBatchDataForExportItemDTO();
+            // Breed
+            Breed breed = breedRepository.findByBreedId(eggBatch.getBreedId()).get();
+            dtoItem.setEggBatchId(eggBatch.getEggBatchId());
+            dtoItem.setBreedId(breed.getBreedId());
+            dtoItem.setBreedName(breed.getBreedName());
+            eggBatchListDto.add(dtoItem);
+        }
+
+        // List product's phase number
+        List<Integer> phases = Arrays.asList(0, 2, 3, 4, 6, 7, 8, 9);
+        ArrayList<Integer> phaseList = new ArrayList<>(phases);
+
+        // Check sold out
+        for (EggBatchDataForExportItemDTO eggBatch : eggBatchListDto) {
+            boolean soldOut = true;
+            List<EggProduct> eggProductList = eggProductRepository.findByEggBatchId(eggBatch.getEggBatchId()).get();
+            List<EggProductDataForExportItemDTO> eggProductDataForExportItemDTOS = new ArrayList<>();
+
+            for (EggProduct eggProduct : eggProductList) {
+                IncubationPhase incubationPhase = incubationPhaseRepository
+                        .findByIncubationPhaseId(eggProduct.getIncubationPhaseId()).get();
+                if (phaseList.contains(incubationPhase.getPhaseNumber())) {
+                    // Available egg product
+                    if (eggProduct.getCurAmount() > 0) {
+                        soldOut = false;
+                        EggProductDataForExportItemDTO item = new EggProductDataForExportItemDTO();
+                        item.setEggProductId(eggProduct.getProductId());
+                        item.setProductName(incubationPhase.getPhaseDescription());
+                        item.setCurAmount(eggProduct.getCurAmount());
+                        eggProductDataForExportItemDTOS.add(item);
+                    }
+                }
+                // Remove Sold out product
+                if (soldOut) {
+                    eggProductDataForExportItemDTOS = new ArrayList<>();
+                } else {
+                    eggProductListDto.add(eggProductDataForExportItemDTOS);
+                }
+            }
+            if (soldOut) {
+                eggBatchListDto.remove(eggBatch);
+            }
+        }
+        dto.setEggBatchList(eggBatchListDto);
+        dto.setEggProductsList(eggProductListDto);
+
+        return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 
     /**
@@ -25,8 +190,69 @@ public class ExportReceiptServiceImpl implements IExportReceiptService {
      * @return
      */
     @Override
+    @Transactional
     public ResponseEntity<?> createExport(CreateExportDTO createExportDTO) {
-        return null;
+        // Check input
+        // Customer id
+        if (createExportDTO.getCustomerId() == null) { // Customer not selected
+            return new ResponseEntity<>("Hãy chọn khách hàng", HttpStatus.BAD_REQUEST);
+        }
+        // Export date
+        LocalDateTime now = LocalDateTime.now();
+        // Egg Product List
+        List<EggProductCreateExportDTO> eggProductList = createExportDTO.getEggProductList();
+        if (eggProductList.size() == 0) {
+            return new ResponseEntity<>("Hãy chọn ít nhất 1 sản phẩm để bán", HttpStatus.BAD_REQUEST);
+        }
+        // Amount and Price
+        float total = 0;
+        for (EggProductCreateExportDTO eggProduct : eggProductList) {
+            if (eggProduct.getEggProductId() == null) {
+                return new ResponseEntity<>("Chưa chọn loại", HttpStatus.BAD_REQUEST);
+            }
+            if (eggProduct.getExportAmount() <= 0 || eggProduct.getExportAmount() > eggProduct.getCurAmount()) { // Amount export must be less than current amount
+                return new ResponseEntity<>("Số lượng xuất không hợp lệ", HttpStatus.BAD_REQUEST);
+            }
+            if (eggProduct.getVaccine() < 0 || eggProduct.getVaccine() > 9999999999999.99) { // Price over limit
+                return new ResponseEntity<>("Đơn giá vaccine không hợp lệ", HttpStatus.BAD_REQUEST);
+            }
+            if (eggProduct.getPrice() < 0 || eggProduct.getPrice() > 9999999999999.99) { // Price over limit
+                return new ResponseEntity<>("Đơn giá không hợp lệ", HttpStatus.BAD_REQUEST);
+            }
+            total += eggProduct.getExportAmount() * (eggProduct.getVaccine() + eggProduct.getPrice());
+        }
+        try {
+            // Set attribute to save export receipt
+            ExportReceipt exportReceipt = new ExportReceipt();
+            exportReceipt.setCustomerId(createExportDTO.getCustomerId());
+            exportReceipt.setUserId(createExportDTO.getUserId());
+            exportReceipt.setFacilityId(createExportDTO.getFacilityId());
+            exportReceipt.setExportDate(now);
+            exportReceipt.setTotal(total);
+            exportReceipt.setPaid(0F);
+            exportReceipt.setStatus(1);
+            ExportReceipt exportReceiptInserted = exportReceiptRepository.save(exportReceipt);
+            Long exportId = exportReceiptInserted.getExportId();
+            // Save exportDetail, update egg product current amount
+            for (EggProductCreateExportDTO dto : createExportDTO.getEggProductList()) {
+                ExportDetail exportDetail = new ExportDetail();
+                exportDetail.setExportId(exportId);
+                exportDetail.setProductId(dto.getEggProductId());
+                exportDetail.setPrice(dto.getPrice());
+                exportDetail.setVaccinePrice(dto.getPrice());
+                exportDetail.setAmount(dto.getExportAmount());
+                exportDetail.setStatus(1);
+                exportReceiptRepository.save(exportReceipt);
+
+                EggProduct eggProduct = eggProductRepository.getByProductId(dto.getEggProductId()).get();
+                eggProduct.setCurAmount(eggProduct.getCurAmount()-dto.getExportAmount());
+                eggProductRepository.save(eggProduct);
+
+            }
+            return new ResponseEntity<>("Tạo hóa đơn xuất thành công", HttpStatus.OK);
+        } catch (IllegalArgumentException iae) {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
     }
 
     /**
@@ -37,7 +263,47 @@ public class ExportReceiptServiceImpl implements IExportReceiptService {
      */
     @Override
     public ResponseEntity<?> getExport(Long exportId) {
-        return null;
+        Optional<ExportReceipt> exportReceiptOptional = exportReceiptRepository.findById(exportId);
+        if (exportReceiptOptional.isPresent()) {
+            ExportReceiptDetailDTO dto = new ExportReceiptDetailDTO();
+            ExportReceipt exportReceipt = exportReceiptOptional.get();
+            // Export
+            dto.setExportId(exportId);
+            dto.setExportDate(exportReceipt.getExportDate());
+            dto.setTotal(exportReceipt.getTotal());
+            dto.setPaid(exportReceipt.getPaid());
+            // Customer
+            Customer customer = customerRepository.findByCustomerId(exportReceipt.getCustomerId()).get();
+            dto.setCustomerId(customer.getCustomerId());
+            dto.setCustomerName(customer.getCustomerName());
+            dto.setCustomerPhone(customer.getCustomerPhone());
+            // Egg product - Export detail
+            List<EggProductViewExportDetailDTO> eggProductList = new ArrayList<>();
+            Optional<List<ExportDetail>> exportDetailListOptional = exportDetailRepository.findByExportId(exportId);
+            if (exportDetailListOptional.isEmpty()) {
+                dto.setEggProductList(new ArrayList<>());
+            } else {
+                for (ExportDetail exportDetail : exportDetailListOptional.get()) {
+                    EggProductViewExportDetailDTO dtoItem = new EggProductViewExportDetailDTO();
+                    EggProduct eggProduct = eggProductRepository.findById(exportDetail.getProductId()).get();
+                    IncubationPhase incubationPhase = incubationPhaseRepository
+                            .findByIncubationPhaseId(eggProduct.getIncubationPhaseId()).get();
+                    EggBatch eggBatch = eggBatchRepository.findByEggBatchId(eggProduct.getEggBatchId()).get();
+                    Breed breed = breedRepository.findByBreedId(eggBatch.getBreedId()).get();
+                    // Set
+                    dtoItem.setBreedId(breed.getBreedId());
+                    dtoItem.setBreedName(breed.getBreedName());
+                    dtoItem.setProductName(incubationPhase.getPhaseDescription());
+                    dtoItem.setVaccine(exportDetail.getVaccinePrice());
+                    dtoItem.setPrice(exportDetail.getPrice());
+                    eggProductList.add(dtoItem);
+                }
+            }
+            dto.setEggProductList(eggProductList);
+            return new ResponseEntity<>(dto, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("Không tìm thấy hóa đơn xuất", HttpStatus.BAD_REQUEST);
+        }
     }
 
     /**
@@ -49,6 +315,17 @@ public class ExportReceiptServiceImpl implements IExportReceiptService {
      */
     @Override
     public ResponseEntity<?> updatePaidOfExport(Long exportId, Float paid) {
-        return null;
+        Optional<ExportReceipt> exportReceiptOptional = exportReceiptRepository.findById(exportId);
+        if (exportReceiptOptional.isPresent()) {
+            ExportReceipt exportReceipt = exportReceiptOptional.get();
+            if (paid < 0F || paid > exportReceipt.getTotal() || paid > 9999999999999.99) {
+                return new ResponseEntity<>("Số tiền đã trả không hợp lệ", HttpStatus.BAD_REQUEST);
+            }
+            exportReceipt.setPaid(paid);
+            exportReceiptRepository.save(exportReceipt);
+            return new ResponseEntity<>("Cập nhật số tiền đã trả", HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
     }
 }

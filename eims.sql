@@ -166,11 +166,13 @@ CREATE TABLE export_receipt(
 );
 
 CREATE TABLE export_detail(
-	export_id		integer			NOT NULL,
-    product_id		integer			NOT NULL,
-    price			decimal(15,2)	NOT NULL,
-    vaccine_price	decimal(15,2),
-    amount			integer			NOT NULL
+	export_detail_id 	integer 		AUTO_INCREMENT PRIMARY KEY,
+	export_id			integer			NOT NULL,
+    product_id			integer			NOT NULL,
+    price				decimal(15,2)	NOT NULL,
+    vaccine_price		decimal(15,2),
+    amount				integer			NOT NULL,
+    status				boolean			NOT NULL
 );
 
 CREATE TABLE machine(

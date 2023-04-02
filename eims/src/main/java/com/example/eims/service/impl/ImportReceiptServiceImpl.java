@@ -240,11 +240,8 @@ public class ImportReceiptServiceImpl implements IImportReceiptService {
             if (eggBatch.getAmount() <= 0) { // Amount negative
                 return new ResponseEntity<>("Số lượng trứng phải lớn hơn 0", HttpStatus.BAD_REQUEST);
             }
-            if (eggBatch.getPrice() < 0) { // Price negative
-                return new ResponseEntity<>("Đơn giá phải lớn hơn hoặc bằng 0", HttpStatus.BAD_REQUEST);
-            }
-            if (eggBatch.getPrice() > 9999999999999.99) { // Price over limit
-                return new ResponseEntity<>("Đơn giá không được vượt quá 9999999999999.99", HttpStatus.BAD_REQUEST);
+            if (eggBatch.getPrice() < 0 || eggBatch.getPrice() > 9999999999999.99) { // Price over limit
+                return new ResponseEntity<>("Đơn giá không hợp lệ", HttpStatus.BAD_REQUEST);
             }
             if (eggBatch.getPrice() * eggBatch.getAmount() > 9999999999999.99) { // Price over limit
                 return new ResponseEntity<>("Giá trị lô trứng không được vượt quá 9999999999999.99",
@@ -319,7 +316,7 @@ public class ImportReceiptServiceImpl implements IImportReceiptService {
             importReceiptDetailDTO.setEggBatchList(eggBatchViewImportDTOList);
             return new ResponseEntity<>(importReceiptDetailDTO, HttpStatus.OK);
         } else {
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Không tìm thấy hóa đơn nhập", HttpStatus.BAD_REQUEST);
         }
     }
 

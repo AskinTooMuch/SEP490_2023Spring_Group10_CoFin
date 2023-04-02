@@ -21,9 +21,11 @@ import lombok.Data;
 public class ExportDetail {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long exportDetailId;
     private Long exportId;
     private Long productId;
     private Float price;
     private Float vaccinePrice;
     private int amount;
+    private int status;
 }

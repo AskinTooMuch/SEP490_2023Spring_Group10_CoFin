@@ -12,6 +12,7 @@
 package com.example.eims.dto.exportReceipt;
 
 import com.example.eims.dto.eggBatch.EggBatchViewImportDTO;
+import com.example.eims.dto.eggProduct.EggProductViewExportDetailDTO;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -19,12 +20,12 @@ import java.util.List;
 
 @Data
 public class ExportReceiptDetailDTO {
-    private Long importId;
+    private Long exportId;
     private Long customerId;
     private String customerName;
     private String customerPhone;
     private LocalDateTime exportDate;
     private Float total;
     private Float paid;
-    private List<EggBatchViewImportDTO> eggBatchList;
+    private List<EggProductViewExportDetailDTO> eggProductList;
 }
