@@ -41,7 +41,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
-import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -215,6 +214,7 @@ public class ImportReceiptServiceImpl implements IImportReceiptService {
             return new ResponseEntity<>("Hãy nhập ngày nhập hóa đơn", HttpStatus.BAD_REQUEST);
         }
         LocalDateTime now = LocalDateTime.now();
+        System.out.println(now);
         if (createImportDTO.getImportDate().isAfter(now)) { // Import date must be before today
             String time = now.toString().replace("T", " ");
             String timeNow = time.subSequence(0, 18).toString();
@@ -272,7 +272,7 @@ public class ImportReceiptServiceImpl implements IImportReceiptService {
                 eggBatch.setAmount(eggBatchDTO.getAmount());
                 eggBatch.setPrice(eggBatchDTO.getPrice());
                 eggBatch.setNeedAction(1);
-                eggBatch.setDateAction(now);
+                eggBatch.setDateAction(now.plusHours(7));
                 eggBatch.setStatus(1);
                 eggBatchRepository.save(eggBatch);
             }

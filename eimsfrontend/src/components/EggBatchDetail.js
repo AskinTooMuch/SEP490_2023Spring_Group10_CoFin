@@ -164,7 +164,7 @@ export default function BasicTabs() {
         phaseNumber: "",
         eggWasted: "",
         amount: "",
-        needAction: eggBatchDetail.needAction,
+        needAction: "",
         eggLocationUpdateEggBatchDTOS: []
     })
 
@@ -219,6 +219,8 @@ export default function BasicTabs() {
         eggBatchDetail.machineList = result.data.machineList;
         eggBatchDetail.machineNotFullList = result.data.machineNotFullList;
 
+        updateEggBatchDTO.needAction = result.data.needAction;
+
         if (result.data.progress == 0) {
             remain.remain = result.data.amount;
         }
@@ -263,14 +265,12 @@ export default function BasicTabs() {
     }
 
     // Variable check done
-    var needAction = 0;
     function setCheck() {
-        if (document.querySelector('#needActionTrue:checked')) {
-            needAction = 0;
-            updateEggBatchDTO.needAction = needAction;
+        var checkBox = document.getElementById("donePhase");
+        if (checkBox.checked){
+            updateEggBatchDTO.needAction = 0;
         } else {
-            needAction = 1;
-            updateEggBatchDTO.needAction = needAction;
+            updateEggBatchDTO.needAction = 1;
         }
     }
 
@@ -761,16 +761,17 @@ export default function BasicTabs() {
                                                     : ''
                                             }
                                             {
-                                                eggBatchDetail.progress !== 6
-                                                    ? <div className='row'>
-                                                        <div className="col-md-3" >
-                                                            <label for="needActionTrue">Xác nhận hoàn thành giai đoạn</label>
-                                                        </div>
-                                                        <div className="col-md-3" >
-                                                            <input type="checkbox" id="needActionTrue" name="needActionTrue" checked onChange={setCheck} />
-                                                        </div>
+                                                (eggBatchDetail.progress == 6 || eggBatchDetail.progress == 0)
+                                                    ? ''
+                                                    : 
+                                                    <div className='row'>
+                                                    <div className="col-md-3" >
+                                                        <label for="donePhase">Xác nhận hoàn thành giai đoạn</label>
                                                     </div>
-                                                    : ''
+                                                    <div className="col-md-3" >
+                                                        <input type="checkbox" id="donePhase" name="donePhase" onClick={()=>setCheck()} />
+                                                    </div>
+                                                </div>
                                             }
                                         </div>
                                     </div>
