@@ -8,6 +8,7 @@
  * DATE          Version    Author           DESCRIPTION<br>
  * 18/01/2023    1.0        ChucNV           First Deploy<br>
  * 23/03/2023    2.0        ChucNV           Re-config security<br>
+ * 02/04/2023    2.1        ChucNV           Add url on Owner<br>
  */
 
 package com.example.eims.config;
@@ -152,7 +153,8 @@ public class SecurityConfig{
                 "/api/eggProduct/**",
                 "/api/notification/**",
                 "/api/cost/**",
-                "/api/payroll/**"
+                "/api/payroll/**",
+                "/api/subscribe"
         };
         final String[] MODERATOR = {
                 "/api/registration/**"

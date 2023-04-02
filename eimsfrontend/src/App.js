@@ -34,6 +34,7 @@ import SubscriptionDetail from './components/SubscriptionDetail';
 import CreateExportBill from './components/CreateExportBill';
 import ExportBill from './components/ExportBill';
 import ExportBillDetail from './components/ExportBillDetail';
+import SubscriptionPayment from './components/SubscriptionPayment';
 function App() {
   return (
     <>
@@ -42,6 +43,7 @@ function App() {
         {/*Owner pages */}
         <Route element={<PrivateRoute roleRequired="2" />} >
           <Route path="/subcribe" element={<Subscription />} />
+          <Route path="/subscriptionPayment" element={<SubscriptionPayment />} />
           <Route path="/egg" element={<Egg />} />
           <Route path="/machine" element={<Machine />} />
           <Route path="/order" element={<Order />} />

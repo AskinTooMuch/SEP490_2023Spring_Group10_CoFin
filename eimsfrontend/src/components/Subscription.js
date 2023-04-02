@@ -1,8 +1,12 @@
-import "../css/subscribe.css"
 import React from 'react';
+import { useState, useRef, useEffect } from 'react';
+import axios from "axios";
+import "../css/subscribe.css"
 import PropTypes from 'prop-types';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
+import { ToastContainer, toast } from 'react-toastify';
+import { useNavigate } from "react-router-dom";
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import WithPermission from "../utils.js/WithPermission";
@@ -40,6 +44,9 @@ function a11yProps(index) {
 }
 
 export default function BasicTabs() {
+
+  //Navigate to detail Page
+  let navigate = useNavigate();
   const [value, setValue] = React.useState(0);
 
   const handleChange = (event, newValue) => {
@@ -88,7 +95,7 @@ export default function BasicTabs() {
                   <span className="icon cross"><i className="fas fa-times"></i></span>
                 </li>
               </ul>
-              <div className="btn"><button>Mua</button></div>
+              <div className="btn" onClick={() => navigate("/subscriptionPayment")}><button>Mua</button></div>
             </div>
             <div className="table premium">
               <div className="ribbon"><span>Khuyến nghị</span></div>
@@ -189,10 +196,22 @@ export default function BasicTabs() {
                   </tbody>
                 </table>
               </div>
+              <ToastContainer position="top-left"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="colored" />
+
             </div>
           </section>
         </Subscription>
       </Box>
     </WithPermission>
+
   );
 }
