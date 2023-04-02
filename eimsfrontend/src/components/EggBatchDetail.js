@@ -267,7 +267,7 @@ export default function BasicTabs() {
     // Variable check done
     function setCheck() {
         var checkBox = document.getElementById("donePhase");
-        if (checkBox.checked){
+        if (checkBox.checked) {
             updateEggBatchDTO.needAction = 0;
         } else {
             updateEggBatchDTO.needAction = 1;
@@ -506,7 +506,7 @@ export default function BasicTabs() {
                                         : ''
                                 }
                                 {
-                                    eggBatchDetail.status === 1 && eggBatchDetail.needAction === 1
+                                    eggBatchDetail.status === 1 && eggBatchDetail.needAction === 1 && eggBatchDetail.progress < 5
                                         ? <td className='text-red'>Cần cập nhật</td>
                                         : ''
                                 }
@@ -516,8 +516,13 @@ export default function BasicTabs() {
                                         : ''
                                 }
                                 {
-                                    eggBatchDetail.status === 1 && eggBatchDetail.needAction === 0 && eggBatchDetail.progress >= 5
+                                    eggBatchDetail.status === 1 && eggBatchDetail.needAction === 0 && eggBatchDetail.progress == 5
                                         ? <td className='text-green'>Đang nở</td>
+                                        : ''
+                                }
+                                {
+                                    eggBatchDetail.status === 1 && eggBatchDetail.progress > 5
+                                        ? <td className='text-green'>Đã nở</td>
                                         : ''
                                 }
                             </div>
@@ -732,6 +737,7 @@ export default function BasicTabs() {
                                                 <input disabled className='form-control' id="amount" name="amount" type="number"
                                                     onChange={(e) => handleUpdateEggBatchChange(e, "amount")} />
                                             </div>
+                                            
                                             {
                                                 eggBatchDetail.progress == 0
                                                     || (eggBatchDetail.progress <= 5 && eggBatchDetail.eggProductList[2].amount !== 0)
@@ -760,18 +766,19 @@ export default function BasicTabs() {
                                                     </>
                                                     : ''
                                             }
+                                            <br/>
                                             {
                                                 (eggBatchDetail.progress == 6 || eggBatchDetail.progress == 0)
                                                     ? ''
-                                                    : 
+                                                    :
                                                     <div className='row'>
-                                                    <div className="col-md-3" >
-                                                        <label for="donePhase">Xác nhận hoàn thành giai đoạn</label>
+                                                        <div className="col-md-3" >
+                                                            <label for="donePhase">Xác nhận hoàn thành giai đoạn</label>
+                                                        </div>
+                                                        <div className="col-md-3" >
+                                                            <input type="checkbox" id="donePhase" name="donePhase" onClick={() => setCheck()} />
+                                                        </div>
                                                     </div>
-                                                    <div className="col-md-3" >
-                                                        <input type="checkbox" id="donePhase" name="donePhase" onClick={()=>setCheck()} />
-                                                    </div>
-                                                </div>
                                             }
                                         </div>
                                     </div>

@@ -29,7 +29,7 @@ public class EggProductController {
      * @param facilityId the id of the facility
      * @return
      */
-    @GetMapping("/allAvailable")
+    @GetMapping("/available/all")
     public ResponseEntity<?> getAllAvailableProduct(@RequestParam Long facilityId){
         return  eggProductService.getAllAvailableProduct(facilityId);
     }

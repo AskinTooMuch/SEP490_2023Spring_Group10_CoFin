@@ -812,15 +812,23 @@ public class EggBatchServiceImpl implements IEggBatchService {
                 eggProductRepository.save(eggIncubating);
 
                 // Update egg batch
-                if (needActionUpdate == 1) {
-                    eggBatch.setNeedAction(needActionUpdate);
-                    eggBatch.setDateAction(now);
-                }
-                if (needActionUpdate == 0) {
-                    eggBatch.setNeedAction(needActionUpdate);
+                // Chuyển hết sang nở
+                if (amount == eggIncubating.getAmount()) {
+                    eggBatch.setNeedAction(0);
                     eggBatch.setDateAction(eggIncubating.getIncubationDate()
                             .plusDays(incubationPhaseList.get(7).getPhasePeriod()));
+                } else {
+                    if (needActionUpdate == 1) {
+                        eggBatch.setNeedAction(needActionUpdate);
+                        eggBatch.setDateAction(now);
+                    }
+                    if (needActionUpdate == 0) {
+                        eggBatch.setNeedAction(needActionUpdate);
+                        eggBatch.setDateAction(eggIncubating.getIncubationDate()
+                                .plusDays(incubationPhaseList.get(7).getPhasePeriod()));
+                    }
                 }
+
                 eggBatchRepository.save(eggBatch);
 
                 // Update egg location

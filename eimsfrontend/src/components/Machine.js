@@ -138,21 +138,33 @@ export default function BasicTabs() {
 
     // Request Machine list and load the Machine list into the table rows
     const loadMachineList = async () => {
-        const result = await axios.get(MACHINE_ALL,
-            {
-                params: { facilityId: sessionStorage.getItem("facilityId") },
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Access-Control-Allow-Origin': '*'
-                },
-                withCredentials: true
-            });
-        setMachineList(result.data);
+        try {
+            const result = await axios.get(MACHINE_ALL,
+                {
+                    params: { facilityId: sessionStorage.getItem("facilityId") },
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Access-Control-Allow-Origin': '*'
+                    },
+                    withCredentials: true
+                });
+            setMachineList(result.data);
 
-        // Toast Delete Machine success
-        if (mess) {
-            toast.success(state);
-            mess = false;
+            // Toast Delete Machine success
+            if (mess) {
+                toast.success(state);
+                mess = false;
+            }
+        } catch (err) {
+            if (!err?.response) {
+                toast.error('Server không phản hồi');
+            } else {
+                if ((err.response.data === null) || (err.response.data === '')) {
+                    toast.error('Có lỗi xảy ra, vui lòng thử lại');
+                } else {
+                    toast.error(err.response.data);
+                }
+            }
         }
     }
 
