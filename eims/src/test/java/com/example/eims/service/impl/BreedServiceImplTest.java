@@ -19,12 +19,14 @@ import com.example.eims.entity.User;
 import com.example.eims.repository.BreedRepository;
 import com.example.eims.repository.SpecieRepository;
 import com.example.eims.repository.UserRepository;
+import jakarta.persistence.*;
 import jakarta.servlet.http.HttpServlet;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpStatus;
@@ -32,9 +34,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.ResponseEntity;
 
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
@@ -50,6 +50,10 @@ class BreedServiceImplTest {
     UserRepository userRepository;
     @Mock
     FileStorageServiceImpl fileStorageServiceImpl;
+
+    @Mock
+   private EntityManager em;
+
     @InjectMocks
     BreedServiceImpl breedService;
 
@@ -88,6 +92,7 @@ class BreedServiceImplTest {
         // Set up
         User user = new User();
         user.setUserId(1L);
+        user.setStatus(2);
         Specie specie = new Specie();
         specie.setUserId(user.getUserId());
         specie.setSpecieId(1L);
@@ -108,7 +113,7 @@ class BreedServiceImplTest {
         ResponseEntity<?> responseEntity = breedService.createNewBreed(dto);
         System.out.println(responseEntity.toString());
         // Assert
-        assertEquals("Cân nặng trung bình phải lớn hơn 0", responseEntity.getBody());
+        assertEquals("Cân nặng trung bình phải lớn hơn 0.01", responseEntity.getBody());
     }
 
     @Test
@@ -117,6 +122,7 @@ class BreedServiceImplTest {
         // Set up
         User user = new User();
         user.setUserId(1L);
+        user.setStatus(2);
         Specie specie = new Specie();
         specie.setUserId(user.getUserId());
         specie.setSpecieId(1L);
@@ -137,7 +143,7 @@ class BreedServiceImplTest {
         ResponseEntity<?> responseEntity = breedService.createNewBreed(dto);
         System.out.println(responseEntity.toString());
         // Assert
-        assertEquals("Tên không được để trống", responseEntity.getBody());
+        assertEquals("Tên loại không được để trống", responseEntity.getBody());
     }
 
     @Test
@@ -146,6 +152,7 @@ class BreedServiceImplTest {
         // Set up
         User user = new User();
         user.setUserId(1L);
+        user.setStatus(2);
         Specie specie = new Specie();
         specie.setUserId(user.getUserId());
         specie.setSpecieId(1L);
@@ -166,7 +173,7 @@ class BreedServiceImplTest {
         ResponseEntity<?> responseEntity = breedService.createNewBreed(dto);
         System.out.println(responseEntity.toString());
         // Assert
-        assertEquals("Tên không được để trống", responseEntity.getBody());
+        assertEquals("Tên loại không được để trống", responseEntity.getBody());
     }
 
     @Test
@@ -175,6 +182,7 @@ class BreedServiceImplTest {
         // Set up
         User user = new User();
         user.setUserId(1L);
+        user.setStatus(2);
         Specie specie = new Specie();
         specie.setUserId(user.getUserId());
         specie.setSpecieId(1L);
@@ -204,6 +212,7 @@ class BreedServiceImplTest {
         // Set up
         User user = new User();
         user.setUserId(1L);
+        user.setStatus(2);
         Specie specie = new Specie();
         specie.setUserId(user.getUserId());
         specie.setSpecieId(1L);
@@ -233,6 +242,7 @@ class BreedServiceImplTest {
         // Set up
         User user = new User();
         user.setUserId(1L);
+        user.setStatus(2);
         Specie specie = new Specie();
         specie.setUserId(user.getUserId());
         specie.setSpecieId(1L);
@@ -262,6 +272,7 @@ class BreedServiceImplTest {
         // Set up
         User user = new User();
         user.setUserId(1L);
+        user.setStatus(2);
         Specie specie = new Specie();
         specie.setUserId(user.getUserId());
         specie.setSpecieId(1L);
@@ -282,7 +293,7 @@ class BreedServiceImplTest {
         ResponseEntity<?> responseEntity = breedService.createNewBreed(dto);
         System.out.println(responseEntity.toString());
         // Assert
-        assertEquals("Cân nặng trung bình phải lớn hơn 0", responseEntity.getBody());
+        assertEquals("Cân nặng trung bình phải lớn hơn 0.01", responseEntity.getBody());
     }
 
     @Test
@@ -338,7 +349,7 @@ class BreedServiceImplTest {
         ResponseEntity<?> responseEntity = breedService.updateBreed(dto);
         System.out.println(responseEntity.toString());
         // Assert
-        assertEquals("Cân nặng trung bình phải lớn hơn 0", responseEntity.getBody());
+        assertEquals("Cân nặng trung bình phải lớn hơn hoặc bằng 0.01 kg", responseEntity.getBody());
     }
 
     @Test
@@ -483,7 +494,7 @@ class BreedServiceImplTest {
         ResponseEntity<?> responseEntity = breedService.updateBreed(dto);
         System.out.println(responseEntity.toString());
         // Assert
-        assertEquals("Cân nặng trung bình phải lớn hơn 0", responseEntity.getBody());
+        assertEquals("Cân nặng trung bình phải lớn hơn hoặc bằng 0.01 kg", responseEntity.getBody());
     }
 
     @Test
@@ -512,7 +523,7 @@ class BreedServiceImplTest {
         ResponseEntity<?> responseEntity = breedService.updateBreed(dto);
         System.out.println(responseEntity.toString());
         // Assert
-        assertEquals("Tên không được để trống", responseEntity.getBody());
+        assertEquals("Tên loại không được để trống", responseEntity.getBody());
     }
 
     @Test
@@ -607,8 +618,170 @@ class BreedServiceImplTest {
         List<Breed> breedList = new ArrayList<>();
         breedList.add(breed1);
         breedList.add(breed2);
+        Query q = new Query() {
+            @Override
+            public List getResultList() {
+                return breedList;
+            }
+
+            @Override
+            public Object getSingleResult() {
+                return null;
+            }
+
+            @Override
+            public int executeUpdate() {
+                return 0;
+            }
+
+            @Override
+            public Query setMaxResults(int i) {
+                return null;
+            }
+
+            @Override
+            public int getMaxResults() {
+                return 0;
+            }
+
+            @Override
+            public Query setFirstResult(int i) {
+                return null;
+            }
+
+            @Override
+            public int getFirstResult() {
+                return 0;
+            }
+
+            @Override
+            public Query setHint(String s, Object o) {
+                return null;
+            }
+
+            @Override
+            public Map<String, Object> getHints() {
+                return null;
+            }
+
+            @Override
+            public <T> Query setParameter(Parameter<T> parameter, T t) {
+                return null;
+            }
+
+            @Override
+            public Query setParameter(Parameter<Calendar> parameter, Calendar calendar, TemporalType temporalType) {
+                return null;
+            }
+
+            @Override
+            public Query setParameter(Parameter<Date> parameter, Date date, TemporalType temporalType) {
+                return null;
+            }
+
+            @Override
+            public Query setParameter(String s, Object o) {
+                return null;
+            }
+
+            @Override
+            public Query setParameter(String s, Calendar calendar, TemporalType temporalType) {
+                return null;
+            }
+
+            @Override
+            public Query setParameter(String s, Date date, TemporalType temporalType) {
+                return null;
+            }
+
+            @Override
+            public Query setParameter(int i, Object o) {
+                return null;
+            }
+
+            @Override
+            public Query setParameter(int i, Calendar calendar, TemporalType temporalType) {
+                return null;
+            }
+
+            @Override
+            public Query setParameter(int i, Date date, TemporalType temporalType) {
+                return null;
+            }
+
+            @Override
+            public Set<Parameter<?>> getParameters() {
+                return null;
+            }
+
+            @Override
+            public Parameter<?> getParameter(String s) {
+                return null;
+            }
+
+            @Override
+            public <T> Parameter<T> getParameter(String s, Class<T> aClass) {
+                return null;
+            }
+
+            @Override
+            public Parameter<?> getParameter(int i) {
+                return null;
+            }
+
+            @Override
+            public <T> Parameter<T> getParameter(int i, Class<T> aClass) {
+                return null;
+            }
+
+            @Override
+            public boolean isBound(Parameter<?> parameter) {
+                return false;
+            }
+
+            @Override
+            public <T> T getParameterValue(Parameter<T> parameter) {
+                return null;
+            }
+
+            @Override
+            public Object getParameterValue(String s) {
+                return null;
+            }
+
+            @Override
+            public Object getParameterValue(int i) {
+                return null;
+            }
+
+            @Override
+            public Query setFlushMode(FlushModeType flushModeType) {
+                return null;
+            }
+
+            @Override
+            public FlushModeType getFlushMode() {
+                return null;
+            }
+
+            @Override
+            public Query setLockMode(LockModeType lockModeType) {
+                return null;
+            }
+
+            @Override
+            public LockModeType getLockMode() {
+                return null;
+            }
+
+            @Override
+            public <T> T unwrap(Class<T> aClass) {
+                return null;
+            }
+        };
+        System.out.println(q.getResultList().size());
         // Define behaviour of repository
-        when(breedRepository.findBySpecieId(specieId)).thenReturn(Optional.of(breedList));
+        when(em.createNamedQuery("GetListBreedBySpecie")).thenReturn(q);
 
         // Run service method
         ResponseEntity<?> responseEntity = breedService.viewListBreedBySpecie(specieId);
@@ -627,15 +800,176 @@ class BreedServiceImplTest {
         Breed breed2 = new Breed();
         breed2.setBreedId(specieId);
         List<Breed> breedList = new ArrayList<>();
+        Query q = new Query() {
+            @Override
+            public List getResultList() {
+                return breedList;
+            }
+
+            @Override
+            public Object getSingleResult() {
+                return null;
+            }
+
+            @Override
+            public int executeUpdate() {
+                return 0;
+            }
+
+            @Override
+            public Query setMaxResults(int i) {
+                return null;
+            }
+
+            @Override
+            public int getMaxResults() {
+                return 0;
+            }
+
+            @Override
+            public Query setFirstResult(int i) {
+                return null;
+            }
+
+            @Override
+            public int getFirstResult() {
+                return 0;
+            }
+
+            @Override
+            public Query setHint(String s, Object o) {
+                return null;
+            }
+
+            @Override
+            public Map<String, Object> getHints() {
+                return null;
+            }
+
+            @Override
+            public <T> Query setParameter(Parameter<T> parameter, T t) {
+                return null;
+            }
+
+            @Override
+            public Query setParameter(Parameter<Calendar> parameter, Calendar calendar, TemporalType temporalType) {
+                return null;
+            }
+
+            @Override
+            public Query setParameter(Parameter<Date> parameter, Date date, TemporalType temporalType) {
+                return null;
+            }
+
+            @Override
+            public Query setParameter(String s, Object o) {
+                return null;
+            }
+
+            @Override
+            public Query setParameter(String s, Calendar calendar, TemporalType temporalType) {
+                return null;
+            }
+
+            @Override
+            public Query setParameter(String s, Date date, TemporalType temporalType) {
+                return null;
+            }
+
+            @Override
+            public Query setParameter(int i, Object o) {
+                return null;
+            }
+
+            @Override
+            public Query setParameter(int i, Calendar calendar, TemporalType temporalType) {
+                return null;
+            }
+
+            @Override
+            public Query setParameter(int i, Date date, TemporalType temporalType) {
+                return null;
+            }
+
+            @Override
+            public Set<Parameter<?>> getParameters() {
+                return null;
+            }
+
+            @Override
+            public Parameter<?> getParameter(String s) {
+                return null;
+            }
+
+            @Override
+            public <T> Parameter<T> getParameter(String s, Class<T> aClass) {
+                return null;
+            }
+
+            @Override
+            public Parameter<?> getParameter(int i) {
+                return null;
+            }
+
+            @Override
+            public <T> Parameter<T> getParameter(int i, Class<T> aClass) {
+                return null;
+            }
+
+            @Override
+            public boolean isBound(Parameter<?> parameter) {
+                return false;
+            }
+
+            @Override
+            public <T> T getParameterValue(Parameter<T> parameter) {
+                return null;
+            }
+
+            @Override
+            public Object getParameterValue(String s) {
+                return null;
+            }
+
+            @Override
+            public Object getParameterValue(int i) {
+                return null;
+            }
+
+            @Override
+            public Query setFlushMode(FlushModeType flushModeType) {
+                return null;
+            }
+
+            @Override
+            public FlushModeType getFlushMode() {
+                return null;
+            }
+
+            @Override
+            public Query setLockMode(LockModeType lockModeType) {
+                return null;
+            }
+
+            @Override
+            public LockModeType getLockMode() {
+                return null;
+            }
+
+            @Override
+            public <T> T unwrap(Class<T> aClass) {
+                return null;
+            }
+        };
+        System.out.println(q.getResultList().size());
         // Define behaviour of repository
-        when(breedRepository.findBySpecieId(15L)).thenReturn(Optional.of(breedList));
+        when(em.createNamedQuery("GetListBreedBySpecie")).thenReturn(q);
 
         // Run service method
         ResponseEntity<?> responseEntity = breedService.viewListBreedBySpecie(specieId);
-        List<Breed> result = (ArrayList<Breed>) responseEntity.getBody();
         System.out.println(responseEntity.getBody());
         // Assert
-        assertEquals(0, result.size());
+        assertEquals("Không tìm thấy loại thuộc loài này", responseEntity.getBody());
     }
 
     @Test
@@ -643,15 +977,170 @@ class BreedServiceImplTest {
     void viewBreedDetailBySpecieUTCID03() {
         // Set up
         Long specieId = 1L;
-        Breed breed1 = new Breed();
-        breed1.setBreedId(specieId);
-        Breed breed2 = new Breed();
-        breed2.setBreedId(specieId);
-        List<Breed> breedList = new ArrayList<>();
-        breedList.add(breed1);
-        breedList.add(breed2);
+        Query q = new Query() {
+            @Override
+            public List getResultList() {
+                return new ArrayList<>();
+            }
+
+            @Override
+            public Object getSingleResult() {
+                return null;
+            }
+
+            @Override
+            public int executeUpdate() {
+                return 0;
+            }
+
+            @Override
+            public Query setMaxResults(int i) {
+                return null;
+            }
+
+            @Override
+            public int getMaxResults() {
+                return 0;
+            }
+
+            @Override
+            public Query setFirstResult(int i) {
+                return null;
+            }
+
+            @Override
+            public int getFirstResult() {
+                return 0;
+            }
+
+            @Override
+            public Query setHint(String s, Object o) {
+                return null;
+            }
+
+            @Override
+            public Map<String, Object> getHints() {
+                return null;
+            }
+
+            @Override
+            public <T> Query setParameter(Parameter<T> parameter, T t) {
+                return null;
+            }
+
+            @Override
+            public Query setParameter(Parameter<Calendar> parameter, Calendar calendar, TemporalType temporalType) {
+                return null;
+            }
+
+            @Override
+            public Query setParameter(Parameter<Date> parameter, Date date, TemporalType temporalType) {
+                return null;
+            }
+
+            @Override
+            public Query setParameter(String s, Object o) {
+                return null;
+            }
+
+            @Override
+            public Query setParameter(String s, Calendar calendar, TemporalType temporalType) {
+                return null;
+            }
+
+            @Override
+            public Query setParameter(String s, Date date, TemporalType temporalType) {
+                return null;
+            }
+
+            @Override
+            public Query setParameter(int i, Object o) {
+                return null;
+            }
+
+            @Override
+            public Query setParameter(int i, Calendar calendar, TemporalType temporalType) {
+                return null;
+            }
+
+            @Override
+            public Query setParameter(int i, Date date, TemporalType temporalType) {
+                return null;
+            }
+
+            @Override
+            public Set<Parameter<?>> getParameters() {
+                return null;
+            }
+
+            @Override
+            public Parameter<?> getParameter(String s) {
+                return null;
+            }
+
+            @Override
+            public <T> Parameter<T> getParameter(String s, Class<T> aClass) {
+                return null;
+            }
+
+            @Override
+            public Parameter<?> getParameter(int i) {
+                return null;
+            }
+
+            @Override
+            public <T> Parameter<T> getParameter(int i, Class<T> aClass) {
+                return null;
+            }
+
+            @Override
+            public boolean isBound(Parameter<?> parameter) {
+                return false;
+            }
+
+            @Override
+            public <T> T getParameterValue(Parameter<T> parameter) {
+                return null;
+            }
+
+            @Override
+            public Object getParameterValue(String s) {
+                return null;
+            }
+
+            @Override
+            public Object getParameterValue(int i) {
+                return null;
+            }
+
+            @Override
+            public Query setFlushMode(FlushModeType flushModeType) {
+                return null;
+            }
+
+            @Override
+            public FlushModeType getFlushMode() {
+                return null;
+            }
+
+            @Override
+            public Query setLockMode(LockModeType lockModeType) {
+                return null;
+            }
+
+            @Override
+            public LockModeType getLockMode() {
+                return null;
+            }
+
+            @Override
+            public <T> T unwrap(Class<T> aClass) {
+                return null;
+            }
+        };
+        System.out.println(q.getResultList().size());
         // Define behaviour of repository
-        when(breedRepository.findBySpecieId(specieId)).thenReturn(Optional.empty());
+        when(em.createNamedQuery("GetListBreedBySpecie")).thenReturn(q);
 
         // Run service method
         ResponseEntity<?> responseEntity = breedService.viewListBreedBySpecie(specieId);
@@ -670,8 +1159,170 @@ class BreedServiceImplTest {
         List<Breed> breedList = new ArrayList<>();
         breedList.add(breed1);
         breedList.add(breed2);
+        Query q = new Query() {
+            @Override
+            public List getResultList() {
+                return breedList;
+            }
+
+            @Override
+            public Object getSingleResult() {
+                return null;
+            }
+
+            @Override
+            public int executeUpdate() {
+                return 0;
+            }
+
+            @Override
+            public Query setMaxResults(int i) {
+                return null;
+            }
+
+            @Override
+            public int getMaxResults() {
+                return 0;
+            }
+
+            @Override
+            public Query setFirstResult(int i) {
+                return null;
+            }
+
+            @Override
+            public int getFirstResult() {
+                return 0;
+            }
+
+            @Override
+            public Query setHint(String s, Object o) {
+                return null;
+            }
+
+            @Override
+            public Map<String, Object> getHints() {
+                return null;
+            }
+
+            @Override
+            public <T> Query setParameter(Parameter<T> parameter, T t) {
+                return null;
+            }
+
+            @Override
+            public Query setParameter(Parameter<Calendar> parameter, Calendar calendar, TemporalType temporalType) {
+                return null;
+            }
+
+            @Override
+            public Query setParameter(Parameter<Date> parameter, Date date, TemporalType temporalType) {
+                return null;
+            }
+
+            @Override
+            public Query setParameter(String s, Object o) {
+                return null;
+            }
+
+            @Override
+            public Query setParameter(String s, Calendar calendar, TemporalType temporalType) {
+                return null;
+            }
+
+            @Override
+            public Query setParameter(String s, Date date, TemporalType temporalType) {
+                return null;
+            }
+
+            @Override
+            public Query setParameter(int i, Object o) {
+                return null;
+            }
+
+            @Override
+            public Query setParameter(int i, Calendar calendar, TemporalType temporalType) {
+                return null;
+            }
+
+            @Override
+            public Query setParameter(int i, Date date, TemporalType temporalType) {
+                return null;
+            }
+
+            @Override
+            public Set<Parameter<?>> getParameters() {
+                return null;
+            }
+
+            @Override
+            public Parameter<?> getParameter(String s) {
+                return null;
+            }
+
+            @Override
+            public <T> Parameter<T> getParameter(String s, Class<T> aClass) {
+                return null;
+            }
+
+            @Override
+            public Parameter<?> getParameter(int i) {
+                return null;
+            }
+
+            @Override
+            public <T> Parameter<T> getParameter(int i, Class<T> aClass) {
+                return null;
+            }
+
+            @Override
+            public boolean isBound(Parameter<?> parameter) {
+                return false;
+            }
+
+            @Override
+            public <T> T getParameterValue(Parameter<T> parameter) {
+                return null;
+            }
+
+            @Override
+            public Object getParameterValue(String s) {
+                return null;
+            }
+
+            @Override
+            public Object getParameterValue(int i) {
+                return null;
+            }
+
+            @Override
+            public Query setFlushMode(FlushModeType flushModeType) {
+                return null;
+            }
+
+            @Override
+            public FlushModeType getFlushMode() {
+                return null;
+            }
+
+            @Override
+            public Query setLockMode(LockModeType lockModeType) {
+                return null;
+            }
+
+            @Override
+            public LockModeType getLockMode() {
+                return null;
+            }
+
+            @Override
+            public <T> T unwrap(Class<T> aClass) {
+                return null;
+            }
+        };
+        System.out.println(q.getResultList().size());
         // Define behaviour of repository
-        when(breedRepository.findByUserId(1L)).thenReturn(Optional.of(breedList));
+        when(em.createNamedQuery("GetListBreedByUser")).thenReturn(q);
 
         // Run service method
         ResponseEntity<?> responseEntity = breedService.viewListBreedByUser(userId);
@@ -685,8 +1336,170 @@ class BreedServiceImplTest {
     void viewListBreedByUserUTCID02() {
         // Set up
         Long userId = 15L;
+        Query q = new Query() {
+            @Override
+            public List getResultList() {
+                return new ArrayList();
+            }
+
+            @Override
+            public Object getSingleResult() {
+                return null;
+            }
+
+            @Override
+            public int executeUpdate() {
+                return 0;
+            }
+
+            @Override
+            public Query setMaxResults(int i) {
+                return null;
+            }
+
+            @Override
+            public int getMaxResults() {
+                return 0;
+            }
+
+            @Override
+            public Query setFirstResult(int i) {
+                return null;
+            }
+
+            @Override
+            public int getFirstResult() {
+                return 0;
+            }
+
+            @Override
+            public Query setHint(String s, Object o) {
+                return null;
+            }
+
+            @Override
+            public Map<String, Object> getHints() {
+                return null;
+            }
+
+            @Override
+            public <T> Query setParameter(Parameter<T> parameter, T t) {
+                return null;
+            }
+
+            @Override
+            public Query setParameter(Parameter<Calendar> parameter, Calendar calendar, TemporalType temporalType) {
+                return null;
+            }
+
+            @Override
+            public Query setParameter(Parameter<Date> parameter, Date date, TemporalType temporalType) {
+                return null;
+            }
+
+            @Override
+            public Query setParameter(String s, Object o) {
+                return null;
+            }
+
+            @Override
+            public Query setParameter(String s, Calendar calendar, TemporalType temporalType) {
+                return null;
+            }
+
+            @Override
+            public Query setParameter(String s, Date date, TemporalType temporalType) {
+                return null;
+            }
+
+            @Override
+            public Query setParameter(int i, Object o) {
+                return null;
+            }
+
+            @Override
+            public Query setParameter(int i, Calendar calendar, TemporalType temporalType) {
+                return null;
+            }
+
+            @Override
+            public Query setParameter(int i, Date date, TemporalType temporalType) {
+                return null;
+            }
+
+            @Override
+            public Set<Parameter<?>> getParameters() {
+                return null;
+            }
+
+            @Override
+            public Parameter<?> getParameter(String s) {
+                return null;
+            }
+
+            @Override
+            public <T> Parameter<T> getParameter(String s, Class<T> aClass) {
+                return null;
+            }
+
+            @Override
+            public Parameter<?> getParameter(int i) {
+                return null;
+            }
+
+            @Override
+            public <T> Parameter<T> getParameter(int i, Class<T> aClass) {
+                return null;
+            }
+
+            @Override
+            public boolean isBound(Parameter<?> parameter) {
+                return false;
+            }
+
+            @Override
+            public <T> T getParameterValue(Parameter<T> parameter) {
+                return null;
+            }
+
+            @Override
+            public Object getParameterValue(String s) {
+                return null;
+            }
+
+            @Override
+            public Object getParameterValue(int i) {
+                return null;
+            }
+
+            @Override
+            public Query setFlushMode(FlushModeType flushModeType) {
+                return null;
+            }
+
+            @Override
+            public FlushModeType getFlushMode() {
+                return null;
+            }
+
+            @Override
+            public Query setLockMode(LockModeType lockModeType) {
+                return null;
+            }
+
+            @Override
+            public LockModeType getLockMode() {
+                return null;
+            }
+
+            @Override
+            public <T> T unwrap(Class<T> aClass) {
+                return null;
+            }
+        };
+        System.out.println(q.getResultList().size());
         // Define behaviour of repository
-        when(breedRepository.findByUserId(15L)).thenReturn(Optional.empty());
+        when(em.createNamedQuery("GetListBreedByUser")).thenReturn(q);
 
         // Run service method
         ResponseEntity<?> responseEntity = breedService.viewListBreedByUser(userId);
@@ -699,8 +1512,170 @@ class BreedServiceImplTest {
     void viewListBreedByUserUTCID03() {
         // Set up
         Long userId = 0L;
+        Query q = new Query() {
+            @Override
+            public List getResultList() {
+                return new ArrayList();
+            }
+
+            @Override
+            public Object getSingleResult() {
+                return null;
+            }
+
+            @Override
+            public int executeUpdate() {
+                return 0;
+            }
+
+            @Override
+            public Query setMaxResults(int i) {
+                return null;
+            }
+
+            @Override
+            public int getMaxResults() {
+                return 0;
+            }
+
+            @Override
+            public Query setFirstResult(int i) {
+                return null;
+            }
+
+            @Override
+            public int getFirstResult() {
+                return 0;
+            }
+
+            @Override
+            public Query setHint(String s, Object o) {
+                return null;
+            }
+
+            @Override
+            public Map<String, Object> getHints() {
+                return null;
+            }
+
+            @Override
+            public <T> Query setParameter(Parameter<T> parameter, T t) {
+                return null;
+            }
+
+            @Override
+            public Query setParameter(Parameter<Calendar> parameter, Calendar calendar, TemporalType temporalType) {
+                return null;
+            }
+
+            @Override
+            public Query setParameter(Parameter<Date> parameter, Date date, TemporalType temporalType) {
+                return null;
+            }
+
+            @Override
+            public Query setParameter(String s, Object o) {
+                return null;
+            }
+
+            @Override
+            public Query setParameter(String s, Calendar calendar, TemporalType temporalType) {
+                return null;
+            }
+
+            @Override
+            public Query setParameter(String s, Date date, TemporalType temporalType) {
+                return null;
+            }
+
+            @Override
+            public Query setParameter(int i, Object o) {
+                return null;
+            }
+
+            @Override
+            public Query setParameter(int i, Calendar calendar, TemporalType temporalType) {
+                return null;
+            }
+
+            @Override
+            public Query setParameter(int i, Date date, TemporalType temporalType) {
+                return null;
+            }
+
+            @Override
+            public Set<Parameter<?>> getParameters() {
+                return null;
+            }
+
+            @Override
+            public Parameter<?> getParameter(String s) {
+                return null;
+            }
+
+            @Override
+            public <T> Parameter<T> getParameter(String s, Class<T> aClass) {
+                return null;
+            }
+
+            @Override
+            public Parameter<?> getParameter(int i) {
+                return null;
+            }
+
+            @Override
+            public <T> Parameter<T> getParameter(int i, Class<T> aClass) {
+                return null;
+            }
+
+            @Override
+            public boolean isBound(Parameter<?> parameter) {
+                return false;
+            }
+
+            @Override
+            public <T> T getParameterValue(Parameter<T> parameter) {
+                return null;
+            }
+
+            @Override
+            public Object getParameterValue(String s) {
+                return null;
+            }
+
+            @Override
+            public Object getParameterValue(int i) {
+                return null;
+            }
+
+            @Override
+            public Query setFlushMode(FlushModeType flushModeType) {
+                return null;
+            }
+
+            @Override
+            public FlushModeType getFlushMode() {
+                return null;
+            }
+
+            @Override
+            public Query setLockMode(LockModeType lockModeType) {
+                return null;
+            }
+
+            @Override
+            public LockModeType getLockMode() {
+                return null;
+            }
+
+            @Override
+            public <T> T unwrap(Class<T> aClass) {
+                return null;
+            }
+        };
+        System.out.println(q.getResultList().size());
         // Define behaviour of repository
-        when(breedRepository.findByUserId(0L)).thenReturn(Optional.empty());
+        when(em.createNamedQuery("GetListBreedByUser")).thenReturn(q);
 
         // Run service method
         ResponseEntity<?> responseEntity = breedService.viewListBreedByUser(userId);

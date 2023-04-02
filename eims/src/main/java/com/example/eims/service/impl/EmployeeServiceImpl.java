@@ -355,7 +355,7 @@ public class EmployeeServiceImpl implements IEmployeeService {
      * Find employee by name or phone number
      *
      * @param facilityId  facility id
-     * @param employeePhone employee phone number or name
+     * @param searchKey employee phone number or name
      * @return employee list
      */
     @Override
