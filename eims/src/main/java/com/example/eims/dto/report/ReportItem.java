@@ -7,7 +7,8 @@
  * Record of change:<br>
  * DATE          Version    Author           DESCRIPTION<br>
  * 02/04/2023    1.0        DuongNH          First Deploy<br>
- */
+ * 03/04/2023    1.1        DuongNH          Add new named query <br>
+ **/
 package com.example.eims.dto.report;
 
 import lombok.Data;
@@ -28,6 +29,18 @@ resultClass = ReportItem.class)
                 "group by year(import_date) order by report_name DESC ",
         resultClass = ReportItem.class)
 
+@NamedNativeQuery( name = "getExportReportItemByMonth",
+        query = "select customer_id as id,month(export_date) as report_name,sum(total) as total, sum(paid) as paid\n" +
+                "from eims.export_receipt where customer_id = ?1 and month(export_date) = ?2 and year(export_date) = ?3 \n" +
+                "group by month(export_date)",
+        resultClass = ReportItem.class)
+
+@NamedNativeQuery( name = "getExportReportItemByYear",
+        query = "select customer_id as id ,year(export_date) as report_name,sum(total) as total, sum(paid) as paid\n" +
+                "from eims.export_receipt where customer_id = ?1 \n" +
+                "group by year(export_date)\n" +
+                "order by report_name DESC ",
+        resultClass = ReportItem.class)
 @Entity
 public class ReportItem {
 

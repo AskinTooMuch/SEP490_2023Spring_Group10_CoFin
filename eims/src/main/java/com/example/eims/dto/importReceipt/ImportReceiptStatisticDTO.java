@@ -7,6 +7,7 @@
  * Record of change:<br>
  * DATE          Version    Author           DESCRIPTION<br>
  * 18/02/2023    1.0        DuongVV          First Deploy<br>
+ * 02/04/2023    1.0        DuongNH          Add new named query<br>
  */
 
 package com.example.eims.dto.importReceipt;
@@ -22,13 +23,6 @@ import java.sql.Date;
                 "from eims.import_receipt as IR inner join eims.supplier as S \n" +
                 "on IR.supplier_id = S.supplier_id\n" +
                 "where IR.user_id = ? group by IR.supplier_id",
-        resultClass = ImportReceiptStatisticDTO.class)
-@NamedNativeQuery(name="getImportReceiptStatisticByUserIdBetweenTime",
-        query= "select IR.supplier_id, S.supplier_name, sum(total) as total, sum(paid) as paid\n" +
-                "from eims.import_receipt as IR inner join eims.supplier as S \n" +
-                "on IR.supplier_id = S.supplier_id\n" +
-                "where IR.user_id = ?1 and ( IR.import_date between ?2 and ?3 )\n" +
-                "group by IR.supplier_id",
         resultClass = ImportReceiptStatisticDTO.class)
 @SqlResultSetMapping(
         name="ImportReceiptStatisticMapping",

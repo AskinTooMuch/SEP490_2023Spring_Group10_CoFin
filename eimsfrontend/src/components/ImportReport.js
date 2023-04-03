@@ -4,7 +4,6 @@ import Box from '@mui/material/Box';
 import React, { useState, useEffect } from 'react';
 import { useLocation } from "react-router-dom";
 import { Modal } from 'react-bootstrap'
-import SearchIcon from '@mui/icons-material/Search';
 import { useTheme } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import { AppBar } from '@mui/material';
@@ -43,14 +42,14 @@ const ImportReport = () => {
     //Get sent params
     const { state } = useLocation();
 
-    // Get list of cost and show
-    // Get cost list
+    // Get list of repport and show
+    // Get report list
     useEffect(() => {
-        loadCostList();
+        loadReportList();
     }, []);
 
-    // Request Cost list and load the cost list into the table rows
-    const loadCostList = async () => {
+    // Request report list and load the report list into the table rows
+    const loadReportList = async () => {
         const result = await axios.get(IMPORT_REPORT_ALL,
             {
                 params: { userId: sessionStorage.getItem("curUserId") },
@@ -64,7 +63,7 @@ const ImportReport = () => {
         console.log(reportList.length)
 
 
-        // Toast Delete Cost success
+        // Toast Delete report success
         console.log("state:====" + state)
         if (state != null) toast.success(state);
     }
