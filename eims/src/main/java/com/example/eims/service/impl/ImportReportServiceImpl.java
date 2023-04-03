@@ -59,7 +59,7 @@ public class ImportReportServiceImpl implements IImportReportService {
         if (!list.isEmpty()) {
             return new ResponseEntity<>(list, HttpStatus.OK);
         }
-        return new ResponseEntity<>(null, HttpStatus.OK);
+        return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
     }
 
     /**

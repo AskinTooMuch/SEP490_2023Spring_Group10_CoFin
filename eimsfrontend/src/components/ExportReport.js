@@ -1,16 +1,24 @@
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useLocation } from "react-router-dom";
 import { Modal } from 'react-bootstrap'
 import { useTheme } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import { AppBar } from '@mui/material';
 import "../css/report.css"
+import axios from 'axios';
+//Toast
+import { ToastContainer, toast } from 'react-toastify';
 const ExportReport = () => {
     //Hide show popup
     const [show, setShow] = useState(false);
-    const handleClose = () => setShow(false);
+    const handleClose = () => {
+        setShow(false);
+        setReportItemList([]);
+        setReportItemYearList([]);
+    }
     const handleShow = () => setShow(true);
 
     //Tab change
@@ -21,6 +29,116 @@ const ExportReport = () => {
     const handleChangeIndex = (index: number) => {
         setValue(index);
     };
+
+    //URL
+    const EXPORT_REPORT_ALL = "/api/exportReport/all";
+    const EXPORT_YEAR_LIST = "/api/exportReport/getExportReceiptYear";
+    const EXPORT_MONTHLY_REPORT_ITEM = "/api/exportReport/getByMonth";
+    const EXPORT_YEAR_REPORT_ITEM = "/api/exportReport/getByYear";
+
+    //Data holding objects
+    const [reportList, setReportList] = useState([]);
+
+    //Get sent params
+    const { state } = useLocation();
+
+    // Get list of report and show
+    // Get report list
+    useEffect(() => {
+        loadReportList();
+    }, []);
+
+    // Request report list and load the report list into the table rows
+    const loadReportList = async () => {
+        const result = await axios.get(EXPORT_REPORT_ALL,
+            {
+                params: { userId: sessionStorage.getItem("curUserId") },
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Access-Control-Allow-Origin': '*'
+                },
+                withCredentials: true
+            });
+        setReportList(result.data);
+        console.log(reportList.length)
+
+
+        // Toast Delete report success
+        console.log("state:====" + state)
+        if (state != null) toast.success(state);
+    }
+
+    //handle show detail
+    const [yearList, setYearList] = useState([]);
+    const [reportItemList, setReportItemList] = useState([]);
+    const [reportItemYearList, setReportItemYearList] = useState([]);
+    const [customerId, setCustomerId] = useState("");
+    const [customerName, setCustomerName] = useState("");
+
+    const handleViewDetail = async (customerId2,customerName) => {
+        setCustomerId(customerId2);
+        setCustomerName(customerName);
+        console.log("setting customerId" + customerId);
+
+        const result = await axios.get(EXPORT_YEAR_LIST,
+            {
+                params: {
+                    userId: sessionStorage.getItem("curUserId"),
+                    customerId: customerId2
+                },
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Access-Control-Allow-Origin': '*'
+                },
+                withCredentials: true
+            });
+        setYearList(result.data);
+        console.log(setYearList.length);
+
+        const result2 = await axios.get(EXPORT_YEAR_REPORT_ITEM,
+            {
+                params: {
+                    userId: sessionStorage.getItem("curUserId"),
+                    customerId: customerId2
+                },
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Access-Control-Allow-Origin': '*'
+                },
+                withCredentials: true
+            });
+        setReportItemYearList(result2.data);
+        console.log(setReportItemYearList.length);
+
+        handleShow();
+        // Toast Delete Payroll success
+        console.log("state:====" + state)
+        if (state != null) toast.success(state);
+    }
+
+    const handleChangeYear = (event) => {
+        let actualValue = event.target.value;
+        setReportItemList([]);
+        handleViewMonthlyReport(actualValue);
+    }
+
+    const handleViewMonthlyReport = async (year) => {
+        const result2 = await axios.get(EXPORT_MONTHLY_REPORT_ITEM,
+            {
+                params: {
+                    customerId: customerId,
+                    year: year
+                },
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Access-Control-Allow-Origin': '*'
+                },
+                withCredentials: true
+            });
+        setReportItemList(result2.data);
+        console.log(reportList.length);
+    }
+
     return (
         <div>
             <Modal show={show} onHide={handleClose}
@@ -48,9 +166,15 @@ const ExportReport = () => {
                                 <br />
                                 <label>Năm </label>
                                 <select
-                                    id="select" className='form-control m-3 mt-0' style={{ display: "inline-block", width: "20%" }} >
+                                    id="select" className='form-control m-3 mt-0' style={{ display: "inline-block", width: "20%" }}
+                                    onChange={(e) => handleChangeYear(e)} >
                                     <option defaultValue="Chọn Năm">Chọn năm</option>
-                                    <option value='2022'>2022</option>
+                                    {
+                                        yearList && yearList.length > 0
+                                            ? yearList.map((item, index) =>
+                                                <option value={item}>{item}</option>
+                                            ) : <option value="">Không có</option>
+                                    }
                                 </select>
                                 <div style={{ overflow: "scroll", maxHeight: "300px" }}>
                                     <table className="table table-bordered" >
@@ -62,46 +186,18 @@ const ExportReport = () => {
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr>
-                                                <th scope="row">1</th>
-                                                <td>0</td>
-                                                <td>0</td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">2</th>
-                                                <td>0</td>
-                                                <td>0</td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">3</th>
-                                                <td>0</td>
-                                                <td>0</td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">4</th>
-                                                <td>0</td>
-                                                <td>0</td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">5</th>
-                                                <td>0</td>
-                                                <td>0</td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">6</th>
-                                                <td>0</td>
-                                                <td>0</td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">7</th>
-                                                <td>0</td>
-                                                <td>0</td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">8</th>
-                                                <td>1.000.000</td>
-                                                <td>1.000.000</td>
-                                            </tr>
+                                            {
+                                                reportItemList && reportItemList.length > 0
+                                                    ? reportItemList.map((item, index) =>
+                                                        <tr>
+                                                            <th scope="row">{item.reportName}</th>
+                                                            <td>{item.total}</td>
+                                                            <td>{item.paid}</td>
+                                                        </tr>
+                                                    ) : <tr>
+                                                        <th colSpan='3'>Không có dữ liệu</th>
+                                                    </tr>
+                                            }
                                         </tbody>
                                     </table>
                                 </div>
@@ -118,16 +214,18 @@ const ExportReport = () => {
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr>
-                                                <th scope="row">2023</th>
-                                                <td>0</td>
-                                                <td>0</td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">2022</th>
-                                                <td>100.000.000</td>
-                                                <td>100.000.000</td>
-                                            </tr>
+                                        {
+                                                reportItemYearList && reportItemYearList.length > 0
+                                                    ? reportItemYearList.map((item, index) =>
+                                                        <tr>
+                                                            <th scope="row">{item.reportName}</th>
+                                                            <td>{item.total}</td>
+                                                            <td>{item.paid}</td>
+                                                        </tr>
+                                                    ) : <tr>
+                                                        <th colSpan='3'>Không có dữ liệu</th>
+                                                    </tr>
+                                            }
 
                                         </tbody>
                                     </table>
@@ -137,11 +235,8 @@ const ExportReport = () => {
                     </div>
                 </Modal.Body>
             </Modal>
-            <div className="input-date">
-                Từ <input type="date"></input> Đến <input type="date"></input>
-            </div>
 
-            {/* Start: Table for import list */}
+            {/* Start: Table for export list */}
             <section className="u-align-center u-clearfix u-section-1" id="sec-b42b">
                 <div className="u-clearfix u-sheet u-sheet-1">
                     <div className="u-expanded-width u-table u-table-responsive u-table-1">
@@ -161,23 +256,35 @@ const ExportReport = () => {
                                 </tr>
                             </thead>
                             <tbody className="u-table-body">
-                                <tr style={{ height: "76px" }} onClick={handleShow}>
-                                    <td className="u-border-1 u-border-grey-30 u-first-column u-grey-5 u-table-cell u-table-cell-5">1</td>
-                                    <td className="u-border-1 u-border-grey-30 u-table-cell">Phạm Ngọc A</td>
-                                    <td className="u-border-1 u-border-grey-30 u-table-cell">10.000.000 VNĐ</td>
-                                    <td className="u-border-1 u-border-grey-30 u-table-cell ">10.000.000 VNĐ</td>
-                                </tr>
-                                <tr style={{ height: "76px" }}>
-                                    <td className="u-border-1 u-border-grey-30 u-first-column u-grey-5 u-table-cell u-table-cell-9">2</td>
-                                    <td className="u-border-1 u-border-grey-30 u-table-cell">Bùi Thanh A</td>
-                                    <td className="u-border-1 u-border-grey-30 u-table-cell">100.000.000 VNĐ</td>
-                                    <td className="u-border-1 u-border-grey-30 u-table-cell ">50.000.000 VNĐ</td>
-                                </tr>
+                            {
+                                    reportList && reportList.length > 0
+                                        ? reportList.map((item, index) =>
+                                            <tr style={{ height: "76px" }} onClick={() => handleViewDetail(item.customerId, item.customerName)}>
+                                                <td className="u-border-1 u-border-grey-30 u-first-column u-grey-5 u-table-cell u-table-cell-5">{index + 1}</td>
+                                                <td className="u-border-1 u-border-grey-30 u-table-cell">{item.customerName}</td>
+                                                <td className="u-border-1 u-border-grey-30 u-table-cell">{item.total} <span style={{ float: "right" }}>VNĐ</span></td>
+                                                <td className="u-border-1 u-border-grey-30 u-table-cell ">{item.paid} <span style={{ float: "right" }}>VNĐ</span></td>
+                                            </tr>)
+                                        : <tr>
+                                            <td colSpan='5'>Chưa có hóa đơn nào được lưu trên hệ thống</td>
+                                        </tr>
+                                }
                             </tbody>
                         </table>
                     </div>
                 </div>
             </section>
+            {/* End: Table for customer list */}
+            <ToastContainer position="top-left"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="colored" />
         </div>
     );
 }
