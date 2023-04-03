@@ -35,6 +35,7 @@ import CreateExportBill from './components/CreateExportBill';
 import ExportBill from './components/ExportBill';
 import ExportBillDetail from './components/ExportBillDetail';
 import SubscriptionPayment from './components/SubscriptionPayment';
+import TestOTP from './components/TestOTP';
 function App() {
   return (
     <>
@@ -89,6 +90,7 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="login" element={<Login />} />
         <Route path="register" element={<Register />} />
+        <Route path='testotp' element={<TestOTP/>}/>
         <Route path="registerotp" element={<RegisterOTP />} />
         <Route path="forgotpassword" element={<ForgotPassword />} />
         <Route path="changepassword" element={<ChangePassword />} />
