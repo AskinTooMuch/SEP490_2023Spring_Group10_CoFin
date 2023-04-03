@@ -7,7 +7,7 @@ import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 const Registrators = () => {
     // API url
-    const REGISTRATION_GET_LIST = '/api/registration/list';
+    const REGISTRATION_GET_LIST = '/api/registration/all';
     const REGISTRATION_GET = '/api/registration/get';
     const REGISTRATION_APPROVE = '/api/registration/approve';
 

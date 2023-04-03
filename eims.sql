@@ -1,3 +1,4 @@
+-- V0.11.2: Add attributes to export_detail table attribute
 -- V0.11.1: Add event need_action, add egg_batch attribute
 -- V0.11.0: Modify specie stored procedures
 -- V0.10.0: Modify field lengths
@@ -17,7 +18,7 @@
 -- V0.2.0: Add foreign key constraint
 -- V0.2.1: Change attribute _name, re-route foreign key constraint
 -- V0.2.2: Add CHECK constraint
--- Last update: 29/03/2023
+-- Last update: 02/04/2023
 -- Script for generating EIMS - Eggs Incubating Management System.
 -- Check if database already exist. If yes then drop the database to ensure the script runs successfully with no variations.
 DROP DATABASE IF EXISTS eims;

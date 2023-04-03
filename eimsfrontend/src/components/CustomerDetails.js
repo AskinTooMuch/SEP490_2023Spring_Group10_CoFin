@@ -76,6 +76,7 @@ export default function BasicTabs() {
         status: ""
     })
 
+
     //Address consts
     //Full Json addresses
     const [fullAddresses, setFullAddresses] = useState('');
@@ -162,12 +163,13 @@ export default function BasicTabs() {
 
     }
 
+
+
     const handleUpdateClick = () => {
         handleShow();
         // Get index of dropdowns
         console.log(addressJson);
         for (let i in city) {
-            console.log(i);
             if (addressJson.city === city[i].label) {
                 setCityIndex(i);
                 addressJson.city = fullAddresses[i].Name;
@@ -182,7 +184,6 @@ export default function BasicTabs() {
                 for (let j in districtList) {
                     if (addressJson.district === districtList[j].label) {
                         setDistrictIndex(j);
-                        console.log(j);
                         addressJson.district = fullAddresses[i].Districts[j].Name;
                         console.log("District " + j);
                         setDistrictIndex(j);
@@ -221,7 +222,6 @@ export default function BasicTabs() {
         setDistrict(districtList);
     }
 
-
     //Load user ward list
     function loadWard(districtIndex, cIndex) {
         if (cIndex === -1) {
@@ -251,7 +251,9 @@ export default function BasicTabs() {
             street: s
         });
         updateCustomerDTO.customerAddress = JSON.stringify(updateAddressJson);
+
     }
+
 
     //Handle Change functions:
     //Update Customer
@@ -291,6 +293,7 @@ export default function BasicTabs() {
             console.log(response);
             toast.success(response.data);
             setShow(false);
+
         } catch (err) {
             if (!err?.response) {
                 toast.error('Server không phản hồi');
@@ -364,7 +367,7 @@ export default function BasicTabs() {
                                                 style={{ width: "100%" }}
                                                 placeholder='Địa chỉ thư điện tử'
                                                 value={updateCustomerDTO.customerMail}
-                                                onChange={e => handleUpdateCustomerChange(e, "customerEmail")} />
+                                                onChange={e => handleUpdateCustomerChange(e, "customerMail")} />
                                         </div>
                                     </div>
                                     <div className='row'>
@@ -382,7 +385,12 @@ export default function BasicTabs() {
                                                 <option value="" disabled selected>Chọn Tỉnh/Thành phố</option>
                                                 {city &&
                                                     city.map((item, index) => (
-                                                        <option value={index}>{item.label}</option>
+                                                        <>
+                                                            {item.label === updateAddressJson.city
+                                                                ? <option value={index} selected>{item.label}</option>
+                                                                : <option value={index}>{item.label}</option>
+                                                            }
+                                                        </>
                                                     ))
                                                 }
                                             </select>
@@ -402,10 +410,15 @@ export default function BasicTabs() {
                                             >
                                                 <option value="" disabled selected>Chọn Quận/Huyện</option>
                                                 {district &&
-                                                    district.map((item, index) => (
-                                                        <option value={index}>{item.label}</option>
-                                                    ))
-                                                }
+                                                district.map((item, index) => (
+                                                    <>
+                                                        {item.label === updateAddressJson.district
+                                                            ? <option value={index} selected>{item.label}</option>
+                                                            : <option value={index}>{item.label}</option>
+                                                        }
+                                                    </>
+                                                ))
+                                            }
                                             </select>
                                         </div>
                                     </div>
@@ -423,10 +436,15 @@ export default function BasicTabs() {
                                             >
                                                 <option value="" disabled selected>Chọn Phường/Xã</option>
                                                 {ward &&
-                                                    ward.map((item, index) => (
-                                                        <option value={index}>{item.label}</option>
-                                                    ))
-                                                }
+                                                ward.map((item, index) => (
+                                                    <>
+                                                        {item.label === updateAddressJson.ward
+                                                            ? <option value={index} selected>{item.label}</option>
+                                                            : <option value={index}>{item.label}</option>
+                                                        }
+                                                    </>
+                                                ))
+                                            }
                                             </select>
                                         </div>
                                     </div>

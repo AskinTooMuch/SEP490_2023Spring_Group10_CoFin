@@ -205,12 +205,12 @@ public class AuthServiceImpl implements IAuthService {
             return new ResponseEntity<>("Số điện thoại đã được sử dụng", HttpStatus.BAD_REQUEST);
         }
         // Email
-        if (signUpDTO.getUserEmail() == null || signUpDTO.getUserEmail().equals("")) {
-            return new ResponseEntity<>("Email không được để trống", HttpStatus.BAD_REQUEST);
-        }
         String email = stringDealer.trimMax(signUpDTO.getUserEmail());
         if ((!email.equals("")) && !stringDealer.checkEmailRegex(email)) { /* Email is not valid */
             return new ResponseEntity<>("Email không đúng định dạng", HttpStatus.BAD_REQUEST);
+        }
+        if (email.length() > 64){ /* Email is not valid*/
+            return new ResponseEntity<>("Email không được dài hơn 64 kí tự", HttpStatus.BAD_REQUEST);
         }
         // Address
         String address = stringDealer.trimMax(signUpDTO.getUserAddress());

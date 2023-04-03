@@ -17,7 +17,9 @@ import com.example.eims.dto.user.UserDetailDTO;
 import com.example.eims.entity.User;
 import com.example.eims.repository.UserRepository;
 import com.example.eims.service.interfaces.IUserService;
+import com.example.eims.utils.AddressPojo;
 import com.example.eims.utils.StringDealer;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;
@@ -39,6 +41,7 @@ public class UserServiceImpl implements IUserService {
     private final UserRepository userRepository;
     @PersistenceContext
     private final EntityManager em;
+    private final ObjectMapper objectMapper = new ObjectMapper();
     private final StringDealer stringDealer;
 
     public UserServiceImpl(UserRepository userRepository, EntityManager em) {
@@ -142,27 +145,54 @@ public class UserServiceImpl implements IUserService {
             if (name.equals("")) { /* Name is empty */
                 return new ResponseEntity<>("Tên không được để trống", HttpStatus.BAD_REQUEST);
             }
+            if (name.length() > 32) { /* Name is empty */
+                return new ResponseEntity<>("Tên không được dài hơn 32 kí tự", HttpStatus.BAD_REQUEST);
+            }
             // Date of birth
             String sDate = stringDealer.trimMax(updateUserDTO.getDob());
-            if (sDate.equals("")) { /* Date of birth is empty */
+            if (sDate == null || sDate.equals("")) { /* Date of birth is empty */
                 return new ResponseEntity<>("Ngày sinh không được để trống", HttpStatus.BAD_REQUEST);
             }
             // Email
             String email = stringDealer.trimMax(updateUserDTO.getEmail());
-            if ((!email.equals("")) && !stringDealer.checkEmailRegex(email)) { /* Email is not valid*/
+            if (!email.equals("") && !stringDealer.checkEmailRegex(email)) { /* Email is not valid*/
                 return new ResponseEntity<>("Email không hợp lệ", HttpStatus.BAD_REQUEST);
             }
-            // Address
-            String address = stringDealer.trimMax(updateUserDTO.getAddress());
-            if (address.equals("")) { /* Address is empty */
-                return new ResponseEntity<>("Địa chỉ không được để trống", HttpStatus.BAD_REQUEST);
+            if (email.length() > 64){ /* Email is not valid*/
+                return new ResponseEntity<>("Email không được dài hơn 64 kí tự", HttpStatus.BAD_REQUEST);
             }
-
+            // Address
+            String userAddress = stringDealer.trimMax(updateUserDTO.getAddress());
+            try {
+                AddressPojo address = objectMapper.readValue(userAddress, AddressPojo.class);
+                address.city = stringDealer.trimMax(address.city);
+                address.district = stringDealer.trimMax(address.district);
+                address.ward = stringDealer.trimMax(address.ward);
+                address.street = stringDealer.trimMax(address.street);
+                if (address.street.equals("")) {
+                    return new ResponseEntity<>("Số nhà không được để trống", HttpStatus.BAD_REQUEST);
+                }
+                if (address.street.length() > 30) {
+                    return new ResponseEntity<>("Số nhà không được dài hơn 30 ký tự", HttpStatus.BAD_REQUEST);
+                }
+                if (address.city.equals("")) {
+                    return new ResponseEntity<>("Thành phố không được để trống", HttpStatus.BAD_REQUEST);
+                }
+                if (address.district.equals("")) {
+                    return new ResponseEntity<>("Huyện không được để trống", HttpStatus.BAD_REQUEST);
+                }
+                if (address.ward.equals("")) {
+                    return new ResponseEntity<>("Xã không được để trống", HttpStatus.BAD_REQUEST);
+                }
+                userAddress = objectMapper.writeValueAsString(address);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
             // Set attribute
             user.setUsername(name);
             Date dob = stringDealer.convertToDateAndFormat(sDate);
             user.setDob(dob);
-            user.setAddress(address);
+            user.setAddress(userAddress);
             user.setEmail(email);
             // Save
             userRepository.save(user);

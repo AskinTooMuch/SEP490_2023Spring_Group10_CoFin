@@ -22,6 +22,5 @@ public class CreateExportDTO {
     private Long customerId;
     private Long userId;
     private Long facilityId;
-    private LocalDateTime exportDate;
     private List<EggProductCreateExportDTO> eggProductList;
 }

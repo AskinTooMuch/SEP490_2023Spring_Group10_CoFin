@@ -7,7 +7,7 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class CreateExportDataDTO {
-    private List<EggBatchDataForExportItemDTO> eggBatchList;
-    private List<List<EggProductDataForExportItemDTO>> eggProductsList;
+public class CreateExportDataItemDTO {
+    private EggBatchDataForExportItemDTO eggBatch;
+    private List<EggProductDataForExportItemDTO> eggProductList;
 }

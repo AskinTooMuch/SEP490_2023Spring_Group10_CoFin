@@ -48,7 +48,8 @@ public class RegistrationServiceImpl implements IRegistrationService {
     @PersistenceContext
     private EntityManager em;
 
-    public RegistrationServiceImpl(UserRepository userRepository, RegistrationRepository registrationRepository, FacilityRepository facilityRepository, EntityManager em) {
+    public RegistrationServiceImpl(UserRepository userRepository, RegistrationRepository registrationRepository,
+                                   FacilityRepository facilityRepository, EntityManager em) {
         this.userRepository = userRepository;
         this.registrationRepository = registrationRepository;
         this.facilityRepository = facilityRepository;

@@ -5,7 +5,7 @@ import com.example.eims.dto.eggProduct.EggProductCreateExportDTO;
 import com.example.eims.dto.eggProduct.EggProductDataForExportItemDTO;
 import com.example.eims.dto.eggProduct.EggProductViewExportDetailDTO;
 import com.example.eims.dto.exportReceipt.CreateExportDTO;
-import com.example.eims.dto.exportReceipt.CreateExportDataDTO;
+import com.example.eims.dto.exportReceipt.CreateExportDataItemDTO;
 import com.example.eims.dto.exportReceipt.ExportReceiptDetailDTO;
 import com.example.eims.dto.exportReceipt.ExportReceiptListItemDTO;
 import com.example.eims.entity.*;
@@ -20,10 +20,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.time.LocalDateTime;
 
 @Service
@@ -107,7 +104,7 @@ public class ExportReceiptServiceImpl implements IExportReceiptService {
         // List dto
         List<EggBatchDataForExportItemDTO> eggBatchListDto = new ArrayList<>();
         List<List<EggProductDataForExportItemDTO>> eggProductListDto = new ArrayList<>();
-        CreateExportDataDTO dto = new CreateExportDataDTO();
+        List<CreateExportDataItemDTO> dtoList = new ArrayList<>();
 
         // Process
         List<EggBatch> eggBatchList = new ArrayList<>();
@@ -177,10 +174,14 @@ public class ExportReceiptServiceImpl implements IExportReceiptService {
                 eggBatchListDto.remove(eggBatch);
             }
         }
-        dto.setEggBatchList(eggBatchListDto);
-        dto.setEggProductsList(eggProductListDto);
 
-        return new ResponseEntity<>(dto, HttpStatus.OK);
+        for (int i =0; i< eggBatchListDto.size(); i++) {
+            CreateExportDataItemDTO dto = new CreateExportDataItemDTO();
+            dto.setEggBatch(eggBatchListDto.get(i));
+            dto.setEggProductList(eggProductListDto.get(i));
+            dtoList.add(dto);
+        }
+        return new ResponseEntity<>(dtoList, HttpStatus.OK);
     }
 
     /**
@@ -203,6 +204,10 @@ public class ExportReceiptServiceImpl implements IExportReceiptService {
         List<EggProductCreateExportDTO> eggProductList = createExportDTO.getEggProductList();
         if (eggProductList.size() == 0) {
             return new ResponseEntity<>("Hãy chọn ít nhất 1 sản phẩm để bán", HttpStatus.BAD_REQUEST);
+        }
+        Set inputSet = new HashSet(eggProductList);
+        if (inputSet.size() < eggProductList.size()) {
+            return new ResponseEntity<>("Có sản phẩm bị trùng lặp", HttpStatus.BAD_REQUEST);
         }
         // Amount and Price
         float total = 0;

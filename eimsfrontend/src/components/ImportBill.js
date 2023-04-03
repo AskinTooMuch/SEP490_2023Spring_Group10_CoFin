@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from "react-router-dom";
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import ImportExportIcon from '@mui/icons-material/ImportExport';
@@ -7,7 +7,6 @@ import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 
 const ImportBill = () => {
-    const userRef = useRef();
     // Dependency
     const [dataLoaded, setDataLoaded] = useState(false);
 
@@ -29,20 +28,32 @@ const ImportBill = () => {
 
     // Get import list
     const loadImportList = async () => {
-        const result = await axios.get(IMPORT_ALL,
-            { params: { facilityId: sessionStorage.getItem("facilityId") } },
-            {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Access-Control-Allow-Origin': '*'
-                },
-                withCredentials: false
-            });
-        setImportList(result.data);
-        // Toast message
-        if (mess) {
-            toast.success(state);
-            mess = false;
+        try {
+            const result = await axios.get(IMPORT_ALL,
+                { params: { facilityId: sessionStorage.getItem("facilityId") } },
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Access-Control-Allow-Origin': '*'
+                    },
+                    withCredentials: false
+                });
+            setImportList(result.data);
+            // Toast message
+            if (mess) {
+                toast.success(state);
+                mess = false;
+            }
+        } catch (err) {
+            if (!err?.response) {
+                toast.error('Server không phản hồi');
+            } else {
+                if ((err.response.data === null) || (err.response.data === '')) {
+                    toast.error('Có lỗi xảy ra, vui lòng thử lại');
+                } else {
+                    toast.error(err.response.data);
+                }
+            }
         }
     }
 
@@ -133,7 +144,6 @@ const ImportBill = () => {
                 pauseOnHover
                 theme="colored" />
         </>
-
     );
 }
 export default ImportBill;

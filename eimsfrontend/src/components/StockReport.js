@@ -15,7 +15,6 @@ const StockReport = () => {
         eggStocks: [],
         poultryStocks: []
     });
-    const [oneList, setOneList] = useState([]);
 
     // Get list of Products and show
     useEffect(() => {
@@ -154,6 +153,7 @@ const StockReport = () => {
                                                 <tr style={{ height: "21px" }}>
                                                     <th className="u-border-1 u-border-custom-color-1 u-palette-2-base u-table-cell u-table-cell-1">STT</th>
                                                     <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-3">Loại</th>
+                                                    <th className="u-border-1 u-border-custom-color-1 u-palette-2-base u-table-cell u-table-cell-1">Mã lô</th>
                                                     <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-4">Sản phẩm</th>
                                                     <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-5">Số lượng trong kho</th>
                                                     <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-6">Ngày xuất</th>
@@ -166,6 +166,7 @@ const StockReport = () => {
                                                             <tr className='trclick' style={{ height: "76px" }} >
                                                                 <td className="u-border-1 u-border-grey-30 u-first-column u-grey-5 u-table-cell u-table-cell-5">{index + 1}</td>
                                                                 <td className="u-border-1 u-border-grey-30 u-table-cell">{item.breedName}</td>
+                                                                <td className="u-border-1 u-border-grey-30 u-table-cell">{item.eggBatchId}</td>
                                                                 <td className="u-border-1 u-border-grey-30 u-table-cell">{item.phaseDescription}</td>
                                                                 <td className="u-border-1 u-border-grey-30 u-table-cell">{item.curAmount}</td>
                                                                 <td className="u-border-1 u-border-grey-30 u-table-cell">{item.incubationDate.replace("T", " ")}</td>
@@ -237,7 +238,18 @@ const StockReport = () => {
                     </div>
                 </section>
             </div>
+            <ToastContainer position="top-left"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="colored" />
         </div >
+
     );
 }
 export default StockReport;

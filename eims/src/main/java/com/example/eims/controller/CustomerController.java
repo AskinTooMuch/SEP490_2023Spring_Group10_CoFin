@@ -44,6 +44,18 @@ public class CustomerController {
     }
 
     /**
+     * Get all of user's active customers.
+     *
+     * @param userId the id of the Owner
+     * @return list of Customers
+     */
+    @GetMapping("/allActive")
+    @Secured({"ROLE_OWNER"})
+    public ResponseEntity<?> getActiveSupplier(@RequestParam Long userId) {
+        return customerService.getActiveCustomer(userId);
+    }
+
+    /**
      * Get a customer.
      *
      * @param customerId the id of the customer

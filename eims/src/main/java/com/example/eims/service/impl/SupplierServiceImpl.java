@@ -53,6 +53,7 @@ public class SupplierServiceImpl implements ISupplierService {
     private final FacilityRepository facilityRepository;
     private final StringDealer stringDealer = new StringDealer();
     private final ObjectMapper objectMapper = new ObjectMapper();
+
     public SupplierServiceImpl(UserRepository userRepository, SupplierRepository supplierRepository,
                                ImportReceiptRepository importReceiptRepository, FacilityRepository facilityRepository) {
         this.userRepository = userRepository;
@@ -62,7 +63,7 @@ public class SupplierServiceImpl implements ISupplierService {
     }
 
     /**
-     * Get all of their suppliers.
+     * Get all of owner's suppliers.
      *
      * @param userId the id of the Owner
      * @return list of Suppliers
@@ -79,7 +80,7 @@ public class SupplierServiceImpl implements ISupplierService {
     }
 
     /**
-     * Get all of their active suppliers.
+     * Get all of owner's active suppliers.
      *
      * @param userId the id of the Owner
      * @return list of Suppliers
@@ -88,7 +89,7 @@ public class SupplierServiceImpl implements ISupplierService {
     public ResponseEntity<?> getActiveSupplier(Long userId) {
         // Get all active suppliers of the current User
         Optional<List<Supplier>> supplierListOptional = supplierRepository.
-                findByUserIdAndStatus(userId,1);
+                findByUserIdAndStatus(userId, 1);
         if (supplierListOptional.isEmpty()) {
             return new ResponseEntity<>("Không tìm thấy nhà cung cấp", HttpStatus.NOT_FOUND); //404
         } else {
@@ -135,7 +136,7 @@ public class SupplierServiceImpl implements ISupplierService {
     public ResponseEntity<?> createSupplier(CreateSupplierDTO createSupplierDTO) {
         // Check if Owner's account is still activated
         Long userId = createSupplierDTO.getUserId();
-        int accountStatus = (userRepository.getStatusByUserId(userId)? 1:0);
+        int accountStatus = (userRepository.getStatusByUserId(userId) ? 1 : 0);
         if (accountStatus == 0) { /* status = 0 (deactivated) */
             return new ResponseEntity<>("Tài khoản đã bị vô hiệu hóa.", HttpStatus.BAD_REQUEST);
         }
@@ -188,11 +189,21 @@ public class SupplierServiceImpl implements ISupplierService {
             address.district = stringDealer.trimMax(address.district);
             address.ward = stringDealer.trimMax(address.ward);
             address.street = stringDealer.trimMax(address.street);
-            if (address.street.equals("")){ return new ResponseEntity<>("Số nhà không được để trống", HttpStatus.BAD_REQUEST); }
-            if (address.street.length() > 30) { return new ResponseEntity<>("Số nhà không được dài hơn 30 ký tự", HttpStatus.BAD_REQUEST);}
-            if (address.city.equals("")){ return new ResponseEntity<>("Thành phố không được để trống", HttpStatus.BAD_REQUEST); }
-            if (address.district.equals("")){ return new ResponseEntity<>("Huyện không được để trống", HttpStatus.BAD_REQUEST); }
-            if (address.ward.equals("")){ return new ResponseEntity<>("Xã không được để trống", HttpStatus.BAD_REQUEST); }
+            if (address.street.equals("")) {
+                return new ResponseEntity<>("Số nhà không được để trống", HttpStatus.BAD_REQUEST);
+            }
+            if (address.street.length() > 30) {
+                return new ResponseEntity<>("Số nhà không được dài hơn 30 ký tự", HttpStatus.BAD_REQUEST);
+            }
+            if (address.city.equals("")) {
+                return new ResponseEntity<>("Thành phố không được để trống", HttpStatus.BAD_REQUEST);
+            }
+            if (address.district.equals("")) {
+                return new ResponseEntity<>("Huyện không được để trống", HttpStatus.BAD_REQUEST);
+            }
+            if (address.ward.equals("")) {
+                return new ResponseEntity<>("Xã không được để trống", HttpStatus.BAD_REQUEST);
+            }
             supplierAddress = objectMapper.writeValueAsString(address);
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -201,7 +212,7 @@ public class SupplierServiceImpl implements ISupplierService {
         supplier.setUserId(userId);
         supplier.setSupplierName(createSupplierDTO.getSupplierName());
         supplier.setSupplierPhone(createSupplierDTO.getSupplierPhone());
-        supplier.setSupplierAddress(createSupplierDTO.getSupplierAddress());
+        supplier.setSupplierAddress(supplierAddress);
         supplier.setFacilityName(createSupplierDTO.getFacilityName());
         supplier.setSupplierMail(createSupplierDTO.getSupplierMail());
         supplier.setStatus(1);
@@ -259,8 +270,8 @@ public class SupplierServiceImpl implements ISupplierService {
         }
         String oldPhone = supplierRepository.findSupplierPhoneById(updateSupplierDTO.getSupplierId());
         if ((!oldPhone.equals(updateSupplierDTO.getSupplierPhone())) &&
-                (supplierRepository.existsBySupplierPhoneAndUserId(updateSupplierDTO.getSupplierPhone(), userId))){
-                return new ResponseEntity<>("Số điện thoại đã được sử dụng.", HttpStatus.BAD_REQUEST);
+                (supplierRepository.existsBySupplierPhoneAndUserId(updateSupplierDTO.getSupplierPhone(), userId))) {
+            return new ResponseEntity<>("Số điện thoại đã được sử dụng.", HttpStatus.BAD_REQUEST);
         }
         // Address
         if (supplierAddress.equals("")) { /* Address is empty */
@@ -284,11 +295,21 @@ public class SupplierServiceImpl implements ISupplierService {
             address.district = stringDealer.trimMax(address.district);
             address.ward = stringDealer.trimMax(address.ward);
             address.street = stringDealer.trimMax(address.street);
-            if (address.street.equals("")){ return new ResponseEntity<>("Số nhà không được để trống", HttpStatus.BAD_REQUEST); }
-            if (address.street.length() > 30) { return new ResponseEntity<>("Số nhà không được dài hơn 30 ký tự", HttpStatus.BAD_REQUEST);}
-            if (address.city.equals("")){ return new ResponseEntity<>("Thành phố không được để trống", HttpStatus.BAD_REQUEST); }
-            if (address.district.equals("")){ return new ResponseEntity<>("Huyện không được để trống", HttpStatus.BAD_REQUEST); }
-            if (address.ward.equals("")){ return new ResponseEntity<>("Xã không được để trống", HttpStatus.BAD_REQUEST); }
+            if (address.street.equals("")) {
+                return new ResponseEntity<>("Số nhà không được để trống", HttpStatus.BAD_REQUEST);
+            }
+            if (address.street.length() > 30) {
+                return new ResponseEntity<>("Số nhà không được dài hơn 30 ký tự", HttpStatus.BAD_REQUEST);
+            }
+            if (address.city.equals("")) {
+                return new ResponseEntity<>("Thành phố không được để trống", HttpStatus.BAD_REQUEST);
+            }
+            if (address.district.equals("")) {
+                return new ResponseEntity<>("Huyện không được để trống", HttpStatus.BAD_REQUEST);
+            }
+            if (address.ward.equals("")) {
+                return new ResponseEntity<>("Xã không được để trống", HttpStatus.BAD_REQUEST);
+            }
             supplierAddress = objectMapper.writeValueAsString(address);
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -298,7 +319,7 @@ public class SupplierServiceImpl implements ISupplierService {
 
         // Retrieve supplier's new information
         Optional<Supplier> supplierOptional = supplierRepository.findBySupplierId(updateSupplierDTO.getSupplierId());
-        if (supplierOptional.isPresent()){
+        if (supplierOptional.isPresent()) {
             Supplier supplier = supplierOptional.get();
             supplier.setSupplierName(supplierName);
             supplier.setSupplierPhone(supplierPhone);

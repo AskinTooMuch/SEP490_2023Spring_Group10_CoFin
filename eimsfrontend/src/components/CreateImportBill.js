@@ -35,6 +35,7 @@ function TableRows({ rowsData, deleteTableRows, handleChange, breedList }) {
 const CreateImportBill = () => {
     // Dependency
     const [dataLoaded, setDataLoaded] = useState(false);
+    //
     let navigate = useNavigate();
     const [rowsData, setRowsData] = useState([]);
 
@@ -69,10 +70,8 @@ const CreateImportBill = () => {
         }
     }
     // DTOs
-    // List active
-    const [supplierList, setSupplierList] = useState([])
-    // total
-    const [total, setTotal] = useState()
+    // List Supplier active
+    const [supplierList, setSupplierList] = useState([]);
 
     // Create import Dto
     const [createImportDTO, setCreateImportDTO] = useState({
@@ -96,13 +95,14 @@ const CreateImportBill = () => {
         if (field === "supplierId") {
             show();
         }
-
     }
+
     // Load supplier list
     useEffect(() => {
+        if (dataLoaded) return;
         loadSuppliers();
         loadBreeds();
-    }, [dataLoaded]);
+    }, []);
 
     // Load supplier list
     const loadSuppliers = async () => {
@@ -118,8 +118,7 @@ const CreateImportBill = () => {
                     withCredentials: true
                 });
             setSupplierList(response.data);
-            setDataLoaded(true)
-            console.log("list:" + response.data);
+            setDataLoaded(true);
         } catch (err) {
             if (!err?.response) {
                 toast.error('Server không phản hồi');
@@ -213,24 +212,17 @@ const CreateImportBill = () => {
                 }
             })
         }
-
-
     }
+
     // calculate total
     function cal() {
         var total = 0;
         rowsData.map((item) => {
             total += item.amount * item.price;
         }
-
         )
         var s = total.toLocaleString('vi', { style: 'currency', currency: 'VND' });
         document.getElementById('total').innerHTML = "Tổng hóa đơn: " + s;
-    }
-
-    function curTime() {
-        let x = new Date().toLocaleString();
-        return x;
     }
 
     return (
@@ -269,7 +261,7 @@ const CreateImportBill = () => {
                                 <p>Ngày nhập</p>
                             </div>
                             <div className="col-md-3 ">
-                                <input type="datetime-local" max={curTime()} id="datetime" name="datetime"
+                                <input type="datetime-local" id="datetime" name="datetime"
                                     onChange={(e) => handleCreateImportChange(e, "importDate")} />
                             </div>
                             <div className="col-md-3">

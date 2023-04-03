@@ -18,7 +18,7 @@ import org.springframework.http.ResponseEntity;
 public interface ISupplierService {
 
     /**
-     * Get all of their suppliers.
+     * Get all of owner's suppliers.
      *
      * @param userId the id of the Owner
      * @return list of Suppliers
@@ -26,12 +26,12 @@ public interface ISupplierService {
     public ResponseEntity<?> getAllSupplier(Long userId);
 
     /**
-     * Get all of their active suppliers.
+     * Get all of owner's active suppliers.
      *
-     * @param facilityId the id of facility
+     * @param userId the id of the Owner
      * @return list of Suppliers
      */
-    public ResponseEntity<?> getActiveSupplier(Long facilityId);
+    public ResponseEntity<?> getActiveSupplier(Long userId);
 
     /**
      * Get a supplier.

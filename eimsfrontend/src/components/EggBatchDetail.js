@@ -821,7 +821,7 @@ export default function BasicTabs() {
                                                             {
                                                                 eggBatchDetail.machineNotFullList && eggBatchDetail.machineNotFullList.length > 0 ?
                                                                     eggBatchDetail.machineNotFullList.map((item, index) =>
-                                                                        <tr className='trclick' onClick={() => addTableRows(item, index)}>
+                                                                        <tr className='trclick' onClick={() => addTableRows(item)}>
                                                                             <td>{item.machineName}</td>
                                                                             <td>{item.curCapacity.toLocaleString()}/{item.maxCapacity.toLocaleString()}</td>
                                                                             <td>{(item.maxCapacity - item.curCapacity).toLocaleString()}</td>

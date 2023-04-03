@@ -19,10 +19,18 @@ public interface ICustomerService {
     /**
      * Get all of user's customers.
      *
-     * @param userId the id of the Owner
+     * @param userId the id of the owner
      * @return list of Customers
      */
     public ResponseEntity<?> getAllCustomer(Long userId);
+
+    /**
+     * Get all of user's active customers.
+     *
+     * @param userId the id of the owner
+     * @return list of Customers
+     */
+    public ResponseEntity<?> getActiveCustomer(Long userId);
 
     /**
      * Get a customer.

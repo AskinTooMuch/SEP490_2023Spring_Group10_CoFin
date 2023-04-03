@@ -55,6 +55,7 @@ const Customer = () => {
         customerMail: ""
     })
 
+
     //Handle Change functions:
     //CreateCustomer
     const handleCreateCustomerChange = (event, field) => {
@@ -130,6 +131,8 @@ const Customer = () => {
         createCustomerDTO.customerAddress = JSON.stringify(addressJson);
     }
 
+
+
     //Handle Submit functions
     //Handle submit new Customer
     const handleCreateCustomerSubmit = async (event) => {
@@ -154,14 +157,15 @@ const Customer = () => {
                 customerAddress: "",
                 customerMail: ""
             });
-            console.log(response);
-            loadCustomerList();
             setAddressJson({
                 city: "",
                 district: "",
                 ward: "",
                 street: ""
               });
+
+            console.log(response);
+            loadCustomerList();
             toast.success(response.data);
             setShow(false);
         } catch (err) {
@@ -213,7 +217,6 @@ const Customer = () => {
     //Navigate to detail Page
     let navigate = useNavigate();
     const routeChange = (cid) => {
-        //let path = '/customerdetail';
         navigate('/customerdetail', { state: { id: cid } });
     }
 
@@ -263,7 +266,7 @@ const Customer = () => {
                                             className="form-control mt-1"
                                             style={{ width: "100%" }}
                                             placeholder='Địa chỉ thư điện tử'
-                                            onChange={e => handleCreateCustomerChange(e, "customerEmail")} />
+                                            onChange={e => handleCreateCustomerChange(e, "customerMail")} />
                                     </div>
                                 </div>
                                 <div className='row'>

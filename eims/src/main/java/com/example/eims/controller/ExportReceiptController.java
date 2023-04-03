@@ -41,7 +41,7 @@ public class ExportReceiptController {
      * @param createExportDTO contains customer's id, user's id who create the export, facility's id, export date
      * @return
      */
-    @PutMapping("/create")
+    @PostMapping("/create")
     public ResponseEntity<?> createExport(@RequestBody CreateExportDTO createExportDTO) {
         return exportReceiptService.createExport(createExportDTO);
     }

@@ -15,11 +15,14 @@ package com.example.eims.service.impl;
 import com.example.eims.dto.customer.CreateCustomerDTO;
 import com.example.eims.dto.customer.UpdateCustomerDTO;
 import com.example.eims.entity.Customer;
+import com.example.eims.entity.Supplier;
 import com.example.eims.repository.CustomerRepository;
 import com.example.eims.repository.FacilityRepository;
 import com.example.eims.repository.UserRepository;
 import com.example.eims.service.interfaces.ICustomerService;
+import com.example.eims.utils.AddressPojo;
 import com.example.eims.utils.StringDealer;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.configurationprocessor.json.JSONException;
 import org.springframework.boot.configurationprocessor.json.JSONObject;
@@ -43,6 +46,7 @@ public class CustomerServiceImpl implements ICustomerService {
     @Autowired
     private final FacilityRepository facilityRepository;
     private final StringDealer stringDealer = new StringDealer();
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     public CustomerServiceImpl(CustomerRepository customerRepository, UserRepository userRepository,
                                FacilityRepository facilityRepository) {
@@ -65,6 +69,24 @@ public class CustomerServiceImpl implements ICustomerService {
             return new ResponseEntity<>(customers.get(), HttpStatus.OK);
         }
         return new ResponseEntity<>("Không tìm thấy khách hàng", HttpStatus.NOT_FOUND);
+    }
+
+    /**
+     * Get all of user's active customers.
+     *
+     * @param userId the id of the owner
+     * @return list of Customers
+     */
+    @Override
+    public ResponseEntity<?> getActiveCustomer(Long userId) {
+        // Get all active customers of the current User
+        Optional<List<Customer>> customerListOptional = customerRepository.
+                findByUserIdAndStatus(userId, 1);
+        if (customerListOptional.isEmpty()) {
+            return new ResponseEntity<>("Không tìm thấy khách hàng", HttpStatus.NOT_FOUND);
+        } else {
+            return new ResponseEntity<>(customerListOptional.get(), HttpStatus.OK);
+        }
     }
 
     /**
@@ -94,7 +116,7 @@ public class CustomerServiceImpl implements ICustomerService {
     public ResponseEntity<?> createCustomer(CreateCustomerDTO createCustomerDTO) {
         // Check if Owner's account is still activated
         Long userId = createCustomerDTO.getUserId();
-        int accountStatus = (userRepository.getStatusByUserId(userId)? 1:0);
+        int accountStatus = (userRepository.getStatusByUserId(userId) ? 1 : 0);
         if (accountStatus == 0) { /* status = 0 (deactivated) */
             return new ResponseEntity<>("Tài khoản đã bị vô hiệu hóa", HttpStatus.BAD_REQUEST);
         }
@@ -103,7 +125,7 @@ public class CustomerServiceImpl implements ICustomerService {
         String name = stringDealer.trimMax(createCustomerDTO.getCustomerName());
         String phone = stringDealer.trimMax(createCustomerDTO.getCustomerPhone());
         String mail = stringDealer.trimMax(createCustomerDTO.getCustomerMail());
-        String address = stringDealer.trimMax(createCustomerDTO.getCustomerAddress());
+        String customerAddress = stringDealer.trimMax(createCustomerDTO.getCustomerAddress());
 
         if (name == null || name.equals("")) { /* Customer name is empty */
             return new ResponseEntity<>("Tên không được để trống", HttpStatus.BAD_REQUEST);
@@ -127,18 +149,32 @@ public class CustomerServiceImpl implements ICustomerService {
             return new ResponseEntity<>("Email không hợp lệ", HttpStatus.BAD_REQUEST);
         }
         // Address
-        if (createCustomerDTO.getCustomerAddress() == null || stringDealer.trimMax(createCustomerDTO.getCustomerAddress()).equals("")) { /* Address is empty */
+        if (createCustomerDTO.getCustomerAddress() == null || customerAddress.equals("")) { /* Address is empty */
             return new ResponseEntity<>("Địa chỉ không được để trống", HttpStatus.BAD_REQUEST);
         }
-        JSONObject addressObj;
         try {
-            addressObj = new JSONObject(address);
-            String street = (String) addressObj.get("street");
-            System.out.println(street);
-            if (street == null || stringDealer.trimMax(street).equals("") || stringDealer.chechValidStreetString(street)){
-                return new ResponseEntity<>("Số nhà sai định dạng", HttpStatus.BAD_REQUEST);
+            AddressPojo address = objectMapper.readValue(customerAddress, AddressPojo.class);
+            address.city = stringDealer.trimMax(address.city);
+            address.district = stringDealer.trimMax(address.district);
+            address.ward = stringDealer.trimMax(address.ward);
+            address.street = stringDealer.trimMax(address.street);
+            if (address.street.equals("")) {
+                return new ResponseEntity<>("Số nhà không được để trống", HttpStatus.BAD_REQUEST);
             }
-        } catch (JSONException e) {
+            if (address.street.length() > 30) {
+                return new ResponseEntity<>("Số nhà không được dài hơn 30 ký tự", HttpStatus.BAD_REQUEST);
+            }
+            if (address.city.equals("")) {
+                return new ResponseEntity<>("Thành phố không được để trống", HttpStatus.BAD_REQUEST);
+            }
+            if (address.district.equals("")) {
+                return new ResponseEntity<>("Huyện không được để trống", HttpStatus.BAD_REQUEST);
+            }
+            if (address.ward.equals("")) {
+                return new ResponseEntity<>("Xã không được để trống", HttpStatus.BAD_REQUEST);
+            }
+            customerAddress = objectMapper.writeValueAsString(address);
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
         // Retrieve customer information and create new customer
@@ -146,7 +182,7 @@ public class CustomerServiceImpl implements ICustomerService {
         customer.setUserId(createCustomerDTO.getUserId());
         customer.setCustomerName(name);
         customer.setCustomerPhone(phone);
-        customer.setCustomerAddress(address);
+        customer.setCustomerAddress(customerAddress);
         customer.setCustomerMail(mail);
         customer.setStatus(1);
         // Save
@@ -180,12 +216,14 @@ public class CustomerServiceImpl implements ICustomerService {
     @Override
     public ResponseEntity<?> updateCustomer(UpdateCustomerDTO updateCustomerDTO) {
         Long userId = updateCustomerDTO.getUserId();
-        // Name
+        // Trim inputs
         String name = stringDealer.trimMax(updateCustomerDTO.getCustomerName());
         String newPhone = stringDealer.trimMax(updateCustomerDTO.getCustomerPhone());
         String mail = stringDealer.trimMax(updateCustomerDTO.getCustomerMail());
-        String address = stringDealer.trimMax(updateCustomerDTO.getCustomerAddress());
+        String customerAddress = stringDealer.trimMax(updateCustomerDTO.getCustomerAddress());
 
+        // Check inputs
+        // Name
         if (name == null || name.equals("")) { /* Customer name is empty */
             return new ResponseEntity<>("Tên khách hàng không được để trống", HttpStatus.BAD_REQUEST);
         }
@@ -201,30 +239,44 @@ public class CustomerServiceImpl implements ICustomerService {
         }
         String oldPhone = customerRepository.findCustomerPhoneById(updateCustomerDTO.getCustomerId());
         if (!newPhone.equals(oldPhone) && (customerRepository.existsByCustomerPhoneAndUserId(newPhone, userId))) {
-                return new ResponseEntity<>("Số điện thoại đã được sử dụng", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Số điện thoại đã được sử dụng", HttpStatus.BAD_REQUEST);
         }
         // Email
         if ((!mail.equals("")) && !stringDealer.checkEmailRegex(mail)) { /* Customer email is not valid */
             return new ResponseEntity<>("Email không hợp lệ", HttpStatus.BAD_REQUEST);
         }
         // Address
-        if (address == null || address.equals("")) { /* Address is empty */
+        if (customerAddress == null || customerAddress.equals("")) { /* Address is empty */
             return new ResponseEntity<>("Địa chỉ không được để trống", HttpStatus.BAD_REQUEST);
         }
-        JSONObject addressObj;
         try {
-            addressObj = new JSONObject(address);
-            String street = (String) addressObj.get("street");
-            System.out.println(street);
-            if (street == null || stringDealer.trimMax(street).equals("") || stringDealer.chechValidStreetString(street)){
-                return new ResponseEntity<>("Số nhà sai định dạng", HttpStatus.BAD_REQUEST);
+            AddressPojo address = objectMapper.readValue(customerAddress, AddressPojo.class);
+            address.city = stringDealer.trimMax(address.city);
+            address.district = stringDealer.trimMax(address.district);
+            address.ward = stringDealer.trimMax(address.ward);
+            address.street = stringDealer.trimMax(address.street);
+            if (address.street.equals("")) {
+                return new ResponseEntity<>("Số nhà không được để trống", HttpStatus.BAD_REQUEST);
             }
-        } catch (JSONException e) {
+            if (address.street.length() > 30) {
+                return new ResponseEntity<>("Số nhà không được dài hơn 30 ký tự", HttpStatus.BAD_REQUEST);
+            }
+            if (address.city.equals("")) {
+                return new ResponseEntity<>("Thành phố không được để trống", HttpStatus.BAD_REQUEST);
+            }
+            if (address.district.equals("")) {
+                return new ResponseEntity<>("Huyện không được để trống", HttpStatus.BAD_REQUEST);
+            }
+            if (address.ward.equals("")) {
+                return new ResponseEntity<>("Xã không được để trống", HttpStatus.BAD_REQUEST);
+            }
+            customerAddress = objectMapper.writeValueAsString(address);
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
         // Status
         int status = updateCustomerDTO.getStatus();
-        if(!(status == 1 || status == 0)){
+        if (!(status == 1 || status == 0)) {
             return new ResponseEntity<>("Trạng thái không hợp lệ", HttpStatus.BAD_REQUEST);
         }
         Optional<Customer> customerOptional = customerRepository.findByCustomerId(updateCustomerDTO.getCustomerId());
@@ -233,7 +285,7 @@ public class CustomerServiceImpl implements ICustomerService {
             Customer customer = customerOptional.get();
             customer.setCustomerName(name);
             customer.setCustomerPhone(newPhone);
-            customer.setCustomerAddress(address);
+            customer.setCustomerAddress(customerAddress);
             customer.setCustomerMail(mail);
             customer.setStatus(status);
             // Save
@@ -253,7 +305,7 @@ public class CustomerServiceImpl implements ICustomerService {
      */
     @Override
     public ResponseEntity<?> searchCustomer(Long userId, String key) {
-        if(key == null || stringDealer.trimMax(key).equals("")){
+        if (key == null || stringDealer.trimMax(key).equals("")) {
             return new ResponseEntity<>("Nhập tên hoặc số điện thoại để tìm kiếm", HttpStatus.BAD_REQUEST);
         }
         // Trim spaces

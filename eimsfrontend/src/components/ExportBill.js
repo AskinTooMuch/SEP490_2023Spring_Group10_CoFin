@@ -1,14 +1,66 @@
-import React from 'react';
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect} from 'react';
+import { useNavigate, useLocation } from "react-router-dom";
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import ImportExportIcon from '@mui/icons-material/ImportExport';
 import SearchIcon from '@mui/icons-material/Search';
+import axios from 'axios';
+import { ToastContainer, toast } from 'react-toastify';
 
 const ExportBill = () => {
+    // Dependency
+    const [dataLoaded, setDataLoaded] = useState(false);
 
+    //API URLs
+    const EXPORT_ALL = '/api/export/allByFacility'
+
+    //Data holding objects
+    const [exportList, setExportList] = useState([]);
+
+    //Get sent params
+    const { state } = useLocation();
+    var mess = true;
+
+    // 
+    useEffect(() => {
+        if (dataLoaded) return;
+        loadExportList();
+        setDataLoaded(true);
+    }, []);
+
+    // Get export list
+    const loadExportList = async () => {
+        try {
+            const result = await axios.get(EXPORT_ALL,
+                { params: { facilityId: sessionStorage.getItem("facilityId") } },
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Access-Control-Allow-Origin': '*'
+                    },
+                    withCredentials: false
+                });
+            setExportList(result.data);
+            // Toast message
+            if (mess) {
+                toast.success(state);
+                mess = false;
+            }
+        } catch (err) {
+            if (!err?.response) {
+                toast.error('Server không phản hồi');
+            } else {
+                if ((err.response.data === null) || (err.response.data === '')) {
+                    toast.error('Có lỗi xảy ra, vui lòng thử lại');
+                } else {
+                    toast.error(err.response.data);
+                }
+            }
+        }
+    }
+    
     let navigate = useNavigate();
-    const routeChange = () => {
-        navigate('/exportbilldetail');
+    const routeChange = (eid) => {
+        navigate('/exportbilldetail', { state: { id: eid } });
     }
 
     return (
@@ -55,15 +107,28 @@ const ExportBill = () => {
                                 </thead>
                                 <tbody className="u-table-body">
 
-                                    <tr className='trclick' style={{ height: "76px" }} onClick={() => routeChange()}>
-                                        <td className="u-border-1 u-border-grey-30 u-first-column u-grey-5 u-table-cell u-table-cell-5">1</td>
-                                        <td className="u-border-1 u-border-grey-30 u-table-cell">AYGQ84-17-12</td>
-                                        <td className="u-border-1 u-border-grey-30 u-table-cell">Lê Tùng Nah</td>
-                                        <td className="u-border-1 u-border-grey-30 u-table-cell">11/02/2023</td>
-                                        <td className="u-border-1 u-border-grey-30 u-table-cell">50.000.000 VNĐ</td>
-                                        <td className="u-border-1 u-border-grey-30 u-table-cell">50.000.000 VNĐ</td>
-                                        <td className="u-border-1 u-border-grey-30 u-table-cell text-green">Đã thanh toán đủ</td>
-                                    </tr>
+                                {
+                                        exportList && exportList.length > 0 ?
+                                        exportList.map((item, index) =>
+                                                <tr className='trclick' style={{ height: "76px" }} onClick={() => routeChange(item.exportId)}>
+                                                    <td className="u-border-1 u-border-grey-30 u-first-column u-grey-5 u-table-cell u-table-cell-5">{index + 1}</td>
+                                                    <td className="u-border-1 u-border-grey-30 u-table-cell">{item.exportId}</td>
+                                                    <td className="u-border-1 u-border-grey-30 u-table-cell">{item.customerName}</td>
+                                                    <td className="u-border-1 u-border-grey-30 u-table-cell">{item.exportDate.replace("T", " ")}</td>
+                                                    <td className="u-border-1 u-border-grey-30 u-table-cell">{item.total.toLocaleString()}</td>
+                                                    <td className="u-border-1 u-border-grey-30 u-table-cell">{item.paid.toLocaleString()}</td>
+                                                    {
+                                                        item.total == item.paid
+                                                            ?
+                                                            <td className="u-border-1 u-border-grey-30 u-table-cell text-green">
+                                                                Đã thanh toán đủ</td>
+                                                            :
+                                                            <td className="u-border-1 u-border-grey-30 u-table-cell text-red">
+                                                                Chưa thanh toán đủ</td>
+                                                    }
+                                                </tr>
+                                            ) : 'Nothing'
+                                    }
 
                                 </tbody>
                             </table>
@@ -71,8 +136,17 @@ const ExportBill = () => {
                     </div>
                 </section>
             </div>
+            <ToastContainer position="top-left"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="colored" />
         </>
-
     );
 }
 export default ExportBill;
