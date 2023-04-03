@@ -18,14 +18,40 @@ import java.sql.Date;
 
 @Data
 @NamedNativeQuery(name="getImportReceiptStatisticByUserId",
-        query="SELECT supplier_id, SUM(total) as total, SUM(paid) as paid from eims.import_receipt " +
-                "WHERE user_id = ? GROUP BY supplier_id",
+        query="select IR.supplier_id, S.supplier_name, sum(total) as total, sum(paid) as paid\n" +
+                "from eims.import_receipt as IR inner join eims.supplier as S \n" +
+                "on IR.supplier_id = S.supplier_id\n" +
+                "where IR.user_id = ? group by IR.supplier_id",
         resultClass = ImportReceiptStatisticDTO.class)
+@NamedNativeQuery(name="getImportReceiptStatisticByUserIdBetweenTime",
+        query= "select IR.supplier_id, S.supplier_name, sum(total) as total, sum(paid) as paid\n" +
+                "from eims.import_receipt as IR inner join eims.supplier as S \n" +
+                "on IR.supplier_id = S.supplier_id\n" +
+                "where IR.user_id = ?1 and ( IR.import_date between ?2 and ?3 )\n" +
+                "group by IR.supplier_id",
+        resultClass = ImportReceiptStatisticDTO.class)
+@SqlResultSetMapping(
+        name="ImportReceiptStatisticMapping",
+        classes = @ConstructorResult(
+                targetClass = ImportReceiptStatisticDTO.class,
+                columns = {
+                        @ColumnResult(name="supplierId", type = Long.class),
+                        @ColumnResult(name="supplierName", type = String.class),
+                        @ColumnResult(name="total", type=Float.class),
+                        @ColumnResult(name="paid", type = Float.class)
+                }
+        )
+)
 
 @Entity
 public class ImportReceiptStatisticDTO {
     @Id
+    @Column(name = "supplier_id")
     private Long supplierId;
+    @Column(name = "supplier_name")
+    private String supplierName;
+    @Column(name = "total")
     private Float total;
+    @Column(name = "paid")
     private Float paid;
 }

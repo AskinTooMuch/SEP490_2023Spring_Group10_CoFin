@@ -20,4 +20,6 @@ public interface ImportReceiptRepository extends JpaRepository<ImportReceipt, Lo
     Optional<List<Objects>> importStatistic(Long userId);
     Page<ImportReceipt> findAllByUserId(Long userId, Pageable pageable);
     Page<ImportReceipt> findAllBySupplierId(Long supplierId, Pageable pageable);
+    @Query(value = "select distinct year(import_date) as YEAR from eims.import_receipt where supplier_id = ?2 and user_id = ?1 order by YEAR DESC;\n", nativeQuery = true)
+    Optional<List<String>> getImportReceiptYear(Long userId, Long supplierId);
 }
