@@ -303,7 +303,7 @@ const Nav = () => {
                                 </>
                                 :
                                 <Box sx={{ flexGrow: 1 }}>
-                                    <Link style={{ textDecoration: "none", color: "white" }} to="/registerotp"><Button className="signupbutton" color="inherit">Đăng ký</Button></Link>
+                                    <Link style={{ textDecoration: "none", color: "white" }} to="/testotp"><Button className="signupbutton" color="inherit">Đăng ký</Button></Link>
                                     <Link style={{ textDecoration: "none", color: "white" }} to="/login"><Button className="loginbutton" color="inherit">Đăng nhập</Button></Link>
                                 </Box>
                         }

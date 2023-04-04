@@ -5,7 +5,7 @@ import axios from '../api/axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import "../css/register.css";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import { faEye } from "@fortawesome/free-solid-svg-icons";
 //import  '../api/provinces.js';
 const EMAIL_REGEX = /^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/;
@@ -14,6 +14,9 @@ const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,20}$/;
 const REGISTER_URL = '/api/auth/signup';
 const eye = <FontAwesomeIcon icon={faEye} />;
 const Register = () => {
+    const verify = sessionStorage.getItem("OTP")
+    const shouldRedirect = true;
+    const navigate = useNavigate();
     //show-hide password 
     const [passwordShown, setPasswordShown] = useState(false);
     const [passwordShown2, setPasswordShown2] = useState(false);
@@ -257,6 +260,9 @@ const Register = () => {
         }
     }
 
+    if (!verify) {
+        navigate("/testOTP")
+    }
     return (
         <>
             {success ? (
