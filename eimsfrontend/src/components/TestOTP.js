@@ -1,4 +1,4 @@
-import React, {useState } from 'react'
+import React, { useState } from 'react'
 import { firebase, auth } from '../firebase/firebasesdk'
 import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
 import { useNavigate } from 'react-router-dom';
@@ -11,7 +11,7 @@ const TestOTP = () => {
     const [result, setResult] = useState('');
     const [buttonDisabled, setButtonDisabled] = useState(false);
     const navigate = useNavigate();
-    const [isVerified, setIsVerified] = useState(true);
+    const isVerified = useState(true);
     // Create RecaptchaVerifier instance
     function onCaptchVerify() {
         if (!window.recaptchaVerifier) {
@@ -32,6 +32,7 @@ const TestOTP = () => {
         const replaced = phoneNumber.replace(phoneNumber[0], "+84")
         console.log(phoneNumber)
         console.log(replaced)
+        sessionStorage.setItem("curPhone", phoneNumber);
         sessionStorage.setItem("currPhone", replaced);
         auth.signInWithPhoneNumber(replaced, appVerifier).then((result) => {
             setResult(result);
@@ -39,7 +40,7 @@ const TestOTP = () => {
             setButtonDisabled(true); //Disable button after sending OTP
             setTimeout(() => {
                 setButtonDisabled(false); //Enable button after one minute
-            }, 60000);
+            }, 0);
             toast.success("Mã OTP đã được gửi đến số điện thoại của bạn")
         })
             .catch((err) => {
@@ -49,23 +50,27 @@ const TestOTP = () => {
     }
 
     const reSendOTP = () => {
+        window.recaptchaVerifier = new RecaptchaVerifier(
+            "recaptcha-container",
+            {
+                size: "invisible",
+            },
+            firebase.auth()
+        );
         const appVerifier = window.recaptchaVerifier;
-        const phoneNumber = sessionStorage.getItem("curPhone")
-        firebase.auth().signInWithPhoneNumber(phoneNumber, appVerifier)
-            .then((verificationId) => {
-                const verificationCode = window.prompt('Please enter the verification ' +
-                    'code that was sent to your mobile device.');
-                const credential = firebase.auth.PhoneAuthProvider.credential(
-                    verificationId,
-                    verificationCode
-                );
-                return firebase.auth().currentUser.reauthenticateWithCredential(credential);
-            })
-            .then((result) => {
-                console.log('Re-authenticated user:', result.user);
-            })
-            .catch((error) => {
-                console.error(error);
+        const phoneNumber = sessionStorage.getItem("currPhone")
+        auth.signInWithPhoneNumber(phoneNumber, appVerifier).then((result2) => {
+            setResult(result2);
+            setStep('VERIFY_OTP');
+            setButtonDisabled(true); //Disable button after sending OTP
+            setTimeout(() => {
+                setButtonDisabled(false); //Enable button after one minute
+            }, 60000);
+            toast.success("Đã gửi lại mã OTP")
+        })
+            .catch((err) => {
+                console.log(err);
+                console.log("SMS not sent");
             });
     }
 
@@ -83,7 +88,7 @@ const TestOTP = () => {
             setTimeout(() => {
                 navigate("/register") //Enable button after one minute
             }, 1000);
-            sessionStorage.setItem("OTP",isVerified);
+            sessionStorage.setItem("OTP", isVerified);
             toast.success("Mã OTP chính xác")
         })
             .catch((err) => {
@@ -117,6 +122,17 @@ const TestOTP = () => {
                                 </div>
                             </div>
                         </section>
+
+                        <ToastContainer position="top-left"
+                            autoClose={1000}
+                            hideProgressBar={false}
+                            newestOnTop={false}
+                            closeOnClick
+                            rtl={false}
+                            pauseOnFocusLoss
+                            draggable
+                            pauseOnHover
+                            theme="colored" />
                     </div>
 
                 }
@@ -144,6 +160,7 @@ const TestOTP = () => {
                                                 OTP gửi lại sau <span style={{ color: "#FF6601", fontWeight: "bold" }}>
                                                     00:{counter}</span>
                                             </Typography>
+                                            <div id="recaptcha-container"></div>
                                             <button className='btn btn-light' style={{ width: "20%" }} disabled={buttonDisabled} onClick={reSendOTP}>
                                                 {buttonDisabled ? 'Vui lòng đợi 1 phút' : 'Gửi lại mã'}</button>
                                         </Box>
@@ -153,19 +170,9 @@ const TestOTP = () => {
                         </section>
                     </div>
                 }
-
             </center>
 
-            <ToastContainer position="top-left"
-                autoClose={5000}
-                hideProgressBar={false}
-                newestOnTop={false}
-                closeOnClick
-                rtl={false}
-                pauseOnFocusLoss
-                draggable
-                pauseOnHover
-                theme="colored" />
+
         </div>
 
     );
