@@ -167,10 +167,6 @@ public class SupplierServiceImpl implements ISupplierService {
         if (supplierRepository.existsBySupplierPhoneAndUserId(supplierPhone, userId)) { /* if phone number existed */
             return new ResponseEntity<>("Số điện thoại đã được sử dụng.", HttpStatus.BAD_REQUEST);
         }
-        // Address
-        if (supplierAddress.equals("")) { /* Address is empty */
-            return new ResponseEntity<>("Địa chỉ không được để trống.", HttpStatus.BAD_REQUEST);
-        }
         // Facility name
         if (facilityName.equals("")) { /* Facility name is empty */
             return new ResponseEntity<>("Tên cơ sở không được để trống.", HttpStatus.BAD_REQUEST);
@@ -183,6 +179,10 @@ public class SupplierServiceImpl implements ISupplierService {
             return new ResponseEntity<>("Email không hợp lệ.", HttpStatus.BAD_REQUEST);
         }
         // Address
+        if (supplierAddress.equals("")) { /* Address is empty */
+            return new ResponseEntity<>("Địa chỉ không được để trống.", HttpStatus.BAD_REQUEST);
+        }
+        System.out.println(supplierAddress);
         try {
             AddressPojo address = objectMapper.readValue(supplierAddress, AddressPojo.class);
             address.city = stringDealer.trimMax(address.city);
@@ -205,16 +205,17 @@ public class SupplierServiceImpl implements ISupplierService {
                 return new ResponseEntity<>("Xã không được để trống", HttpStatus.BAD_REQUEST);
             }
             supplierAddress = objectMapper.writeValueAsString(address);
+            System.out.println(supplierAddress);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
         // Set attribute
         supplier.setUserId(userId);
-        supplier.setSupplierName(createSupplierDTO.getSupplierName());
-        supplier.setSupplierPhone(createSupplierDTO.getSupplierPhone());
+        supplier.setSupplierName(supplierName);
+        supplier.setSupplierPhone(supplierPhone);
         supplier.setSupplierAddress(supplierAddress);
-        supplier.setFacilityName(createSupplierDTO.getFacilityName());
-        supplier.setSupplierMail(createSupplierDTO.getSupplierMail());
+        supplier.setFacilityName(facilityName);
+        supplier.setSupplierMail(supplierMail);
         supplier.setStatus(1);
         // Save
         supplierRepository.save(supplier);
@@ -273,10 +274,6 @@ public class SupplierServiceImpl implements ISupplierService {
                 (supplierRepository.existsBySupplierPhoneAndUserId(updateSupplierDTO.getSupplierPhone(), userId))) {
             return new ResponseEntity<>("Số điện thoại đã được sử dụng.", HttpStatus.BAD_REQUEST);
         }
-        // Address
-        if (supplierAddress.equals("")) { /* Address is empty */
-            return new ResponseEntity<>("Địa chỉ không được để trống.", HttpStatus.BAD_REQUEST);
-        }
         // Facility name
         if (facilityName.equals("")) { /* Facility name is empty */
             return new ResponseEntity<>("Tên cơ sở không được để trống.", HttpStatus.BAD_REQUEST);
@@ -289,6 +286,10 @@ public class SupplierServiceImpl implements ISupplierService {
             return new ResponseEntity<>("Email không hợp lệ.", HttpStatus.BAD_REQUEST);
         }
         // Address
+        if (supplierAddress.equals("")) { /* Address is empty */
+            return new ResponseEntity<>("Địa chỉ không được để trống.", HttpStatus.BAD_REQUEST);
+        }
+        System.out.println(supplierAddress);
         try {
             AddressPojo address = objectMapper.readValue(supplierAddress, AddressPojo.class);
             address.city = stringDealer.trimMax(address.city);
@@ -311,6 +312,7 @@ public class SupplierServiceImpl implements ISupplierService {
                 return new ResponseEntity<>("Xã không được để trống", HttpStatus.BAD_REQUEST);
             }
             supplierAddress = objectMapper.writeValueAsString(address);
+            System.out.println(supplierAddress);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

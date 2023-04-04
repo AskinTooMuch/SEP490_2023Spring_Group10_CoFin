@@ -19,6 +19,8 @@ import com.example.eims.repository.UserRepository;
 import com.example.eims.service.interfaces.IFacilityService;
 import com.example.eims.utils.StringDealer;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.configurationprocessor.json.JSONException;
+import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -114,45 +116,79 @@ public class FacilityServiceImpl implements IFacilityService {
             }
             Facility facility = facilityOptional.get();
             // Facility name
-            if (updateFacilityDTO.getFacilityName() == null || updateFacilityDTO.getFacilityName().equals("")) { /* Facility name empty */
+            String name = stringDealer.trimMax(updateFacilityDTO.getFacilityName());
+            if (name.equals("")) { /* Facility name empty */
                 return new ResponseEntity<>("Tên cơ sở không được để trống", HttpStatus.BAD_REQUEST);
             }
-            String name = stringDealer.trimMax(updateFacilityDTO.getFacilityName());
             // Found date
-            if (updateFacilityDTO.getFoundDate() == null || updateFacilityDTO.getFoundDate().equals("")) { /* Found date is empty */
+            String fDate = updateFacilityDTO.getFoundDate();
+            if (fDate.equals("")) { /* Found date is empty */
                 return new ResponseEntity<>("Ngày thành lập không được để trống", HttpStatus.BAD_REQUEST);
             }
-            String fDate = updateFacilityDTO.getFoundDate();
             Date foundDate = stringDealer.convertToDateAndFormat(fDate);
             if(foundDate.after(Date.valueOf(LocalDate.now()))){
                 return new ResponseEntity<>("Ngày thành lập không hợp lệ", HttpStatus.BAD_REQUEST);
             }
             // Hotline
-            if (updateFacilityDTO.getHotline() == null || stringDealer.trimMax(updateFacilityDTO.getHotline()).equals("")) { /* Hotline empty */
+            String hotline = stringDealer.trimMax(updateFacilityDTO.getHotline());
+            if (hotline.equals("")) { /* Hotline empty */
                 return new ResponseEntity<>("Hotline không được để trống", HttpStatus.BAD_REQUEST);
             }
-            String hotline = stringDealer.trimMax(updateFacilityDTO.getHotline());
             if (!stringDealer.checkPhoneRegex(hotline)) { /* Hotline is not valid */
                 return new ResponseEntity<>("Hotline không hợp lệ", HttpStatus.BAD_REQUEST);
             }
             // Facility address
+            String facilityAddress = stringDealer.trimMax(updateFacilityDTO.getFacilityAddress());
             if (updateFacilityDTO.getFacilityAddress() == null || stringDealer.trimMax(updateFacilityDTO.getFacilityAddress()).equals("")) { /* Facility address empty */
                 return new ResponseEntity<>("Địa chỉ cơ sở không được để trống", HttpStatus.BAD_REQUEST);
             }
-            String address = stringDealer.trimMax(updateFacilityDTO.getFacilityAddress());
+            JSONObject addressObj;
+            try {
+                addressObj = new JSONObject(facilityAddress);
+                String city = stringDealer.trimMax((String) addressObj.get("city"));
+                String district = stringDealer.trimMax((String) addressObj.get("district"));
+                String ward = stringDealer.trimMax((String) addressObj.get("ward"));
+                String street = stringDealer.trimMax((String) addressObj.get("street"));
+                if (city == null || city.equals("")) {
+                    return new ResponseEntity<>("Thành phố không được để trống", HttpStatus.BAD_REQUEST);
+                }
+                if (district == null || district.equals("")) {
+                    return new ResponseEntity<>("Quận/Huyện không được để trống", HttpStatus.BAD_REQUEST);
+                }
+                if (ward == null || ward.equals("")) {
+                    return new ResponseEntity<>("Phường xã không được để trống", HttpStatus.BAD_REQUEST);
+                }
+                if (street == null || street.equals("")) {
+                    return new ResponseEntity<>("Số nhà không được để trống", HttpStatus.BAD_REQUEST);
+                }
+                if (street.length() > 30) {
+                    return new ResponseEntity<>("Số nhà không được quá 30 kí tự", HttpStatus.BAD_REQUEST);
+                }
+                addressObj = new JSONObject();
+                addressObj.put("city", city);
+                addressObj.put("district", district);
+                addressObj.put("ward", ward);
+                addressObj.put("street", street);
+                facilityAddress = addressObj.toString();
+            } catch (JSONException e) {
+                throw new RuntimeException(e);
+            }
+
             // Business license number
-            if (updateFacilityDTO.getBusinessLicenseNumber() == null || stringDealer.trimMax(updateFacilityDTO.getBusinessLicenseNumber()).equals("")) { /* Business License Number empty */
+            String licenseNumber = stringDealer.trimMax(updateFacilityDTO.getBusinessLicenseNumber());
+            if (licenseNumber.equals("")) { /* Business License Number empty */
                 return new ResponseEntity<>("Số đăng kí kinh doanh không được để trống", HttpStatus.BAD_REQUEST);
             }
-            String licenseNumber = stringDealer.trimMax(updateFacilityDTO.getBusinessLicenseNumber());
+            if (licenseNumber.length() != 10) { /* Business License Number empty */
+                return new ResponseEntity<>("Số đăng kí kinh doanh phải có 10 kí tự", HttpStatus.BAD_REQUEST);
+            }
             // Status
             int status = updateFacilityDTO.getStatus();
-
             // Set attribute
             facility.setFacilityName(name);
             facility.setFacilityFoundDate(foundDate);
             facility.setHotline(hotline);
-            facility.setFacilityAddress(address);
+            facility.setFacilityAddress(facilityAddress);
             facility.setBusinessLicenseNumber(licenseNumber);
             facility.setStatus(status);
             // Save

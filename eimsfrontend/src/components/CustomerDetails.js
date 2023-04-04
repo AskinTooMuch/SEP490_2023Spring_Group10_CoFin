@@ -405,7 +405,7 @@ export default function BasicTabs() {
                                             <select className="form-control mt-1" id="udistrict" name="supplierDistrict"
                                                 ref={userRef}
                                                 autoComplete="off"
-                                                onChange={(e) => loadWard(e.target.value)}
+                                                onChange={(e) => loadWard(e.target.value, -1)}
                                                 value={districtIndex}
                                             >
                                                 <option value="" disabled selected>Chọn Quận/Huyện</option>

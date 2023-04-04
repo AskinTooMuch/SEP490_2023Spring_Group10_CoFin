@@ -152,29 +152,37 @@ public class CustomerServiceImpl implements ICustomerService {
         if (createCustomerDTO.getCustomerAddress() == null || customerAddress.equals("")) { /* Address is empty */
             return new ResponseEntity<>("Địa chỉ không được để trống", HttpStatus.BAD_REQUEST);
         }
+
+        JSONObject addressObj;
+        System.out.println(customerAddress);
         try {
-            AddressPojo address = objectMapper.readValue(customerAddress, AddressPojo.class);
-            address.city = stringDealer.trimMax(address.city);
-            address.district = stringDealer.trimMax(address.district);
-            address.ward = stringDealer.trimMax(address.ward);
-            address.street = stringDealer.trimMax(address.street);
-            if (address.street.equals("")) {
-                return new ResponseEntity<>("Số nhà không được để trống", HttpStatus.BAD_REQUEST);
-            }
-            if (address.street.length() > 30) {
-                return new ResponseEntity<>("Số nhà không được dài hơn 30 ký tự", HttpStatus.BAD_REQUEST);
-            }
-            if (address.city.equals("")) {
+            addressObj = new JSONObject(customerAddress);
+            String city = stringDealer.trimMax((String) addressObj.get("city"));
+            String district = stringDealer.trimMax((String) addressObj.get("district"));
+            String ward = stringDealer.trimMax((String) addressObj.get("ward"));
+            String street = stringDealer.trimMax((String) addressObj.get("street"));
+            if (city == null || city.equals("")) {
                 return new ResponseEntity<>("Thành phố không được để trống", HttpStatus.BAD_REQUEST);
             }
-            if (address.district.equals("")) {
-                return new ResponseEntity<>("Huyện không được để trống", HttpStatus.BAD_REQUEST);
+            if (district == null || district.equals("")) {
+                return new ResponseEntity<>("Quận/Huyện không được để trống", HttpStatus.BAD_REQUEST);
             }
-            if (address.ward.equals("")) {
-                return new ResponseEntity<>("Xã không được để trống", HttpStatus.BAD_REQUEST);
+            if (ward == null || ward.equals("")) {
+                return new ResponseEntity<>("Phường xã không được để trống", HttpStatus.BAD_REQUEST);
             }
-            customerAddress = objectMapper.writeValueAsString(address);
-        } catch (Exception e) {
+            if (street == null || street.equals("")) {
+                return new ResponseEntity<>("Số nhà không được để trống", HttpStatus.BAD_REQUEST);
+            }
+            if (street.length() > 30) {
+                return new ResponseEntity<>("Số nhà không được quá 30 kí tự", HttpStatus.BAD_REQUEST);
+            }
+            addressObj = new JSONObject();
+            addressObj.put("city", city);
+            addressObj.put("district", district);
+            addressObj.put("ward", ward);
+            addressObj.put("street", street);
+            customerAddress = addressObj.toString();
+        } catch (JSONException e) {
             throw new RuntimeException(e);
         }
         // Retrieve customer information and create new customer
@@ -224,14 +232,14 @@ public class CustomerServiceImpl implements ICustomerService {
 
         // Check inputs
         // Name
-        if (name == null || name.equals("")) { /* Customer name is empty */
+        if (name.equals("")) { /* Customer name is empty */
             return new ResponseEntity<>("Tên khách hàng không được để trống", HttpStatus.BAD_REQUEST);
         }
         if (name.length() > 32) { /* Supplier name is empty */
             return new ResponseEntity<>("Tên khách hàng không được dài hơn 32 ký tự.", HttpStatus.BAD_REQUEST);
         }
         // Phone number
-        if (newPhone == null || newPhone.equals("")) { /* Phone number is empty */
+        if (newPhone.equals("")) { /* Phone number is empty */
             return new ResponseEntity<>("Số điện thoại không được để trống", HttpStatus.BAD_REQUEST);
         }
         if (!stringDealer.checkPhoneRegex(newPhone)) { /* Phone number is not valid */
@@ -246,32 +254,39 @@ public class CustomerServiceImpl implements ICustomerService {
             return new ResponseEntity<>("Email không hợp lệ", HttpStatus.BAD_REQUEST);
         }
         // Address
-        if (customerAddress == null || customerAddress.equals("")) { /* Address is empty */
+        if (customerAddress.equals("")) { /* Address is empty */
             return new ResponseEntity<>("Địa chỉ không được để trống", HttpStatus.BAD_REQUEST);
         }
+        JSONObject addressObj;
+        System.out.println(customerAddress);
         try {
-            AddressPojo address = objectMapper.readValue(customerAddress, AddressPojo.class);
-            address.city = stringDealer.trimMax(address.city);
-            address.district = stringDealer.trimMax(address.district);
-            address.ward = stringDealer.trimMax(address.ward);
-            address.street = stringDealer.trimMax(address.street);
-            if (address.street.equals("")) {
-                return new ResponseEntity<>("Số nhà không được để trống", HttpStatus.BAD_REQUEST);
-            }
-            if (address.street.length() > 30) {
-                return new ResponseEntity<>("Số nhà không được dài hơn 30 ký tự", HttpStatus.BAD_REQUEST);
-            }
-            if (address.city.equals("")) {
+            addressObj = new JSONObject(customerAddress);
+            String city = stringDealer.trimMax((String) addressObj.get("city"));
+            String district = stringDealer.trimMax((String) addressObj.get("district"));
+            String ward = stringDealer.trimMax((String) addressObj.get("ward"));
+            String street = stringDealer.trimMax((String) addressObj.get("street"));
+            if (city == null || city.equals("")) {
                 return new ResponseEntity<>("Thành phố không được để trống", HttpStatus.BAD_REQUEST);
             }
-            if (address.district.equals("")) {
-                return new ResponseEntity<>("Huyện không được để trống", HttpStatus.BAD_REQUEST);
+            if (district == null || district.equals("")) {
+                return new ResponseEntity<>("Quận/Huyện không được để trống", HttpStatus.BAD_REQUEST);
             }
-            if (address.ward.equals("")) {
-                return new ResponseEntity<>("Xã không được để trống", HttpStatus.BAD_REQUEST);
+            if (ward == null || ward.equals("")) {
+                return new ResponseEntity<>("Phường xã không được để trống", HttpStatus.BAD_REQUEST);
             }
-            customerAddress = objectMapper.writeValueAsString(address);
-        } catch (Exception e) {
+            if (street == null || street.equals("")) {
+                return new ResponseEntity<>("Số nhà không được để trống", HttpStatus.BAD_REQUEST);
+            }
+            if (street.length() > 30) {
+                return new ResponseEntity<>("Số nhà không được quá 30 kí tự", HttpStatus.BAD_REQUEST);
+            }
+            addressObj = new JSONObject();
+            addressObj.put("city", city);
+            addressObj.put("district", district);
+            addressObj.put("ward", ward);
+            addressObj.put("street", street);
+            customerAddress = addressObj.toString();
+        } catch (JSONException e) {
             throw new RuntimeException(e);
         }
         // Status
