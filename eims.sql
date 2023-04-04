@@ -235,6 +235,7 @@ CREATE TABLE subscription(
     cost			decimal(15,2) 	NOT NULL,
     duration		integer			NOT NULL,
     machine_quota	integer			NOT NULL,
+    recommended		boolean			NOT NULL DEFAULT 0,
     status 			boolean			NOT NULL
 );
 
@@ -642,12 +643,12 @@ VALUES 	(1, 1, 'Máy ấp kho', '6000', '0', '2019-02-17', 0, 1),
         (2, 1, 'Máy nở to', '4000', '0', '2019-02-17', 0, 1);
 
 -- subscription
-INSERT INTO subscription(subscription_id, cost, duration, machine_quota, status)
-VALUES 	(1, 0, 30, 5, 1),
-		(2, 500000, 30, 5, 1),
-		(3, 1300000, 90, 5, 1),
-		(4, 2400000, 180, 10, 1),
-		(5, 4000000, 365, 15, 1);
+INSERT INTO subscription(subscription_id, cost, duration, machine_quota, recommended, status)
+VALUES 	(1, 0, 30, 5, 0, 0),
+		(2, 500000, 30, 5, 0, 1),
+		(3, 1300000, 90, 5, 0, 1),
+		(4, 2400000, 180, 10, 1, 1),
+		(5, 4000000, 365, 15, 0, 1);
         
 -- user_subscription
 INSERT INTO user_subsription(facility_id, subscription_id, subscribe_date, status)

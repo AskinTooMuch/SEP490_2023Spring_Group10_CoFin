@@ -28,6 +28,13 @@ import java.util.Objects;
 public class PaymentController {
     @Autowired
     StripeServiceImpl stripeService;
+
+    /**
+     * Make a payment through Stripe
+     * @param chargeDTO
+     * @return
+     * @throws Exception
+     */
     @PostMapping("/charge")
     public ResponseEntity<?> chargeCard(@RequestBody ChargeDTO chargeDTO) throws Exception {
         PaymentIntent intent = stripeService.createCharge(chargeDTO);

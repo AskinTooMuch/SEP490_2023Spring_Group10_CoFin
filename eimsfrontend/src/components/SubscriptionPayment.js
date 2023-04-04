@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe} from '@stripe/stripe-js';
-import { CardElement, useElements, useStripe } from '@stripe/react-stripe-js';
+import { useNavigate, useLocation } from "react-router-dom";
 import axios from 'axios';
 import PaymentForm from './PaymentForm';
 
@@ -11,10 +11,23 @@ const PUBLIC_KEY = 'pk_test_51MsHItAecmTOEDnIXCk62F10thHcVgo1OcclEEjndJsVYHa7iWz
 const stripeTestPromise = loadStripe(PUBLIC_KEY);
 
 export default function SubscriptionPayment() {
+    //Get sent params
+    const { state } = useLocation();
+    const { id } = state;
     
     return (
-        <Elements stripe = {stripeTestPromise}>
+        <div className='row'>
+            <div className='col-md-3'>
+                <span>{id}</span>
+            </div>
+            <div className='col-md-6'>
+                <Elements stripe = {stripeTestPromise}>
             <PaymentForm/>
-        </Elements>
+            </Elements>
+            </div>
+            <div className='col-md-3'></div>
+        
+        </div>
+        
     )
 }

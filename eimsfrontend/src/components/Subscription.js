@@ -44,11 +44,50 @@ function a11yProps(index) {
 }
 
 export default function BasicTabs() {
+  //URL
+  const GET_ALL_ACTIVE_SUBSCRIPTION = '/api/subscription/getActive';
+
+  //DATA
+  const [subscriptionList, setSubscriptionList] = useState([]);
+
+  // Get list of subscription packs and show
+  //Get subscription pack list
+  useEffect(() => {
+    loadActiveSubscription();
+  }, []);
+
+  // Request supplier list and load the supplier list into the table rows
+  const loadActiveSubscription = async () => {
+    try {
+      const result = await axios.get(GET_ALL_ACTIVE_SUBSCRIPTION,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*'
+          },
+          withCredentials: true
+        });
+      setSubscriptionList(result.data);
+      console.log(subscriptionList);
+    } catch (err) {
+      if (!err?.response) {
+        toast.error('Server không phản hồi');
+      } else {
+        if ((err.response.data === null) || (err.response.data === '')) {
+          toast.error('Có lỗi xảy ra, vui lòng thử lại');
+        } else {
+          toast.error(err.response.data);
+        }
+      }
+    }
+  }
 
   //Navigate to detail Page
   let navigate = useNavigate();
+  const routeChange = (sid) => {
+    navigate('/subscriptionPayment', { state: { id: sid } });
+  }
   const [value, setValue] = React.useState(0);
-
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
@@ -65,153 +104,117 @@ export default function BasicTabs() {
             <Tab id="history" style={{ textTransform: "capitalize" }} label="Lịch sử" {...a11yProps(1)} />
           </Tabs>
         </Box>
-        <Subscription value={value} index={0}>
-          <div className="wrapper">
-            <div className="table basic">
-              <div className="price-section">
-                <div className="price-area">
-                  <div className="inner-area">
-                    <span className="text">VNĐ</span>
-                    <span className="price">200.000</span>
-                  </div>
+        {/* Print out subscription list */}
+        {
+          subscriptionList && subscriptionList.length > 0
+            ? subscriptionList.map((item, index) =>
+              <Subscription value={value} index={0}>
+                <div className="wrapper">
+                  {item.recommended
+                    ?
+                    <div className="table premium">
+                      <div className="ribbon"><span>Khuyến nghị</span></div>
+                      <div className="price-section">
+                        <div className="price-area">
+                          <div className="inner-area">
+                            <span className="text">VNĐ</span>
+                            <span className="price">{item.cost.toLocaleString("de-DE")}</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="package-name">Gói {item.subscriptionId}</div>
+                      <ul className="features">
+                        <li>
+                          <span className="list-name">Thời gian hiệu lực {item.duration} ngày.</span>
+                          <span className="icon check"><i className="fas fa-check"></i></span>
+                        </li>
+                        <li>
+                          <span className="list-name">Tối đa sử dụng cho {item.machineQuota} máy.</span>
+                          <span className="icon check"><i className="fas fa-check"></i></span>
+                        </li>
+                      </ul>
+                      <div className="btn" onClick={() => routeChange(item.subscriptionId)}><button>Mua</button></div>
+                    </div>
+                    : <div className="table basic">
+                      <div className="price-section">
+                        <div className="price-area">
+                          <div className="inner-area">
+                          <span className="text">VNĐ</span>
+                            <span className="price">{item.cost.toLocaleString("de-DE")}</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="package-name">Gói {item.subscriptionId}</div>
+                      <ul className="features">
+                        <li>
+                          <span className="list-name">Thời gian hiệu lực {item.duration} ngày.</span>
+                          <span className="icon check"><i className="fas fa-check"></i></span>
+                        </li>
+                        <li>
+                          <span className="list-name">Tối đa sử dụng cho {item.machineQuota} máy.</span>
+                          <span className="icon check"><i className="fas fa-check"></i></span>
+                        </li>
+                      </ul>
+                      <div className="btn" onClick={() => routeChange(item.subscriptionId)}><button>Mua</button></div>
+                    </div>
+                  }
                 </div>
-              </div>
-              <div className="package-name"></div>
-              <ul className="features">
-                <li>
-                  <span className="list-name">One Selected Template</span>
-                  <span className="icon check"><i className="fas fa-check"></i></span>
-                </li>
-                <li>
-                  <span className="list-name">100% Responsive Design</span>
-                  <span className="icon check"><i className="fas fa-check"></i></span>
-                </li>
-                <li>
-                  <span className="list-name">Credit Remove Permission</span>
-                  <span className="icon cross"><i className="fas fa-times"></i></span>
-                </li>
-                <li>
-                  <span className="list-name">Lifetime Template Updates</span>
-                  <span className="icon cross"><i className="fas fa-times"></i></span>
-                </li>
-              </ul>
-              <div className="btn" onClick={() => navigate("/subscriptionPayment")}><button>Mua</button></div>
+              </Subscription>
+            )
+            : 'Không tìm thấy gói đăng ký khả dụng'
+        }
+      <Subscription value={value} index={1}>
+        <section className="u-align-center u-clearfix u-section-1" id="sec-b42b">
+          <div className="u-clearfix u-sheet u-sheet-1">
+
+            <div className="u-expanded-width u-table u-table-responsive u-table-1">
+              <table className="u-table-entity u-table-entity-1">
+                <colgroup>
+                  <col width="5%" />
+                  <col width="35%" />
+                  <col width="30%" />
+                  <col width="30%" />
+                </colgroup>
+                <thead className="u-palette-4-base u-table-header u-table-header-1">
+                  <tr style={{ height: "21px" }}>
+                    <th className="u-border-1 u-border-custom-color-1 u-palette-2-base u-table-cell u-table-cell-1">STT</th>
+                    <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-2">Tên gói</th>
+                    <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-3">Ngày đăng ký</th>
+                    <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-5">Giá gói</th>
+                  </tr>
+                </thead>
+                <tbody className="u-table-body">
+                  <tr style={{ height: "76px" }}>
+                    <td className="u-border-1 u-border-grey-30 u-first-column u-grey-5 u-table-cell u-table-cell-5">1</td>
+                    <td className="u-border-1 u-border-grey-30 u-table-cell">Gói 1 tháng</td>
+                    <td className="u-border-1 u-border-grey-30 u-table-cell">01/12/2022</td>
+                    <td className="u-border-1 u-border-grey-30 u-table-cell ">100.000 VNĐ</td>
+                  </tr>
+                  <tr style={{ height: "76px" }}>
+                    <td className="u-border-1 u-border-grey-30 u-first-column u-grey-5 u-table-cell u-table-cell-9">2</td>
+                    <td className="u-border-1 u-border-grey-30 u-table-cell">Gói 1 tháng</td>
+                    <td className="u-border-1 u-border-grey-30 u-table-cell">01/01/2023</td>
+                    <td className="u-border-1 u-border-grey-30 u-table-cell ">100.000 VNĐ</td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
-            <div className="table premium">
-              <div className="ribbon"><span>Khuyến nghị</span></div>
-              <div className="price-section">
-                <div className="price-area">
-                  <div className="inner-area">
-                    <span className="text">VNĐ</span>
-                    <span className="price">500.000</span>
-                  </div>
-                </div>
-              </div>
-              <div className="package-name"></div>
-              <ul className="features">
-                <li>
-                  <span className="list-name">Five Existing Templates</span>
-                  <span className="icon check"><i className="fas fa-check"></i></span>
-                </li>
-                <li>
-                  <span className="list-name">100% Responsive Design</span>
-                  <span className="icon check"><i className="fas fa-check"></i></span>
-                </li>
-                <li>
-                  <span className="list-name">Credit Remove Permission</span>
-                  <span className="icon check"><i className="fas fa-check"></i></span>
-                </li>
-                <li>
-                  <span className="list-name">Lifetime Template Updates</span>
-                  <span className="icon cross"><i className="fas fa-times"></i></span>
-                </li>
-              </ul>
-              <div className="btn"><button>Mua</button></div>
-            </div>
-            <div className="table ultimate">
-              <div className="price-section">
-                <div className="price-area">
-                  <div className="inner-area">
-                    <span className="text">VNĐ</span>
-                    <span className="price">900.000</span>
-                  </div>
-                </div>
-              </div>
-              <div className="package-name"></div>
-              <ul className="features">
-                <li>
-                  <span className="list-name">All Existing Templates</span>
-                  <span className="icon check"><i className="fas fa-check"></i></span>
-                </li>
-                <li>
-                  <span className="list-name">100% Responsive Design</span>
-                  <span className="icon check"><i className="fas fa-check"></i></span>
-                </li>
-                <li>
-                  <span className="list-name">Credit Remove Permission</span>
-                  <span className="icon check"><i className="fas fa-check"></i></span>
-                </li>
-                <li>
-                  <span className="list-name">Lifetime Template Updates</span>
-                  <span className="icon check"><i className="fas fa-check"></i></span>
-                </li>
-              </ul>
-              <div className="btn"><button>Mua</button></div>
-            </div>
+            <ToastContainer position="top-left"
+              autoClose={5000}
+              hideProgressBar={false}
+              newestOnTop={false}
+              closeOnClick
+              rtl={false}
+              pauseOnFocusLoss
+              draggable
+              pauseOnHover
+              theme="colored" />
+
           </div>
-        </Subscription>
-        <Subscription value={value} index={1}>
-          <section className="u-align-center u-clearfix u-section-1" id="sec-b42b">
-            <div className="u-clearfix u-sheet u-sheet-1">
-
-              <div className="u-expanded-width u-table u-table-responsive u-table-1">
-                <table className="u-table-entity u-table-entity-1">
-                  <colgroup>
-                    <col width="5%" />
-                    <col width="35%" />
-                    <col width="30%" />
-                    <col width="30%" />
-                  </colgroup>
-                  <thead className="u-palette-4-base u-table-header u-table-header-1">
-                    <tr style={{ height: "21px" }}>
-                      <th className="u-border-1 u-border-custom-color-1 u-palette-2-base u-table-cell u-table-cell-1">STT</th>
-                      <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-2">Tên gói</th>
-                      <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-3">Ngày đăng ký</th>
-                      <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-5">Giá gói</th>
-                    </tr>
-                  </thead>
-                  <tbody className="u-table-body">
-                    <tr style={{ height: "76px" }}>
-                      <td className="u-border-1 u-border-grey-30 u-first-column u-grey-5 u-table-cell u-table-cell-5">1</td>
-                      <td className="u-border-1 u-border-grey-30 u-table-cell">Gói 1 tháng</td>
-                      <td className="u-border-1 u-border-grey-30 u-table-cell">01/12/2022</td>
-                      <td className="u-border-1 u-border-grey-30 u-table-cell ">100.000 VNĐ</td>
-                    </tr>
-                    <tr style={{ height: "76px" }}>
-                      <td className="u-border-1 u-border-grey-30 u-first-column u-grey-5 u-table-cell u-table-cell-9">2</td>
-                      <td className="u-border-1 u-border-grey-30 u-table-cell">Gói 1 tháng</td>
-                      <td className="u-border-1 u-border-grey-30 u-table-cell">01/01/2023</td>
-                      <td className="u-border-1 u-border-grey-30 u-table-cell ">100.000 VNĐ</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-              <ToastContainer position="top-left"
-                autoClose={5000}
-                hideProgressBar={false}
-                newestOnTop={false}
-                closeOnClick
-                rtl={false}
-                pauseOnFocusLoss
-                draggable
-                pauseOnHover
-                theme="colored" />
-
-            </div>
-          </section>
-        </Subscription>
-      </Box>
-    </WithPermission>
+        </section>
+      </Subscription>
+    </Box>
+    </WithPermission >
 
   );
 }
