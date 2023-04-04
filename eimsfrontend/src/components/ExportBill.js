@@ -37,7 +37,7 @@ const ExportBill = () => {
                         'Content-Type': 'application/json',
                         'Access-Control-Allow-Origin': '*'
                     },
-                    withCredentials: false
+                    withCredentials: true
                 });
                 console.log(JSON.stringify(result.data))
             setExportList(result.data);

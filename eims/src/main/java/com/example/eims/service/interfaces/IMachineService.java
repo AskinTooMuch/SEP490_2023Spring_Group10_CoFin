@@ -7,6 +7,7 @@
  * Record of change:<br>
  * DATE         Version     Author      DESCRIPTION<br>
  * 02/03/2023   1.0         DuongVV     First Deploy<br>
+ * 04/04/2023   1.2         DuongVV     Update function<br>
  */
 
 package com.example.eims.service.interfaces;
@@ -83,4 +84,12 @@ public interface IMachineService {
      * @return page of machines
      */
     public ResponseEntity<?> getAllMachinePaging(Long facilityId, Integer page, Integer size, String sort);
+
+    /**
+     * Get current running machines.
+     *
+     * @param facilityId the id of the facility
+     * @return
+     */
+    public ResponseEntity<?> getMachineDashboard(Long facilityId);
 }

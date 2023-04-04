@@ -9,6 +9,7 @@
  * 18/02/2023    1.0        DuongVV          First Deploy<br>
  * 28/02/2023    2.0        DuongVV          Add Paging<br>
  * 02/03/2023    3.0        DuongVV          New code structure<br>
+ * 04/04/2023    3.1         DuongVV          Update function<br>
  */
 
 package com.example.eims.controller;
@@ -128,5 +129,16 @@ public class MachineController {
                                                   @RequestParam(name = "size", required = false, defaultValue = "5") Integer size,
                                                   @RequestParam(name = "sort", required = false, defaultValue = "ASC") String sort) {
         return machineService.getAllMachinePaging(facilityId, page, size, sort);
+    }
+
+    /**
+     * Get current running machines.
+     *
+     * @param facilityId the id of the facility
+     * @return
+     */
+    @GetMapping("/dashboard")
+    public ResponseEntity<?> getMachineDashboard(@RequestParam Long facilityId){
+        return  machineService.getMachineDashboard(facilityId);
     }
 }

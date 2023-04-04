@@ -1,103 +1,106 @@
-import * as React from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from "react-router-dom";
 import { ProgressBar } from 'react-bootstrap';
 import "../css/dashboard.css"
 import WithPermission from '../utils.js/WithPermission';
+import axios from 'axios';
+import { ToastContainer, toast } from 'react-toastify';
+
 const Dashboard = () => {
+  // Dependency
+  const [dataLoaded, setDataLoaded] = useState(false);
+
+  //API URLs
+  const MACHINE_DASHBOARD = '/api/machine/dashboard'
+
+  //Data holding objects
+  const [machineList, setMachineList] = useState([]);
+
+  // 
+  useEffect(() => {
+    if (dataLoaded) return;
+    loadMachineList();
+    setDataLoaded(true);
+  }, []);
+
+  // Get export list
+  const loadMachineList = async () => {
+    try {
+      const result = await axios.get(MACHINE_DASHBOARD,
+        { params: { facilityId: sessionStorage.getItem("facilityId") } },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*'
+          },
+          withCredentials: true
+        });
+      console.log(JSON.stringify(result.data))
+      setMachineList(result.data);
+    } catch (err) {
+      if (!err?.response) {
+        toast.error('Server không phản hồi');
+      } else {
+        if ((err.response.data === null) || (err.response.data === '')) {
+          toast.error('Có lỗi xảy ra, vui lòng thử lại');
+        } else {
+          toast.error(err.response.data);
+        }
+      }
+    }
+  }
+
+  let navigate = useNavigate();
+  const routeChange = (mid) => {
+    navigate('/machinedetail', { state: { id: mid } });
+  }
+
   const progress = 65;
   return (
     <div>
       <WithPermission roleRequired='2'>
         <div className="container">
           <div className="row">
-            <div className="col-md-3 col-sm-6">
-              <div className="serviceBox orange">
-                <div className="service-icon">
-                  <span>Máy ấp 40</span>
-                </div>
-                <p className="description">
-                  <span>Lô HDC216</span>
-                  <ProgressBar now={100} variant="success" label={`${100}% `} />
-
-                  <span>Lô CUS937</span>
-                  <ProgressBar now={70} variant="warning" label={`${70}% `} />
-
-                  <span>Lô CUS937</span>
-                  <ProgressBar now={progress} variant="info" label={`${progress}% `} />
-
-                  <span>Lô CCC696</span>
-                  <ProgressBar now={20} variant="danger" label={`${20}% `} />
-
-                </p>
-                <h3 className="title">3000/3000</h3>
-              </div>
-            </div>
-            <div className="col-md-3 col-sm-6">
-              <div className="serviceBox orange">
-                <div className="service-icon">
-                  <span>Máy ấp 13</span>
-                </div>
-                <p className="description">
-                  <span>Lô HDC216</span>
-                  <ProgressBar now={progress} variant="success" label={`${progress}% `} />
-
-                  <span>Lô TQN712</span>
-                  <ProgressBar now={70} variant="warning" label={`${70}% `} />
-
-                  <span>Lô CLS451</span>
-                  <ProgressBar now={100} variant="info" label={`${100}% `} />
-
-                  <span>Lô CCC696</span>
-                  <ProgressBar now={20} variant="danger" label={`${20}% `} />
-                </p>
-                <h3 className="title">3000/3000</h3>
-              </div>
-            </div>
-            <div className="col-md-3 col-sm-6">
-              <div className="serviceBox orange">
-                <div className="service-icon">
-                  <span>Máy nở 61</span>
-                </div>
-                <p className="description">
-                  <span>Lô HDC216</span>
-                  <ProgressBar now={100} variant="success" label={`${100}% `} />
-
-                  <span>Lô CUS937</span>
-                  <ProgressBar now={70} variant="warning" label={`${70}% `} />
-
-                  <span>Lô CUS937</span>
-                  <ProgressBar now={progress} variant="info" label={`${progress}% `} />
-
-                  <span>Lô CCC696</span>
-                  <ProgressBar now={20} variant="danger" label={`${20}% `} />
-                </p>
-                <h3 className="title">900/1000</h3>
-              </div>
-            </div>
-            <div className="col-md-3 col-sm-6">
-              <div className="serviceBox orange">
-                <div className="service-icon">
-                  <span>Máy nở 1</span>
-                </div>
-                <p className="description">
-                  <span>Lô HDC216</span>
-                  <ProgressBar now={100} variant="success" label={`${100}% `} />
-
-                  <span>Lô CUS937</span>
-                  <ProgressBar now={70} variant="warning" label={`${70}% `} />
-
-                  <span>Lô CUS937</span>
-                  <ProgressBar now={progress} variant="info" label={`${progress}% `} />
-
-                  <span>Lô CCC696</span>
-                  <ProgressBar now={20} variant="danger" label={`${20}% `} />
-                </p>
-                <h3 className="title">3000/3000</h3>
-              </div>
-            </div>
-
+            {
+              machineList && machineList.length > 0
+                ? machineList.map((item) =>
+                  <div className="col-md-3 col-sm-6">
+                    <div className="serviceBox orange" onClick={() => routeChange(item.machineId)}>
+                      <div className="service-icon">
+                        <span>{item.machineTypeName}:{item.machineName}</span>
+                      </div>
+                      <p className="description">
+                        {
+                          item.eggs && item.eggs.length > 0
+                            ? item.eggs.map((itemm) =>
+                              <>
+                                <span>Mã lô {itemm.eggBatchId}: {itemm.incubationDateToNow}/{itemm.incubationPeriod} ngày </span>
+                                <p>Số lượng {itemm.amount}</p>
+                                <ProgressBar now={Math.round(itemm.incubationDateToNow / itemm.incubationPeriod * 100)} variant="success" label={` `} />
+                              </>
+                            )
+                            : ''
+                        }
+                      </p>
+                      <h3 className="title">{item.curCapacity}/{item.maxCapacity}</h3>
+                    </div>
+                  </div>
+                )
+                : 'Loading'
+            }
           </div>
         </div>
       </WithPermission>
+      <ToastContainer position="top-left"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="colored" />
     </div >
   );
 }
