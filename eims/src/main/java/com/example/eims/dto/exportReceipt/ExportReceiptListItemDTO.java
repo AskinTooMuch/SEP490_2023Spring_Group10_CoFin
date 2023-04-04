@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 
 @Data
 public class ExportReceiptListItemDTO {
-    private Long importId;
+    private Long exportId;
     private Long customerId;
     private String customerName;
     private LocalDateTime exportDate;

@@ -77,7 +77,7 @@ public class ExportReceiptServiceImpl implements IExportReceiptService {
             List<ExportReceiptListItemDTO> listDTO = new ArrayList<>();
             for (ExportReceipt receipt : exportReceiptList) {
                 ExportReceiptListItemDTO exportReceiptListItemDTO = new ExportReceiptListItemDTO();
-                exportReceiptListItemDTO.setImportId(receipt.getExportId());
+                exportReceiptListItemDTO.setExportId(receipt.getExportId());
                 exportReceiptListItemDTO.setCustomerId(receipt.getCustomerId());
                 Customer customer = customerRepository.findByCustomerId(receipt.getCustomerId()).get();
                 exportReceiptListItemDTO.setCustomerName(customer.getCustomerName());
@@ -138,13 +138,19 @@ public class ExportReceiptServiceImpl implements IExportReceiptService {
             dtoItem.setBreedName(breed.getBreedName());
             eggBatchListDto.add(dtoItem);
         }
-
+        System.out.println("list:"+eggBatchListDto);
+        // No available
+        if (eggBatchListDto.size() == 0) {
+            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
+        }
         // List product's phase number
         List<Integer> phases = Arrays.asList(0, 2, 3, 4, 6, 7, 8, 9);
         ArrayList<Integer> phaseList = new ArrayList<>(phases);
 
         // Check sold out
-        for (EggBatchDataForExportItemDTO eggBatch : eggBatchListDto) {
+        for (int i = 0; i < eggBatchListDto.size(); i++) {
+        //for (EggBatchDataForExportItemDTO eggBatch : eggBatchListDto) {
+            EggBatchDataForExportItemDTO eggBatch = eggBatchListDto.get(i);
             boolean soldOut = true;
             List<EggProduct> eggProductList = eggProductRepository.findByEggBatchId(eggBatch.getEggBatchId()).get();
             List<EggProductDataForExportItemDTO> eggProductDataForExportItemDTOS = new ArrayList<>();
@@ -240,6 +246,7 @@ public class ExportReceiptServiceImpl implements IExportReceiptService {
             Long exportId = exportReceiptInserted.getExportId();
             // Save exportDetail, update egg product current amount
             for (EggProductCreateExportDTO dto : createExportDTO.getEggProductList()) {
+                System.out.println(dto);
                 ExportDetail exportDetail = new ExportDetail();
                 exportDetail.setExportId(exportId);
                 exportDetail.setProductId(dto.getEggProductId());
@@ -247,7 +254,7 @@ public class ExportReceiptServiceImpl implements IExportReceiptService {
                 exportDetail.setVaccinePrice(dto.getPrice());
                 exportDetail.setAmount(dto.getExportAmount());
                 exportDetail.setStatus(1);
-                exportReceiptRepository.save(exportReceipt);
+                exportDetailRepository.save(exportDetail);
 
                 EggProduct eggProduct = eggProductRepository.getByProductId(dto.getEggProductId()).get();
                 eggProduct.setCurAmount(eggProduct.getCurAmount()-dto.getExportAmount());
@@ -299,6 +306,8 @@ public class ExportReceiptServiceImpl implements IExportReceiptService {
                     dtoItem.setBreedId(breed.getBreedId());
                     dtoItem.setBreedName(breed.getBreedName());
                     dtoItem.setProductName(incubationPhase.getPhaseDescription());
+                    dtoItem.setEggBatchId(eggBatch.getEggBatchId());
+                    dtoItem.setExportAmount(exportDetail.getAmount());
                     dtoItem.setVaccine(exportDetail.getVaccinePrice());
                     dtoItem.setPrice(exportDetail.getPrice());
                     eggProductList.add(dtoItem);

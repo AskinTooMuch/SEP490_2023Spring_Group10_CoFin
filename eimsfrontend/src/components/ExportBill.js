@@ -39,6 +39,7 @@ const ExportBill = () => {
                     },
                     withCredentials: false
                 });
+                console.log(JSON.stringify(result.data))
             setExportList(result.data);
             // Toast message
             if (mess) {
