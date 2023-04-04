@@ -239,7 +239,8 @@ CREATE TABLE subscription(
     status 			boolean			NOT NULL
 );
 
-CREATE TABLE user_subsription(
+CREATE TABLE user_subscription(
+	usId			integer		AUTO_INCREMENT PRIMARY KEY,
     facility_id		integer		NOT NULL,
     subscription_id	integer 	NOT NULL,
     subscribe_date	datetime	NOT NULL,
@@ -367,7 +368,7 @@ ADD CHECK (cost >= 0),
 ADD CHECK (duration >= 0),
 ADD CHECK (machine_quota >= 0);
 
-ALTER TABLE user_subsription
+ALTER TABLE user_subscription
 ADD FOREIGN KEY (facility_id)		REFERENCES facility(facility_id),
 ADD FOREIGN KEY (subscription_id)	REFERENCES subscription(subscription_id);
 
@@ -394,7 +395,7 @@ SELECT U.user_id, R.role_name, U.username, U.dob, U.email, U.salary, U.address, 
 FROM user U JOIN user_role UR ON U.user_id = UR.user_id
 		LEFT JOIN role R ON UR.role_id = R.role_id, 
 		facility F
-        LEFT JOIN user_subsription US ON F.facility_id = US.facility_id
+        LEFT JOIN user_subscription US ON F.facility_id = US.facility_id
 		WHERE U.user_id = uid AND F.facility_id = (CASE
 													WHEN fid != 0 THEN fid
 													ELSE (SELECT facility_id FROM work_in WHERE user_id = uid)
@@ -651,7 +652,7 @@ VALUES 	(1, 0, 30, 5, 0, 0),
 		(5, 4000000, 365, 15, 0, 1);
         
 -- user_subscription
-INSERT INTO user_subsription(facility_id, subscription_id, subscribe_date, status)
+INSERT INTO user_subscription(facility_id, subscription_id, subscribe_date, status)
 VALUES	('1', '3', '2022-05-31', 0),
 		('1', '5', '2023-02-02', 1),
 		('2', '4', '2021-04-25', 0);

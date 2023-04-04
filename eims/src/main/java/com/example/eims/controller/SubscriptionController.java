@@ -28,7 +28,7 @@ public class SubscriptionController {
     private SubscriptionServiceImpl subscriptionService;
 
     /**
-     * Make a payment through Stripe
+     * Get all active subscriptions
      * @return
      * @throws Exception
      */
@@ -37,4 +37,13 @@ public class SubscriptionController {
         return subscriptionService.getAllSubscription();
     }
 
+    /**
+     * Get 1 subscription by id
+     * @return
+     * @throws Exception
+     */
+    @GetMapping("/getById")
+    public ResponseEntity<?> getSubscriptionById(@RequestParam Long subscriptionId) throws Exception {
+        return subscriptionService.getSubscriptionById(subscriptionId);
+    }
 }

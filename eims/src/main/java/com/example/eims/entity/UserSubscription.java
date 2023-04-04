@@ -8,6 +8,7 @@
  * DATE          Version    Author           DESCRIPTION<br>
  * 16/02/2023    1.0        DuongVV          First Deploy<br>
  * 19/02/2023    2.0        DuongVV          Fix notation, id filed
+ * 04/04/2023    3.0        ChucNV           add usId
  */
 package com.example.eims.entity;
 
@@ -21,8 +22,10 @@ import java.sql.Date;
 @Table(name = "user_subscription")
 public class UserSubscription {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long usId;
     private Long facilityId;
     private Long subscriptionId;
-    private Date subscriptionDate;
+    private Date subscribeDate;
     private boolean status;
 }

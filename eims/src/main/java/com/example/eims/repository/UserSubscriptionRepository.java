@@ -10,16 +10,8 @@
  */
 package com.example.eims.repository;
 
-import com.example.eims.entity.Subscription;
+import com.example.eims.entity.UserSubscription;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.http.ResponseEntity;
 
-import java.util.List;
-import java.util.Optional;
-
-public interface SubscriptionRepository extends JpaRepository<Subscription, Long> {
-
-    Optional<List<Subscription>> findByStatus(boolean status);
-
-    Optional<Subscription> findBySubscriptionId(long subscriptionId);
+public interface UserSubscriptionRepository extends JpaRepository<UserSubscription, Long> {
 }

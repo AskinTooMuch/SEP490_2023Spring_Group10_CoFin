@@ -23,7 +23,7 @@ const CARD_OPTIONS = {
     }
 }
 
-export default function PaymentForm() {
+export default function PaymentForm(props) {
     const CREATE_PAYMENT = '/api/subscribe/charge';
     const [success, setSuccess] = useState(false);
     const stripe = useStripe();
@@ -43,6 +43,8 @@ export default function PaymentForm() {
                 const { id } = paymentMethod;
                 const response = await axios.post(CREATE_PAYMENT,
                     {
+                        subscriptionId: props.data,
+                        facilityId: sessionStorage.getItem("facilityId"),
                         amount: 500000,
                         currency: 'vnd',
                         method: id

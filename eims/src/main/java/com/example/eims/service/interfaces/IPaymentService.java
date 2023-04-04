@@ -10,19 +10,15 @@
  */
 package com.example.eims.service.interfaces;
 
+import com.example.eims.dto.payment.ChargeDTO;
 import org.springframework.http.ResponseEntity;
 
-public interface ISubscriptionService {
-    /**
-     * Get all subscriptions.
-     *
-     * @return list of Subscription list or error message
-     */
-    public ResponseEntity<?> getAllSubscription();
+public interface IPaymentService {
 
     /**
-     * Get 1 subscription by id
-     * @return Subscription or error message
+     * Charge the card and add the information into db
+     * @param chargeDTO dto for making charges to card
+     * @return list payroll
      */
-    public ResponseEntity<?> getSubscriptionById(Long subscriptionId);
+    public ResponseEntity<?> chargeCard(ChargeDTO chargeDTO) throws Exception;
 }
