@@ -7,6 +7,7 @@
  * Record of change:<br>
  * DATE         Version     Author      DESCRIPTION<br>
  * 29/03/2023   1.0         DuongVV     First Deploy<br>
+ * 02/04/2023   2.0         DuongVV     Update function<br>
  */
 
 package com.example.eims.controller;

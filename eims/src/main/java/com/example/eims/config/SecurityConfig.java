@@ -150,6 +150,7 @@ public class SecurityConfig{
                 "/api/breed/**",
                 "/api/employee/**",
                 "/api/import/**",
+                "/api/export/**",
                 "/api/eggBatch/**",
                 "/api/eggProduct/**",
                 "/api/notification/**",

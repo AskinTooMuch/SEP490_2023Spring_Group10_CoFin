@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from 'react';
+import { useNavigate, useParams, useLocation } from "react-router-dom";
 import { Modal } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
+import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 
 function ExportBillDetail(props) {
@@ -41,6 +42,13 @@ function a11yProps(index) {
 }
 
 export default function BasicTabs() {
+    // Dependency
+    const [dataLoaded, setDataLoaded] = useState(false);
+
+    //URL
+    const EXPORT_GET = "/api/export/get";
+    const EXPORT_UPDATE_PAID = "/api/export/update";
+
     //Show-hide Popup
     const [value, setValue] = React.useState(0);
     const navigate = useNavigate();
@@ -50,6 +58,106 @@ export default function BasicTabs() {
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
+
+    //Get sent params
+    const { state } = useLocation();
+    const { id } = state;
+
+    // DTO
+    const [eggProductList, setEggProductList] = useState([]);
+    const [exportDetail, setExportDetail] = useState({
+        exportId: "",
+        customerId: "",
+        customerName: "",
+        customerPhone: "",
+        exportDate: "",
+        total: "",
+        paid: "",
+    })
+
+    // DTO for update paid
+    const [paid, setPaid] = useState({
+        paid: exportDetail.paid
+    })
+
+    //Get export details
+    useEffect(() => {
+        if (dataLoaded) return;
+        loadExport();
+        setDataLoaded(true);
+    }, []);
+
+    const loadExport = async () => {
+        const result = await axios.get(EXPORT_GET,
+            { params: { exportId: id } },
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Access-Control-Allow-Origin': '*'
+                },
+                withCredentials: false
+            });
+        console.log(result);
+        // Set inf
+        exportDetail.exportId = result.data.exportId;
+        exportDetail.customerId = result.data.customerId;
+        exportDetail.customerName = result.data.customerName;
+        exportDetail.customerPhone = result.data.customerPhone;
+        exportDetail.exportDate = result.data.exportDate;
+        exportDetail.total = result.data.total;
+        exportDetail.paid = result.data.paid;
+        paid.paid = result.data.paid;
+        setEggProductList(result.data.eggProductList);
+    }
+
+    //Handle Change functions:
+    //Update paid
+    const handleUpdatePaidChange = (event, field) => {
+        let actualValue = event.target.value
+        setPaid({
+            ...paid,
+            [field]: actualValue
+        })
+    }
+
+    //Handle Submit functions
+    //Handle submit update paid
+    const handleUpdatePaidSubmit = async (event) => {
+        event.preventDefault();
+        let response;
+        try {
+            response = await axios.put(EXPORT_UPDATE_PAID, {},
+                {
+                    params:
+                    {
+                        exportId: exportDetail.exportId,
+                        paid: paid.paid
+                    }
+                },
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Access-Control-Allow-Origin': '*'
+                    },
+                    withCredentials: false
+                }
+            );
+            loadExport();
+            console.log(response);
+            toast.success("Cập nhật thành công");
+            setShow(false);
+        } catch (err) {
+            if (!err?.response) {
+                toast.error('Server không phản hồi');
+            } else {
+                if ((err.response.data === null) || (err.response.data === '')) {
+                    toast.error('Có lỗi xảy ra, vui lòng thử lại');
+                } else {
+                    toast.error(err.response.data);
+                }
+            }
+        }
+    }
 
     return (
         <Box sx={{ width: '100%' }}>
@@ -71,13 +179,13 @@ export default function BasicTabs() {
                                 <p>Khách hàng</p>
                             </div>
                             <div className="col-md-3">
-                                <p>Khách lẻ</p>
+                                <p>{exportDetail.customerName}</p>
                             </div>
                             <div className="col-md-3 ">
                                 <p>Số điện thoại</p>
                             </div>
                             <div className="col-md-3">
-                                <p>0969696969</p>
+                                <p>{exportDetail.customerPhone}</p>
                             </div>
                         </div>
                         <div className="row">
@@ -85,13 +193,13 @@ export default function BasicTabs() {
                                 <p>Ngày nhập</p>
                             </div>
                             <div className="col-md-3" >
-                                <p>14/02/2023</p>
+                                <p>{exportDetail.exportDate.replace("T", " ")}</p>
                             </div>
                             <div className="col-md-3 ">
                                 <p>Mã hoá đơn</p>
                             </div>
                             <div className="col-md-3 ">
-                                <p>MVB02-85</p>
+                                <p>{exportDetail.exportId}</p>
                             </div>
                         </div>
                     </div>
@@ -100,7 +208,7 @@ export default function BasicTabs() {
                     <table className="table table-bordered" >
                         <thead>
                             <tr>
-                                <th scope="col">Loài</th>
+                                <th scope="col">STT</th>
                                 <th scope="col">Loại</th>
                                 <th scope="col">Sản phẩm</th>
                                 <th scope="col">Mã lô</th>
@@ -111,17 +219,21 @@ export default function BasicTabs() {
                             </tr>
                         </thead>
                         <tbody>
-
-                            <tr className='trclick' style={{ height: "76px" }}>
-                                <td>Gà</td>
-                                <td>Gà ri</td>
-                                <td>Trứng trắng</td>
-                                <td>HDW571</td>
-                                <td>500</td>
-                                <td>3500</td>
-                                <td>1000</td>
-                                <td>2.250.000</td>
-                            </tr>
+                            {
+                                eggProductList && eggProductList.length > 0 ?
+                                    eggProductList.map((item, index) =>
+                                        <tr className='trclick' style={{ height: "76px" }}>
+                                            <td>{index + 1}</td>
+                                            <td>{item.breedName}</td>
+                                            <td>{item.productName}</td>
+                                            <td>{item.eggBatchId}</td>
+                                            <td>{item.exportAmount.toLocaleString()}</td>
+                                            <td>{item.price.toLocaleString('vi', { style: 'currency', currency: 'VND' })}</td>
+                                            <td>{item.vaccine.toLocaleString('vi', { style: 'currency', currency: 'VND' })}</td>
+                                            <td>{(item.exportAmount * item.price +item.exportAmount * item.vaccine).toLocaleString('vi', { style: 'currency', currency: 'VND' })}</td>
+                                        </tr>
+                                    ) : "Nothing"
+                            }
                         </tbody>
                     </table>
 
@@ -129,10 +241,14 @@ export default function BasicTabs() {
                         <div className="col-md-6"></div>
                         <div className="col-md-3"></div>
                         <div className="col-md-3">
-                            <p>Tổng giá trị: 6.300.000 </p>
-                            <p>Đã thanh toán: 300.000 </p>
+                            <p>Tổng hóa đơn: {exportDetail.total.toLocaleString('vi', { style: 'currency', currency: 'VND' })} </p>
+                            <p>Đã thanh toán: {exportDetail.paid.toLocaleString('vi', { style: 'currency', currency: 'VND' })} </p>
                             <p>Trạng thái:
-                                <span className='text-red'> Chưa thanh toán đủ</span>
+                                {
+                                    exportDetail.total == exportDetail.paid
+                                        ? <span className='text-green'> Đã thanh toán đủ</span>
+                                        : <span className='text-red'> Chưa thanh toán đủ</span>
+                                }
                             </p>
                         </div>
                     </div>
@@ -144,9 +260,9 @@ export default function BasicTabs() {
                             size="lg"
                             aria-labelledby="contained-modal-title-vcenter"
                             centered >
-                            <form >
+                            <form onSubmit={handleUpdatePaidSubmit}>
                                 <Modal.Header closeButton onClick={handleClose}>
-                                    <Modal.Title>Cập nhật số tiền đã thanh toán</Modal.Title>
+                                    <Modal.Title>Cập nhật số tiền thanh toán</Modal.Title>
                                 </Modal.Header>
                                 <Modal.Body>
                                     <div className="row">
@@ -155,7 +271,7 @@ export default function BasicTabs() {
                                         </div>
                                         <div className="col-md-6">
                                             <input style={{ width: "100%" }} type="number"
-                                                value="0"
+                                                value={paid.paid} onChange={(e) => handleUpdatePaidChange(e, "paid")}
                                             />
                                         </div>
                                     </div>

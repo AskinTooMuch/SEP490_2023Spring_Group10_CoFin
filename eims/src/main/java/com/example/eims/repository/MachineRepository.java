@@ -8,6 +8,7 @@
  * DATE          Version    Author           DESCRIPTION<br>
  * 17/02/2023    1.0        DuongVV          First Deploy<br>
  * 28/02/2023    2.0        DuongVV          Add Paging<br>
+ * 04/04/2023    2.1        DuongVV          Update function<br>
  */
 
 package com.example.eims.repository;
@@ -33,4 +34,5 @@ public interface MachineRepository extends JpaRepository<Machine, Long> {
     @Query(value = "SELECT IFNULL(SUM(amount), 0) FROM eims.egg_location WHERE machine_id = ?1",
             nativeQuery = true)
     int getCurrentAmount(Long machineId);
+    Optional<List<Machine>> findByFacilityIdAndStatus(Long facilityId, int status);
 }

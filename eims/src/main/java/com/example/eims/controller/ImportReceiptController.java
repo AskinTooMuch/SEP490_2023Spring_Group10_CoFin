@@ -138,7 +138,7 @@ public class ImportReceiptController {
      * @return
      */
     @Secured({"ROLE_OWNER","ROLE_EMPLOYEE"})
-    @PutMapping("/updatePaid")
+    @PutMapping("/update")
     public ResponseEntity<?> updatePaidOfImport(@RequestParam Long importId, @RequestParam Float paid) {
         return  importReceiptService.updatePaidOfImport(importId, paid);
     }

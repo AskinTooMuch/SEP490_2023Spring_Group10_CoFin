@@ -8,6 +8,7 @@
  * DATE         Version     Author      DESCRIPTION<br>
  * 02/03/2023   1.0         DuongVV     First Deploy<br>
  * 29/03/2023   1.1         DuongVV     Update function<br>
+ * 04/04/2023   1.2         DuongVV     Update function<br>
  */
 
 package com.example.eims.service.impl;
@@ -337,4 +338,70 @@ public class MachineServiceImpl implements IMachineService {
         Page<Machine> machinePage = machineRepository.findAllByFacilityId(facilityId, PageRequest.of(page, size, sortable));
         return new ResponseEntity<>(machinePage, HttpStatus.OK);
     }
+
+
+    /**
+     * Get current running machines.
+     *
+     * @param facilityId the id of the facility
+     * @return
+     */
+    @Override
+    public ResponseEntity<?> getMachineDashboard(Long facilityId) {
+        List<MachineDetailDTO> dtoList = new ArrayList<>();
+        // status = 1 (running)
+        Optional<List<Machine>> machineListOptional = machineRepository.findByFacilityIdAndStatus(facilityId, 1);
+        if (machineListOptional.isEmpty()) {
+            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
+        }
+        List<Machine> machineList = machineListOptional.get();
+        for (Machine machine : machineList) {
+            if (machine.getCurCapacity() == 0) {
+                continue;
+            }
+            // Get and add attribute to DTO
+            MachineDetailDTO machineDetailDTO = new MachineDetailDTO();
+            machineDetailDTO.getFromEntity(machine);
+            MachineType machineType = machineTypeRepository.findByMachineTypeId(machine.getMachineTypeId());
+            machineDetailDTO.setMachineTypeName(machineType.getMachineTypeName());
+            List<EggLocationMachineDetailDTO> eggLocations = new ArrayList<>();
+            Optional<List<EggLocation>> eggsOpt = eggLocationRepository.getAllByMachineId(machine.getMachineId());
+            if (eggsOpt.isPresent()) {
+                List<EggLocation> eggs = eggsOpt.get();
+                for (EggLocation eggLocation : eggs) {
+                    EggLocationMachineDetailDTO eggLocationMachineDetailDTO = new EggLocationMachineDetailDTO();
+                    eggLocationMachineDetailDTO.getFromEntity(eggLocation);
+                    EggProduct eggProduct = eggProductRepository.getByProductId(eggLocation.getProductId()).get();
+                    LocalDateTime dateTime = LocalDateTime.now();
+
+                    List<EggProduct> eggProductList = eggProductRepository.findByEggBatchId(eggProduct.getEggBatchId()).get();
+                    for (EggProduct item : eggProductList) {
+                        IncubationPhase incubationPhase = incubationPhaseRepository.
+                                findByIncubationPhaseId(item.getIncubationPhaseId()).get();
+                        if (incubationPhase.getPhaseNumber() == 1) {
+                            dateTime = item.getIncubationDate();
+                            break;
+                        }
+                    }
+                    Date startDate = Date.valueOf(dateTime.toLocalDate());
+                    Date endDate = Date.valueOf(LocalDate.now());
+                    // Breed
+                    Breed breed = breedRepository.getBreedOfProduct(eggProduct.getProductId());
+                    String breedName = breed.getBreedName();
+                    eggLocationMachineDetailDTO.setBreedName(breedName);
+                    // Specie
+                    Specie specie = specieRepository.findById(breed.getSpecieId()).get();
+                    eggLocationMachineDetailDTO.setIncubationPeriod(specie.getIncubationPeriod());
+
+                    eggLocationMachineDetailDTO.setIncubationDateToNow(stringDealer.dateDiff(startDate, endDate));
+                    eggLocationMachineDetailDTO.setEggBatchId(eggProduct.getEggBatchId());
+                    eggLocations.add(eggLocationMachineDetailDTO);
+                }
+            }
+            machineDetailDTO.setEggs(eggLocations);
+            dtoList.add(machineDetailDTO);
+        }
+        return new ResponseEntity<>(dtoList, HttpStatus.OK);
+    }
+
 }

@@ -6,7 +6,7 @@
  *
  * Record of change:<br>
  * DATE          Version    Author           DESCRIPTION<br>
- * 15/03/2023    1.0        DuongVV          First Deploy<br>
+ * 03/04/2023    1.0        DuongVV          First Deploy<br>
  */
 
 package com.example.eims.dto.exportReceipt;
@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 
 @Data
 public class ExportReceiptListItemDTO {
-    private Long importId;
+    private Long exportId;
     private Long customerId;
     private String customerName;
     private LocalDateTime exportDate;

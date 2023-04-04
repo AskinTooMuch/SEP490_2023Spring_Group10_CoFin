@@ -47,7 +47,7 @@ export default function BasicTabs() {
 
     //URL
     const IMPORT_GET = "/api/import/get";
-    const IMPORT_UPDATE_PAID = "/api/import/updatePaid";
+    const IMPORT_UPDATE_PAID = "/api/import/update";
 
     //Show-hide Popup
     const [value, setValue] = React.useState(0);
@@ -74,6 +74,7 @@ export default function BasicTabs() {
         total: "",
         paid: "",
     })
+
     // DTO for update paid
     const [paid, setPaid] = useState({
         paid: importDetail.paid
@@ -239,7 +240,7 @@ export default function BasicTabs() {
                         <div className="col-md-6"></div>
                         <div className="col-md-3"></div>
                         <div className="col-md-3">
-                            <p>Tổng giá trị: {importDetail.total.toLocaleString('vi', { style: 'currency', currency: 'VND' })} </p>
+                            <p>Tổng hóa đơn: {importDetail.total.toLocaleString('vi', { style: 'currency', currency: 'VND' })} </p>
                             <p>Đã thanh toán: {importDetail.paid.toLocaleString('vi', { style: 'currency', currency: 'VND' })} </p>
                             <p>Trạng thái:
                                 {

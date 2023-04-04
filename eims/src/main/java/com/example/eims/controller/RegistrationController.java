@@ -5,9 +5,9 @@
  * Eggs Incubating Management System <br>
  *
  * Record of change:<br>
-<<<<<<< Updated upstream
  * DATE          Version    Author           DESCRIPTION<br>
  * 04/03/2023    1.0        DuongVV          First Deploy<br>
+ * 03/04/2023    1.1        DuongVV          Update function<br>
  */
 
 package com.example.eims.controller;

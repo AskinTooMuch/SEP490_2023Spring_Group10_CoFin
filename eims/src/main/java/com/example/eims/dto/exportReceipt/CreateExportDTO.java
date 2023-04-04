@@ -6,7 +6,7 @@
  *
  * Record of change:<br>
  * DATE          Version    Author           DESCRIPTION<br>
- * 15/03/2023    1.0        DuongVV          First Deploy<br>
+ * 02/04/2023    1.0        DuongVV          First Deploy<br>
  */
 
 package com.example.eims.dto.exportReceipt;

@@ -7,7 +7,7 @@
  * Record of change:<br>
  * DATE          Version    Author           DESCRIPTION<br>
  * 02/04/2023    1.0        DuongNH          First Deploy<br>
- * 02/04/2023    1.0        DuongNH          Add new named query<br>
+ * 02/04/2023    1.1        DuongNH          Add new named query<br>
  */
 package com.example.eims.dto.exportReceipt;
 

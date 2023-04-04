@@ -18,11 +18,11 @@ function TableRows({ rowsData, deleteTableRows, handleChange, eggBatchList }) {
                     <td><input type="number" value={price} onChange={(evnt) => (handleChange(index, evnt))} name="price" className="form-control" /> </td>
                     {
                         phaseNumber == 7 || phaseNumber == 8 || phaseNumber == 9
-                        ?<td><input type="number" value={vaccine} onChange={(evnt) => (handleChange(index, evnt))} name="vaccine" className="form-control" /> </td>
-                        :<td><input disabled type="number" value={vaccine} name="vaccine" className="form-control" /> </td>
+                            ? <td><input type="number" value={vaccine} onChange={(evnt) => (handleChange(index, evnt))} name="vaccine" className="form-control" /> </td>
+                            : <td><input disabled type="number" value={vaccine} name="vaccine" className="form-control" /> </td>
                     }
-                    
-                    <td><input disabled type="text" value={(exportAmount*price + vaccine*exportAmount).toLocaleString('vi', { style: 'currency', currency: 'VND' })} name="total" className="form-control"/> </td>
+
+                    <td><input disabled type="text" value={(exportAmount * price + vaccine * exportAmount).toLocaleString('vi', { style: 'currency', currency: 'VND' })} name="total" className="form-control" /> </td>
                     <td><button className="btn btn-outline-danger" type='button' onClick={() => (deleteTableRows(index))}>x</button></td>
                 </tr>
             )
@@ -214,7 +214,7 @@ const CreateExportBill = () => {
         event.preventDefault();
         console.log(rowsData);
         createExportDTO.eggProductList = rowsData;
-        console.log("dto:"+JSON.stringify(createExportDTO));
+        console.log("dto:" + JSON.stringify(createExportDTO));
         let response;
         try {
             response = await axios.post(CREATE_EXPORT_SAVE,
@@ -341,46 +341,54 @@ const CreateExportBill = () => {
                             <Modal.Body>
                                 <div className="table-wrapper-scroll-y my-custom-scrollbar">
                                     <table style={{ overflowY: "scroll" }} className="table table-bordered">
-                                    <thead className="u-palette-4-base u-table-header u-table-header-1">
-                                                <tr style={{ height: "21px" }}>
-                                                    <th className="u-border-1 u-border-custom-color-1 u-palette-2-base u-table-cell u-table-cell-1">STT</th>
-                                                    <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-3">Loại</th>
-                                                    <th className="u-border-1 u-border-custom-color-1 u-palette-2-base u-table-cell u-table-cell-1">Mã lô</th>
-                                                    <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-4">Sản phẩm</th>
-                                                    <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-5">Số lượng trong kho</th>
-                                                    <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-6">Ngày xuất</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody className="u-table-body">
-                                                {
-                                                    allList.eggStocks && allList.eggStocks.length > 0
-                                                        ? allList.eggStocks.map((item, index) =>
-                                                            <tr onClick={() => addTableRows(item)} className='trclick' style={{ height: "76px" }} >
-                                                                <td className="u-border-1 u-border-grey-30 u-first-column u-grey-5 u-table-cell u-table-cell-5">{index + 1}</td>
-                                                                <td className="u-border-1 u-border-grey-30 u-table-cell">{item.breedName}</td>
-                                                                <td className="u-border-1 u-border-grey-30 u-table-cell">{item.eggBatchId}</td>
-                                                                <td className="u-border-1 u-border-grey-30 u-table-cell">{item.phaseDescription}</td>
-                                                                <td className="u-border-1 u-border-grey-30 u-table-cell">{item.curAmount}</td>
-                                                                <td className="u-border-1 u-border-grey-30 u-table-cell">{item.incubationDate.replace("T", " ")}</td>
-                                                            </tr>
-                                                        )
-                                                        : 'Nothing'
-                                                }
-                                                {
-                                                    allList.poultryStocks && allList.poultryStocks.length > 0
-                                                        ? allList.poultryStocks.map((item, index) =>
-                                                            <tr onClick={() => addTableRows(item)} className='trclick' style={{ height: "76px" }} >
-                                                                <td className="u-border-1 u-border-grey-30 u-first-column u-grey-5 u-table-cell u-table-cell-5">{index + 1}</td>
-                                                                <td className="u-border-1 u-border-grey-30 u-table-cell">{item.breedName}</td>
-                                                                <td className="u-border-1 u-border-grey-30 u-table-cell">{item.eggBatchId}</td>
-                                                                <td className="u-border-1 u-border-grey-30 u-table-cell">{item.phaseDescription}</td>
-                                                                <td className="u-border-1 u-border-grey-30 u-table-cell">{item.curAmount}</td>
-                                                                <td className="u-border-1 u-border-grey-30 u-table-cell">{item.incubationDate.replace("T", " ")}</td>
-                                                            </tr>
-                                                        )
-                                                        : 'Nothing'
-                                                }
-                                            </tbody>
+                                        {
+                                            allList.eggStocks.length === 0 && allList.poultryStocks.length === 0
+                                                ? 'Hiện tại không có sản phẩm nào'
+                                                :
+                                                <>
+                                                    <thead className="u-palette-4-base u-table-header u-table-header-1">
+                                                        <tr style={{ height: "21px" }}>
+                                                            <th className="u-border-1 u-border-custom-color-1 u-palette-2-base u-table-cell u-table-cell-1">STT</th>
+                                                            <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-3">Loại</th>
+                                                            <th className="u-border-1 u-border-custom-color-1 u-palette-2-base u-table-cell u-table-cell-1">Mã lô</th>
+                                                            <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-4">Sản phẩm</th>
+                                                            <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-5">Số lượng trong kho</th>
+                                                            <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-6">Ngày xuất</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody className="u-table-body">
+
+                                                        {
+                                                            allList.eggStocks && allList.eggStocks.length > 0
+                                                                ? allList.eggStocks.map((item, index) =>
+                                                                    <tr onClick={() => addTableRows(item)} className='trclick' style={{ height: "76px" }} >
+                                                                        <td className="u-border-1 u-border-grey-30 u-first-column u-grey-5 u-table-cell u-table-cell-5">{index + 1}</td>
+                                                                        <td className="u-border-1 u-border-grey-30 u-table-cell">{item.breedName}</td>
+                                                                        <td className="u-border-1 u-border-grey-30 u-table-cell">{item.eggBatchId}</td>
+                                                                        <td className="u-border-1 u-border-grey-30 u-table-cell">{item.phaseDescription}</td>
+                                                                        <td className="u-border-1 u-border-grey-30 u-table-cell">{item.curAmount}</td>
+                                                                        <td className="u-border-1 u-border-grey-30 u-table-cell">{item.incubationDate.replace("T", " ")}</td>
+                                                                    </tr>
+                                                                )
+                                                                : ''
+                                                        }
+                                                        {
+                                                            allList.poultryStocks && allList.poultryStocks.length > 0
+                                                                ? allList.poultryStocks.map((item, index) =>
+                                                                    <tr onClick={() => addTableRows(item)} className='trclick' style={{ height: "76px" }} >
+                                                                        <td className="u-border-1 u-border-grey-30 u-first-column u-grey-5 u-table-cell u-table-cell-5">{index + 1}</td>
+                                                                        <td className="u-border-1 u-border-grey-30 u-table-cell">{item.breedName}</td>
+                                                                        <td className="u-border-1 u-border-grey-30 u-table-cell">{item.eggBatchId}</td>
+                                                                        <td className="u-border-1 u-border-grey-30 u-table-cell">{item.phaseDescription}</td>
+                                                                        <td className="u-border-1 u-border-grey-30 u-table-cell">{item.curAmount}</td>
+                                                                        <td className="u-border-1 u-border-grey-30 u-table-cell">{item.incubationDate.replace("T", " ")}</td>
+                                                                    </tr>
+                                                                )
+                                                                : ''
+                                                        }
+                                                    </tbody>
+                                                </>
+                                        }
                                     </table>
                                 </div>
                             </Modal.Body>

@@ -6,9 +6,10 @@
  *
  * Record of change:<br>
  * DATE          Version    Author           DESCRIPTION<br>
- * 02/04/2023    1.0        DuongYK          First Deploy<br>
+ * 02/04/2023    1.0        DuongVV          First Deploy<br>
  * 03/04/2023    1.1        DuongNH          Add getImportReceiptYear function <br>
- **/
+ */
+
 package com.example.eims.repository;
 
 import com.example.eims.entity.ExportReceipt;
