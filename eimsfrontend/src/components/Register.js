@@ -227,8 +227,7 @@ const Register = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         const v2 = PWD_REGEX.test(password);
-        const v3 = EMAIL_REGEX.test(signUpDTO.userEmail);
-        if (!v2 || !v3) {
+        if (!v2) {
             toast.error("Sai định dạng yêu cầu");
             return;
         }
@@ -428,7 +427,6 @@ const Register = () => {
                                                                     <input type={passwordShown ? "text" : "password"} id="password"
                                                                         onChange={(e) => setPwd(e.target.value)}
                                                                         value={password}
-                                                                        minLength="8" maxLength="20"
                                                                         aria-invalid={validPwd ? "false" : "true"}
                                                                         aria-describedby="pwdnote"
                                                                         className="form-control " />
@@ -444,7 +442,6 @@ const Register = () => {
                                                                         className="tip invalid" ><FontAwesomeIcon icon={faInfoCircle} /></span>
                                                                     <input type={passwordShown2 ? "text" : "password"} id="confirm_pwd"
                                                                         onChange={(e) => setMatchPwd(e.target.value)}
-                                                                        minLength="8" maxLength="20"
                                                                         aria-invalid={validMatch ? "false" : "true"}
                                                                         aria-describedby="confirmnote" className="form-control " />
                                                                     <i onClick={togglePasswordVisiblity2}>{eye}</i>
