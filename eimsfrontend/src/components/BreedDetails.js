@@ -477,7 +477,6 @@ export default function BasicTabs() {
                                         className="form-control mt-1"
                                         style={{ display: "block" }}
                                         value={editBreedDTO.commonDisease}
-                                        placeholder='Cúm gia cầm, đậu gà, ...'
                                         readOnly />
                                 </p>
                             </div>
