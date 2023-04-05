@@ -491,7 +491,7 @@ public class AuthServiceImpl implements IAuthService {
             return new ResponseEntity<>("Xác nhận mật khẩu không được để trống", HttpStatus.BAD_REQUEST);
         }
         if (!stringDealer.checkPasswordRegex(newPassword)) { /* Password is not valid */
-            return new ResponseEntity<>("Mật khẩu không đúng định dạng", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Mật khẩu mới không đúng định dạng", HttpStatus.BAD_REQUEST);
         }
 
         // Get user

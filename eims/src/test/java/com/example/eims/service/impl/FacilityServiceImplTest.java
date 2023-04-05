@@ -73,7 +73,7 @@ class FacilityServiceImplTest {
         facility.setFacilityFoundDate(Date.valueOf("2019-02-17"));
         facility.setSubscriptionExpirationDate(Date.valueOf("2023-05-31"));
         facility.setHotline("0987654321");
-        facility.setBusinessLicenseNumber("12345678");
+        facility.setBusinessLicenseNumber("1234567890");
         facility.setStatus(1);
 
         // Define behaviour of repository
@@ -115,7 +115,7 @@ class FacilityServiceImplTest {
         facility.setFacilityFoundDate(Date.valueOf("2019-02-17"));
         facility.setSubscriptionExpirationDate(Date.valueOf("2023-05-31"));
         facility.setHotline("0987654321");
-        facility.setBusinessLicenseNumber("12345678");
+        facility.setBusinessLicenseNumber("1234567890");
         facility.setStatus(1);
         UpdateFacilityDTO dto = new UpdateFacilityDTO();
         dto.getFromEntity(facility);
@@ -154,9 +154,9 @@ class FacilityServiceImplTest {
         dto.setUserId(1L);
         dto.setFacilityId(1L);
         dto.setFacilityName("Nguyễn Văn A");
-        dto.setFacilityAddress("Hà Nội, Việt Nam");
+        dto.setFacilityAddress("{\"city\":\"Tỉnh Hải Dương\",\"district\":\"Huyện Gia Lộc\",\"ward\":\"Xã Hoàng Diệu\",\"street\":\"Thôn Nghĩa Hy\"}");
         dto.setFoundDate("2000-02-03");
-        dto.setBusinessLicenseNumber("12345678");
+        dto.setBusinessLicenseNumber("1234567890");
         dto.setHotline("0987654321");
         dto.setStatus(1);
         // Define behaviour of repository
@@ -179,9 +179,9 @@ class FacilityServiceImplTest {
         dto.setUserId(1L);
         dto.setFacilityId(1L);
         dto.setFacilityName("ABC123");
-        dto.setFacilityAddress("So 27 duong Truong Trinh");
+        dto.setFacilityAddress("{\"city\":\"Tỉnh Hải Dương\",\"district\":\"Huyện Gia Lộc\",\"ward\":\"Xã Hoàng Diệu\",\"street\":\"Thôn Nghĩa Hy\"}");
         dto.setFoundDate("2000-02-03");
-        dto.setBusinessLicenseNumber("12345678");
+        dto.setBusinessLicenseNumber("1234567890");
         dto.setHotline("0987654321");
         dto.setStatus(1);
         // Define behaviour of repository
@@ -204,9 +204,9 @@ class FacilityServiceImplTest {
         dto.setUserId(1L);
         dto.setFacilityId(1L);
         dto.setFacilityName("");
-        dto.setFacilityAddress("So 27 duong Truong Trinh");
+        dto.setFacilityAddress("{\"city\":\"Tỉnh Hải Dương\",\"district\":\"Huyện Gia Lộc\",\"ward\":\"Xã Hoàng Diệu\",\"street\":\"Thôn Nghĩa Hy\"}");
         dto.setFoundDate("2000-02-03");
-        dto.setBusinessLicenseNumber("12345678");
+        dto.setBusinessLicenseNumber("1234567890");
         dto.setHotline("0987654321");
         dto.setStatus(1);
         // Define behaviour of repository
@@ -229,9 +229,9 @@ class FacilityServiceImplTest {
         dto.setUserId(1L);
         dto.setFacilityId(1L);
         dto.setFacilityName(null);
-        dto.setFacilityAddress("So 27 duong Truong Trinh");
+        dto.setFacilityAddress("{\"city\":\"Tỉnh Hải Dương\",\"district\":\"Huyện Gia Lộc\",\"ward\":\"Xã Hoàng Diệu\",\"street\":\"Thôn Nghĩa Hy\"}");
         dto.setFoundDate("2000-02-03");
-        dto.setBusinessLicenseNumber("12345678");
+        dto.setBusinessLicenseNumber("1234567890");
         dto.setHotline("0987654321");
         dto.setStatus(1);
         // Define behaviour of repository
@@ -256,7 +256,7 @@ class FacilityServiceImplTest {
         dto.setFacilityName("Nguyễn Văn A");
         dto.setFacilityAddress("");
         dto.setFoundDate("2000-02-03");
-        dto.setBusinessLicenseNumber("12345678");
+        dto.setBusinessLicenseNumber("1234567890");
         dto.setHotline("0987654321");
         dto.setStatus(1);
         // Define behaviour of repository
@@ -281,7 +281,7 @@ class FacilityServiceImplTest {
         dto.setFacilityName("Nguyễn Văn A");
         dto.setFacilityAddress(null);
         dto.setFoundDate("2000-02-03");
-        dto.setBusinessLicenseNumber("12345678");
+        dto.setBusinessLicenseNumber("1234567890");
         dto.setHotline("0987654321");
         dto.setStatus(1);
         // Define behaviour of repository
@@ -304,9 +304,9 @@ class FacilityServiceImplTest {
         dto.setUserId(1L);
         dto.setFacilityId(1L);
         dto.setFacilityName("Nguyễn Văn A");
-        dto.setFacilityAddress("So 27 duong Truong Trinh");
+        dto.setFacilityAddress("{\"city\":\"Tỉnh Hải Dương\",\"district\":\"Huyện Gia Lộc\",\"ward\":\"Xã Hoàng Diệu\",\"street\":\"Thôn Nghĩa Hy\"}");
         dto.setFoundDate("2050-02-03");
-        dto.setBusinessLicenseNumber("12345678");
+        dto.setBusinessLicenseNumber("1234567890");
         dto.setHotline("0987654321");
         dto.setStatus(1);
         // Define behaviour of repository
@@ -329,9 +329,9 @@ class FacilityServiceImplTest {
         dto.setUserId(1L);
         dto.setFacilityId(1L);
         dto.setFacilityName("Nguyễn Văn A");
-        dto.setFacilityAddress("So 27 duong Truong Trinh");
+        dto.setFacilityAddress("{\"city\":\"Tỉnh Hải Dương\",\"district\":\"Huyện Gia Lộc\",\"ward\":\"Xã Hoàng Diệu\",\"street\":\"Thôn Nghĩa Hy\"}");
         dto.setFoundDate("");
-        dto.setBusinessLicenseNumber("12345678");
+        dto.setBusinessLicenseNumber("1234567890");
         dto.setHotline("0987654321");
         dto.setStatus(1);
         // Define behaviour of repository
@@ -354,9 +354,9 @@ class FacilityServiceImplTest {
         dto.setUserId(1L);
         dto.setFacilityId(1L);
         dto.setFacilityName("Nguyễn Văn A");
-        dto.setFacilityAddress("So 27 duong Truong Trinh");
+        dto.setFacilityAddress("{\"city\":\"Tỉnh Hải Dương\",\"district\":\"Huyện Gia Lộc\",\"ward\":\"Xã Hoàng Diệu\",\"street\":\"Thôn Nghĩa Hy\"}");
         dto.setFoundDate(null);
-        dto.setBusinessLicenseNumber("12345678");
+        dto.setBusinessLicenseNumber("1234567890");
         dto.setHotline("0987654321");
         dto.setStatus(1);
         // Define behaviour of repository
@@ -379,7 +379,7 @@ class FacilityServiceImplTest {
         dto.setUserId(1L);
         dto.setFacilityId(1L);
         dto.setFacilityName("Nguyễn Văn A");
-        dto.setFacilityAddress("So 27 duong Truong Trinh");
+        dto.setFacilityAddress("{\"city\":\"Tỉnh Hải Dương\",\"district\":\"Huyện Gia Lộc\",\"ward\":\"Xã Hoàng Diệu\",\"street\":\"Thôn Nghĩa Hy\"}");
         dto.setFoundDate("2000-02-03");
         dto.setBusinessLicenseNumber("");
         dto.setHotline("0987654321");
@@ -404,7 +404,7 @@ class FacilityServiceImplTest {
         dto.setUserId(1L);
         dto.setFacilityId(1L);
         dto.setFacilityName("Nguyễn Văn A");
-        dto.setFacilityAddress("So 27 duong Truong Trinh");
+        dto.setFacilityAddress("{\"city\":\"Tỉnh Hải Dương\",\"district\":\"Huyện Gia Lộc\",\"ward\":\"Xã Hoàng Diệu\",\"street\":\"Thôn Nghĩa Hy\"}");
         dto.setFoundDate("2000-02-03");
         dto.setBusinessLicenseNumber(null);
         dto.setHotline("0987654321");
@@ -429,9 +429,9 @@ class FacilityServiceImplTest {
         dto.setUserId(1L);
         dto.setFacilityId(1L);
         dto.setFacilityName("Nguyễn Văn A");
-        dto.setFacilityAddress("So 27 duong Truong Trinh");
+        dto.setFacilityAddress("{\"city\":\"Tỉnh Hải Dương\",\"district\":\"Huyện Gia Lộc\",\"ward\":\"Xã Hoàng Diệu\",\"street\":\"Thôn Nghĩa Hy\"}");
         dto.setFoundDate("2000-02-03");
-        dto.setBusinessLicenseNumber("12345678");
+        dto.setBusinessLicenseNumber("1234567890");
         dto.setHotline("098765432");
         dto.setStatus(1);
         // Define behaviour of repository
@@ -454,9 +454,9 @@ class FacilityServiceImplTest {
         dto.setUserId(1L);
         dto.setFacilityId(1L);
         dto.setFacilityName("Nguyễn Văn A");
-        dto.setFacilityAddress("So 27 duong Truong Trinh");
+        dto.setFacilityAddress("{\"city\":\"Tỉnh Hải Dương\",\"district\":\"Huyện Gia Lộc\",\"ward\":\"Xã Hoàng Diệu\",\"street\":\"Thôn Nghĩa Hy\"}");
         dto.setFoundDate("2000-02-03");
-        dto.setBusinessLicenseNumber("12345678");
+        dto.setBusinessLicenseNumber("1234567890");
         dto.setHotline("abcdefgh");
         dto.setStatus(1);
         // Define behaviour of repository
@@ -479,9 +479,9 @@ class FacilityServiceImplTest {
         dto.setUserId(1L);
         dto.setFacilityId(1L);
         dto.setFacilityName("Nguyễn Văn A");
-        dto.setFacilityAddress("So 27 duong Truong Trinh");
+        dto.setFacilityAddress("{\"city\":\"Tỉnh Hải Dương\",\"district\":\"Huyện Gia Lộc\",\"ward\":\"Xã Hoàng Diệu\",\"street\":\"Thôn Nghĩa Hy\"}");
         dto.setFoundDate("2000-02-03");
-        dto.setBusinessLicenseNumber("12345678");
+        dto.setBusinessLicenseNumber("1234567890");
         dto.setHotline("");
         dto.setStatus(1);
         // Define behaviour of repository
@@ -504,9 +504,9 @@ class FacilityServiceImplTest {
         dto.setUserId(1L);
         dto.setFacilityId(1L);
         dto.setFacilityName("Nguyễn Văn A");
-        dto.setFacilityAddress("So 27 duong Truong Trinh");
+        dto.setFacilityAddress("{\"city\":\"Tỉnh Hải Dương\",\"district\":\"Huyện Gia Lộc\",\"ward\":\"Xã Hoàng Diệu\",\"street\":\"Thôn Nghĩa Hy\"}");
         dto.setFoundDate("2000-02-03");
-        dto.setBusinessLicenseNumber("12345678");
+        dto.setBusinessLicenseNumber("1234567890");
         dto.setHotline(null);
         dto.setStatus(1);
         // Define behaviour of repository

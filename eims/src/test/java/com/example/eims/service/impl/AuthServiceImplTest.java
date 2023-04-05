@@ -388,32 +388,6 @@
 
      @Test
      @DisplayName("RegisterUTCID14")
-     void registerUTCID14() {
-         // Set up Dto
-         SignUpDTO signUpDTO = new SignUpDTO();
-         signUpDTO.setUsername("Lê Văn Đ");
-         signUpDTO.setUserDob("2000-02-03");
-         signUpDTO.setUserPhone("0987654321");
-         signUpDTO.setUserEmail(null);
-         signUpDTO.setUserAddress("Hà Nội, Việt Nam");
-         signUpDTO.setUserPassword("@User123");
-         signUpDTO.setFacilityName("Lê Văn Đ");
-         signUpDTO.setFacilityFoundDate("2000-02-03");
-         signUpDTO.setFacilityHotline("0987654321");
-         signUpDTO.setFacilityAddress("Hà Nội, Việt Nam");
-         signUpDTO.setBusinessLicenseNumber("12345678");
-         // Define behaviour of repository
-         //when(userRepository.existsByPhone(signUpDTO.getUserPhone())).thenReturn(false);
-         //when(userRepository.save(any(User.class))).thenReturn(user);
-         // Run service method
-         ResponseEntity<?> responseEntity = authService.registerUser(signUpDTO);
-         System.out.println(responseEntity.toString());
-         // Assert
-         assertEquals("Email không được để trống", responseEntity.getBody());
-     }
-
-     @Test
-     @DisplayName("RegisterUTCID15")
      void registerUTCID15() {
          // Set up Dto
          SignUpDTO signUpDTO = new SignUpDTO();
@@ -439,7 +413,7 @@
      }
 
      @Test
-     @DisplayName("RegisterUTCID16")
+     @DisplayName("RegisterUTCID15")
      void registerUTCID16() {
          // Set up Dto
          SignUpDTO signUpDTO = new SignUpDTO();
@@ -698,6 +672,7 @@
          dto.setUserId(user.getUserId());
          dto.setPassword("@User123");
          dto.setNewPassword("User@111");
+         dto.setReNewPassword("User@111");
          // Define behaviour of repository
          when(userRepository.findByUserId(user.getUserId())).thenReturn(Optional.of(user));
          when(passwordEncoder.matches(dto.getPassword(), user.getPassword()))
@@ -737,11 +712,12 @@
          dto.setUserId(user.getUserId());
          dto.setPassword("");
          dto.setNewPassword("User@111");
+         dto.setReNewPassword("User@111");
          // Run service method
          ResponseEntity<?> responseEntity = authService.changePassword(dto);
          System.out.println(responseEntity.toString());
          // Assert
-         assertEquals("Mật khẩu không được để trống", responseEntity.getBody());
+         assertEquals("Mật khẩu cũ sai", responseEntity.getBody());
      }
 
      @Test
@@ -756,7 +732,7 @@
          ResponseEntity<?> responseEntity = authService.changePassword(dto);
          System.out.println(responseEntity.toString());
          // Assert
-         assertEquals("Mật khẩu không được để trống", responseEntity.getBody());
+         assertEquals("Mật khẩu cũ sai", responseEntity.getBody());
      }
 
      @Test
@@ -767,6 +743,12 @@
          dto.setUserId(user.getUserId());
          dto.setPassword("@User123");
          dto.setNewPassword("12456789");
+         dto.setReNewPassword("12456789");
+         // Define behaviour of repository
+         when(userRepository.findByUserId(user.getUserId())).thenReturn(Optional.of(user));
+         when(passwordEncoder.matches(dto.getPassword(), user.getPassword()))
+                 .thenReturn((dto.getPassword().equals(user.getPassword())));
+         when(passwordEncoder.matches(dto.getPassword(),user.getPassword())).thenReturn(true);
          // Run service method
          ResponseEntity<?> responseEntity = authService.changePassword(dto);
          System.out.println(responseEntity.toString());
@@ -782,6 +764,12 @@
          dto.setUserId(user.getUserId());
          dto.setPassword("@User123");
          dto.setNewPassword("eimslogin");
+         dto.setReNewPassword("eimslogin");
+         // Define behaviour of repository
+         when(userRepository.findByUserId(user.getUserId())).thenReturn(Optional.of(user));
+         when(passwordEncoder.matches(dto.getPassword(), user.getPassword()))
+                 .thenReturn((dto.getPassword().equals(user.getPassword())));
+         when(passwordEncoder.matches(dto.getPassword(),user.getPassword())).thenReturn(true);
          // Run service method
          ResponseEntity<?> responseEntity = authService.changePassword(dto);
          System.out.println(responseEntity.toString());
@@ -797,6 +785,12 @@
          dto.setUserId(user.getUserId());
          dto.setPassword("@User123");
          dto.setNewPassword("");
+         dto.setReNewPassword("");
+         // Define behaviour of repository
+         when(userRepository.findByUserId(user.getUserId())).thenReturn(Optional.of(user));
+         when(passwordEncoder.matches(dto.getPassword(), user.getPassword()))
+                 .thenReturn((dto.getPassword().equals(user.getPassword())));
+         when(passwordEncoder.matches(dto.getPassword(),user.getPassword())).thenReturn(true);
          // Run service method
          ResponseEntity<?> responseEntity = authService.changePassword(dto);
          System.out.println(responseEntity.toString());
@@ -812,13 +806,18 @@
          dto.setUserId(user.getUserId());
          dto.setPassword("@User123");
          dto.setNewPassword(null);
+         dto.setReNewPassword(null);
+         // Define behaviour of repository
+         when(userRepository.findByUserId(user.getUserId())).thenReturn(Optional.of(user));
+         when(passwordEncoder.matches(dto.getPassword(), user.getPassword()))
+                 .thenReturn((dto.getPassword().equals(user.getPassword())));
+         when(passwordEncoder.matches(dto.getPassword(),user.getPassword())).thenReturn(true);
          // Run service method
          ResponseEntity<?> responseEntity = authService.changePassword(dto);
          System.out.println(responseEntity.toString());
          // Assert
          assertEquals("Mật khẩu mới không được để trống", responseEntity.getBody());
      }
-
      @Test
      void sendOTP() throws IOException{
          // Set up
@@ -875,6 +874,102 @@
          dto.setPhone("0987654321");
          dto.setNewPassword("1234567Aa@");
          dto.setConfirmPassword("1234567Aa@");
+         // Define behaviour of repository
+         when(userRepository.findByPhone(dto.getPhone())).thenReturn(Optional.of(user));
+         // Run service method
+         ResponseEntity<?> responseEntity = authService.resetPassword(dto);
+         System.out.println(responseEntity.toString());
+         // Assert
+         assertEquals("Mật khẩu thay đổi thành công", responseEntity.getBody());
+     }
+
+     @Test
+     @DisplayName("resetPasswordUTCID01")
+     void resetPasswordUTCID01() {
+         // Set up
+         ForgotPasswordDTO dto = new ForgotPasswordDTO();
+         dto.setPhone("0987654321");
+         dto.setNewPassword("User@111");
+         dto.setConfirmPassword("User@111");
+         // Define behaviour of repository
+         when(userRepository.findByPhone(dto.getPhone())).thenReturn(Optional.of(user));
+         // Run service method
+         ResponseEntity<?> responseEntity = authService.resetPassword(dto);
+         System.out.println(responseEntity.toString());
+         // Assert
+         assertEquals("Mật khẩu thay đổi thành công", responseEntity.getBody());
+     }
+
+     @Test
+     @DisplayName("resetPasswordUTCID02")
+     void resetPasswordUTCID02() {
+         // Set up
+         ForgotPasswordDTO dto = new ForgotPasswordDTO();
+         dto.setPhone("0987654321");
+         dto.setNewPassword("User@111");
+         dto.setConfirmPassword("@User123");
+         // Define behaviour of repository
+         when(userRepository.findByPhone(dto.getPhone())).thenReturn(Optional.of(user));
+         // Run service method
+         ResponseEntity<?> responseEntity = authService.resetPassword(dto);
+         System.out.println(responseEntity.toString());
+         // Assert
+         assertEquals("Mật khẩu không khớp", responseEntity.getBody());
+     }
+
+     @Test
+     @DisplayName("resetPasswordUTCID03")
+     void resetPasswordUTCID03() {
+         // Set up
+         ForgotPasswordDTO dto = new ForgotPasswordDTO();
+         dto.setPhone("0987654321");
+         dto.setNewPassword("1245678");
+         dto.setConfirmPassword("@User123");
+         // Run service method
+         ResponseEntity<?> responseEntity = authService.resetPassword(dto);
+         System.out.println(responseEntity.toString());
+         // Assert
+         assertEquals("Mật khẩu mới không đúng định dạng", responseEntity.getBody());
+     }
+
+     @Test
+     @DisplayName("resetPasswordUTCID04")
+     void resetPasswordUTCID04() {
+         // Set up
+         ForgotPasswordDTO dto = new ForgotPasswordDTO();
+         dto.setPhone("0987654321");
+         dto.setNewPassword("");
+         dto.setConfirmPassword("@User123");
+         // Run service method
+         ResponseEntity<?> responseEntity = authService.resetPassword(dto);
+         System.out.println(responseEntity.toString());
+         // Assert
+         assertEquals("Mật khẩu không được để trống", responseEntity.getBody());
+     }
+
+     @Test
+     @DisplayName("resetPasswordUTCID05")
+     void resetPasswordUTCID05() {
+         // Set up
+         ForgotPasswordDTO dto = new ForgotPasswordDTO();
+         dto.setPhone("0987654321");
+         dto.setNewPassword("");
+         dto.setConfirmPassword("@User123");
+         // Run service method
+         ResponseEntity<?> responseEntity = authService.resetPassword(dto);
+         System.out.println(responseEntity.toString());
+         // Assert
+         assertEquals("Mật khẩu không được để trống", responseEntity.getBody());
+     }
+
+     @Test
+     @DisplayName("resetPasswordUTCID06")
+     void resetPasswordUTCID06() {
+         // Set up
+         ForgotPasswordDTO dto = new ForgotPasswordDTO();
+         dto.setPhone("0987654321");
+         dto.setNewPassword("@User123");
+         dto.setConfirmPassword("@User123");
          // Define behaviour of repository
          when(userRepository.findByPhone(dto.getPhone())).thenReturn(Optional.of(user));
          // Run service method

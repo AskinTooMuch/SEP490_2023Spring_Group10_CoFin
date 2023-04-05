@@ -55,6 +55,10 @@ class MachineServiceImplTest {
     Page machinePage;
     @Mock
     BreedRepository breedRepository;
+    @Mock
+    IncubationPhaseRepository incubationPhaseRepository;
+    @Mock
+    SpecieRepository specieRepository;
     @InjectMocks
     MachineServiceImpl machineService;
 
@@ -160,8 +164,22 @@ class MachineServiceImplTest {
         EggProduct eggProduct = new EggProduct();
         eggProduct.setProductId(1L);
         eggProduct.setIncubationDate(LocalDateTime.now());
+        eggProduct.setEggBatchId(1L);
+        eggProduct.setIncubationPhaseId(1L);
 
         Breed breed = new Breed();
+        breed.setSpecieId(1L);
+
+        Specie specie = new Specie();
+        specie.setSpecieId(1L);
+        specie.setIncubationPeriod(10);
+
+        List<EggProduct> listEggProduct = new ArrayList<>();
+        listEggProduct.add(eggProduct);
+
+        IncubationPhase incubationPhase = new IncubationPhase();
+        incubationPhase.setIncubationPhaseId(1l);
+        incubationPhase.setPhaseNumber(1);
 
         // Define behaviour of repository
         when(machineRepository.findById(1L)).thenReturn(Optional.of(machine));
@@ -169,7 +187,9 @@ class MachineServiceImplTest {
         when(eggLocationRepository.getAllByMachineId(1L)).thenReturn(Optional.of(eggLocationList));
         when(eggProductRepository.getByProductId(1L)).thenReturn(Optional.of(eggProduct));
         when(breedRepository.getBreedOfProduct(1L)).thenReturn(breed);
-
+        when(eggProductRepository.findByEggBatchId(1L)).thenReturn(Optional.of(listEggProduct));
+        when(incubationPhaseRepository.findByIncubationPhaseId(1L)).thenReturn(Optional.of(incubationPhase));
+        when(specieRepository.findById(1L)).thenReturn(Optional.of(specie));
         // Run service method
         ResponseEntity<?> responseEntity = machineService.getMachine(machineId);
         System.out.println(responseEntity.getBody());
@@ -375,7 +395,7 @@ class MachineServiceImplTest {
         ResponseEntity<?> responseEntity = machineService.createMachine(dto);
         System.out.println(responseEntity.toString());
         // Assert
-        assertEquals("Sức chứa của máy phải lớn hơn 0", responseEntity.getBody());
+        assertEquals("Sức chứa của máy phải trong khoảng 1 - 20.000", responseEntity.getBody());
     }
 
     @Test
@@ -404,7 +424,7 @@ class MachineServiceImplTest {
         ResponseEntity<?> responseEntity = machineService.createMachine(dto);
         System.out.println(responseEntity.toString());
         // Assert
-        assertEquals("Sức chứa của máy phải lớn hơn 0", responseEntity.getBody());
+        assertEquals("Sức chứa của máy phải trong khoảng 1 - 20.000", responseEntity.getBody());
     }
 
     @Test
