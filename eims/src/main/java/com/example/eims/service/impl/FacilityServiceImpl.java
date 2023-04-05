@@ -121,7 +121,7 @@ public class FacilityServiceImpl implements IFacilityService {
                 return new ResponseEntity<>("Tên cơ sở không được để trống", HttpStatus.BAD_REQUEST);
             }
             // Found date
-            String fDate = updateFacilityDTO.getFoundDate();
+            String fDate = stringDealer.trimMax(updateFacilityDTO.getFoundDate());
             if (fDate.equals("")) { /* Found date is empty */
                 return new ResponseEntity<>("Ngày thành lập không được để trống", HttpStatus.BAD_REQUEST);
             }

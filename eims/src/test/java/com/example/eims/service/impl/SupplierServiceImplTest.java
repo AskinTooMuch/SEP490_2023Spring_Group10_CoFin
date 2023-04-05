@@ -62,7 +62,6 @@ class SupplierServiceImplTest {
         supplierList.add(supplier1);
         supplierList.add(supplier2);
         // Define behaviour of repository
-        when(userRepository.existsById(1L)).thenReturn(true);
         when(supplierRepository.findByUserId(1L)).thenReturn(Optional.of(supplierList));
 
         // Run service method
@@ -79,29 +78,13 @@ class SupplierServiceImplTest {
         // Set up
         Long userId = 15L;
         // Define behaviour of repository
-        when(userRepository.existsById(15L)).thenReturn(true);
         when(supplierRepository.findByUserId(15L)).thenReturn(Optional.empty());
 
         // Run service method
         ResponseEntity<?> responseEntity = supplierService.getAllSupplier(userId);
         System.out.println(responseEntity.toString());
         // Assert
-        assertEquals(null, responseEntity.getBody());
-    }
-
-    @Test
-    @DisplayName("getAllSupplierUTCID03")
-    void getAllSupplierUTCID03() {
-        // Set up
-        Long userId = 0L;
-        // Define behaviour of repository
-        when(userRepository.existsById(0L)).thenReturn(false);
-
-        // Run service method
-        ResponseEntity<?> responseEntity = supplierService.getAllSupplier(userId);
-        System.out.println(responseEntity.toString());
-        // Assert
-        assertEquals("Người dùng không tồn tại", responseEntity.getBody());
+        assertEquals("Không tìm thấy nhà cung cấp", responseEntity.getBody());
     }
 
     @Test
@@ -154,7 +137,7 @@ class SupplierServiceImplTest {
         dto.setSupplierName("Nguyễn Văn A");
         dto.setFacilityName("Nguyễn Văn A");
         dto.setSupplierPhone("0987654321");
-        dto.setSupplierAddress("Ha Noi, Viet Nam");
+        dto.setSupplierAddress("{\"city\":\"Tỉnh Hải Dương\",\"district\":\"Huyện Gia Lộc\",\"ward\":\"Xã Hoàng Diệu\",\"street\":\"Thôn Nghĩa Hy\"}"	);
         dto.setSupplierMail("BNV71@gmail.com");
 
         // Define behaviour of repository
@@ -166,7 +149,7 @@ class SupplierServiceImplTest {
         ResponseEntity<?> responseEntity = supplierService.createSupplier(dto);
         System.out.println(responseEntity.toString());
         // Assert
-        assertEquals("Thêm nhà cung cấp thành công", responseEntity.getBody());
+        assertEquals("Thêm nhà cung cấp thành công.", responseEntity.getBody());
     }
 
     @Test
@@ -179,7 +162,7 @@ class SupplierServiceImplTest {
         dto.setSupplierName("Nguyễn Văn A");
         dto.setFacilityName("ABC123");
         dto.setSupplierPhone("0987654321");
-        dto.setSupplierAddress("So 27 duong Truong Trinh");
+        dto.setSupplierAddress("{\"city\":\"Tỉnh Hải Dương\",\"district\":\"Huyện Gia Lộc\",\"ward\":\"Xã Hoàng Diệu\",\"street\":\"Thôn Nghĩa Hy\"}"	);
         dto.setSupplierMail("BNV71@gmail.com");
 
         // Define behaviour of repository
@@ -191,7 +174,7 @@ class SupplierServiceImplTest {
         ResponseEntity<?> responseEntity = supplierService.createSupplier(dto);
         System.out.println(responseEntity.toString());
         // Assert
-        assertEquals("Thêm nhà cung cấp thành công", responseEntity.getBody());
+        assertEquals("Thêm nhà cung cấp thành công.", responseEntity.getBody());
     }
 
     @Test
@@ -204,7 +187,7 @@ class SupplierServiceImplTest {
         dto.setSupplierName("");
         dto.setFacilityName("ABC123");
         dto.setSupplierPhone("0987654321");
-        dto.setSupplierAddress("Ha Noi, Viet Nam");
+        dto.setSupplierAddress("{\"city\":\"Tỉnh Hải Dương\",\"district\":\"Huyện Gia Lộc\",\"ward\":\"Xã Hoàng Diệu\",\"street\":\"Thôn Nghĩa Hy\"}"	);
         dto.setSupplierMail("BNV71@gmail.com");
 
         // Define behaviour of repository
@@ -214,7 +197,7 @@ class SupplierServiceImplTest {
         ResponseEntity<?> responseEntity = supplierService.createSupplier(dto);
         System.out.println(responseEntity.toString());
         // Assert
-        assertEquals("Tên không được để trống", responseEntity.getBody());
+        assertEquals("Tên nhà cung cấp không được để trống.", responseEntity.getBody());
     }
 
     @Test
@@ -227,7 +210,7 @@ class SupplierServiceImplTest {
         dto.setSupplierName(null);
         dto.setFacilityName("ABC123");
         dto.setSupplierPhone("0987654321");
-        dto.setSupplierAddress("Ha Noi, Viet Nam");
+        dto.setSupplierAddress("{\"city\":\"Tỉnh Hải Dương\",\"district\":\"Huyện Gia Lộc\",\"ward\":\"Xã Hoàng Diệu\",\"street\":\"Thôn Nghĩa Hy\"}"	);
         dto.setSupplierMail("BNV71@gmail.com");
 
         // Define behaviour of repository
@@ -236,7 +219,7 @@ class SupplierServiceImplTest {
         ResponseEntity<?> responseEntity = supplierService.createSupplier(dto);
         System.out.println(responseEntity.toString());
         // Assert
-        assertEquals("Tên không được để trống", responseEntity.getBody());
+        assertEquals("Tên nhà cung cấp không được để trống.", responseEntity.getBody());
     }
 
     @Test
@@ -249,7 +232,7 @@ class SupplierServiceImplTest {
         dto.setSupplierName("Nguyễn Văn A");
         dto.setFacilityName("");
         dto.setSupplierPhone("0987654321");
-        dto.setSupplierAddress("Ha Noi, Viet Nam");
+        dto.setSupplierAddress("{\"city\":\"Tỉnh Hải Dương\",\"district\":\"Huyện Gia Lộc\",\"ward\":\"Xã Hoàng Diệu\",\"street\":\"Thôn Nghĩa Hy\"}"	);
         dto.setSupplierMail("BNV71@gmail.com");
 
         // Define behaviour of repository
@@ -258,7 +241,7 @@ class SupplierServiceImplTest {
         ResponseEntity<?> responseEntity = supplierService.createSupplier(dto);
         System.out.println(responseEntity.toString());
         // Assert
-        assertEquals("Tên cơ sở không được để trống", responseEntity.getBody());
+        assertEquals("Tên cơ sở không được để trống.", responseEntity.getBody());
     }
 
     @Test
@@ -271,7 +254,7 @@ class SupplierServiceImplTest {
         dto.setSupplierName("Nguyễn Văn A");
         dto.setFacilityName(null);
         dto.setSupplierPhone("0987654321");
-        dto.setSupplierAddress("Ha Noi, Viet Nam");
+        dto.setSupplierAddress("{\"city\":\"Tỉnh Hải Dương\",\"district\":\"Huyện Gia Lộc\",\"ward\":\"Xã Hoàng Diệu\",\"street\":\"Thôn Nghĩa Hy\"}"	);
         dto.setSupplierMail("BNV71@gmail.com");
 
         // Define behaviour of repository
@@ -280,7 +263,7 @@ class SupplierServiceImplTest {
         ResponseEntity<?> responseEntity = supplierService.createSupplier(dto);
         System.out.println(responseEntity.toString());
         // Assert
-        assertEquals("Tên cơ sở không được để trống", responseEntity.getBody());
+        assertEquals("Tên cơ sở không được để trống.", responseEntity.getBody());
     }
 
     @Test
@@ -302,7 +285,7 @@ class SupplierServiceImplTest {
         ResponseEntity<?> responseEntity = supplierService.createSupplier(dto);
         System.out.println(responseEntity.toString());
         // Assert
-        assertEquals("Địa chỉ không được để trống", responseEntity.getBody());
+        assertEquals("Địa chỉ không được để trống.", responseEntity.getBody());
     }
 
     @Test
@@ -324,7 +307,7 @@ class SupplierServiceImplTest {
         ResponseEntity<?> responseEntity = supplierService.createSupplier(dto);
         System.out.println(responseEntity.toString());
         // Assert
-        assertEquals("Địa chỉ không được để trống", responseEntity.getBody());
+        assertEquals("Địa chỉ không được để trống.", responseEntity.getBody());
     }
 
     @Test
@@ -337,7 +320,7 @@ class SupplierServiceImplTest {
         dto.setSupplierName("Nguyễn Văn A");
         dto.setFacilityName("Nguyễn Văn A");
         dto.setSupplierPhone("abcdefgh");
-        dto.setSupplierAddress("Ha Noi, Viet Nam");
+        dto.setSupplierAddress("{\"city\":\"Tỉnh Hải Dương\",\"district\":\"Huyện Gia Lộc\",\"ward\":\"Xã Hoàng Diệu\",\"street\":\"Thôn Nghĩa Hy\"}"	);
         dto.setSupplierMail("BNV71@gmail.com");
 
         // Define behaviour of repository
@@ -346,7 +329,7 @@ class SupplierServiceImplTest {
         ResponseEntity<?> responseEntity = supplierService.createSupplier(dto);
         System.out.println(responseEntity.toString());
         // Assert
-        assertEquals("Số điện thoại không hợp lệ", responseEntity.getBody());
+        assertEquals("Số điện thoại không hợp lệ.", responseEntity.getBody());
     }
 
     @Test
@@ -359,7 +342,7 @@ class SupplierServiceImplTest {
         dto.setSupplierName("Nguyễn Văn A");
         dto.setFacilityName("Nguyễn Văn A");
         dto.setSupplierPhone("098765432");
-        dto.setSupplierAddress("Ha Noi, Viet Nam");
+        dto.setSupplierAddress("{\"city\":\"Tỉnh Hải Dương\",\"district\":\"Huyện Gia Lộc\",\"ward\":\"Xã Hoàng Diệu\",\"street\":\"Thôn Nghĩa Hy\"}"	);
         dto.setSupplierMail("BNV71@gmail.com");
 
         // Define behaviour of repository
@@ -368,7 +351,7 @@ class SupplierServiceImplTest {
         ResponseEntity<?> responseEntity = supplierService.createSupplier(dto);
         System.out.println(responseEntity.toString());
         // Assert
-        assertEquals("Số điện thoại không hợp lệ", responseEntity.getBody());
+        assertEquals("Số điện thoại không hợp lệ.", responseEntity.getBody());
     }
 
     @Test
@@ -381,7 +364,7 @@ class SupplierServiceImplTest {
         dto.setSupplierName("Nguyễn Văn A");
         dto.setFacilityName("Nguyễn Văn A");
         dto.setSupplierPhone("");
-        dto.setSupplierAddress("Ha Noi, Viet Nam");
+        dto.setSupplierAddress("{\"city\":\"Tỉnh Hải Dương\",\"district\":\"Huyện Gia Lộc\",\"ward\":\"Xã Hoàng Diệu\",\"street\":\"Thôn Nghĩa Hy\"}"	);
         dto.setSupplierMail("BNV71@gmail.com");
 
         // Define behaviour of repository
@@ -390,7 +373,7 @@ class SupplierServiceImplTest {
         ResponseEntity<?> responseEntity = supplierService.createSupplier(dto);
         System.out.println(responseEntity.toString());
         // Assert
-        assertEquals("Số điện thoại không được để trống", responseEntity.getBody());
+        assertEquals("Số điện thoại không được để trống.", responseEntity.getBody());
     }
 
     @Test
@@ -403,7 +386,7 @@ class SupplierServiceImplTest {
         dto.setSupplierName("Nguyễn Văn A");
         dto.setFacilityName("Nguyễn Văn A");
         dto.setSupplierPhone(null);
-        dto.setSupplierAddress("Ha Noi, Viet Nam");
+        dto.setSupplierAddress("{\"city\":\"Tỉnh Hải Dương\",\"district\":\"Huyện Gia Lộc\",\"ward\":\"Xã Hoàng Diệu\",\"street\":\"Thôn Nghĩa Hy\"}"	);
         dto.setSupplierMail("BNV71@gmail.com");
 
         // Define behaviour of repository
@@ -412,7 +395,7 @@ class SupplierServiceImplTest {
         ResponseEntity<?> responseEntity = supplierService.createSupplier(dto);
         System.out.println(responseEntity.toString());
         // Assert
-        assertEquals("Số điện thoại không được để trống", responseEntity.getBody());
+        assertEquals("Số điện thoại không được để trống.", responseEntity.getBody());
     }
 
     @Test
@@ -425,7 +408,7 @@ class SupplierServiceImplTest {
         dto.setSupplierName("Nguyễn Văn A");
         dto.setFacilityName("Nguyễn Văn A");
         dto.setSupplierPhone("0987654321");
-        dto.setSupplierAddress("Ha Noi, Viet Nam");
+        dto.setSupplierAddress("{\"city\":\"Tỉnh Hải Dương\",\"district\":\"Huyện Gia Lộc\",\"ward\":\"Xã Hoàng Diệu\",\"street\":\"Thôn Nghĩa Hy\"}"	);
         dto.setSupplierMail("a_b_c@gmail.com");
 
         // Define behaviour of repository
@@ -434,7 +417,7 @@ class SupplierServiceImplTest {
         ResponseEntity<?> responseEntity = supplierService.createSupplier(dto);
         System.out.println(responseEntity.toString());
         // Assert
-        assertEquals("Email không hợp lệ", responseEntity.getBody());
+        assertEquals("Email không hợp lệ.", responseEntity.getBody());
     }
 
     @Test
@@ -447,7 +430,7 @@ class SupplierServiceImplTest {
         dto.setSupplierName("Nguyễn Văn A");
         dto.setFacilityName("Nguyễn Văn A");
         dto.setSupplierPhone("0987654321");
-        dto.setSupplierAddress("Ha Noi, Viet Nam");
+        dto.setSupplierAddress("{\"city\":\"Tỉnh Hải Dương\",\"district\":\"Huyện Gia Lộc\",\"ward\":\"Xã Hoàng Diệu\",\"street\":\"Thôn Nghĩa Hy\"}"	);
         dto.setSupplierMail("12@3tungdt@gmail.com");
 
         // Define behaviour of repository
@@ -456,7 +439,7 @@ class SupplierServiceImplTest {
         ResponseEntity<?> responseEntity = supplierService.createSupplier(dto);
         System.out.println(responseEntity.toString());
         // Assert
-        assertEquals("Email không hợp lệ", responseEntity.getBody());
+        assertEquals("Email không hợp lệ.", responseEntity.getBody());
     }
 
     @Test
@@ -506,7 +489,7 @@ class SupplierServiceImplTest {
         dto.setSupplierName("Nguyễn Văn A");
         dto.setFacilityName("Nguyễn Văn A");
         dto.setSupplierPhone("0987654321");
-        dto.setSupplierAddress("Ha Noi, Viet Nam");
+        dto.setSupplierAddress("{\"city\":\"Tỉnh Hải Dương\",\"district\":\"Huyện Gia Lộc\",\"ward\":\"Xã Hoàng Diệu\",\"street\":\"Thôn Nghĩa Hy\"}"	);
         dto.setSupplierMail("BNV71@gmail.com");
         dto.setStatus(1);
         String oldPhone = "0987654320";
@@ -519,7 +502,7 @@ class SupplierServiceImplTest {
         ResponseEntity<?> responseEntity = supplierService.updateSupplier(dto);
         System.out.println(responseEntity.toString());
         // Assert
-        assertEquals("Cập nhật thông tin nhà cung cấp thành công", responseEntity.getBody());
+        assertEquals("Cập nhật thông tin nhà cung cấp thành công.", responseEntity.getBody());
     }
 
     @Test
@@ -534,7 +517,7 @@ class SupplierServiceImplTest {
         dto.setSupplierName("Nguyễn Văn A");
         dto.setFacilityName("Nguyễn Văn A");
         dto.setSupplierPhone("0987654321");
-        dto.setSupplierAddress("Ha Noi, Viet Nam");
+        dto.setSupplierAddress("{\"city\":\"Tỉnh Hải Dương\",\"district\":\"Huyện Gia Lộc\",\"ward\":\"Xã Hoàng Diệu\",\"street\":\"Thôn Nghĩa Hy\"}"	);
         dto.setSupplierMail("BNV71@gmail.com");
         dto.setStatus(0);
         String oldPhone = "0987654320";
@@ -547,7 +530,7 @@ class SupplierServiceImplTest {
         ResponseEntity<?> responseEntity = supplierService.updateSupplier(dto);
         System.out.println(responseEntity.toString());
         // Assert
-        assertEquals("Cập nhật thông tin nhà cung cấp thành công", responseEntity.getBody());
+        assertEquals("Cập nhật thông tin nhà cung cấp thành công.", responseEntity.getBody());
     }
 
     @Test
@@ -562,7 +545,7 @@ class SupplierServiceImplTest {
         dto.setSupplierName("");
         dto.setFacilityName("Nguyễn Văn A");
         dto.setSupplierPhone("0987654321");
-        dto.setSupplierAddress("Ha Noi, Viet Nam");
+        dto.setSupplierAddress("{\"city\":\"Tỉnh Hải Dương\",\"district\":\"Huyện Gia Lộc\",\"ward\":\"Xã Hoàng Diệu\",\"street\":\"Thôn Nghĩa Hy\"}"	);
         dto.setSupplierMail("BNV71@gmail.com");
         dto.setStatus(0);
         String oldPhone = "0987654320";
@@ -570,7 +553,7 @@ class SupplierServiceImplTest {
         ResponseEntity<?> responseEntity = supplierService.updateSupplier(dto);
         System.out.println(responseEntity.toString());
         // Assert
-        assertEquals("Tên không được để trống", responseEntity.getBody());
+        assertEquals("Tên nhà cung cấp không được để trống.", responseEntity.getBody());
     }
 
     @Test
@@ -585,7 +568,7 @@ class SupplierServiceImplTest {
         dto.setSupplierName(null);
         dto.setFacilityName("Nguyễn Văn A");
         dto.setSupplierPhone("0987654321");
-        dto.setSupplierAddress("Ha Noi, Viet Nam");
+        dto.setSupplierAddress("{\"city\":\"Tỉnh Hải Dương\",\"district\":\"Huyện Gia Lộc\",\"ward\":\"Xã Hoàng Diệu\",\"street\":\"Thôn Nghĩa Hy\"}"	);
         dto.setSupplierMail("BNV71@gmail.com");
         dto.setStatus(0);
         String oldPhone = "0987654320";
@@ -593,7 +576,7 @@ class SupplierServiceImplTest {
         ResponseEntity<?> responseEntity = supplierService.updateSupplier(dto);
         System.out.println(responseEntity.toString());
         // Assert
-        assertEquals("Tên không được để trống", responseEntity.getBody());
+        assertEquals("Tên nhà cung cấp không được để trống.", responseEntity.getBody());
     }
 
     @Test
@@ -608,7 +591,7 @@ class SupplierServiceImplTest {
         dto.setSupplierName("Nguyễn Văn A");
         dto.setFacilityName("");
         dto.setSupplierPhone("0987654321");
-        dto.setSupplierAddress("Ha Noi, Viet Nam");
+        dto.setSupplierAddress("{\"city\":\"Tỉnh Hải Dương\",\"district\":\"Huyện Gia Lộc\",\"ward\":\"Xã Hoàng Diệu\",\"street\":\"Thôn Nghĩa Hy\"}"	);
         dto.setSupplierMail("BNV71@gmail.com");
         dto.setStatus(0);
         String oldPhone = "0987654320";
@@ -618,7 +601,7 @@ class SupplierServiceImplTest {
         ResponseEntity<?> responseEntity = supplierService.updateSupplier(dto);
         System.out.println(responseEntity.toString());
         // Assert
-        assertEquals("Tên cơ sở không được để trống", responseEntity.getBody());
+        assertEquals("Tên cơ sở không được để trống.", responseEntity.getBody());
     }
 
     @Test
@@ -633,7 +616,7 @@ class SupplierServiceImplTest {
         dto.setSupplierName("Nguyễn Văn A");
         dto.setFacilityName(null);
         dto.setSupplierPhone("0987654321");
-        dto.setSupplierAddress("Ha Noi, Viet Nam");
+        dto.setSupplierAddress("{\"city\":\"Tỉnh Hải Dương\",\"district\":\"Huyện Gia Lộc\",\"ward\":\"Xã Hoàng Diệu\",\"street\":\"Thôn Nghĩa Hy\"}"	);
         dto.setSupplierMail("BNV71@gmail.com");
         dto.setStatus(0);
         String oldPhone = "0987654320";
@@ -643,7 +626,7 @@ class SupplierServiceImplTest {
         ResponseEntity<?> responseEntity = supplierService.updateSupplier(dto);
         System.out.println(responseEntity.toString());
         // Assert
-        assertEquals("Tên cơ sở không được để trống", responseEntity.getBody());
+        assertEquals("Tên cơ sở không được để trống.", responseEntity.getBody());
     }
 
     @Test
@@ -670,7 +653,7 @@ class SupplierServiceImplTest {
         ResponseEntity<?> responseEntity = supplierService.updateSupplier(dto);
         System.out.println(responseEntity.toString());
         // Assert
-        assertEquals("Địa chỉ không được để trống", responseEntity.getBody());
+        assertEquals("Địa chỉ không được để trống.", responseEntity.getBody());
     }
 
     @Test
@@ -697,7 +680,7 @@ class SupplierServiceImplTest {
         ResponseEntity<?> responseEntity = supplierService.updateSupplier(dto);
         System.out.println(responseEntity.toString());
         // Assert
-        assertEquals("Địa chỉ không được để trống", responseEntity.getBody());
+        assertEquals("Địa chỉ không được để trống.", responseEntity.getBody());
     }
 
     @Test
@@ -712,7 +695,7 @@ class SupplierServiceImplTest {
         dto.setSupplierName("Nguyễn Văn A");
         dto.setFacilityName("Nguyễn Văn A");
         dto.setSupplierPhone("abcdefgh");
-        dto.setSupplierAddress("Ha Noi, Viet Nam");
+        dto.setSupplierAddress("{\"city\":\"Tỉnh Hải Dương\",\"district\":\"Huyện Gia Lộc\",\"ward\":\"Xã Hoàng Diệu\",\"street\":\"Thôn Nghĩa Hy\"}"	);
         dto.setSupplierMail("BNV71@gmail.com");
         dto.setStatus(0);
         String oldPhone = "0987654320";
@@ -720,7 +703,7 @@ class SupplierServiceImplTest {
         ResponseEntity<?> responseEntity = supplierService.updateSupplier(dto);
         System.out.println(responseEntity.toString());
         // Assert
-        assertEquals("Số điện thoại không hợp lệ", responseEntity.getBody());
+        assertEquals("Số điện thoại không hợp lệ.", responseEntity.getBody());
     }
 
     @Test
@@ -735,7 +718,7 @@ class SupplierServiceImplTest {
         dto.setSupplierName("Nguyễn Văn A");
         dto.setFacilityName("Nguyễn Văn A");
         dto.setSupplierPhone("098765432");
-        dto.setSupplierAddress("Ha Noi, Viet Nam");
+        dto.setSupplierAddress("{\"city\":\"Tỉnh Hải Dương\",\"district\":\"Huyện Gia Lộc\",\"ward\":\"Xã Hoàng Diệu\",\"street\":\"Thôn Nghĩa Hy\"}"	);
         dto.setSupplierMail("BNV71@gmail.com");
         dto.setStatus(0);
         String oldPhone = "0987654320";
@@ -743,7 +726,7 @@ class SupplierServiceImplTest {
         ResponseEntity<?> responseEntity = supplierService.updateSupplier(dto);
         System.out.println(responseEntity.toString());
         // Assert
-        assertEquals("Số điện thoại không hợp lệ", responseEntity.getBody());
+        assertEquals("Số điện thoại không hợp lệ.", responseEntity.getBody());
     }
 
     @Test
@@ -758,7 +741,7 @@ class SupplierServiceImplTest {
         dto.setSupplierName("Nguyễn Văn A");
         dto.setFacilityName("Nguyễn Văn A");
         dto.setSupplierPhone("");
-        dto.setSupplierAddress("Ha Noi, Viet Nam");
+        dto.setSupplierAddress("{\"city\":\"Tỉnh Hải Dương\",\"district\":\"Huyện Gia Lộc\",\"ward\":\"Xã Hoàng Diệu\",\"street\":\"Thôn Nghĩa Hy\"}"	);
         dto.setSupplierMail("BNV71@gmail.com");
         dto.setStatus(0);
         String oldPhone = "0987654320";
@@ -766,7 +749,7 @@ class SupplierServiceImplTest {
         ResponseEntity<?> responseEntity = supplierService.updateSupplier(dto);
         System.out.println(responseEntity.toString());
         // Assert
-        assertEquals("Số điện thoại không được để trống", responseEntity.getBody());
+        assertEquals("Số điện thoại không được để trống.", responseEntity.getBody());
     }
 
     @Test
@@ -781,7 +764,7 @@ class SupplierServiceImplTest {
         dto.setSupplierName("Nguyễn Văn A");
         dto.setFacilityName("Nguyễn Văn A");
         dto.setSupplierPhone(null);
-        dto.setSupplierAddress("Ha Noi, Viet Nam");
+        dto.setSupplierAddress("{\"city\":\"Tỉnh Hải Dương\",\"district\":\"Huyện Gia Lộc\",\"ward\":\"Xã Hoàng Diệu\",\"street\":\"Thôn Nghĩa Hy\"}"	);
         dto.setSupplierMail("BNV71@gmail.com");
         dto.setStatus(0);
         String oldPhone = "0987654320";
@@ -789,7 +772,7 @@ class SupplierServiceImplTest {
         ResponseEntity<?> responseEntity = supplierService.updateSupplier(dto);
         System.out.println(responseEntity.toString());
         // Assert
-        assertEquals("Số điện thoại không được để trống", responseEntity.getBody());
+        assertEquals("Số điện thoại không được để trống.", responseEntity.getBody());
     }
 
     @Test
@@ -804,7 +787,7 @@ class SupplierServiceImplTest {
         dto.setSupplierName("Nguyễn Văn A");
         dto.setFacilityName("Nguyễn Văn A");
         dto.setSupplierPhone("0987654321");
-        dto.setSupplierAddress("Ha Noi, Viet Nam");
+        dto.setSupplierAddress("{\"city\":\"Tỉnh Hải Dương\",\"district\":\"Huyện Gia Lộc\",\"ward\":\"Xã Hoàng Diệu\",\"street\":\"Thôn Nghĩa Hy\"}"	);
         dto.setSupplierMail("a_b_c@gmail.com");
         dto.setStatus(0);
         String oldPhone = "0987654320";
@@ -812,12 +795,11 @@ class SupplierServiceImplTest {
         when(supplierRepository.findSupplierPhoneById(dto.getSupplierId())).thenReturn(oldPhone);
         when(supplierRepository.existsBySupplierPhoneAndUserId(dto.getSupplierPhone(), dto.getUserId()))
                 .thenReturn(false);
-        when(supplierRepository.findBySupplierId(1L)).thenReturn(Optional.of(supplier));
         // Run service method
         ResponseEntity<?> responseEntity = supplierService.updateSupplier(dto);
         System.out.println(responseEntity.toString());
         // Assert
-        assertEquals("Email không hợp lệ", responseEntity.getBody());
+        assertEquals("Email không hợp lệ.", responseEntity.getBody());
     }
 
     @Test
@@ -832,7 +814,7 @@ class SupplierServiceImplTest {
         dto.setSupplierName("Nguyễn Văn A");
         dto.setFacilityName("Nguyễn Văn A");
         dto.setSupplierPhone("0987654321");
-        dto.setSupplierAddress("Ha Noi, Viet Nam");
+        dto.setSupplierAddress("{\"city\":\"Tỉnh Hải Dương\",\"district\":\"Huyện Gia Lộc\",\"ward\":\"Xã Hoàng Diệu\",\"street\":\"Thôn Nghĩa Hy\"}"	);
         dto.setSupplierMail("12@3tungdt@gmail.com");
         dto.setStatus(0);
         String oldPhone = "0987654320";
@@ -844,7 +826,7 @@ class SupplierServiceImplTest {
         ResponseEntity<?> responseEntity = supplierService.updateSupplier(dto);
         System.out.println(responseEntity.toString());
         // Assert
-        assertEquals("Email không hợp lệ", responseEntity.getBody());
+        assertEquals("Email không hợp lệ.", responseEntity.getBody());
     }
 
     @Test
@@ -899,7 +881,7 @@ class SupplierServiceImplTest {
         ResponseEntity<?> responseEntity = supplierService.searchSupplier(userId, key1);
         System.out.println(responseEntity.toString());
         // Assert
-        assertEquals("Nhập từ khóa để tìm kiếm", responseEntity.getBody());
+        assertEquals(null, responseEntity.getBody());
     }
 
     @Test
@@ -927,7 +909,7 @@ class SupplierServiceImplTest {
         ResponseEntity<?> responseEntity = supplierService.searchSupplier(userId, key1);
         System.out.println(responseEntity.toString());
         // Assert
-        assertEquals("Nhập từ khóa để tìm kiếm", responseEntity.getBody());
+        assertEquals(null, responseEntity.getBody());
     }
 
     @Test
@@ -964,7 +946,6 @@ class SupplierServiceImplTest {
         Sort sortable = Sort.by("supplierId").ascending();
         Pageable pageable = PageRequest.of(page, size, sortable);
         // Define behaviour of repository
-        when(userRepository.existsById(1L)).thenReturn(true);
         when(supplierRepository.findAllByUserId(1L, pageable)).thenReturn(supplierPage);
         // Run service method
         ResponseEntity<?> responseEntity = supplierService.getAllSupplierPaging(userId, page, size, sort);

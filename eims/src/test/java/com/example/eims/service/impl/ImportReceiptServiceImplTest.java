@@ -58,7 +58,7 @@ class ImportReceiptServiceImplTest {
         // Define behaviour of repository
         when(importReceiptRepository.findByUserId(1L)).thenReturn(Optional.of(importReceiptList));
         // Run service method
-        ResponseEntity<?> responseEntity = importReceiptService.viewImportsByOwner(1L);
+        ResponseEntity<?> responseEntity = importReceiptService.getImport(1L);
         System.out.println(responseEntity.toString());
         // Assert
         assertEquals(importReceiptList, responseEntity.getBody());

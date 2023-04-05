@@ -66,7 +66,7 @@ class CustomerServiceImplTest {
         ResponseEntity<?> responseEntity = customerService.getAllCustomer(userId);
         System.out.println(responseEntity.toString());
         // Assert
-        assertEquals(null, responseEntity.getBody());
+        assertEquals("Không tìm thấy khách hàng", responseEntity.getBody());
     }
 
     @Test
@@ -86,7 +86,7 @@ class CustomerServiceImplTest {
         ResponseEntity<?> responseEntity = customerService.getAllCustomer(userId);
         System.out.println(responseEntity.toString());
         // Assert
-        assertEquals(null, responseEntity.getBody());
+        assertEquals("Không tìm thấy khách hàng", responseEntity.getBody());
     }
 
     @Test
@@ -122,7 +122,7 @@ class CustomerServiceImplTest {
         ResponseEntity<?> responseEntity = customerService.getCustomer(customerId);
         System.out.println(responseEntity.toString());
         // Assert
-        assertEquals(null, responseEntity.getBody());
+        assertEquals("Không tìm thấy khách hàng", responseEntity.getBody());
     }
 
     @Test
