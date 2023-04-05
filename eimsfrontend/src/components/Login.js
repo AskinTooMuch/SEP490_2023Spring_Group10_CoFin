@@ -76,7 +76,10 @@ const Login = () => {
     }
 
   }
-
+  function changeLocation(placeToGo) {
+    navigate(placeToGo, { replace: true });
+    window.location.reload();
+}
   return (
     <>
 
@@ -111,8 +114,8 @@ const Login = () => {
                
               </form>
             </div>
-            <Link to="/forgotpassword" className="u-active-none u-border-2 u-border-active-palette-2-dark-1 u-border-custom-color-1 u-border-hover-palette-1-base u-border-no-left u-border-no-right u-border-no-top u-btn u-button-style u-hover-none u-login-control u-login-forgot-password u-none u-text-custom-color-1 u-text-hover-palette-1-base u-btn-2">Quên mật khẩu</Link>
-            <Link to="/registerotp" className="u-active-none u-border-2 u-border-active-palette-2-dark-1 u-border-custom-color-1 u-border-hover-palette-1-base u-border-no-left u-border-no-right u-border-no-top u-btn u-button-style u-hover-none u-login-control u-login-create-account u-none u-text-custom-color-1 u-text-hover-palette-1-base u-btn-3">Bạn chưa có tài khoản?</Link>
+            <Link to="/forgotpassword" onClick={() => changeLocation('/forgotpassword')} className="u-active-none u-border-2 u-border-active-palette-2-dark-1 u-border-custom-color-1 u-border-hover-palette-1-base u-border-no-left u-border-no-right u-border-no-top u-btn u-button-style u-hover-none u-login-control u-login-forgot-password u-none u-text-custom-color-1 u-text-hover-palette-1-base u-btn-2">Quên mật khẩu</Link>
+            <Link to="/testotp" onClick={() => changeLocation('/testotp')} className="u-active-none u-border-2 u-border-active-palette-2-dark-1 u-border-custom-color-1 u-border-hover-palette-1-base u-border-no-left u-border-no-right u-border-no-top u-btn u-button-style u-hover-none u-login-control u-login-create-account u-none u-text-custom-color-1 u-text-hover-palette-1-base u-btn-3">Bạn chưa có tài khoản?</Link>
           </div>
         </div>
       </section>

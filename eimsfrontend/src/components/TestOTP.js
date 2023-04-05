@@ -80,7 +80,6 @@ const TestOTP = () => {
                 size: "invisible"
             }
         );
-
         const phoneNumber = sessionStorage.getItem("currPhone")
         auth.signInWithPhoneNumber(phoneNumber, window.recaptchaVerifier)
             .then((result2) => {
@@ -91,9 +90,6 @@ const TestOTP = () => {
                     setButtonDisabled(false); //Enable button after one minute
                 }, 60000);
                 toast.success("Đã gửi lại mã OTP")
-                // Clear the RecaptchaVerifier instance
-
-                console.log('window.recaptchaVerifier:', window.recaptchaVerifier);
             })
             .catch((err) => {
                 console.log(err);
