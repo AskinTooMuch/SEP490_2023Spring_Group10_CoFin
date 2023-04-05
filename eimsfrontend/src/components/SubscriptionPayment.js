@@ -3,7 +3,7 @@ import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
 import { useNavigate, useLocation } from "react-router-dom";
 import axios from 'axios';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import PaymentForm from './PaymentForm';
 
 
@@ -71,16 +71,7 @@ export default function SubscriptionPayment() {
                 </Elements>
             </div>
             <div className='col-md-3'></div>
-            <ToastContainer position="top-left"
-              autoClose={5000}
-              hideProgressBar={false}
-              newestOnTop={false}
-              closeOnClick
-              rtl={false}
-              pauseOnFocusLoss
-              draggable
-              pauseOnHover
-              theme="colored" />
+            
         </div>
     )
 }

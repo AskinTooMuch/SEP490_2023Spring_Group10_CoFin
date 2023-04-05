@@ -2,8 +2,12 @@ import React, { useState } from 'react'
 import { firebase, auth } from '../firebase/firebasesdk'
 import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
 import { useNavigate } from 'react-router-dom';
-import { Box, Typography } from '@mui/material';
-import { ToastContainer, toast } from 'react-toastify';
+import { Box } from '@mui/material';
+import { toast } from 'react-toastify';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
+
+const PHONE_REGEX = /(0)(3|5|7|8|9)+([0-9]{8})\b/;
 const TestOTP = () => {
     const [phoneNumber, setPhoneNumber] = useState("");
     const [otp, setOtp] = useState('');
@@ -25,9 +29,19 @@ const TestOTP = () => {
             );
         }
     }
-    const sendOTP = () => {
+    // send OTP first time to phone number
+    const sendOTP = (e) => {
+        e.preventDefault();
         onCaptchVerify();
-        if (phoneNumber === "") return;
+        const v2 = PHONE_REGEX.test(phoneNumber);
+        if (phoneNumber === "") {
+            toast.error("Vui lòng nhập Số điện thoại");
+            return;
+        }
+        else if (!v2) {
+            toast.error("Số điện thoại không tồn tại");
+            return;
+        }
         const appVerifier = window.recaptchaVerifier;
         const replaced = phoneNumber.replace(phoneNumber[0], "+84")
         console.log(phoneNumber)
@@ -40,37 +54,50 @@ const TestOTP = () => {
             setButtonDisabled(true); //Disable button after sending OTP
             setTimeout(() => {
                 setButtonDisabled(false); //Enable button after one minute
-            }, 0);
+            }, 60000);
             toast.success("Mã OTP đã được gửi đến số điện thoại của bạn")
         })
             .catch((err) => {
                 console.log(err);
-                console.log("SMS not sent");
+                toast.error("OTP không gửi được");
             });
     }
 
+    // Resend OTP to phone number
     const reSendOTP = () => {
-        window.recaptchaVerifier = new RecaptchaVerifier(
+        const element = document.getElementById('recaptcha-container');
+        if (window.recaptchaVerifier) {
+            window.recaptchaVerifier.clear();
+            element.remove();
+        }
+        const myDiv = document.createElement('div');
+        myDiv.id = 'recaptcha-container';
+        document.body.appendChild(myDiv);
+        // Create a new RecaptchaVerifier instance
+        window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier(
             "recaptcha-container",
             {
-                size: "invisible",
-            },
-            firebase.auth()
+                size: "invisible"
+            }
         );
-        const appVerifier = window.recaptchaVerifier;
+
         const phoneNumber = sessionStorage.getItem("currPhone")
-        auth.signInWithPhoneNumber(phoneNumber, appVerifier).then((result2) => {
-            setResult(result2);
-            setStep('VERIFY_OTP');
-            setButtonDisabled(true); //Disable button after sending OTP
-            setTimeout(() => {
-                setButtonDisabled(false); //Enable button after one minute
-            }, 60000);
-            toast.success("Đã gửi lại mã OTP")
-        })
+        auth.signInWithPhoneNumber(phoneNumber, window.recaptchaVerifier)
+            .then((result2) => {
+                setResult(result2);
+                setStep('VERIFY_OTP');
+                setButtonDisabled(true); //Disable button after sending OTP
+                setTimeout(() => {
+                    setButtonDisabled(false); //Enable button after one minute
+                }, 60000);
+                toast.success("Đã gửi lại mã OTP")
+                // Clear the RecaptchaVerifier instance
+
+                console.log('window.recaptchaVerifier:', window.recaptchaVerifier);
+            })
             .catch((err) => {
                 console.log(err);
-                console.log("SMS not sent");
+                toast.error("OTP không gửi được");
             });
     }
 
@@ -109,32 +136,24 @@ const TestOTP = () => {
                                 <div className="u-container-layout u-valign-middle-xs u-container-layout-1">
                                     <h2 className="u-text u-text-custom-color-1 u-text-default u-text-1">Đăng ký</h2>
                                     <div className="u-form u-login-control u-form-1">
-                                        <div className="u-form-group u-form-name">
-                                            <label htmlFor="username-a30d" className="u-label u-text-grey-25 u-label-1">Số điện thoại </label>
-                                            <input type="text" name="account" value={phoneNumber} placeholder="Nhập số điện thoại" onChange={(e) => setPhoneNumber(e.target.value)}
-                                                className="u-border-2 u-border-grey-10 u-grey-10 u-input u-input-rectangle u-input-1" />
-                                        </div>
-                                        <div className="u-align-left u-form-group u-form-submit">
-                                            <div id="recaptcha-container"></div>
-                                            <button onClick={sendOTP} className="u-btn u-btn-submit u-button-style u-btn-1">Tiếp tục</button>
-                                        </div>
+                                        <form onSubmit={sendOTP}>
+                                            <div className="u-form-group u-form-name">
+                                                <label htmlFor="username-a30d" className="u-label u-text-grey-25 u-label-1">Số điện thoại </label>
+                                                <span id="phonenote" data-text="Số điện thoại Việt Nam, bắt đầu bằng 03|5|7|8|9"
+                                                    className="tip invalid" ><FontAwesomeIcon icon={faInfoCircle} /></span>
+                                                <input type="text" name="account" value={phoneNumber} placeholder="Nhập số điện thoại" onChange={(e) => setPhoneNumber(e.target.value)}
+                                                     className="u-border-2 u-border-grey-10 u-grey-10 u-input u-input-rectangle u-input-1" />
+                                            </div>
+                                            <div className="u-align-left u-form-group u-form-submit">
+                                                <div id="recaptcha-container"></div>
+                                                <button className="u-btn u-btn-submit u-button-style u-btn-1">Tiếp tục</button>
+                                            </div>
+                                        </form>
                                     </div>
                                 </div>
                             </div>
                         </section>
-
-                        <ToastContainer position="top-left"
-                            autoClose={1000}
-                            hideProgressBar={false}
-                            newestOnTop={false}
-                            closeOnClick
-                            rtl={false}
-                            pauseOnFocusLoss
-                            draggable
-                            pauseOnHover
-                            theme="colored" />
                     </div>
-
                 }
 
                 {step === 'VERIFY_OTP' &&
@@ -150,19 +169,14 @@ const TestOTP = () => {
                                             <label htmlFor="username-a30d" className="u-label u-text-grey-25 u-label-1">Nhập mã xác thực </label>
                                             <input type="text" name="otp" placeholder="Nhập mã" onChange={(e) => setOtp(e.target.value)}
                                                 className="u-border-2 u-border-grey-10 u-grey-10 u-input u-input-rectangle u-input-1" />
-
                                         </div>
                                         <div className="u-align-left u-form-group u-form-submit">
                                             <button onClick={ValidateOtp} className="u-btn u-btn-submit u-button-style u-btn-1">Tiếp tục</button>
                                         </div>
                                         <Box mt={3} >
-                                            <Typography fontWeight={500} align="center" color='textSecondary'>
-                                                OTP gửi lại sau <span style={{ color: "#FF6601", fontWeight: "bold" }}>
-                                                    00:{counter}</span>
-                                            </Typography>
                                             <div id="recaptcha-container"></div>
-                                            <button className='btn btn-light' style={{ width: "20%" }} disabled={buttonDisabled} onClick={reSendOTP}>
-                                                {buttonDisabled ? 'Vui lòng đợi 1 phút' : 'Gửi lại mã'}</button>
+                                            <button className='btn btn-light' style={{ width: "35%" }} disabled={buttonDisabled} onClick={reSendOTP}>
+                                                {buttonDisabled ? 'Vui lòng đợi 1 phút để gửi lại mã' : 'Gửi lại mã'}</button>
                                         </Box>
                                     </div>
                                 </div>
@@ -171,8 +185,6 @@ const TestOTP = () => {
                     </div>
                 }
             </center>
-
-
         </div>
 
     );

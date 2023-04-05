@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import { Modal } from 'react-bootstrap';
 
 function TableRows({ rowsData, deleteTableRows, handleChange, eggBatchList }) {
@@ -406,16 +406,6 @@ const CreateExportBill = () => {
                     </div>
                 </div>
             </form>
-            <ToastContainer position="top-left"
-                autoClose={5000}
-                hideProgressBar={false}
-                newestOnTop={false}
-                closeOnClick
-                rtl={false}
-                pauseOnFocusLoss
-                draggable
-                pauseOnHover
-                theme="colored" />
         </>
     );
 }

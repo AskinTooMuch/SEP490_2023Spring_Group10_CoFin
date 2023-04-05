@@ -15,7 +15,7 @@ import { faStarOfLife } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from 'axios';
 //Toast
-import { ToastContainer, toast } from 'react-toastify';
+import {toast } from 'react-toastify';
 import { padding } from '@mui/system';
 function Employee(props) {
     const { children, value, index, ...other } = props;
@@ -504,17 +504,7 @@ export default function BasicTabs() {
                     </section>
                 </div>
             </Employee>
-            <ToastContainer position="top-left"
-                autoClose={5000}
-                hideProgressBar={false}
-                newestOnTop={false}
-                closeOnClick
-                rtl={false}
-                pauseOnFocusLoss
-                draggable
-                pauseOnHover
-                theme="colored" />
-
+           
         </Box>
     );
 }

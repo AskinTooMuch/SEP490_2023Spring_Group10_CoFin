@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import SearchIcon from '@mui/icons-material/Search';
-import { ToastContainer, toast } from 'react-toastify';
+import {toast } from 'react-toastify';
 import axios from 'axios';
 
 const StockReport = () => {
@@ -238,16 +238,7 @@ const StockReport = () => {
                     </div>
                 </section>
             </div>
-            <ToastContainer position="top-left"
-                autoClose={5000}
-                hideProgressBar={false}
-                newestOnTop={false}
-                closeOnClick
-                rtl={false}
-                pauseOnFocusLoss
-                draggable
-                pauseOnHover
-                theme="colored" />
+           
         </div >
 
     );

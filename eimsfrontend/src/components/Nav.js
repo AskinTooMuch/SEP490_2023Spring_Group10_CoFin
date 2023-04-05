@@ -23,7 +23,7 @@ import WithPermission from '../utils.js/WithPermission';
 import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
 import { Modal } from 'react-bootstrap';
 import axios from '../api/axios';
-import { ToastContainer, toast } from 'react-toastify';
+import {toast } from 'react-toastify';
 const Nav = () => {
     // Auth
     const auth = sessionStorage.getItem("curUserId");
@@ -186,15 +186,15 @@ const Nav = () => {
     const loadNotificationList = async () => {
         try {
             const result = await axios.get(NOTIFICATION_NEWEST,
-            {
-                params: { facilityId: sessionStorage.getItem("facilityId") },
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Access-Control-Allow-Origin': '*'
-                },
-                withCredentials: true
-            });
-        setNotificationList(result.data);
+                {
+                    params: { facilityId: sessionStorage.getItem("facilityId") },
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Access-Control-Allow-Origin': '*'
+                    },
+                    withCredentials: true
+                });
+            setNotificationList(result.data);
         } catch (err) {
             if (!err?.response) {
                 toast.error('Server không phản hồi');
@@ -223,7 +223,10 @@ const Nav = () => {
         handleCloseNoti();
         navigate("/eggbatchdetail", { state: { id: item.eggBatchId } })
     }
-
+    function changeLocation(placeToGo) {
+        navigate(placeToGo, { replace: true });
+        window.location.reload();
+    }
     return (
         <div>
             <Box sx={{ flexGrow: 1 }}>
@@ -303,7 +306,7 @@ const Nav = () => {
                                 </>
                                 :
                                 <Box sx={{ flexGrow: 1 }}>
-                                    <Link style={{ textDecoration: "none", color: "white" }} to="/testotp"><Button className="signupbutton" color="inherit">Đăng ký</Button></Link>
+                                    <Link style={{ textDecoration: "none", color: "white" }} to="/testotp" onClick={() => changeLocation('/testotp')}><Button className="signupbutton" color="inherit">Đăng ký</Button></Link>
                                     <Link style={{ textDecoration: "none", color: "white" }} to="/login"><Button className="loginbutton" color="inherit">Đăng nhập</Button></Link>
                                 </Box>
                         }
@@ -343,12 +346,12 @@ const Nav = () => {
                         notificationList && notificationList.length > 0
                             ?
                             notificationList.map((item) =>
-                            <div className="notifi-item" onClick={() => goUpdateEggBatch(item)}>
-                                <div className="text">
-                                    <h4>{item.notificationBrief}</h4>
-                                    <p>({item.date})</p>
+                                <div className="notifi-item" onClick={() => goUpdateEggBatch(item)}>
+                                    <div className="text">
+                                        <h4>{item.notificationBrief}</h4>
+                                        <p>({item.date})</p>
+                                    </div>
                                 </div>
-                            </div>
                             )
                             :
                             <div className="notifi-item">
@@ -357,20 +360,10 @@ const Nav = () => {
                                 </div>
                             </div>
                     }
-                    <br/><br/>
+                    <br /><br />
                     <i><button className='mybtn' onClick={() => viewAllNoti()} >Xem tất cả</button></i>
                 </div>
             </Menu>
-            <ToastContainer position="top-left"
-                autoClose={5000}
-                hideProgressBar={false}
-                newestOnTop={false}
-                closeOnClick
-                rtl={false}
-                pauseOnFocusLoss
-                draggable
-                pauseOnHover
-                theme="colored" />
         </div>
 
     )

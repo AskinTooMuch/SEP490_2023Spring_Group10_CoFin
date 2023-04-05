@@ -9,7 +9,7 @@ import '../css/machine.css'
 import { Modal } from 'react-bootstrap';
 import ClearIcon from '@mui/icons-material/Clear';
 import axios from 'axios';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import { padding } from '@mui/system';
 
 function EggBatchDetail(props) {
@@ -851,17 +851,6 @@ export default function BasicTabs() {
                     </Modal>
                 </div>
             </EggBatchDetail>
-            <ToastContainer position="top-left"
-                autoClose={5000}
-                hideProgressBar={false}
-                newestOnTop={false}
-                closeOnClick
-                rtl={false}
-                pauseOnFocusLoss
-                draggable
-                pauseOnHover
-                theme="colored"
-                style={{ zIndex: "10000" }} />
         </Box>
     );
 }

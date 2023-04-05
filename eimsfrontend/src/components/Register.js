@@ -2,13 +2,13 @@ import { useRef, useState, useEffect } from "react";
 import { faCheck, faTimes, faInfoCircle, faStarOfLife } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from '../api/axios';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import "../css/register.css";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import { faEye } from "@fortawesome/free-solid-svg-icons";
 //import  '../api/provinces.js';
-const EMAIL_REGEX = /^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/;
+const EMAIL_REGEX = /^[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?$/;
 const PHONE_REGEX = /(0)(3|5|7|8|9)+([0-9]{8})\b/;
 const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,20}$/;
 const REGISTER_URL = '/api/auth/signup';
@@ -259,7 +259,7 @@ const Register = () => {
             }
         }
     }
-
+    //Prevent go to Page by Link
     if (!verify) {
         navigate("/testOTP")
     }
@@ -322,14 +322,11 @@ const Register = () => {
                                                                         <FontAwesomeIcon icon={faCheck} className={validPhone ? "valid" : "hide"} />
                                                                         <FontAwesomeIcon icon={faTimes} className={validPhone || !signUpDTO.userPhone ? "hide" : "invalid"} />
                                                                     </label>
-                                                                    <span id="phonenote" data-text="Số điện thoại Việt Nam, bắt đầu bằng 03|5|7|8|9"
-                                                                        className="tip invalid" ><FontAwesomeIcon icon={faInfoCircle} /></span>
                                                                     <input type="text" id="userPhone"
                                                                         ref={userRef}
                                                                         autoComplete="off"
                                                                         onChange={(e) => handleSignUpChange(e, "userPhone")}
                                                                         value={signUpDTO.userPhone}
-
                                                                         aria-invalid={validPhone ? "false" : "true"}
                                                                         aria-describedby="phonenote"
                                                                         className="form-control " disabled />
@@ -338,7 +335,7 @@ const Register = () => {
                                                             {/*userEmail*/}
                                                             <div className="mb-4 ">
                                                                 <div className="form-outline">
-                                                                    <label htmlFor="userEmail">Email <FontAwesomeIcon className="star" icon={faStarOfLife} /></label>
+                                                                    <label htmlFor="userEmail">Email </label>
                                                                     <FontAwesomeIcon icon={faCheck} className={validEmail ? "valid" : "hide"} />
                                                                     <FontAwesomeIcon icon={faTimes} className={validEmail || !signUpDTO.userEmail ? "hide" : "invalid"} />
                                                                     <span id="emailnote" data-text="Bắt đầu bằng 1 chữ cái + @example.com"
@@ -348,7 +345,6 @@ const Register = () => {
                                                                         autoComplete="off"
                                                                         onChange={(e) => handleSignUpChange(e, "userEmail")}
                                                                         value={signUpDTO.userEmail}
-
                                                                         aria-invalid={validEmail ? "false" : "true"}
                                                                         aria-describedby="emailnote" className="form-control " />
                                                                 </div>
@@ -583,16 +579,7 @@ const Register = () => {
                                                             </div>
                                                             <button id="confirmRegister" type="submit" className="btn btn-light" style={{ width: "100%", textAlign: "center" }}
                                                             >Đăng ký</button>
-                                                            <ToastContainer position="top-left"
-                                                                autoClose={5000}
-                                                                hideProgressBar={false}
-                                                                newestOnTop={false}
-                                                                closeOnClick
-                                                                rtl={false}
-                                                                pauseOnFocusLoss
-                                                                draggable
-                                                                pauseOnHover
-                                                                theme="colored" />
+
                                                             <p className="regislink">
                                                                 <label> Bạn đã có tài khoản?</label><a style={{ fontSize: "small", fontWeight: "initial", textDecoration: "underline" }} href="login">Đăng nhập</a><br />
                                                             </p>

@@ -15,7 +15,7 @@ import { faStarOfLife } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from 'axios';
 //Toast
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import WithPermission from '../utils.js/WithPermission';
 function Machine(props) {
     const { children, value, index, ...other } = props;
@@ -314,16 +314,6 @@ export default function BasicTabs() {
                 </div>
                 {/* End: Table for machine list */}
             </Machine>
-            <ToastContainer position="top-left"
-                autoClose={5000}
-                hideProgressBar={false}
-                newestOnTop={false}
-                closeOnClick
-                rtl={false}
-                pauseOnFocusLoss
-                draggable
-                pauseOnHover
-                theme="colored" />
         </Box>
     );
 }

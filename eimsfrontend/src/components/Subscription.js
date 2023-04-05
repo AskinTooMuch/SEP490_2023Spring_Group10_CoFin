@@ -5,7 +5,7 @@ import "../css/subscribe.css"
 import PropTypes from 'prop-types';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
-import { ToastContainer, toast } from 'react-toastify';
+import {  toast } from 'react-toastify';
 import { useNavigate } from "react-router-dom";
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
@@ -199,17 +199,7 @@ export default function BasicTabs() {
                 </tbody>
               </table>
             </div>
-            <ToastContainer position="top-left"
-              autoClose={5000}
-              hideProgressBar={false}
-              newestOnTop={false}
-              closeOnClick
-              rtl={false}
-              pauseOnFocusLoss
-              draggable
-              pauseOnHover
-              theme="colored" />
-
+            
           </div>
         </section>
       </Subscription>

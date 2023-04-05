@@ -12,7 +12,7 @@ import { Modal } from 'react-bootstrap'
 import ConfirmBox from './ConfirmBox';
 import axios from 'axios';
 //Toast
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 function MachineDetails(props) {
     const { children, value, index, ...other } = props;
     return (
@@ -357,17 +357,6 @@ export default function BasicTabs() {
                     </table>
                 </div>
             </MachineDetails>
-            <ToastContainer position="top-left"
-                autoClose={5000}
-                hideProgressBar={false}
-                newestOnTop={false}
-                closeOnClick
-                rtl={false}
-                pauseOnFocusLoss
-                draggable
-                pauseOnHover
-                theme="colored" />
-
         </Box>
 
     );

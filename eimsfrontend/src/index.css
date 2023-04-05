@@ -5,9 +5,19 @@
   background-color: white;
   font-weight: bold;
 }
-.input-date{
+
+.col-md-3 {
+  -moz-hyphens: auto;
+  -ms-hyphens: auto;
+  -webkit-hyphens: auto;
+  hyphens: auto;
+  word-wrap: break-word;
+}
+
+.input-date {
   margin: 10px;
 }
+
 .modal-90w {
   width: 90%;
   max-width: none !important;

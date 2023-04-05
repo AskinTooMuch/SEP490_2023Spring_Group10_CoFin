@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { CardElement, useElements, useStripe } from '@stripe/react-stripe-js';
 import axios from 'axios';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 
 const CARD_OPTIONS = {
     iconStyle: 'solid',
@@ -89,16 +89,7 @@ export default function PaymentForm(props) {
                     <h2>Success</h2>
                 </div>
             }
-            <ToastContainer position="top-left"
-                autoClose={5000}
-                hideProgressBar={false}
-                newestOnTop={false}
-                closeOnClick
-                rtl={false}
-                pauseOnFocusLoss
-                draggable
-                pauseOnHover
-                theme="colored" />
+           
         </>
     )
 }

@@ -36,6 +36,7 @@ import ExportBill from './components/ExportBill';
 import ExportBillDetail from './components/ExportBillDetail';
 import SubscriptionPayment from './components/SubscriptionPayment';
 import TestOTP from './components/TestOTP';
+import { ToastContainer } from 'react-toastify';
 function App() {
   return (
     <>
@@ -90,7 +91,7 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="login" element={<Login />} />
         <Route path="register" element={<Register />} />
-        <Route path='testotp' element={<TestOTP/>}/>
+        <Route path='testotp' element={<TestOTP />} />
         <Route path="registerotp" element={<RegisterOTP />} />
         <Route path="forgotpassword" element={<ForgotPassword />} />
         <Route path="changepassword" element={<ChangePassword />} />
@@ -98,7 +99,17 @@ function App() {
         {/* Permission denied route */}
         <Route path="unauthorized" element={<Unauthorized />} />
       </Routes>
-
+      <ToastContainer position="top-left"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="colored" 
+        style={{ zIndex: "10000" }}/>
     </>
   );
 }

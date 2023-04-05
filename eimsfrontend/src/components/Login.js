@@ -2,7 +2,7 @@
 import React, { useState, useRef } from 'react';
 import axios from '../api/axios';
 import { Link, useNavigate } from 'react-router-dom';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye } from "@fortawesome/free-solid-svg-icons";
@@ -108,16 +108,7 @@ const Login = () => {
                   <button type="submit" className="u-btn u-btn-submit u-button-style u-btn-1">Đăng nhập</button>
                 </div>
                 <input type="hidden" value="" name="recaptchaResponse" />
-                <ToastContainer position="top-left"
-                  autoClose={5000}
-                  hideProgressBar={false}
-                  newestOnTop={false}
-                  closeOnClick
-                  rtl={false}
-                  pauseOnFocusLoss
-                  draggable
-                  pauseOnHover
-                  theme="colored" />
+               
               </form>
             </div>
             <Link to="/forgotpassword" className="u-active-none u-border-2 u-border-active-palette-2-dark-1 u-border-custom-color-1 u-border-hover-palette-1-base u-border-no-left u-border-no-right u-border-no-top u-btn u-button-style u-hover-none u-login-control u-login-forgot-password u-none u-text-custom-color-1 u-text-hover-palette-1-base u-btn-2">Quên mật khẩu</Link>

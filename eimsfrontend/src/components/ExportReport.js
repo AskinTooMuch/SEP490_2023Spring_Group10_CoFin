@@ -10,7 +10,7 @@ import { AppBar } from '@mui/material';
 import "../css/report.css"
 import axios from 'axios';
 //Toast
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 const ExportReport = () => {
     //Hide show popup
     const [show, setShow] = useState(false);
@@ -275,16 +275,7 @@ const ExportReport = () => {
                 </div>
             </section>
             {/* End: Table for customer list */}
-            <ToastContainer position="top-left"
-                autoClose={5000}
-                hideProgressBar={false}
-                newestOnTop={false}
-                closeOnClick
-                rtl={false}
-                pauseOnFocusLoss
-                draggable
-                pauseOnHover
-                theme="colored" />
+            
         </div>
     );
 }

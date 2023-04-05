@@ -6,7 +6,7 @@ import { Modal } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import "../css/notification.css"
 import axios from '../api/axios';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 
 const NotificationList = () => {
     // Dependency

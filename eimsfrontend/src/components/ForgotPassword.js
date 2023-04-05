@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import axios from '../api/axios';
 import { useNavigate } from 'react-router-dom';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const ForgotPassword = () => {
@@ -147,16 +147,6 @@ const ForgotPassword = () => {
                     <button type="submit" className="u-btn u-btn-submit u-button-style u-btn-1">Tiếp tục</button>
                   </div>
                   <input type="hidden" value="" name="recaptchaResponse" />
-                  <ToastContainer position="top-left"
-                    autoClose={5000}
-                    hideProgressBar={false}
-                    newestOnTop={false}
-                    closeOnClick
-                    rtl={false}
-                    pauseOnFocusLoss
-                    draggable
-                    pauseOnHover
-                    theme="colored" />
                 </form>
               </div>
             </div>
@@ -179,16 +169,6 @@ const ForgotPassword = () => {
                     <button type="submit" className="u-btn u-btn-submit u-button-style u-btn-1">Tiếp tục</button>
                   </div>
                   <input type="hidden" value="" name="recaptchaResponse" />
-                  <ToastContainer position="top-left"
-                    autoClose={5000}
-                    hideProgressBar={false}
-                    newestOnTop={false}
-                    closeOnClick
-                    rtl={false}
-                    pauseOnFocusLoss
-                    draggable
-                    pauseOnHover
-                    theme="colored" />
                 </form>
               </div>
             </div>

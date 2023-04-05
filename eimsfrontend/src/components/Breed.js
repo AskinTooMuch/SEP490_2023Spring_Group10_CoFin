@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from '../api/axios';
 import { useNavigate } from "react-router-dom";
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import SearchIcon from '@mui/icons-material/Search';
 import ImportExportIcon from '@mui/icons-material/ImportExport';
@@ -300,7 +300,6 @@ const Breed = () => {
                                     <div className="col-md-8">
                                         <textarea className="form-control mt-1" id="createBreedCommondisease" style={{ width: "100%" }}
                                             onChange={e => handleChange(e, "commonDisease")}
-                                            placeholder="Đậu gà, cúm gà, khô chân, giun sán,..."
                                         />
                                     </div>
                                 </div>
@@ -369,16 +368,7 @@ const Breed = () => {
                     </tbody>
                 </table>
             </div>
-            <ToastContainer position="top-left"
-                autoClose={5000}
-                hideProgressBar={false}
-                newestOnTop={false}
-                closeOnClick
-                rtl={false}
-                pauseOnFocusLoss
-                draggable
-                pauseOnHover
-                theme="colored" />
+            
         </div>
     );
 }

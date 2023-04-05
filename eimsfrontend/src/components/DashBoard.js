@@ -4,7 +4,7 @@ import { ProgressBar } from 'react-bootstrap';
 import "../css/dashboard.css"
 import WithPermission from '../utils.js/WithPermission';
 import axios from 'axios';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 
 const Dashboard = () => {
   // Dependency
@@ -91,16 +91,7 @@ const Dashboard = () => {
           </div>
         </div>
       </WithPermission>
-      <ToastContainer position="top-left"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="colored" />
+      
     </div >
   );
 }
