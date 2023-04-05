@@ -1,7 +1,161 @@
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import SearchIcon from '@mui/icons-material/Search';
 import "../css/totalincome.css"
+import axios from 'axios';
+//Toast
+import { toast } from 'react-toastify';
 const TotalIncome = () => {
+    // Dependency
+    const [dataLoaded, setDataLoaded] = useState(false);
+
+    // API URLs
+    const GET_IN_MONTH = 'api/incomeReport/inMonth';
+    const GET_IN_YEAR = 'api/incomeReport/inYear';
+
+    // Data holding objects
+    const [inMonthList, setInMonthList] = useState({
+        costList: [],
+        payrollList: [],
+        importList: [],
+        exportList: [],
+        incomeNow: "",
+        incomeLast: ""
+    });
+
+    const [inYearList, setInYearList] = useState({
+        yearList: [],
+        costList: [],
+        payrollList: [],
+        importList: [],
+        exportList: [],
+        incomeNow: "",
+        incomeLast: ""
+    });
+
+    // Set value
+    useEffect(() => {
+        if (dataLoaded) return;
+        loadDefaultInMonth();
+        loadInYear();
+        setDataLoaded(true);
+    }, [dataLoaded]);
+
+    // var year to search
+    var year = new Date().getFullYear();
+
+    // load report in month for current year
+    const loadDefaultInMonth = async () => {
+        try {
+            const result = await axios.get(GET_IN_MONTH,
+                {
+                    params: {
+                        userId: sessionStorage.getItem("curUserId"),
+                        year: year
+                    },
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Access-Control-Allow-Origin': '*'
+                    },
+                    withCredentials: true
+                });
+            setInMonthList({
+                costList: result.data.costList,
+                payrollList: result.data.payrollList,
+                importList: result.data.importList,
+                exportList: result.data.exportList,
+                incomeNow: result.data.incomeNow,
+                incomeLast: result.data.incomeLast
+            });
+        } catch (err) {
+            if (!err?.response) {
+                toast.error('Server không phản hồi');
+            } else {
+                if ((err.response.data === null) || (err.response.data === '')) {
+                    toast.error('Có lỗi xảy ra, vui lòng thử lại');
+                } else {
+                    toast.error(err.response.data);
+                }
+            }
+        }
+    }
+
+    // load report in year
+    const loadInYear = async () => {
+        try {
+            const result = await axios.get(GET_IN_YEAR,
+                {
+                    params: {
+                        userId: sessionStorage.getItem("curUserId")
+                    },
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Access-Control-Allow-Origin': '*'
+                    },
+                    withCredentials: true
+                });
+            setInYearList({
+                yearList: result.data.yearList,
+                costList: result.data.costList,
+                payrollList: result.data.payrollList,
+                importList: result.data.importList,
+                exportList: result.data.exportList,
+                incomeNow: result.data.incomeNow,
+                incomeLast: result.data.incomeLast
+            })
+        } catch (err) {
+            if (!err?.response) {
+                toast.error('Server không phản hồi');
+            } else {
+                if ((err.response.data === null) || (err.response.data === '')) {
+                    toast.error('Có lỗi xảy ra, vui lòng thử lại');
+                } else {
+                    toast.error(err.response.data);
+                }
+            }
+        }
+    }
+
+    // handle choose year
+    const handleFilter = (event) => {
+        let actualValue = event.target.value
+        loadInMonth(actualValue);
+    }
+
+    const loadInMonth = async (yearChosen) => {
+        try {
+            const result = await axios.get(GET_IN_MONTH,
+                {
+                    params: {
+                        userId: sessionStorage.getItem("curUserId"),
+                        year: yearChosen
+                    },
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Access-Control-Allow-Origin': '*'
+                    },
+                    withCredentials: true
+                });
+            setInMonthList({
+                costList: result.data.costList,
+                payrollList: result.data.payrollList,
+                importList: result.data.importList,
+                exportList: result.data.exportList,
+                incomeNow: result.data.incomeNow,
+                incomeLast: result.data.incomeLast
+            })
+        } catch (err) {
+            if (!err?.response) {
+                toast.error('Server không phản hồi');
+            } else {
+                if ((err.response.data === null) || (err.response.data === '')) {
+                    toast.error('Có lỗi xảy ra, vui lòng thử lại');
+                } else {
+                    toast.error(err.response.data);
+                }
+            }
+        }
+    }
+
     return (
         <div>
             <div className="tab-wrapper">
@@ -12,12 +166,21 @@ const TotalIncome = () => {
                     <label htmlFor="year" className="year">Năm</label>
                     <div className="slider"></div>
                 </nav>
+                <br />
                 <section>
                     <div className="content content-1">
-                        <div className="input-date" style={{ textAlign: "end" }}>
-                            Từ <input type="date"></input> Đến <input type="date"></input>
-                        </div>
-
+                        <select onChange={(e) => handleFilter(e)}
+                            style={{ width: "fit-content" }} id="selectEgg" name="selectEgg" className="form-select" aria-label="Default select example">
+                            <option value={year} selected>Hiện tại</option>
+                            {
+                                inYearList.yearList && inYearList.yearList.length > 0
+                                    ? inYearList.yearList.map((item) =>
+                                        <option value={item}>{item}</option>
+                                    )
+                                    : ''
+                            }
+                        </select>
+                        <br />
                         <table className="table table-bordered" >
                             <thead>
                                 <tr>
@@ -26,116 +189,37 @@ const TotalIncome = () => {
                                     <th scope="col">Tiền lương</th>
                                     <th scope="col">Chi</th>
                                     <th scope="col">Thu</th>
-                                    <th scope="col">Doanh thu</th>
+                                    <th scope="col">Tổng thu</th>
+                                    <th scope="col">Thực thu</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <th scope="row">1</th>
-                                    <td>0</td>
-                                    <td>0</td>
-                                    <td>0</td>
-                                    <td>0</td>
-                                    <td>0</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">2</th>
-                                    <td>0</td>
-                                    <td>0</td>
-                                    <td>0</td>
-                                    <td>0</td>
-                                    <td>0</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">3</th>
-                                    <td>0</td>
-                                    <td>0</td>
-                                    <td>0</td>
-                                    <td>0</td>
-                                    <td>0</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">4</th>
-                                    <td>0</td>
-                                    <td>0</td>
-                                    <td>0</td>
-                                    <td>0</td>
-                                    <td>0</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">5</th>
-                                    <td>0</td>
-                                    <td>0</td>
-                                    <td>0</td>
-                                    <td>0</td>
-                                    <td>0</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">6</th>
-                                    <td>0</td>
-                                    <td>0</td>
-                                    <td>0</td>
-                                    <td>0</td>
-                                    <td>0</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">7</th>
-                                    <td>0</td>
-                                    <td>0</td>
-                                    <td>0</td>
-                                    <td>0</td>
-                                    <td>0</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">8</th>
-                                    <td>0</td>
-                                    <td>0</td>
-                                    <td>0</td>
-                                    <td>0</td>
-                                    <td>0</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">9</th>
-                                    <td>0</td>
-                                    <td>0</td>
-                                    <td>0</td>
-                                    <td>0</td>
-                                    <td>0</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">10</th>
-                                    <td>0</td>
-                                    <td>0</td>
-                                    <td>0</td>
-                                    <td>0</td>
-                                    <td>0</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">11</th>
-                                    <td>0</td>
-                                    <td>0</td>
-                                    <td>0</td>
-                                    <td>0</td>
-                                    <td>0</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">12</th>
-                                    <td>5.000.000</td>
-                                    <td>50.000.000</td>
-                                    <td>250.000.000</td>
-                                    <td>600.000.000</td>
-                                    <td>295.000.000</td>
-                                </tr>
+                                {
+                                    inMonthList.costList && inMonthList.costList.length > 0
+                                        ? inMonthList.costList.map((item, index) =>
+                                            <tr>
+                                                <th scope="row">{index + 1}</th>
+                                                <td>{inMonthList.costList[index].paid.toLocaleString()}/{inMonthList.costList[index].total.toLocaleString('vi', { style: 'currency', currency: 'VND' })}</td>
+                                                <td>{inMonthList.payrollList[index].total.toLocaleString('vi', { style: 'currency', currency: 'VND' })}</td>
+                                                <td>{inMonthList.importList[index].paid.toLocaleString()}/{inMonthList.importList[index].total.toLocaleString('vi', { style: 'currency', currency: 'VND' })}</td>
+                                                <td>{inMonthList.exportList[index].paid.toLocaleString()}/{inMonthList.exportList[index].total.toLocaleString('vi', { style: 'currency', currency: 'VND' })}</td>
+                                                <td>{(- inMonthList.costList[index].total - inMonthList.payrollList[index].total - inMonthList.importList[index].total + inMonthList.exportList[index].total).toLocaleString('vi', { style: 'currency', currency: 'VND' })}</td>
+                                                <td>{(- inMonthList.costList[index].paid - inMonthList.payrollList[index].total - inMonthList.importList[index].paid + inMonthList.exportList[index].paid).toLocaleString('vi', { style: 'currency', currency: 'VND' })}</td>
+
+                                            </tr>
+                                        ) : 'Nothing'
+                                }
                             </tbody>
                         </table>
                         <div className='total-icome' >
-                            <p>Tổng doanh thu: <span>295.000.000 VNĐ</span></p>
+                            <p>Tổng thu: <span id="incomeTrue">{inMonthList.incomeLast.toLocaleString('vi', { style: 'currency', currency: 'VND' })}</span></p>
+                        </div>
+                        <div className='total-icome' >
+                            <p>Thực thu: <span id="incomeNow">{inMonthList.incomeNow.toLocaleString('vi', { style: 'currency', currency: 'VND' })}</span></p>
                         </div>
                     </div>
+                    <br />
                     <div className="content content-2">
-                        <div className="input-date" style={{ textAlign: "end" }}>
-                            Từ <input type="date"></input> Đến <input type="date"></input>
-                        </div>
 
                         <table className="table table-bordered" >
                             <thead>
@@ -145,45 +229,34 @@ const TotalIncome = () => {
                                     <th scope="col">Tiền lương</th>
                                     <th scope="col">Chi</th>
                                     <th scope="col">Thu</th>
-                                    <th scope="col">Doanh thu</th>
+                                    <th scope="col">Tổng thu</th>
+                                    <th scope="col">Thực thu</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                <tr>
-                                    <th scope="row">2023</th>
-                                    <td>0</td>
-                                    <td>0</td>
-                                    <td>0</td>
-                                    <td>0</td>
-                                    <td>0</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">2022</th>
-                                    <td>25.000.000</td>
-                                    <td>10.000.000</td>
-                                    <td>50.000.000</td>
-                                    <td>250.000.000</td>
-                                    <td>165.000.000</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">2021</th>
-                                    <td>0</td>
-                                    <td>0</td>
-                                    <td>0</td>
-                                    <td>0</td>
-                                    <td>0</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">2020</th>
-                                    <td>0</td>
-                                    <td>0</td>
-                                    <td>0</td>
-                                    <td>0</td>
-                                    <td>0</td>
-                                </tr>
-                                
-                            </tbody>
+                            {
+                                inYearList.costList && inYearList.costList.length > 0
+                                    ? inYearList.costList.map((item, index) =>
+                                        <tbody>
+                                            <tr>
+                                                <th scope="row">{inYearList.yearList[index]}</th>
+                                                <td>{inYearList.costList[index].paid.toLocaleString()}/{inYearList.costList[index].total.toLocaleString('vi', { style: 'currency', currency: 'VND' })}</td>
+                                                <td>{inYearList.payrollList[index].paid.toLocaleString()}/{inYearList.payrollList[index].total.toLocaleString('vi', { style: 'currency', currency: 'VND' })}</td>
+                                                <td>{inYearList.importList[index].paid.toLocaleString()}/{inYearList.importList[index].total.toLocaleString('vi', { style: 'currency', currency: 'VND' })}</td>
+                                                <td>{inYearList.exportList[index].paid.toLocaleString()}/{inYearList.exportList[index].total.toLocaleString('vi', { style: 'currency', currency: 'VND' })}</td>
+                                                <td>{(- inYearList.costList[index].total - inYearList.payrollList[index].total - inYearList.importList[index].total + inYearList.exportList[index].total).toLocaleString('vi', { style: 'currency', currency: 'VND' })}</td>
+                                                <td>{(- inYearList.costList[index].paid - inYearList.payrollList[index].total - inYearList.importList[index].paid + inYearList.exportList[index].paid).toLocaleString('vi', { style: 'currency', currency: 'VND' })}</td>
+                                            </tr>
+                                        </tbody>
+                                    )
+                                    : 'Nothing'
+                            }
                         </table>
+                        <div className='total-icome' >
+                            <p>Tổng thu: <span id="incomeLast">{inYearList.incomeLast.toLocaleString('vi', { style: 'currency', currency: 'VND' })}</span></p>
+                        </div>
+                        <div className='total-icome' >
+                            <p>Thực thu: <span id="incomeNow">{inYearList.incomeNow.toLocaleString('vi', { style: 'currency', currency: 'VND' })}</span></p>
+                        </div>
                     </div>
                 </section>
             </div>

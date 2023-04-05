@@ -28,4 +28,11 @@ public interface PayrollRepository extends JpaRepository<Payroll,Long> {
             "on A.employee_id = B.user_id\n" +
             "where A.owner_id = ?1 AND (B.username like %?2% or A.phone like %?2%)", nativeQuery = true)
     Optional<List<Payroll>> searchPayroll(Long ownerId, String searchKey);
+    @Query(value = "select distinct(year(issue_date)) from eims.payroll where owner_id = ?1", nativeQuery = true)
+    Optional<List<String>> getAllYear(Long userId);
+    @Query(value = "select * from eims.payroll where owner_id = ?1 and year(issue_date) = ?2", nativeQuery = true)
+    Optional<List<Payroll>> getAllByYear(Long userId, String year);
+    @Query(value = "select * from eims.payroll where owner_id = ?1 and year(issue_date) = ?2 and " +
+            "month(issue_date) = ?3", nativeQuery = true)
+    Optional<List<Payroll>> getAllByYearAndMonth(Long userId, String year, String month);
 }

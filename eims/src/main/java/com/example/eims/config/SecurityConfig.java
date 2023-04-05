@@ -158,7 +158,8 @@ public class SecurityConfig{
                 "/api/payroll/**",
                 "/api/subscribe",
                 "api/importReport/**",
-                "api/exportReport/**"
+                "api/exportReport/**",
+                "api/incomeReport/**"
         };
         final String[] MODERATOR = {
                 "/api/registration/**"

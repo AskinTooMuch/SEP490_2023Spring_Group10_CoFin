@@ -25,4 +25,11 @@ public interface CostRepository extends JpaRepository<Cost,Long> {
     Optional<List<Cost>> searchCostByName(Long userId,String costName);
 
     Optional<List<Cost>> findAllByUserId(Long userId);
+    @Query(value = "select distinct(year(issue_date)) from eims.cost where facility_id = ?1", nativeQuery = true)
+    Optional<List<String>> getAllYear(Long facilityId);
+    @Query(value = "select * from eims.cost where facility_id = ?1 and year(issue_date) = ?2", nativeQuery = true)
+    Optional<List<Cost>> getAllByYear(Long facilityId, String year);
+    @Query(value = "select * from eims.cost where facility_id = ?1 and year(issue_date) = ?2 and " +
+            "month(issue_date) = ?3", nativeQuery = true)
+    Optional<List<Cost>> getAllByYearAndMonth(Long facilityId, String year, String month);
 }

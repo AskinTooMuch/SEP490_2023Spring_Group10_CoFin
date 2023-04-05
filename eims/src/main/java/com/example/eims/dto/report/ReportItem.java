@@ -41,9 +41,9 @@ resultClass = ReportItem.class)
                 "group by year(export_date)\n" +
                 "order by report_name DESC ",
         resultClass = ReportItem.class)
+
 @Entity
 public class ReportItem {
-
     private Long id;
     @Id
     private String reportName;
