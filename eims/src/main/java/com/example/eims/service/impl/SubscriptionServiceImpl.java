@@ -7,11 +7,14 @@
  * Record of change:<br>
  * DATE          Version    Author      DESCRIPTION<br>
  * 04/04/2023    1.0        ChucNV      First Deploy<br>
+ * 05/04/2023    2.0        ChucNV      Add get discount<br>
  */
 package com.example.eims.service.impl;
 
 import com.example.eims.entity.Subscription;
+import com.example.eims.repository.FacilityRepository;
 import com.example.eims.repository.SubscriptionRepository;
+import com.example.eims.repository.UserSubscriptionRepository;
 import com.example.eims.service.interfaces.ISubscriptionService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,9 +29,15 @@ import java.util.Optional;
 public class SubscriptionServiceImpl implements ISubscriptionService {
     @Autowired
     private final SubscriptionRepository subscriptionRepository;
+    @Autowired
+    private final FacilityRepository facilityRepository;
+    @Autowired
+    private final UserSubscriptionRepository userSubscriptionRepository;
 
-    public SubscriptionServiceImpl(SubscriptionRepository subscriptionRepository) {
+    public SubscriptionServiceImpl(SubscriptionRepository subscriptionRepository, FacilityRepository facilityRepository, UserSubscriptionRepository userSubscriptionRepository) {
         this.subscriptionRepository = subscriptionRepository;
+        this.facilityRepository = facilityRepository;
+        this.userSubscriptionRepository = userSubscriptionRepository;
     }
 
     @Override
@@ -47,5 +56,15 @@ public class SubscriptionServiceImpl implements ISubscriptionService {
             return new ResponseEntity<>("Không tìm thấy gói đăng ký khả dụng", HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>(subscriptionOpt.get(), HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<?> getDiscountByFacilityId(Long facilityId) {
+        if (!facilityRepository.existsByFacilityId(facilityId)) {
+            return new ResponseEntity<>("Không tìm thấy cơ sở khả dụng", HttpStatus.BAD_REQUEST);
+        }
+        float discount = userSubscriptionRepository.getDiscountByFacility(facilityId);
+        System.out.println(discount);
+        return new ResponseEntity<>(discount, HttpStatus.OK);
     }
 }

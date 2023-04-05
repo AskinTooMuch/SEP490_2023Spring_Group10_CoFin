@@ -14,8 +14,11 @@ const stripeTestPromise = loadStripe(PUBLIC_KEY);
 export default function SubscriptionPayment() {
     //URL
     const SUBSCRIPTION_GET_ID = "/api/subscription/getById";
+    const DISCOUNT_GET = "/api/subscription/getDiscount";
 
     const [subscription, setSubscription] = useState("");
+    const [discount, setDiscount] = useState("");
+    const [final, setFinal] = useState("");
     
     //Get sent params
     const { state } = useLocation();
@@ -35,6 +38,14 @@ export default function SubscriptionPayment() {
                 });
             setSubscription(result.data);
             console.log(subscription);
+            const resultDiscount = await axios.get(DISCOUNT_GET,
+                {
+                    params: { facilityId: sessionStorage.getItem("facilityId") },
+                    withCredentials: true
+                });
+            setDiscount(resultDiscount.data);
+            if (result.data.cost - resultDiscount.data < 0) {setFinal(0);} else {setFinal(result.data.cost - resultDiscount.data); }
+            console.log(final);
         } catch (err) {
             if (!err?.response) {
                 toast.error('Server không phản hồi');
@@ -58,8 +69,9 @@ export default function SubscriptionPayment() {
                 <p>Gói {subscription.subscriptionId}</p>
                 <p> - Giới hạn {subscription.machineQuota} máy sử dụng cùng lúc.</p>
                 <p> - Sử dụng trong vòng {subscription.duration} ngày kể từ lúc thanh toán thành công.</p> 
-                
-                <p>Thành tiền: {subscription.cost.toLocaleString('vi', {style : 'currency', currency : 'VND'})}</p>
+                <p>Giá gói   : {subscription.cost.toLocaleString('vi', {style : 'currency', currency : 'VND'})}</p>
+                <p>Giảm giá  : {discount.toLocaleString('vi', {style : 'currency', currency : 'VND'})}</p>
+                <p>Thành tiền: {final.toLocaleString('vi', {style : 'currency', currency : 'VND'})}</p>
                 </div>
                     
                 :<></>
@@ -67,7 +79,7 @@ export default function SubscriptionPayment() {
                 }
                 
                 <Elements stripe={stripeTestPromise}>
-                    <PaymentForm data={id}/>
+                    <PaymentForm data={{id : id, final: final}}/>
                 </Elements>
             </div>
             <div className='col-md-3'></div>

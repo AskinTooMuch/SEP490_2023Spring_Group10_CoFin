@@ -9,6 +9,7 @@
  * 16/02/2023    1.0        DuongVV          First Deploy<br>
  * 19/02/2023    2.0        DuongVV          Fix notation, id filed
  * 04/04/2023    3.0        ChucNV           add usId
+ * 05/04/2023    4.0        ChucNV           Add subscribe date and expire date<br>
  */
 package com.example.eims.entity;
 
@@ -27,5 +28,7 @@ public class UserSubscription {
     private Long facilityId;
     private Long subscriptionId;
     private Date subscribeDate;
+    private Date expireDate;
+    private float paid;
     private boolean status;
 }

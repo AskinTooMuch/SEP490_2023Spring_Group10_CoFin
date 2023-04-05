@@ -7,6 +7,7 @@
  * Record of change:<br>
  * DATE          Version    Author      DESCRIPTION<br>
  * 04/04/2023    1.0        ChucNV      First Deploy<br>
+ * 05/04/2023    2.0        ChucNV      Add get discount<br>
  */
 package com.example.eims.controller;
 
@@ -45,5 +46,15 @@ public class SubscriptionController {
     @GetMapping("/getById")
     public ResponseEntity<?> getSubscriptionById(@RequestParam Long subscriptionId) throws Exception {
         return subscriptionService.getSubscriptionById(subscriptionId);
+    }
+
+    /**
+     * Get 1 subscription by id
+     * @return
+     * @throws Exception
+     */
+    @GetMapping("/getDiscount")
+    public ResponseEntity<?> getDiscountByFacilityId(@RequestParam Long facilityId) throws Exception {
+        return subscriptionService.getDiscountByFacilityId(facilityId);
     }
 }

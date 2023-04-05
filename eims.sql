@@ -1,3 +1,4 @@
+-- V0.12.0: Add attributes to user_subscription table, add 1 triggers
 -- V0.11.2: Add attributes to export_detail table attribute
 -- V0.11.1: Add event need_action, add egg_batch attribute
 -- V0.11.0: Modify specie stored procedures
@@ -240,11 +241,13 @@ CREATE TABLE subscription(
 );
 
 CREATE TABLE user_subscription(
-	usId			integer		AUTO_INCREMENT PRIMARY KEY,
-    facility_id		integer		NOT NULL,
-    subscription_id	integer 	NOT NULL,
-    subscribe_date	datetime	NOT NULL,
-    status			boolean		NOT NULL
+	us_id			integer			AUTO_INCREMENT PRIMARY KEY,
+    facility_id		integer			NOT NULL,
+    subscription_id	integer 		NOT NULL,
+    subscribe_date	datetime		NOT NULL,
+    expire_date		datetime		NOT NULL,
+    paid			decimal(15,2) 	NOT NULL,
+    status			boolean			NOT NULL
 );
 
 CREATE TABLE registration(
@@ -508,6 +511,26 @@ BEGIN
     ), "" , NEW.egg_batch_id , DATE(NEW.date_action), 1);
 END;//
 DELIMITER ;
+
+-- Trigger for subscription
+DELIMITER //
+CREATE TRIGGER update_status_trigger 
+AFTER INSERT ON user_subscription
+FOR EACH ROW
+BEGIN
+    DECLARE cur_time DATETIME;
+    SET cur_time = NOW();
+    
+    IF NEW.status = true AND NEW.expire_date <= cur_time THEN
+        UPDATE user_subscription
+        SET status = false
+        WHERE us_id = NEW.us_id;
+    END IF;
+    UPDATE user_subscription SET status = false WHERE facility_id = NEW.facility_id AND us_id != NEW.us_id;
+    UPDATE facility SET subscription_expiration_date = NEW.expire_date WHERE facility_id = NEW.facility_id;
+END;//
+DELIMITER ;
+
 -- Insert Data into tables
 -- role
 INSERT INTO role (role_id, role_name, status)
@@ -652,10 +675,10 @@ VALUES 	(1, 0, 30, 5, 0, 0),
 		(5, 4000000, 365, 15, 0, 1);
         
 -- user_subscription
-INSERT INTO user_subscription(facility_id, subscription_id, subscribe_date, status)
-VALUES	('1', '3', '2022-05-31', 0),
-		('1', '5', '2023-02-02', 1),
-		('2', '4', '2021-04-25', 0);
+INSERT INTO user_subscription(facility_id, subscription_id, subscribe_date, expire_date, paid, status)
+VALUES	('1', '3', '2022-05-31', '2022-08-29', '1300000', 0),
+		('1', '5', '2023-02-02', '2024-02-02', '4000000', 1),
+		('2', '4', '2021-04-25', '2021-10-22', '2400000', 0);
        
 -- registration
 INSERT INTO registration(registration_id, user_id, register_date, status)

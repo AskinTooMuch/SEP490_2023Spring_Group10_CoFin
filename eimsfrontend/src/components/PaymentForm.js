@@ -43,9 +43,9 @@ export default function PaymentForm(props) {
                 const { id } = paymentMethod;
                 const response = await axios.post(CREATE_PAYMENT,
                     {
-                        subscriptionId: props.data,
+                        subscriptionId: props.data.id,
                         facilityId: sessionStorage.getItem("facilityId"),
-                        amount: 500000,
+                        amount: props.data.final,
                         currency: 'vnd',
                         method: id
                     },
