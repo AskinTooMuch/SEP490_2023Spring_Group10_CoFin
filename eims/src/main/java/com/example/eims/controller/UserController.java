@@ -40,7 +40,7 @@ public class UserController {
      */
     @GetMapping("/details")
     //@Secured({"ROLE_OWNER", "ROLE_EMPLOYEE"})
-    public ResponseEntity<UserDetailDTO> sendUserDetail(@RequestParam Long userId){
+    public ResponseEntity<?> sendUserDetail(@RequestParam Long userId){
         return userService.sendUserDetail(userId);
     }
 

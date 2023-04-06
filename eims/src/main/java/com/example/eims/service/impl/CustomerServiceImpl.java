@@ -116,8 +116,8 @@ public class CustomerServiceImpl implements ICustomerService {
     public ResponseEntity<?> createCustomer(CreateCustomerDTO createCustomerDTO) {
         // Check if Owner's account is still activated
         Long userId = createCustomerDTO.getUserId();
-        int accountStatus = (userRepository.getStatusByUserId(userId) ? 1 : 0);
-        if (accountStatus == 0) { /* status = 0 (deactivated) */
+        int accountStatus =userRepository.getStatusByUserId(userId);
+        if (accountStatus != 2) { /* status = 0 (deactivated) */
             return new ResponseEntity<>("Tài khoản đã bị vô hiệu hóa", HttpStatus.BAD_REQUEST);
         }
         // Check blank input

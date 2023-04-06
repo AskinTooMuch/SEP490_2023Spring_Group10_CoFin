@@ -20,7 +20,9 @@ import com.example.eims.repository.FacilityRepository;
 import com.example.eims.repository.RegistrationRepository;
 import com.example.eims.repository.UserRepository;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
 import jakarta.persistence.Query;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -52,7 +54,8 @@ class RegistrationServiceImplTest {
     @InjectMocks
     RegistrationServiceImpl registrationService;
     @Test
-    void viewListRegistration() {
+    @DisplayName("viewListRegistrationUTCID01")
+    void viewListRegistrationUTCID01() {
         // Set up
         RegistrationListItemDTO itemDTO1 = new RegistrationListItemDTO();
         RegistrationListItemDTO itemDTO2 = new RegistrationListItemDTO();
@@ -73,8 +76,28 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void viewRegistration() {
+    @DisplayName("viewListRegistrationUTCID02")
+    void viewListRegistrationUTCID02() {
         // Set up
+        List<RegistrationListItemDTO> listDTO = new ArrayList<>();
+
+        Query q = mock(Query.class);
+        // Define behaviour of repository
+        when(em.createNamedQuery("getRegistrationListByStatus")).thenReturn(q);
+        when(q.getResultList()).thenReturn(listDTO);
+        // Run service method
+        ResponseEntity<?> responseEntity = registrationService.viewListRegistration();
+        List<RegistrationListItemDTO> resultList = (List<RegistrationListItemDTO>) responseEntity.getBody();
+        System.out.println(responseEntity.toString());
+        // Assert
+        assertEquals(0, resultList.size());
+    }
+
+    @Test
+    @DisplayName("viewRegistrationUTC01")
+    void viewRegistrationUTC01() {
+        // Set up
+        Long registrationId = 1L;
         RegistrationInforDTO dto = new RegistrationInforDTO();
 
         Query q = mock(Query.class);
@@ -87,15 +110,31 @@ class RegistrationServiceImplTest {
         // Assert
         assertEquals(dto, responseEntity.getBody());
     }
+    @Test
+    @DisplayName("viewRegistrationUTC02")
+    void viewRegistrationUTC02() {
+        // Set up
+        Query q = mock(Query.class);
+        // Define behaviour of repository
+        when(em.createNamedQuery("getRegistrationInforForUser")).thenReturn(q);
+        when(q.getSingleResult()).thenThrow( new NoResultException());
+        // Run service method
+        ResponseEntity<?> responseEntity = registrationService.viewRegistration(1L);
+        System.out.println(responseEntity.toString());
+        // Assert
+        assertEquals("Đơn đăng ký không tồn tại", responseEntity.getBody());
+    }
 
     @Test
-    void registrationApproval() throws IOException {
+    @DisplayName("registrationApprovalUTCID01")
+    void registrationApprovalUTCID01() throws IOException {
         // Set up
         Long userId = 1L;
         Long facilityId = 1L;
         boolean approval = true;
 
         Registration registration = new Registration();
+        registration.setStatus(0);
         User user = new User();
         Facility facility = new Facility();
         // Define behaviour of repository
@@ -107,6 +146,73 @@ class RegistrationServiceImplTest {
         ResponseEntity<?> responseEntity = registrationService.registrationApproval(userId, facilityId, approval);
         System.out.println(responseEntity.toString());
         // Assert
-        assertEquals("Owner's registration approved", responseEntity.getBody());
+        assertEquals("Đã chấp thuận đơn đăng ký", responseEntity.getBody());
+    }
+
+    @Test
+    @DisplayName("registrationApprovalUTCID02")
+    void registrationApprovalUTCID02() throws IOException {
+        // Set up
+        Long userId = 1L;
+        Long facilityId = 1L;
+        boolean approval = false;
+
+        Registration registration = new Registration();
+        registration.setStatus(0);
+        User user = new User();
+        Facility facility = new Facility();
+        // Define behaviour of repository
+        when(registrationRepository.findByUserId(userId)).thenReturn(Optional.of(registration));
+        when(userRepository.findByUserId(userId)).thenReturn(Optional.of(user));
+
+        // Run service method
+        ResponseEntity<?> responseEntity = registrationService.registrationApproval(userId, facilityId, approval);
+        System.out.println(responseEntity.toString());
+        // Assert
+        assertEquals("Đã từ chối đơn đăng ký", responseEntity.getBody());
+    }
+
+    @Test
+    @DisplayName("registrationApprovalUTCID03")
+    void registrationApprovalUTCID03() throws IOException {
+        // Set up
+        Long userId = 1L;
+        Long facilityId = 1L;
+        boolean approval = false;
+
+        Registration registration = new Registration();
+        registration.setStatus(2);
+        User user = new User();
+        Facility facility = new Facility();
+        // Define behaviour of repository
+        when(registrationRepository.findByUserId(userId)).thenReturn(Optional.of(registration));
+
+        // Run service method
+        ResponseEntity<?> responseEntity = registrationService.registrationApproval(userId, facilityId, approval);
+        System.out.println(responseEntity.toString());
+        // Assert
+        assertEquals("Đơn đăng ký đã được chấp thuận hoặc đã bị từ chối", responseEntity.getBody());
+    }
+
+    @Test
+    @DisplayName("registrationApprovalUTCID04")
+    void registrationApprovalUTCID04() throws IOException {
+        // Set up
+        Long userId = 1L;
+        Long facilityId = 1L;
+        boolean approval = false;
+
+        Registration registration = new Registration();
+        registration.setStatus(1);
+        User user = new User();
+        Facility facility = new Facility();
+        // Define behaviour of repository
+        when(registrationRepository.findByUserId(userId)).thenReturn(Optional.of(registration));
+
+        // Run service method
+        ResponseEntity<?> responseEntity = registrationService.registrationApproval(userId, facilityId, approval);
+        System.out.println(responseEntity.toString());
+        // Assert
+        assertEquals("Đơn đăng ký đã được chấp thuận hoặc đã bị từ chối", responseEntity.getBody());
     }
 }

@@ -156,7 +156,7 @@ class CustomerServiceImplTest {
         dto.setCustomerAddress("{\"city\":\"Tỉnh Hải Dương\",\"district\":\"Huyện Gia Lộc\",\"ward\":\"Xã Hoàng Diệu\",\"street\":\"Thôn Nghĩa Hy\"}");
         dto.setCustomerMail("duonghoang01@gmail.com");
         // Define behaviour of repository
-        when(userRepository.getStatusByUserId(user.getUserId())).thenReturn(user.getStatus() == 1);
+        when(userRepository.getStatusByUserId(user.getUserId())).thenReturn(2);
         when(customerRepository.existsByCustomerPhoneAndUserId(dto.getCustomerPhone(), user.getUserId()))
                 .thenReturn(false);
 
@@ -182,7 +182,7 @@ class CustomerServiceImplTest {
         dto.setCustomerAddress("{\"city\":\"Tỉnh Hải Dương\",\"district\":\"Huyện Gia Lộc\",\"ward\":\"Xã Hoàng Diệu\",\"street\":\"Thôn Nghĩa Hy\"}");
         dto.setCustomerMail("duonghoang01@gmail.com");
         // Define behaviour of repository
-        when(userRepository.getStatusByUserId(user.getUserId())).thenReturn(user.getStatus() == 1);
+        when(userRepository.getStatusByUserId(user.getUserId())).thenReturn(2);
         //when(customerRepository.existsByCustomerPhoneAndUserId(dto.getCustomerPhone(), user.getUserId())).thenReturn(false);
 
         // Run service method
@@ -207,7 +207,7 @@ class CustomerServiceImplTest {
         dto.setCustomerAddress("{\"city\":\"Tỉnh Hải Dương\",\"district\":\"Huyện Gia Lộc\",\"ward\":\"Xã Hoàng Diệu\",\"street\":\"Thôn Nghĩa Hy\"}");
         dto.setCustomerMail("12@3tungdt@gmail.com");
         // Define behaviour of repository
-        when(userRepository.getStatusByUserId(user.getUserId())).thenReturn(user.getStatus() == 1);
+        when(userRepository.getStatusByUserId(user.getUserId())).thenReturn(2);
         //when(customerRepository.existsByCustomerPhoneAndUserId(dto.getCustomerPhone(), user.getUserId())).thenReturn(false);
 
         // Run service method
@@ -232,7 +232,7 @@ class CustomerServiceImplTest {
         dto.setCustomerAddress("{\"city\":\"Tỉnh Hải Dương\",\"district\":\"Huyện Gia Lộc\",\"ward\":\"Xã Hoàng Diệu\",\"street\":\"Thôn Nghĩa Hy\"}");
         dto.setCustomerMail("duonghoang01@gmail.com");
         // Define behaviour of repository
-        when(userRepository.getStatusByUserId(user.getUserId())).thenReturn(user.getStatus() == 1);
+        when(userRepository.getStatusByUserId(user.getUserId())).thenReturn(2);
         //when(customerRepository.existsByCustomerPhoneAndUserId(dto.getCustomerPhone(), user.getUserId())).thenReturn(false);
 
         // Run service method
@@ -257,7 +257,7 @@ class CustomerServiceImplTest {
         dto.setCustomerAddress("{\"city\":\"Tỉnh Hải Dương\",\"district\":\"Huyện Gia Lộc\",\"ward\":\"Xã Hoàng Diệu\",\"street\":\"Thôn Nghĩa Hy\"}");
         dto.setCustomerMail("duonghoang01@gmail.com");
         // Define behaviour of repository
-        when(userRepository.getStatusByUserId(user.getUserId())).thenReturn(user.getStatus() == 1);
+        when(userRepository.getStatusByUserId(user.getUserId())).thenReturn(2);
         //when(customerRepository.existsByCustomerPhoneAndUserId(dto.getCustomerPhone(), user.getUserId())).thenReturn(false);
 
         // Run service method
@@ -282,7 +282,7 @@ class CustomerServiceImplTest {
         dto.setCustomerAddress("{\"city\":\"Tỉnh Hải Dương\",\"district\":\"Huyện Gia Lộc\",\"ward\":\"Xã Hoàng Diệu\",\"street\":\"Thôn Nghĩa Hy\"}");
         dto.setCustomerMail("a_b_c@gmail.com");
         // Define behaviour of repository
-        when(userRepository.getStatusByUserId(user.getUserId())).thenReturn(user.getStatus() == 1);
+        when(userRepository.getStatusByUserId(user.getUserId())).thenReturn(2);
         //when(customerRepository.existsByCustomerPhoneAndUserId(dto.getCustomerPhone(), user.getUserId())).thenReturn(false);
 
         // Run service method
@@ -307,7 +307,7 @@ class CustomerServiceImplTest {
         dto.setCustomerAddress("{\"city\":\"Tỉnh Hải Dương\",\"district\":\"Huyện Gia Lộc\",\"ward\":\"Xã Hoàng Diệu\",\"street\":\"Thôn Nghĩa Hy\"}");
         dto.setCustomerMail("duonghoang01@gmail.com");
         // Define behaviour of repository
-        when(userRepository.getStatusByUserId(user.getUserId())).thenReturn(user.getStatus() == 1);
+        when(userRepository.getStatusByUserId(user.getUserId())).thenReturn(2);
         //when(customerRepository.existsByCustomerPhoneAndUserId(dto.getCustomerPhone(), user.getUserId())).thenReturn(false);
 
         // Run service method
@@ -332,7 +332,7 @@ class CustomerServiceImplTest {
         dto.setCustomerAddress(null);
         dto.setCustomerMail("duonghoang01@gmail.com");
         // Define behaviour of repository
-        when(userRepository.getStatusByUserId(user.getUserId())).thenReturn(user.getStatus() == 1);
+        when(userRepository.getStatusByUserId(user.getUserId())).thenReturn(2);
         //when(customerRepository.existsByCustomerPhoneAndUserId(dto.getCustomerPhone(), user.getUserId())).thenReturn(false);
 
         // Run service method
@@ -357,7 +357,7 @@ class CustomerServiceImplTest {
         dto.setCustomerAddress("{\"city\":\"Tỉnh Hải Dương\",\"district\":\"Huyện Gia Lộc\",\"ward\":\"Xã Hoàng Diệu\",\"street\":\"So 27@ duong Truong Trinh\"}");
         dto.setCustomerMail("duonghoang01@gmail.com");
         // Define behaviour of repository
-        when(userRepository.getStatusByUserId(user.getUserId())).thenReturn(user.getStatus() == 1);
+        when(userRepository.getStatusByUserId(user.getUserId())).thenReturn(2);
         //when(customerRepository.existsByCustomerPhoneAndUserId(dto.getCustomerPhone(), user.getUserId())).thenReturn(false);
 
         // Run service method

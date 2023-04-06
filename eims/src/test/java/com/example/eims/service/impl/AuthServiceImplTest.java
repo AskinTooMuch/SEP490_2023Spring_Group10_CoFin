@@ -868,22 +868,6 @@
      }
 
      @Test
-     void resetPassword() {
-         // Set up
-         ForgotPasswordDTO dto = new ForgotPasswordDTO();
-         dto.setPhone("0987654321");
-         dto.setNewPassword("1234567Aa@");
-         dto.setConfirmPassword("1234567Aa@");
-         // Define behaviour of repository
-         when(userRepository.findByPhone(dto.getPhone())).thenReturn(Optional.of(user));
-         // Run service method
-         ResponseEntity<?> responseEntity = authService.resetPassword(dto);
-         System.out.println(responseEntity.toString());
-         // Assert
-         assertEquals("Mật khẩu thay đổi thành công", responseEntity.getBody());
-     }
-
-     @Test
      @DisplayName("resetPasswordUTCID01")
      void resetPasswordUTCID01() {
          // Set up

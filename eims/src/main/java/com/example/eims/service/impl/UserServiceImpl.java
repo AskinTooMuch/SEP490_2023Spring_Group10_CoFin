@@ -21,6 +21,7 @@ import com.example.eims.utils.AddressPojo;
 import com.example.eims.utils.StringDealer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,12 +59,16 @@ public class UserServiceImpl implements IUserService {
      * @return the details of a user and it's facility in the form of a UserDetailDTO
      */
     @Override
-    public ResponseEntity<UserDetailDTO> sendUserDetail(Long userId) {
+    public ResponseEntity<?> sendUserDetail(Long userId) {
         Query q = em.createNamedQuery("GetUserDetail");
         q.setParameter(1, userId);
-        UserDetailDTO userDetailDTO = (UserDetailDTO) q.getSingleResult();
-        System.out.println(userDetailDTO);
-        return new ResponseEntity<>(userDetailDTO, HttpStatus.OK);
+        try {
+            UserDetailDTO userDetailDTO = (UserDetailDTO) q.getSingleResult();
+            System.out.println(userDetailDTO);
+            return new ResponseEntity<>(userDetailDTO, HttpStatus.OK);
+        }catch (NoResultException e){
+            return new ResponseEntity<>("Người dùng không hợp lệ", HttpStatus.BAD_REQUEST);
+        }
     }
 
     /**
@@ -131,8 +136,8 @@ public class UserServiceImpl implements IUserService {
     public ResponseEntity<?> updateUser(UpdateUserDTO updateUserDTO) {
         // Check if Owner's account is still activated
         Long userId = updateUserDTO.getUserId();
-        int accountStatus = (userRepository.getStatusByUserId(userId) ? 1 : 0);
-        if (accountStatus == 0) { /* status = 0 (deactivated) */
+        int accountStatus = userRepository.getStatusByUserId(userId);
+        if (accountStatus != 2) { /* status = 0 (deactivated) */
             return new ResponseEntity<>("Tài khoản đã bị vô hiệu hóa", HttpStatus.BAD_REQUEST);
         }
         // Retrieve user's new information
@@ -163,6 +168,9 @@ public class UserServiceImpl implements IUserService {
             }
             // Address
             String userAddress = stringDealer.trimMax(updateUserDTO.getAddress());
+            if(userAddress.equals("")){
+                return new ResponseEntity<>("Địa chỉ không được để trống", HttpStatus.BAD_REQUEST);
+            }
             try {
                 AddressPojo address = objectMapper.readValue(userAddress, AddressPojo.class);
                 address.city = stringDealer.trimMax(address.city);

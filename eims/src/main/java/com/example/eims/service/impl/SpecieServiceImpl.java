@@ -84,10 +84,10 @@ public class SpecieServiceImpl implements ISpecieService {
         if (specieName.equals("")) { return new ResponseEntity<>("Tên loài không được để trống", HttpStatus.BAD_REQUEST); }
         if (specieName.length() > 32) { return new ResponseEntity<>("Tên loài không được dài hơn 32 ký tự", HttpStatus.BAD_REQUEST); }
         if ((incubationPeriod <= 4) || (incubationPeriod > 1000)) { return new ResponseEntity<>("Tổng thời gian ấp không được nhỏ hơn 5 và lớn hơn 1000 ngày", HttpStatus.BAD_REQUEST); }
-        if ((embryolessDate <= 0) || (embryolessDate >= incubationPeriod)) { return new ResponseEntity<>("Mốc xác định trứng trắng không được nhỏ hơn 0 và lớn hơn tổng thời gian ấp", HttpStatus.BAD_REQUEST); }
-        if ((diedEmbryoDate <= embryolessDate) || (diedEmbryoDate >= incubationPeriod)) { return new ResponseEntity<>("Mốc xác định trứng loãng không được nhỏ hơn mốc xác định trứng trắng và lớn hơn tổng thời gian ấp", HttpStatus.BAD_REQUEST); }
-        if ((balutDate <= diedEmbryoDate) || (balutDate >= incubationPeriod)) { return new ResponseEntity<>("Mốc xác định trứng lộn không được nhỏ hơn mốc xác định trứng loãng và lớn hơn tổng thời gian ấp", HttpStatus.BAD_REQUEST); }
-        if ((hatchingDate <= balutDate) || (hatchingDate >= incubationPeriod)) { return new ResponseEntity<>("Mốc chuyển trứng sang máy nở không được nhỏ hơn mốc xác định trứng lộn và lớn hơn tổng thời gian ấp", HttpStatus.BAD_REQUEST); }
+        if ((embryolessDate <= 0) || (embryolessDate >= incubationPeriod)) { return new ResponseEntity<>("Mốc xác định trứng trắng không được nhỏ hơn 0 và phải nhỏ hơn tổng thời gian ấp", HttpStatus.BAD_REQUEST); }
+        if ((diedEmbryoDate <= embryolessDate) || (diedEmbryoDate >= incubationPeriod)) { return new ResponseEntity<>("Mốc xác định trứng loãng không được nhỏ hơn mốc xác định trứng trắng và phải nhỏ hơn tổng thời gian ấp", HttpStatus.BAD_REQUEST); }
+        if ((balutDate <= diedEmbryoDate) || (balutDate >= incubationPeriod)) { return new ResponseEntity<>("Mốc xác định trứng lộn không được nhỏ hơn mốc xác định trứng loãng và phải nhỏ hơn tổng thời gian ấp", HttpStatus.BAD_REQUEST); }
+        if ((hatchingDate <= balutDate) || (hatchingDate >= incubationPeriod)) { return new ResponseEntity<>("Mốc chuyển trứng sang máy nở không được nhỏ hơn mốc xác định trứng lộn và phải nhỏ hơn tổng thời gian ấp", HttpStatus.BAD_REQUEST); }
         //Done; start adding the specie
         User user = null;
         if (userOpt.isPresent()) { user = userOpt.get(); }
@@ -198,10 +198,10 @@ public class SpecieServiceImpl implements ISpecieService {
         if (specieName.equals("")) { return new ResponseEntity<>("Tên loài không được để trống", HttpStatus.BAD_REQUEST); }
         if (specieName.length() > 32) { return new ResponseEntity<>("Tên loài không được dài hơn 32 ký tự", HttpStatus.BAD_REQUEST); }
         if ((incubationPeriod <= 4) || (incubationPeriod > 1000)) { return new ResponseEntity<>("Tổng thời gian ấp không được nhỏ hơn 5 và lớn hơn 1000 ngày", HttpStatus.BAD_REQUEST); }
-        if ((embryolessDate <= 0) || (embryolessDate >= incubationPeriod)) { return new ResponseEntity<>("Mốc xác định trứng trắng không được nhỏ hơn 0 và lớn hơn tổng thời gian ấp", HttpStatus.BAD_REQUEST); }
-        if ((diedEmbryoDate <= embryolessDate) || (diedEmbryoDate >= incubationPeriod)) { return new ResponseEntity<>("Mốc xác định trứng loãng không được nhỏ hơn mốc xác định trứng trắng và lớn hơn tổng thời gian ấp", HttpStatus.BAD_REQUEST); }
-        if ((balutDate <= diedEmbryoDate) || (balutDate >= incubationPeriod)) { return new ResponseEntity<>("Mốc xác định trứng lộn không được nhỏ hơn mốc xác định trứng loãng và lớn hơn tổng thời gian ấp", HttpStatus.BAD_REQUEST); }
-        if ((hatchingDate <= balutDate) || (hatchingDate >= incubationPeriod)) { return new ResponseEntity<>("Mốc chuyển trứng sang máy nở không được nhỏ hơn mốc xác định trứng lộn và lớn hơn tổng thời gian ấp", HttpStatus.BAD_REQUEST); }
+        if ((embryolessDate <= 0) || (embryolessDate >= incubationPeriod)) { return new ResponseEntity<>("Mốc xác định trứng trắng không được nhỏ hơn 0 và phải nhỏ hơn tổng thời gian ấp", HttpStatus.BAD_REQUEST); }
+        if ((diedEmbryoDate <= embryolessDate) || (diedEmbryoDate >= incubationPeriod)) { return new ResponseEntity<>("Mốc xác định trứng loãng không được nhỏ hơn mốc xác định trứng trắng và phải nhỏ hơn tổng thời gian ấp", HttpStatus.BAD_REQUEST); }
+        if ((balutDate <= diedEmbryoDate) || (balutDate >= incubationPeriod)) { return new ResponseEntity<>("Mốc xác định trứng lộn không được nhỏ hơn mốc xác định trứng loãng và phải nhỏ hơn tổng thời gian ấp", HttpStatus.BAD_REQUEST); }
+        if ((hatchingDate <= balutDate) || (hatchingDate >= incubationPeriod)) { return new ResponseEntity<>("Mốc chuyển trứng sang máy nở không được nhỏ hơn mốc xác định trứng lộn và phải nhỏ hơn tổng thời gian ấp", HttpStatus.BAD_REQUEST); }
         //Prevent getting and saving null specie
         Optional<Specie> specieOpt = specieRepository.findById(editSpecieDTO.getSpecieId());
         Specie specie = null;

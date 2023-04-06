@@ -13,8 +13,6 @@
 package com.example.eims.service.interfaces;
 
 import com.example.eims.dto.user.UpdateUserDTO;
-import com.example.eims.dto.user.UserDetailDTO;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 public interface IUserService {
@@ -25,7 +23,7 @@ public interface IUserService {
      * @param userId
      * @return the details of a user and it's facility in the form of a UserDetailDTO
      */
-    public ResponseEntity<UserDetailDTO> sendUserDetail(Long userId);
+    public ResponseEntity<?> sendUserDetail(Long userId);
 
     /**
      * Get all user.
