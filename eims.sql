@@ -1,3 +1,4 @@
+-- V0.12.1: Modify update_status_trigger
 -- V0.12.0: Add attributes to user_subscription table, add 1 triggers
 -- V0.11.2: Add attributes to export_detail table attribute
 -- V0.11.1: Add event need_action, add egg_batch attribute
@@ -19,7 +20,7 @@
 -- V0.2.0: Add foreign key constraint
 -- V0.2.1: Change attribute _name, re-route foreign key constraint
 -- V0.2.2: Add CHECK constraint
--- Last update: 02/04/2023
+-- Last update: 06/04/2023
 -- Script for generating EIMS - Eggs Incubating Management System.
 -- Check if database already exist. If yes then drop the database to ensure the script runs successfully with no variations.
 DROP DATABASE IF EXISTS eims;
@@ -526,7 +527,6 @@ BEGIN
         SET status = false
         WHERE us_id = NEW.us_id;
     END IF;
-    UPDATE user_subscription SET status = false WHERE facility_id = NEW.facility_id AND us_id != NEW.us_id;
     UPDATE facility SET subscription_expiration_date = NEW.expire_date WHERE facility_id = NEW.facility_id;
 END;//
 DELIMITER ;

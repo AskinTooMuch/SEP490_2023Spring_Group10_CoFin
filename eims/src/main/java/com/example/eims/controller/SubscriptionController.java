@@ -8,6 +8,7 @@
  * DATE          Version    Author      DESCRIPTION<br>
  * 04/04/2023    1.0        ChucNV      First Deploy<br>
  * 05/04/2023    2.0        ChucNV      Add get discount<br>
+ * 06/04/2023    3.0        ChucNV      Modify getDiscountByFacilityId to get other attributes<br>
  */
 package com.example.eims.controller;
 
@@ -49,12 +50,12 @@ public class SubscriptionController {
     }
 
     /**
-     * Get 1 subscription by id
+     * Get 1 subscription discount and machine information by id
      * @return
      * @throws Exception
      */
     @GetMapping("/getDiscount")
-    public ResponseEntity<?> getDiscountByFacilityId(@RequestParam Long facilityId) throws Exception {
-        return subscriptionService.getDiscountByFacilityId(facilityId);
+    public ResponseEntity<?> getDiscountByFacilityId(@RequestParam Long subscriptionId, @RequestParam Long facilityId) throws Exception {
+        return subscriptionService.getDiscountByFacilityId(subscriptionId, facilityId);
     }
 }

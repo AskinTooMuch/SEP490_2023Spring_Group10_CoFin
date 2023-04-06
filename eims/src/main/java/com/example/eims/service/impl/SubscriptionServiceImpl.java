@@ -8,9 +8,11 @@
  * DATE          Version    Author      DESCRIPTION<br>
  * 04/04/2023    1.0        ChucNV      First Deploy<br>
  * 05/04/2023    2.0        ChucNV      Add get discount<br>
+ * 06/04/2023    2.0        ChucNV      Modify getDiscountByFacilityId<br>
  */
 package com.example.eims.service.impl;
 
+import com.example.eims.dto.payment.ChargeRequirementDTO;
 import com.example.eims.entity.Subscription;
 import com.example.eims.repository.FacilityRepository;
 import com.example.eims.repository.SubscriptionRepository;
@@ -59,12 +61,23 @@ public class SubscriptionServiceImpl implements ISubscriptionService {
     }
 
     @Override
-    public ResponseEntity<?> getDiscountByFacilityId(Long facilityId) {
+    public ResponseEntity<?> getDiscountByFacilityId(Long subscriptionId, Long facilityId) {
         if (!facilityRepository.existsByFacilityId(facilityId)) {
             return new ResponseEntity<>("Không tìm thấy cơ sở khả dụng", HttpStatus.BAD_REQUEST);
         }
+        Optional<Subscription> subscriptionOpt = subscriptionRepository.findBySubscriptionId(subscriptionId);
+        if (subscriptionOpt.isEmpty()) {
+            return new ResponseEntity<>("Không tìm thấy gói đăng ký khả dụng", HttpStatus.BAD_REQUEST);
+        }
+        Subscription subscription = subscriptionOpt.get();
         float discount = userSubscriptionRepository.getDiscountByFacility(facilityId);
-        System.out.println(discount);
-        return new ResponseEntity<>(discount, HttpStatus.OK);
+        int machineRunning = userSubscriptionRepository.getRunningMachineByFacility(facilityId);
+        ChargeRequirementDTO chargeRequirementDTO = new ChargeRequirementDTO();
+        chargeRequirementDTO.setDiscount(discount);
+        chargeRequirementDTO.setMachineRunning(machineRunning);
+        chargeRequirementDTO.setMachineQuota(subscription.getMachineQuota());
+        chargeRequirementDTO.setSubscriptionId(subscription.getSubscriptionId());
+        chargeRequirementDTO.setCost(subscription.getCost());
+        return new ResponseEntity<>(chargeRequirementDTO, HttpStatus.OK);
     }
 }

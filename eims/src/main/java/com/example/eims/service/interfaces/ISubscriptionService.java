@@ -8,6 +8,7 @@
  * DATE          Version    Author      DESCRIPTION<br>
  * 04/04/2023    1.0        ChucNV      First Deploy<br>
  * 05/04/2023    2.0        ChucNV      Add get discount<br>
+ * 06/04/2023    3.0        ChucNV      Modify get discount<br>
  */
 package com.example.eims.service.interfaces;
 
@@ -31,5 +32,5 @@ public interface ISubscriptionService {
      * Get 1 subscription by id
      * @return Discount of the pack or error message
      */
-    public ResponseEntity<?> getDiscountByFacilityId(Long facilityId);
+    public ResponseEntity<?> getDiscountByFacilityId(Long subscriptionId, Long facilityId);
 }

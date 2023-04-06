@@ -8,6 +8,7 @@
  * DATE          Version    Author      DESCRIPTION<br>
  * 04/04/2023    1.0        ChucNV      First Deploy<br>
  * 05/04/2023    2.0        ChucNV      Add get discount<br>
+ * 06/04/2023    3.0        ChucNV      Modify charge card<br>
  */
 package com.example.eims.service.impl;
 
@@ -44,6 +45,7 @@ public class PaymentServiceImpl implements IPaymentService {
     FacilityRepository facilityRepository;
     @Override
     public ResponseEntity<?> chargeCard(ChargeDTO chargeDTO) throws Exception {
+        // Check requirements
         if (!facilityRepository.existsById(chargeDTO.getFacilityId())) {
             return new ResponseEntity<>("Không tìm thấy cơ sở hoặc cơ sở đã bị vô hiệu hóa", HttpStatus.BAD_REQUEST);
         }
@@ -54,12 +56,19 @@ public class PaymentServiceImpl implements IPaymentService {
         }
         Subscription subscription = subscriptionOpt.get();
 
+        int machineRunning = userSubscriptionRepository.getRunningMachineByFacility(chargeDTO.getFacilityId());
+        if (machineRunning > subscription.getMachineQuota()) {
+            return new ResponseEntity<>("Hiện tại cơ sở đang có " + machineRunning + " máy đang hoạt động. Vui lòng chuyển lô trứng về " + subscription.getMachineQuota() +
+                    "                                máy hoặc ít hơn trước khi chuyển sang gói này.", HttpStatus.BAD_REQUEST);
+        }
+
         if (chargeDTO.getAmount() > 0) {
             PaymentIntent intent = stripeService.createCharge(chargeDTO);
             if (!Objects.equals(intent.getStatus(), "succeeded")) {
             return new ResponseEntity<>("Thanh toán thất bại", HttpStatus.BAD_REQUEST); }
         }
 
+        // Set data and save
         UserSubscription us = new UserSubscription();
         us.setFacilityId(chargeDTO.getFacilityId());
         us.setSubscriptionId(chargeDTO.getSubscriptionId());
@@ -71,7 +80,9 @@ public class PaymentServiceImpl implements IPaymentService {
         java.sql.Date dateExpire = new java.sql.Date(millis + daysInMillis);
         us.setExpireDate(dateExpire);
         us.setStatus(true);
-        userSubscriptionRepository.save(us);
+        UserSubscription usNew = userSubscriptionRepository.save(us);
+        // Deactivate old subscription
+        userSubscriptionRepository.flipStatusSubscription(usNew.getFacilityId(), usNew.getUsId());
         return new ResponseEntity<>("Thanh toán thành công", HttpStatus.OK);
     }
 }
