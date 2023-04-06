@@ -77,7 +77,8 @@ export default function BasicTabs() {
     const [updateMachineDTO, setUpdateMachineDTO] = useState({
         machineId: "",
         machineName: "",
-        status: ""
+        status: "",
+        active: ""
     })
 
     // DTO for display machine detail
@@ -89,7 +90,8 @@ export default function BasicTabs() {
         maxCapacity: "",
         addedDate: "",
         eggs: "",
-        status: ""
+        status: "",
+        active: ""
     })
 
     //Get sent params
@@ -116,18 +118,23 @@ export default function BasicTabs() {
         console.log(result);
 
         // Set inf
-        updateMachineDTO.machineId = result.data.machineId;
-        updateMachineDTO.machineName = result.data.machineName;
-        updateMachineDTO.status = result.data.status;
-
-        machineDetailDTO.machineId = result.data.machineId;
-        machineDetailDTO.machineName = result.data.machineName;
-        machineDetailDTO.machineTypeName = result.data.machineTypeName;
-        machineDetailDTO.curCapacity = result.data.curCapacity;
-        machineDetailDTO.maxCapacity = result.data.maxCapacity;
-        machineDetailDTO.addedDate = result.data.addedDate;
-        machineDetailDTO.listEggLocation = result.data.eggs;
-        machineDetailDTO.status = result.data.status;
+        setUpdateMachineDTO({
+            machineId: result.data.machineId,
+            machineName: result.data.machineName,
+            status: result.data.status,
+            active: result.data.active
+        })
+        setMachineDetailDTO({
+            machineId: result.data.machineId,
+            machineName: result.data.machineName,
+            machineTypeName: result.data.machineTypeName,
+            curCapacity: result.data.curCapacity,
+            maxCapacity: result.data.maxCapacity,
+            addedDate:result.data.addedDate,
+            eggs: result.data.eggs,
+            status: result.data.status,
+            active: result.data.active
+        })
         setListEggLocation(result.data.eggs);
     }
 
@@ -243,16 +250,16 @@ export default function BasicTabs() {
                                         <div className="col-md-6">
                                             <p>Trạng thái<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                         </div>
-                                        {updateMachineDTO.status === 1 ?
+                                        {updateMachineDTO.active === 1 ?
                                             <div className="col-md-6">
-                                                <select onChange={(e) => handleUpdateMachineChange(e, "status")} class="form-select" aria-label="Default select example">
+                                                <select onChange={(e) => handleUpdateMachineChange(e, "active")} class="form-select" aria-label="Default select example">
                                                     <option value="1" selected>Hoạt động</option>
                                                     <option value="0">Dừng hoạt động</option>
                                                 </select>
                                             </div>
                                             :
                                             <div className="col-md-6">
-                                                <select onChange={(e) => handleUpdateMachineChange(e, "status")} class="form-select" aria-label="Default select example">
+                                                <select onChange={(e) => handleUpdateMachineChange(e, "active")} class="form-select" aria-label="Default select example">
                                                     <option value="1">Hoạt động</option>
                                                     <option value="0" selected>Dừng hoạt động</option>
                                                 </select>
@@ -320,7 +327,7 @@ export default function BasicTabs() {
                             <div className="col-md-4">
                                 <p>Trạng thái</p>
                             </div>
-                            {machineDetailDTO.status === 1 ?
+                            {machineDetailDTO.active === 1 ?
                                 <div className="col-md-4">
                                     <p className="text-green">Hoạt động</p>
                                 </div>

@@ -14,9 +14,11 @@ package com.example.eims.service.impl;
 
 import com.example.eims.dto.registration.RegistrationInforDTO;
 import com.example.eims.dto.registration.RegistrationListItemDTO;
+import com.example.eims.entity.Customer;
 import com.example.eims.entity.Facility;
 import com.example.eims.entity.Registration;
 import com.example.eims.entity.User;
+import com.example.eims.repository.CustomerRepository;
 import com.example.eims.repository.FacilityRepository;
 import com.example.eims.repository.RegistrationRepository;
 import com.example.eims.repository.UserRepository;
@@ -26,6 +28,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -44,16 +47,20 @@ public class RegistrationServiceImpl implements IRegistrationService {
     private final RegistrationRepository registrationRepository;
     @Autowired
     private final FacilityRepository facilityRepository;
+    @Autowired
+    private final CustomerRepository customerRepository;
     private final SpeedSMS speedSMS;
     private final String SENDER = "61522b07d22251db";
     @PersistenceContext
     private EntityManager em;
 
     public RegistrationServiceImpl(UserRepository userRepository, RegistrationRepository registrationRepository,
-                                   FacilityRepository facilityRepository, EntityManager em) {
+                                   FacilityRepository facilityRepository, CustomerRepository customerRepository,
+                                   EntityManager em) {
         this.userRepository = userRepository;
         this.registrationRepository = registrationRepository;
         this.facilityRepository = facilityRepository;
+        this.customerRepository = customerRepository;
         this.speedSMS = new SpeedSMS();
         this.em = em;
     }
@@ -97,6 +104,7 @@ public class RegistrationServiceImpl implements IRegistrationService {
      * @return
      */
     @Override
+    @Transactional
     public ResponseEntity<?> registrationApproval(Long userId, Long facilityId, boolean approval) throws IOException {
         int status = (approval ? 2 : 1); /*1-rejected 2-approved */
         User user;
@@ -130,6 +138,15 @@ public class RegistrationServiceImpl implements IRegistrationService {
             } else {
                 return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
             }
+            // Create Khách lẻ
+            Customer customer = new Customer();
+            customer.setCustomerName("Khách lẻ");
+            customer.setCustomerAddress("");
+            customer.setCustomerPhone("Khách lẻ");
+            customer.setStatus(1);
+            customer.setUserId(userId);
+            customerRepository.save(customer);
+
             //  Send message to Owner
             String content = "Đơn đăng ký của bạn đã được chấp thuận! Chào mừng đến với EIMS.";
             //String userInfo = speedSMS.getUserInfo();

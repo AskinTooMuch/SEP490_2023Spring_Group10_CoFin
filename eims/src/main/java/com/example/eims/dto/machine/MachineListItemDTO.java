@@ -32,6 +32,7 @@ public class MachineListItemDTO {
     private String machineTypeName;
     private int curCapacity;
     private int maxCapacity;
+    private int active;
     private int status;
 
     public void getFromEntity(Machine machine){
@@ -40,6 +41,7 @@ public class MachineListItemDTO {
         this.machineTypeId = machine.getMachineTypeId();
         this.curCapacity = machine.getCurCapacity();
         this.maxCapacity = machine.getMaxCapacity();
+        this.active = machine.getActive();
         this.status = machine.getStatus();
     }
 }

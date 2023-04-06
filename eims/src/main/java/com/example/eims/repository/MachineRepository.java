@@ -28,11 +28,11 @@ public interface MachineRepository extends JpaRepository<Machine, Long> {
     Optional<Machine> findByMachineId(Long machineId);
     boolean existsByMachineId(Long machineId);
     Page<Machine> findAllByFacilityId(Long facilityId, Pageable pageable);
-    @Query(value = "SELECT * FROM eims.machine WHERE max_capacity > cur_capacity AND facility_id = ?1",
+    @Query(value = "SELECT * FROM eims.machine WHERE max_capacity > cur_capacity AND facility_id = ?1 AND active = 1 ",
             nativeQuery = true)
     Optional<List<Machine>> findAllNotFull(Long facilityId);
     @Query(value = "SELECT IFNULL(SUM(amount), 0) FROM eims.egg_location WHERE machine_id = ?1",
             nativeQuery = true)
     int getCurrentAmount(Long machineId);
-    Optional<List<Machine>> findByFacilityIdAndStatus(Long facilityId, int status);
+    Optional<List<Machine>> findByFacilityIdAndActive(Long facilityId, int active);
 }

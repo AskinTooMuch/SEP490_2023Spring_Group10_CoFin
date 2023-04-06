@@ -98,4 +98,12 @@ public interface IAuthService {
      * @return
      */
     public ResponseEntity<?> resendOTPRegister(String phone) throws IOException;
+
+    /**
+     * Check if phone number is used to create account or not.
+     *
+     * @param phone the phone number
+     * @return
+     */
+    public ResponseEntity<?> checkPhone(String phone);
 }

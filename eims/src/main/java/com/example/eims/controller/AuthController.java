@@ -15,17 +15,20 @@
 package com.example.eims.controller;
 
 import com.example.eims.dto.auth.*;
+import com.example.eims.entity.User;
 import com.example.eims.service.interfaces.IAuthService;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -143,5 +146,16 @@ public class AuthController {
     @PostMapping("/forgotPassword/changePassword")
     public ResponseEntity<?> resetPassword(@RequestBody ForgotPasswordDTO forgotPasswordDTO) {
         return authService.resetPassword(forgotPasswordDTO);
+    }
+
+    /**
+     * Check if phone number is used to create account or not.
+     *
+     * @param phone the phone number
+     * @return
+     */
+    @GetMapping("/checkPhone")
+    public ResponseEntity<?> checkPhone(@RequestParam String phone) {
+        return authService.checkPhone(phone);
     }
 }

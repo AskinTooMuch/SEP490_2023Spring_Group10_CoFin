@@ -27,6 +27,7 @@ public class MachineDetailDTO {
     private int maxCapacity;
     private Date addedDate;
     private List<EggLocationMachineDetailDTO> eggs;
+    private int active;
     private int status;
 
     public void getFromEntity(Machine machine) {
@@ -35,6 +36,7 @@ public class MachineDetailDTO {
         this.curCapacity = machine.getCurCapacity();
         this.maxCapacity = machine.getMaxCapacity();
         this.addedDate = machine.getAddedDate();
+        this.active = machine.getActive();
         this.status = machine.getStatus();
     }
 }

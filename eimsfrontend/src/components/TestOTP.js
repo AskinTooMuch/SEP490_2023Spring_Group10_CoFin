@@ -6,9 +6,13 @@ import { Box } from '@mui/material';
 import { toast } from 'react-toastify';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
+import axios from 'axios';
 
 const PHONE_REGEX = /(0)(3|5|7|8|9)+([0-9]{8})\b/;
 const TestOTP = () => {
+    // API URL
+    const CHECK_PHONE = "/api/auth/checkPhone"
+
     const [phoneNumber, setPhoneNumber] = useState("");
     const [otp, setOtp] = useState('');
     const [step, setStep] = useState('INPUT_PHONE_NUMBER');
@@ -29,19 +33,40 @@ const TestOTP = () => {
             );
         }
     }
-    // send OTP first time to phone number
-    const sendOTP = (e) => {
+
+    const checkPhone = async (e) => {
         e.preventDefault();
+        let response;
+        try {
+            response = await axios.get(CHECK_PHONE,
+                {
+                    params: { phone: phoneNumber },
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Access-Control-Allow-Origin': '*'
+                    },
+                    withCredentials: true
+                }
+            );
+            if (response.data === 1) {
+                sendOTP();
+            }
+        } catch (err) {
+            if (!err?.response) {
+                toast.error('Server không phản hồi');
+            } else {
+                if ((err.response.data === null) || (err.response.data === '')) {
+                    toast.error('Có lỗi xảy ra, vui lòng thử lại');
+                } else {
+                    toast.error(err.response.data);
+                }
+            }
+        }
+    }
+
+    // send OTP first time to phone number
+    const sendOTP = () => {
         onCaptchVerify();
-        const v2 = PHONE_REGEX.test(phoneNumber);
-        if (phoneNumber === "") {
-            toast.error("Vui lòng nhập Số điện thoại");
-            return;
-        }
-        else if (!v2) {
-            toast.error("Số điện thoại không tồn tại");
-            return;
-        }
         const appVerifier = window.recaptchaVerifier;
         const replaced = phoneNumber.replace(phoneNumber[0], "+84")
         console.log(phoneNumber)
@@ -132,13 +157,13 @@ const TestOTP = () => {
                                 <div className="u-container-layout u-valign-middle-xs u-container-layout-1">
                                     <h2 className="u-text u-text-custom-color-1 u-text-default u-text-1">Đăng ký</h2>
                                     <div className="u-form u-login-control u-form-1">
-                                        <form onSubmit={sendOTP}>
+                                        <form onSubmit={checkPhone}>
                                             <div className="u-form-group u-form-name">
                                                 <label htmlFor="username-a30d" className="u-label u-text-grey-25 u-label-1">Số điện thoại </label>
                                                 <span id="phonenote" data-text="Số điện thoại Việt Nam, bắt đầu bằng 03|5|7|8|9"
                                                     className="tip invalid" ><FontAwesomeIcon icon={faInfoCircle} /></span>
                                                 <input type="text" name="account" value={phoneNumber} placeholder="Nhập số điện thoại" onChange={(e) => setPhoneNumber(e.target.value)}
-                                                     className="u-border-2 u-border-grey-10 u-grey-10 u-input u-input-rectangle u-input-1" />
+                                                    className="u-border-2 u-border-grey-10 u-grey-10 u-input u-input-rectangle u-input-1" />
                                             </div>
                                             <div className="u-align-left u-form-group u-form-submit">
                                                 <div id="recaptcha-container"></div>

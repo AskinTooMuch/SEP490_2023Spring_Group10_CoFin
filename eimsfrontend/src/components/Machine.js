@@ -294,7 +294,7 @@ export default function BasicTabs() {
                                                         <td className="u-border-1 u-border-grey-30 u-table-cell">{item.machineTypeName}</td>
                                                         <td className="u-border-1 u-border-grey-30 u-table-cell">{item.curCapacity}/{item.maxCapacity}</td>
 
-                                                        {item.status === 1
+                                                        {item.active === 1
                                                             ? <td className="u-border-1 u-border-grey-30 u-table-cell text-green">
                                                                 Đang hoạt động
                                                             </td>

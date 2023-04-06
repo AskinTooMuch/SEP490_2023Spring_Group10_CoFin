@@ -232,6 +232,7 @@ public class MachineServiceImpl implements IMachineService {
             machine.setCurCapacity(0);
             Date date = Date.valueOf(LocalDate.now());/* format yyyy-MM-dd*/
             machine.setAddedDate(date);
+            machine.setActive(0);
             machine.setStatus(1);
             // Save
             machineRepository.save(machine);
@@ -272,15 +273,15 @@ public class MachineServiceImpl implements IMachineService {
             Machine machine = machineOptional.get();
             // Check blank input
             // Machine's name
-            if (updateMachineDTO.getMachineName() == null || stringDealer.trimMax(updateMachineDTO.getMachineName()).equals("")) { /* Machine name is empty */
+            String name = stringDealer.trimMax(updateMachineDTO.getMachineName());
+            if (name.equals("")) { /* Machine name is empty */
                 return new ResponseEntity<>("Tên máy không được để trống", HttpStatus.BAD_REQUEST);
             }
-            String name = stringDealer.trimMax(updateMachineDTO.getMachineName());
             machine.setMachineName(name);
-            if (updateMachineDTO.getStatus() != 1 && updateMachineDTO.getStatus() != 0) {
+            if (updateMachineDTO.getActive() != 1 && updateMachineDTO.getActive() != 0) {
                 return new ResponseEntity<>("Trạng thái không hợp lệ", HttpStatus.BAD_REQUEST);
             }
-            machine.setStatus(updateMachineDTO.getStatus());
+            machine.setActive(updateMachineDTO.getActive());
             // Save
             machineRepository.save(machine);
             return new ResponseEntity<>("Cập nhật thông tin máy thành công", HttpStatus.OK);
@@ -350,7 +351,7 @@ public class MachineServiceImpl implements IMachineService {
     public ResponseEntity<?> getMachineDashboard(Long facilityId) {
         List<MachineDetailDTO> dtoList = new ArrayList<>();
         // status = 1 (running)
-        Optional<List<Machine>> machineListOptional = machineRepository.findByFacilityIdAndStatus(facilityId, 1);
+        Optional<List<Machine>> machineListOptional = machineRepository.findByFacilityIdAndActive(facilityId, 1);
         if (machineListOptional.isEmpty()) {
             return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
         }
