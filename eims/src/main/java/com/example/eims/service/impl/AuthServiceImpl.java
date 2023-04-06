@@ -636,13 +636,13 @@ public class AuthServiceImpl implements IAuthService {
     }
 
     /**
-     * Check if phone number is used to create account or not.
+     * Check phone number when register account
      *
      * @param phone the phone number
      * @return
      */
     @Override
-    public ResponseEntity<?> checkPhone(String phone) {
+    public ResponseEntity<?> checkPhoneRegister(String phone) {
         phone = stringDealer.trimMax(phone);
         if (phone.equals("")) { // phone number empty
             return new ResponseEntity<>("Số điện thoại không được để trống", HttpStatus.BAD_REQUEST);
@@ -653,6 +653,28 @@ public class AuthServiceImpl implements IAuthService {
         Optional<User> userOptional = userRepository.findByPhone(phone);
         if (userOptional.isPresent()){
             return new ResponseEntity<>("Số điện thoại đã được sử dụng", HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(1, HttpStatus.OK);
+    }
+
+    /**
+     * Check phone number when reset password
+     *
+     * @param phone the phone number
+     * @return
+     */
+    @Override
+    public ResponseEntity<?> checkPhoneForgotPassword(String phone) {
+        phone = stringDealer.trimMax(phone);
+        if (phone.equals("")) { // phone number empty
+            return new ResponseEntity<>("Số điện thoại không được để trống", HttpStatus.BAD_REQUEST);
+        }
+        if (!stringDealer.checkPhoneRegex(phone)) { // phone number invalid
+            return new ResponseEntity<>("Số điện thoại không hợp lệ", HttpStatus.BAD_REQUEST);
+        }
+        Optional<User> userOptional = userRepository.findByPhone(phone);
+        if (userOptional.isEmpty()){
+            return new ResponseEntity<>("Không tìm thấy tài khoản với số điện thoại đã nhập", HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>(1, HttpStatus.OK);
     }

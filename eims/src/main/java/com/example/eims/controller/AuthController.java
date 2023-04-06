@@ -154,8 +154,18 @@ public class AuthController {
      * @param phone the phone number
      * @return
      */
-    @GetMapping("/checkPhone")
+    @GetMapping("/register/check")
     public ResponseEntity<?> checkPhone(@RequestParam String phone) {
-        return authService.checkPhone(phone);
+        return authService.checkPhoneRegister(phone);
+    }
+    /**
+     * Check phone number when reset password
+     *
+     * @param phone the phone number
+     * @return
+     */
+    @GetMapping("/forgotPassword/check")
+    public ResponseEntity<?> checkPhoneForgotPassword(String phone) {
+        return authService.checkPhoneForgotPassword(phone);
     }
 }

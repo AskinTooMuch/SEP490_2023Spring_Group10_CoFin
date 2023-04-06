@@ -11,7 +11,7 @@ import axios from 'axios';
 const PHONE_REGEX = /(0)(3|5|7|8|9)+([0-9]{8})\b/;
 const TestOTP = () => {
     // API URL
-    const CHECK_PHONE = "/api/auth/checkPhone"
+    const CHECK_PHONE = "/api/auth/register/check"
 
     const [phoneNumber, setPhoneNumber] = useState("");
     const [otp, setOtp] = useState('');

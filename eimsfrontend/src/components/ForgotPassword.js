@@ -9,8 +9,10 @@ import { Box } from '@mui/material';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 
-const PHONE_REGEX = /(0)(3|5|7|8|9)+([0-9]{8})\b/;
 const ForgotPassword = () => {
+  // API URL
+  const CHECK_PHONE = "/api/auth/forgotPassword/check"
+  //
   const [phoneNumber, setPhoneNumber] = useState("");
   const [otp, setOtp] = useState('');
   const [step, setStep] = useState('INPUT_PHONE_NUMBER');
@@ -31,19 +33,41 @@ const ForgotPassword = () => {
       );
     }
   }
-  // Handle send OTP
-  const handleSend = (e) => {
+
+  // Check phone number
+  const checkPhone = async (e) => {
     e.preventDefault();
+    let response;
+    try {
+      response = await axios.get(CHECK_PHONE,
+        {
+          params: { phone: phoneNumber },
+          headers: {
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*'
+          },
+          withCredentials: true
+        }
+      );
+      if (response.data === 1) {
+        handleSend();
+      }
+    } catch (err) {
+      if (!err?.response) {
+        toast.error('Server không phản hồi');
+      } else {
+        if ((err.response.data === null) || (err.response.data === '')) {
+          toast.error('Có lỗi xảy ra, vui lòng thử lại');
+        } else {
+          toast.error(err.response.data);
+        }
+      }
+    }
+  }
+
+  // Handle send OTP
+  const handleSend = () => {
     onCaptchVerify();
-    const v2 = PHONE_REGEX.test(phoneNumber);
-    if (phoneNumber === "") {
-      toast.error("Vui lòng nhập Số điện thoại");
-      return;
-    }
-    else if (!v2) {
-      toast.error("Số điện thoại không tồn tại");
-      return;
-    }
     const appVerifier = window.recaptchaVerifier;
     const replaced = phoneNumber.replace(phoneNumber[0], "+84")
     console.log(phoneNumber)
@@ -152,7 +176,7 @@ const ForgotPassword = () => {
             <div className="u-container-layout u-valign-middle-xs u-container-layout-1">
               <h2 className="u-text u-text-custom-color-1 u-text-default u-text-1">Quên mật khẩu</h2>
               <div className="u-form u-login-control u-form-1">
-                <form onSubmit={handleSend}>
+                <form onSubmit={checkPhone}>
                   <div className="u-form-group u-form-name">
                     <label htmlFor="username-a30d" className="u-label u-text-grey-25 u-label-1">Số điện thoại </label>
                     <span id="phonenote" data-text="Số điện thoại Việt Nam, bắt đầu bằng 03|5|7|8|9"
