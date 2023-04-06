@@ -192,7 +192,10 @@ public class ExportReceiptServiceImpl implements IExportReceiptService {
             }
         }
 
-        for (int i =0; i< eggBatchListDto.size(); i++) {
+        if (eggProductListDto.size() == 0) {
+            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
+        }
+        for (int i = 0; i< eggBatchListDto.size(); i++) {
             CreateExportDataItemDTO dto = new CreateExportDataItemDTO();
             dto.setEggBatch(eggBatchListDto.get(i));
             dto.setEggProductList(eggProductListDto.get(i));
@@ -262,7 +265,7 @@ public class ExportReceiptServiceImpl implements IExportReceiptService {
                 exportDetail.setExportId(exportId);
                 exportDetail.setProductId(dto.getEggProductId());
                 exportDetail.setPrice(dto.getPrice());
-                exportDetail.setVaccinePrice(dto.getPrice());
+                exportDetail.setVaccinePrice(dto.getVaccine());
                 exportDetail.setAmount(dto.getExportAmount());
                 exportDetail.setStatus(1);
                 exportDetailRepository.save(exportDetail);

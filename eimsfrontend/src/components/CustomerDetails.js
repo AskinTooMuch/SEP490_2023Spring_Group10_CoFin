@@ -410,15 +410,15 @@ export default function BasicTabs() {
                                             >
                                                 <option value="" disabled selected>Chọn Quận/Huyện</option>
                                                 {district &&
-                                                district.map((item, index) => (
-                                                    <>
-                                                        {item.label === updateAddressJson.district
-                                                            ? <option value={index} selected>{item.label}</option>
-                                                            : <option value={index}>{item.label}</option>
-                                                        }
-                                                    </>
-                                                ))
-                                            }
+                                                    district.map((item, index) => (
+                                                        <>
+                                                            {item.label === updateAddressJson.district
+                                                                ? <option value={index} selected>{item.label}</option>
+                                                                : <option value={index}>{item.label}</option>
+                                                            }
+                                                        </>
+                                                    ))
+                                                }
                                             </select>
                                         </div>
                                     </div>
@@ -436,15 +436,15 @@ export default function BasicTabs() {
                                             >
                                                 <option value="" disabled selected>Chọn Phường/Xã</option>
                                                 {ward &&
-                                                ward.map((item, index) => (
-                                                    <>
-                                                        {item.label === updateAddressJson.ward
-                                                            ? <option value={index} selected>{item.label}</option>
-                                                            : <option value={index}>{item.label}</option>
-                                                        }
-                                                    </>
-                                                ))
-                                            }
+                                                    ward.map((item, index) => (
+                                                        <>
+                                                            {item.label === updateAddressJson.ward
+                                                                ? <option value={index} selected>{item.label}</option>
+                                                                : <option value={index}>{item.label}</option>
+                                                            }
+                                                        </>
+                                                    ))
+                                                }
                                             </select>
                                         </div>
                                     </div>
@@ -470,8 +470,19 @@ export default function BasicTabs() {
                                         <div className="col-md-8">
                                             <select id="updateCustomerStatus" class="form-select mt-1" aria-label="Default select example"
                                                 onChange={(e) => handleUpdateCustomerChange(e, "status")}>
-                                                <option value="1" className='text-green'>Đang hoạt động</option>
-                                                <option value="0" className='text-red'>Ngừng hoạt động</option>
+                                                {
+                                                    updateCustomerDTO.status === 0
+                                                        ? <>
+                                                            <option value="1" className='text-green'>Đang hoạt động</option>
+                                                            <option value="0" className='text-red' selected>Ngừng hoạt động</option>
+                                                        </>
+                                                        : <>
+                                                            <option value="1" className='text-green' selected>Đang hoạt động</option>
+                                                            <option value="0" className='text-red'>Ngừng hoạt động</option>
+                                                        </>
+                                                }
+
+
                                             </select>
                                         </div>
                                     </div>

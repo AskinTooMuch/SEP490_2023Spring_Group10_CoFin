@@ -392,7 +392,6 @@ const Supplier = () => {
               <th scope="col">STT</th>
               <th scope="col">Nhà cung cấp</th>
               <th scope="col">Số điện thoại</th>
-              <th scope="col">Doanh thu theo tháng</th>
               <th scope="col">Trạng thái</th>
             </tr>
           </thead>
@@ -404,7 +403,6 @@ const Supplier = () => {
                     <th scope="row">{index + 1}</th>
                     <td>{item.supplierName}</td>
                     <td>{item.supplierPhone}</td>
-                    <td>100.000.000 VNĐ</td>
                     {item.status === 1
                       ? <td className='text-green'>
                         Đang hoạt động

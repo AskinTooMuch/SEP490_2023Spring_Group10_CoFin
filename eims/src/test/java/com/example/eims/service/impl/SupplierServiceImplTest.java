@@ -141,7 +141,7 @@ class SupplierServiceImplTest {
         dto.setSupplierMail("BNV71@gmail.com");
 
         // Define behaviour of repository
-        when(userRepository.getStatusByUserId(1L)).thenReturn(true);
+        when(userRepository.getStatusByUserId(1L)).thenReturn(2);
         when(supplierRepository.existsBySupplierPhoneAndUserId("0987654321", dto.getUserId()))
                 .thenReturn(false);
 
@@ -166,7 +166,7 @@ class SupplierServiceImplTest {
         dto.setSupplierMail("BNV71@gmail.com");
 
         // Define behaviour of repository
-        when(userRepository.getStatusByUserId(1L)).thenReturn(true);
+        when(userRepository.getStatusByUserId(1L)).thenReturn(2);
         when(supplierRepository.existsBySupplierPhoneAndUserId("0987654321", dto.getUserId()))
                 .thenReturn(false);
 
@@ -191,7 +191,7 @@ class SupplierServiceImplTest {
         dto.setSupplierMail("BNV71@gmail.com");
 
         // Define behaviour of repository
-        when(userRepository.getStatusByUserId(1L)).thenReturn(true);
+        when(userRepository.getStatusByUserId(1L)).thenReturn(2);
 
         // Run service method
         ResponseEntity<?> responseEntity = supplierService.createSupplier(dto);
@@ -214,7 +214,7 @@ class SupplierServiceImplTest {
         dto.setSupplierMail("BNV71@gmail.com");
 
         // Define behaviour of repository
-        when(userRepository.getStatusByUserId(1L)).thenReturn(true);
+        when(userRepository.getStatusByUserId(1L)).thenReturn(2);
         // Run service method
         ResponseEntity<?> responseEntity = supplierService.createSupplier(dto);
         System.out.println(responseEntity.toString());
@@ -236,7 +236,7 @@ class SupplierServiceImplTest {
         dto.setSupplierMail("BNV71@gmail.com");
 
         // Define behaviour of repository
-        when(userRepository.getStatusByUserId(1L)).thenReturn(true);
+        when(userRepository.getStatusByUserId(1L)).thenReturn(2);
         // Run service method
         ResponseEntity<?> responseEntity = supplierService.createSupplier(dto);
         System.out.println(responseEntity.toString());
@@ -258,7 +258,7 @@ class SupplierServiceImplTest {
         dto.setSupplierMail("BNV71@gmail.com");
 
         // Define behaviour of repository
-        when(userRepository.getStatusByUserId(1L)).thenReturn(true);
+        when(userRepository.getStatusByUserId(1L)).thenReturn(2);
         // Run service method
         ResponseEntity<?> responseEntity = supplierService.createSupplier(dto);
         System.out.println(responseEntity.toString());
@@ -280,7 +280,7 @@ class SupplierServiceImplTest {
         dto.setSupplierMail("BNV71@gmail.com");
 
         // Define behaviour of repository
-        when(userRepository.getStatusByUserId(1L)).thenReturn(true);
+        when(userRepository.getStatusByUserId(1L)).thenReturn(2);
         // Run service method
         ResponseEntity<?> responseEntity = supplierService.createSupplier(dto);
         System.out.println(responseEntity.toString());
@@ -302,7 +302,7 @@ class SupplierServiceImplTest {
         dto.setSupplierMail("BNV71@gmail.com");
 
         // Define behaviour of repository
-        when(userRepository.getStatusByUserId(1L)).thenReturn(true);
+        when(userRepository.getStatusByUserId(1L)).thenReturn(2);
         // Run service method
         ResponseEntity<?> responseEntity = supplierService.createSupplier(dto);
         System.out.println(responseEntity.toString());
@@ -324,7 +324,7 @@ class SupplierServiceImplTest {
         dto.setSupplierMail("BNV71@gmail.com");
 
         // Define behaviour of repository
-        when(userRepository.getStatusByUserId(1L)).thenReturn(true);
+        when(userRepository.getStatusByUserId(1L)).thenReturn(2);
         // Run service method
         ResponseEntity<?> responseEntity = supplierService.createSupplier(dto);
         System.out.println(responseEntity.toString());
@@ -346,7 +346,7 @@ class SupplierServiceImplTest {
         dto.setSupplierMail("BNV71@gmail.com");
 
         // Define behaviour of repository
-        when(userRepository.getStatusByUserId(1L)).thenReturn(true);
+        when(userRepository.getStatusByUserId(1L)).thenReturn(2);
         // Run service method
         ResponseEntity<?> responseEntity = supplierService.createSupplier(dto);
         System.out.println(responseEntity.toString());
@@ -368,7 +368,7 @@ class SupplierServiceImplTest {
         dto.setSupplierMail("BNV71@gmail.com");
 
         // Define behaviour of repository
-        when(userRepository.getStatusByUserId(1L)).thenReturn(true);
+        when(userRepository.getStatusByUserId(1L)).thenReturn(2);
         // Run service method
         ResponseEntity<?> responseEntity = supplierService.createSupplier(dto);
         System.out.println(responseEntity.toString());
@@ -390,7 +390,7 @@ class SupplierServiceImplTest {
         dto.setSupplierMail("BNV71@gmail.com");
 
         // Define behaviour of repository
-        when(userRepository.getStatusByUserId(1L)).thenReturn(true);
+        when(userRepository.getStatusByUserId(1L)).thenReturn(2);
         // Run service method
         ResponseEntity<?> responseEntity = supplierService.createSupplier(dto);
         System.out.println(responseEntity.toString());
@@ -412,7 +412,7 @@ class SupplierServiceImplTest {
         dto.setSupplierMail("a_b_c@gmail.com");
 
         // Define behaviour of repository
-        when(userRepository.getStatusByUserId(1L)).thenReturn(true);
+        when(userRepository.getStatusByUserId(1L)).thenReturn(2);
         // Run service method
         ResponseEntity<?> responseEntity = supplierService.createSupplier(dto);
         System.out.println(responseEntity.toString());
@@ -434,7 +434,7 @@ class SupplierServiceImplTest {
         dto.setSupplierMail("12@3tungdt@gmail.com");
 
         // Define behaviour of repository
-        when(userRepository.getStatusByUserId(1L)).thenReturn(true);
+        when(userRepository.getStatusByUserId(1L)).thenReturn(2);
         // Run service method
         ResponseEntity<?> responseEntity = supplierService.createSupplier(dto);
         System.out.println(responseEntity.toString());

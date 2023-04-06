@@ -21,6 +21,14 @@ import java.util.Optional;
 
 public interface ExportReceiptRepository extends JpaRepository<ExportReceipt, Long> {
     Optional<List<ExportReceipt>> findByFacilityId(Long facilityId);
-    @Query(value = "select distinct year(export_date) as YEAR from eims.export_receipt where customer_id = ?2 and user_id = ?1 order by YEAR DESC \n", nativeQuery = true)
+    @Query(value = "select distinct year(export_date) as YEAR from eims.export_receipt where customer_id = ?2 " +
+            "and user_id = ?1 order by YEAR DESC", nativeQuery = true)
     Optional<List<String>> getImportReceiptYear(Long userId, Long customerId);
+    @Query(value = "select distinct(year(export_date)) from eims.export_receipt where facility_id = ?1 ", nativeQuery = true)
+    Optional<List<String>> getAllYear(Long facilityId);
+    @Query(value = "select * from eims.export_receipt where facility_id = ?1 and year(export_date) = ?2", nativeQuery = true)
+    Optional<List<ExportReceipt>> getAllByYear(Long facilityId, String year);
+    @Query(value = "select * from eims.export_receipt where facility_id = ?1 and year(export_date) = ?2 and " +
+            "month(export_date) = ?3", nativeQuery = true)
+    Optional<List<ExportReceipt>> getAllByYearAndMonth(Long facilityId, String year, String month);
 }

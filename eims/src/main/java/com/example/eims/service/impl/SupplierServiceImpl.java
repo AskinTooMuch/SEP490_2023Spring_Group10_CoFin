@@ -136,8 +136,8 @@ public class SupplierServiceImpl implements ISupplierService {
     public ResponseEntity<?> createSupplier(CreateSupplierDTO createSupplierDTO) {
         // Check if Owner's account is still activated
         Long userId = createSupplierDTO.getUserId();
-        int accountStatus = (userRepository.getStatusByUserId(userId) ? 1 : 0);
-        if (accountStatus == 0) { /* status = 0 (deactivated) */
+        int accountStatus = userRepository.getStatusByUserId(userId);
+        if (accountStatus != 2) { /* status = 0 (deactivated) */
             return new ResponseEntity<>("Tài khoản đã bị vô hiệu hóa.", HttpStatus.BAD_REQUEST);
         }
         // Retrieve supplier information and create new supplier

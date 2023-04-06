@@ -17,7 +17,9 @@ import com.example.eims.dto.user.UserDetailDTO;
 import com.example.eims.entity.User;
 import com.example.eims.repository.UserRepository;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
 import jakarta.persistence.Query;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -82,19 +84,36 @@ class UserServiceImplTest {
     }*/
 
     @Test
-    void sendUserDetail() {
+    @DisplayName("sendUserDetailUTCID01")
+    void sendUserDetailUTCID01() {
         // Set up
         UserDetailDTO dto = new UserDetailDTO();
-        dto.setUserId(2L);
+        dto.setUserId(1L);
         Query q = mock(Query.class);
         // Define behaviour of repository
         when(em.createNamedQuery("GetUserDetail")).thenReturn(q);
         when(q.getSingleResult()).thenReturn(dto);
         // Run service method
-        ResponseEntity<UserDetailDTO> responseEntity = userService.sendUserDetail(2L);
+        ResponseEntity<?> responseEntity = userService.sendUserDetail(1L);
         System.out.println(responseEntity.toString());
         // Assert
-        assertEquals(2L,responseEntity.getBody().getUserId());
+        assertEquals(dto,responseEntity.getBody());
+    }
+
+    @Test
+    @DisplayName("sendUserDetailUTCID02")
+    void sendUserDetailUTCID02() {
+        // Set up
+        Long userId = 0L;
+        Query q = mock(Query.class);
+        // Define behaviour of repository
+        when(em.createNamedQuery("GetUserDetail")).thenReturn(q);
+        when(q.getSingleResult()).thenThrow(new NoResultException());
+        // Run service method
+        ResponseEntity<?> responseEntity = userService.sendUserDetail(userId);
+        System.out.println(responseEntity.toString());
+        // Assert
+        assertEquals("Người dùng không hợp lệ",responseEntity.getBody());
     }
 
     @Test
@@ -142,7 +161,8 @@ class UserServiceImplTest {
     }
 
     @Test
-    void showFormUpdate() {
+    @DisplayName("showFormUpdateUTCID01")
+    void showFormUpdateUTCID01() {
         // Set up
         User user = new User();
         user.setUserId(1L);
@@ -150,35 +170,258 @@ class UserServiceImplTest {
         user.setDob(new Date(999999));
         user.setAddress("a@a.com");
         user.setAddress("address");
+        UpdateUserDTO updateUserDTO = new UpdateUserDTO();
+        updateUserDTO.getFromEntity(user);
         // Define behaviour of repository
         when(userRepository.findById(1L)).thenReturn(Optional.of(user));
         // Run service method
         ResponseEntity<?> responseEntity = userService.showFormUpdate(1L);
         System.out.println(responseEntity.toString());
-        UpdateUserDTO dto = (UpdateUserDTO) responseEntity.getBody();
         // Assert
-        assertEquals("aa", dto.getUsername());
+        assertEquals(updateUserDTO, responseEntity.getBody());
     }
 
     @Test
-    void updateUser() {
+    @DisplayName("showFormUpdateUTCID02")
+    void showFormUpdateUTCID02() {
+        // Set up
+        Long userId = 0L;
+        // Define behaviour of repository
+        when(userRepository.findById(0L)).thenReturn(Optional.empty());
+        // Run service method
+        ResponseEntity<?> responseEntity = userService.showFormUpdate(userId);
+        System.out.println(responseEntity.toString());
+        // Assert
+        assertEquals(null, responseEntity.getBody());
+    }
+
+    @Test
+    @DisplayName("updateUserUTCID01")
+    void updateUserUTCID01() {
         // Set up
         UpdateUserDTO dto = new UpdateUserDTO();
         dto.setUserId(1L);
-        dto.setUsername("aa");
-        dto.setDob("2000-01-01");
-        dto.setEmail("a@a.com");
-        dto.setAddress("address");
+        dto.setUsername("Lê Văn Đ");
+        dto.setDob("2000-03-02");
+        dto.setEmail("tungduong71@gmail.com");
+        dto.setAddress("{\"city\":\"Tỉnh Hải Dương\",\"district\":\"Huyện Gia Lộc\",\"ward\":\"Xã Hoàng Diệu\",\"street\":\"Thôn Nghĩa Hy\"}");
         User user = new User();
         user.setUserId(1L);
-        int accountStatus = 1;
+        user.setStatus(2);
         // Define behaviour of repository
-        when(userRepository.getStatusByUserId(1L)).thenReturn(true);
+        when(userRepository.getStatusByUserId(1L)).thenReturn(2);
         when(userRepository.findById(1L)).thenReturn(Optional.of(user));
         // Run service method
         ResponseEntity<?> responseEntity = userService.updateUser(dto);
         System.out.println(responseEntity.toString());
         // Assert
         assertEquals("Cập nhật thông tin thành công",responseEntity.getBody());
+    }
+
+    @Test
+    @DisplayName("updateUserUTCID02")
+    void updateUserUTCID02() {
+        // Set up
+        UpdateUserDTO dto = new UpdateUserDTO();
+        dto.setUserId(1L);
+        dto.setUsername("& HCm");
+        dto.setDob("2000-03-02");
+        dto.setEmail("tungduong71@gmail.com");
+        dto.setAddress("{\"city\":\"Tỉnh Hải Dương\",\"district\":\"Huyện Gia Lộc\",\"ward\":\"Xã Hoàng Diệu\",\"street\":\"Thôn Nghĩa Hy\"}");
+        User user = new User();
+        user.setUserId(1L);
+        user.setStatus(2);
+        // Define behaviour of repository
+        when(userRepository.getStatusByUserId(1L)).thenReturn(2);
+        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+        // Run service method
+        ResponseEntity<?> responseEntity = userService.updateUser(dto);
+        System.out.println(responseEntity.toString());
+        // Assert
+        assertEquals("Tên không hợp lệ",responseEntity.getBody());
+    }
+
+    @Test
+    @DisplayName("updateUserUTCID03")
+    void updateUserUTCID03() {
+        // Set up
+        UpdateUserDTO dto = new UpdateUserDTO();
+        dto.setUserId(1L);
+        dto.setUsername("");
+        dto.setDob("2000-03-02");
+        dto.setEmail("tungduong71@gmail.com");
+        dto.setAddress("{\"city\":\"Tỉnh Hải Dương\",\"district\":\"Huyện Gia Lộc\",\"ward\":\"Xã Hoàng Diệu\",\"street\":\"Thôn Nghĩa Hy\"}");
+        User user = new User();
+        user.setUserId(1L);
+        user.setStatus(2);
+        // Define behaviour of repository
+        when(userRepository.getStatusByUserId(1L)).thenReturn(2);
+        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+        // Run service method
+        ResponseEntity<?> responseEntity = userService.updateUser(dto);
+        System.out.println(responseEntity.toString());
+        // Assert
+        assertEquals("Tên không được để trống",responseEntity.getBody());
+    }
+
+    @Test
+    @DisplayName("updateUserUTCID04")
+    void updateUserUTCID04() {
+        // Set up
+        UpdateUserDTO dto = new UpdateUserDTO();
+        dto.setUserId(1L);
+        dto.setUsername(null);
+        dto.setDob("2000-03-02");
+        dto.setEmail("tungduong71@gmail.com");
+        dto.setAddress("{\"city\":\"Tỉnh Hải Dương\",\"district\":\"Huyện Gia Lộc\",\"ward\":\"Xã Hoàng Diệu\",\"street\":\"Thôn Nghĩa Hy\"}");
+        User user = new User();
+        user.setUserId(1L);
+        user.setStatus(2);
+        // Define behaviour of repository
+        when(userRepository.getStatusByUserId(1L)).thenReturn(2);
+        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+        // Run service method
+        ResponseEntity<?> responseEntity = userService.updateUser(dto);
+        System.out.println(responseEntity.toString());
+        // Assert
+        assertEquals("Tên không được để trống", responseEntity.getBody());
+    }
+
+    @Test
+    @DisplayName("updateUserUTCID05")
+    void updateUserUTCID05() {
+        // Set up
+        UpdateUserDTO dto = new UpdateUserDTO();
+        dto.setUserId(1L);
+        dto.setUsername("Lê Văn Đ");
+        dto.setDob("");
+        dto.setEmail("tungduong71@gmail.com");
+        dto.setAddress("{\"city\":\"Tỉnh Hải Dương\",\"district\":\"Huyện Gia Lộc\",\"ward\":\"Xã Hoàng Diệu\",\"street\":\"Thôn Nghĩa Hy\"}");
+        User user = new User();
+        user.setUserId(1L);
+        user.setStatus(2);
+        // Define behaviour of repository
+        when(userRepository.getStatusByUserId(1L)).thenReturn(2);
+        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+        // Run service method
+        ResponseEntity<?> responseEntity = userService.updateUser(dto);
+        System.out.println(responseEntity.toString());
+        // Assert
+        assertEquals("Ngày sinh không được để trống", responseEntity.getBody());
+    }
+
+    @Test
+    @DisplayName("updateUserUTCID06")
+    void updateUserUTCID06() {
+        // Set up
+        UpdateUserDTO dto = new UpdateUserDTO();
+        dto.setUserId(1L);
+        dto.setUsername("Lê Văn Đ");
+        dto.setDob(null);
+        dto.setEmail("tungduong71@gmail.com");
+        dto.setAddress("{\"city\":\"Tỉnh Hải Dương\",\"district\":\"Huyện Gia Lộc\",\"ward\":\"Xã Hoàng Diệu\",\"street\":\"Thôn Nghĩa Hy\"}");
+        User user = new User();
+        user.setUserId(1L);
+        user.setStatus(2);
+        // Define behaviour of repository
+        when(userRepository.getStatusByUserId(1L)).thenReturn(2);
+        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+        // Run service method
+        ResponseEntity<?> responseEntity = userService.updateUser(dto);
+        System.out.println(responseEntity.toString());
+        // Assert
+        assertEquals("Ngày sinh không được để trống", responseEntity.getBody());
+    }
+
+    @Test
+    @DisplayName("updateUserUTCID07")
+    void updateUserUTCID07() {
+        // Set up
+        UpdateUserDTO dto = new UpdateUserDTO();
+        dto.setUserId(1L);
+        dto.setUsername("Lê Văn Đ");
+        dto.setDob("2000-02-03");
+        dto.setEmail("a_b_c@gmail.com");
+        dto.setAddress("{\"city\":\"Tỉnh Hải Dương\",\"district\":\"Huyện Gia Lộc\",\"ward\":\"Xã Hoàng Diệu\",\"street\":\"Thôn Nghĩa Hy\"}");
+        User user = new User();
+        user.setUserId(1L);
+        user.setStatus(2);
+        // Define behaviour of repository
+        when(userRepository.getStatusByUserId(1L)).thenReturn(2);
+        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+        // Run service method
+        ResponseEntity<?> responseEntity = userService.updateUser(dto);
+        System.out.println(responseEntity.toString());
+        // Assert
+        assertEquals("Email không hợp lệ", responseEntity.getBody());
+    }
+
+    @Test
+    @DisplayName("updateUserUTCID08")
+    void updateUserUTCID08() {
+        // Set up
+        UpdateUserDTO dto = new UpdateUserDTO();
+        dto.setUserId(1L);
+        dto.setUsername("Lê Văn Đ");
+        dto.setDob("2000-02-03");
+        dto.setEmail("12@3tungdt@gmail.com"	);
+        dto.setAddress("{\"city\":\"Tỉnh Hải Dương\",\"district\":\"Huyện Gia Lộc\",\"ward\":\"Xã Hoàng Diệu\",\"street\":\"Thôn Nghĩa Hy\"}");
+        User user = new User();
+        user.setUserId(1L);
+        user.setStatus(2);
+        // Define behaviour of repository
+        when(userRepository.getStatusByUserId(1L)).thenReturn(2);
+        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+        // Run service method
+        ResponseEntity<?> responseEntity = userService.updateUser(dto);
+        System.out.println(responseEntity.toString());
+        // Assert
+        assertEquals("Email không hợp lệ", responseEntity.getBody());
+    }
+
+    @Test
+    @DisplayName("updateUserUTCID09")
+    void updateUserUTCID09() {
+        // Set up
+        UpdateUserDTO dto = new UpdateUserDTO();
+        dto.setUserId(1L);
+        dto.setUsername("Lê Văn Đ");
+        dto.setDob("2000-02-03");
+        dto.setEmail("tungduong71@gmail.com");
+        dto.setAddress("");
+        User user = new User();
+        user.setUserId(1L);
+        user.setStatus(2);
+        // Define behaviour of repository
+        when(userRepository.getStatusByUserId(1L)).thenReturn(2);
+        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+        // Run service method
+        ResponseEntity<?> responseEntity = userService.updateUser(dto);
+        System.out.println(responseEntity.toString());
+        // Assert
+        assertEquals("Địa chỉ không được để trống", responseEntity.getBody());
+    }
+
+    @Test
+    @DisplayName("updateUserUTCID10")
+    void updateUserUTCID10() {
+        // Set up
+        UpdateUserDTO dto = new UpdateUserDTO();
+        dto.setUserId(1L);
+        dto.setUsername("Lê Văn Đ");
+        dto.setDob("2000-02-03");
+        dto.setEmail("tungduong71@gmail.com");
+        dto.setAddress(null);
+        User user = new User();
+        user.setUserId(1L);
+        user.setStatus(2);
+        // Define behaviour of repository
+        when(userRepository.getStatusByUserId(1L)).thenReturn(2);
+        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+        // Run service method
+        ResponseEntity<?> responseEntity = userService.updateUser(dto);
+        System.out.println(responseEntity.toString());
+        // Assert
+        assertEquals("Địa chỉ không được để trống", responseEntity.getBody());
     }
 }

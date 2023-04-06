@@ -23,6 +23,7 @@ import com.example.eims.repository.UserRepository;
 import com.example.eims.service.interfaces.IRegistrationService;
 import com.example.eims.utils.SpeedSMS;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -80,8 +81,12 @@ public class RegistrationServiceImpl implements IRegistrationService {
     public ResponseEntity<?> viewRegistration(Long userId) {
         Query query = em.createNamedQuery("getRegistrationInforForUser");
         query.setParameter(1, userId);
-        RegistrationInforDTO registrationInforDTO = (RegistrationInforDTO) query.getSingleResult();
-        return new ResponseEntity<>(registrationInforDTO, HttpStatus.OK);
+        try {
+            RegistrationInforDTO registrationInforDTO = (RegistrationInforDTO) query.getSingleResult();
+            return new ResponseEntity<>(registrationInforDTO, HttpStatus.OK);
+        } catch (NoResultException e) {
+            return new ResponseEntity<>("Đơn đăng ký không tồn tại", HttpStatus.BAD_REQUEST);
+        }
     }
 
     /**
@@ -93,21 +98,23 @@ public class RegistrationServiceImpl implements IRegistrationService {
      */
     @Override
     public ResponseEntity<?> registrationApproval(Long userId, Long facilityId, boolean approval) throws IOException {
-        int status = (approval ? 2:1); /*1-rejected 2-approved */
+        int status = (approval ? 2 : 1); /*1-rejected 2-approved */
         User user;
         Optional<Registration> registrationOptional = registrationRepository.findByUserId(userId);
+        if (!registrationOptional.isPresent()) {
+            return new ResponseEntity<>("Đơn đăng ký không tồn tại", HttpStatus.BAD_REQUEST);
+        }
+        if (registrationOptional.get().getStatus() != 0) {
+            return new ResponseEntity<>("Đơn đăng ký đã được chấp thuận hoặc đã bị từ chối", HttpStatus.BAD_REQUEST);
+        }
+        Registration registration = registrationOptional.get();
         if (approval) {  /* Approve registration */
             // Change status of registration
-            if (registrationOptional.isPresent()){
-                Registration registration = registrationOptional.get();
-                registration.setStatus(status);
-                registrationRepository.save(registration);
-            } else {
-                return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
-            }
+            registration.setStatus(status);
+            registrationRepository.save(registration);
             // Change status of Owner's account
             Optional<User> userOptional = userRepository.findByUserId(userId);
-            if (userOptional.isPresent()){
+            if (userOptional.isPresent()) {
                 user = userOptional.get();
                 user.setStatus(1);
                 userRepository.save(user);
@@ -116,7 +123,7 @@ public class RegistrationServiceImpl implements IRegistrationService {
             }
             // Change status of Facility
             Optional<Facility> facilityOptional = facilityRepository.findByUserId(userId);
-            if (facilityOptional.isPresent()){
+            if (facilityOptional.isPresent()) {
                 Facility facility = facilityOptional.get();
                 facility.setStatus(1);
                 facilityRepository.save(facility);
@@ -132,16 +139,11 @@ public class RegistrationServiceImpl implements IRegistrationService {
             return new ResponseEntity<>("Đã chấp thuận đơn đăng ký", HttpStatus.OK);
         } else { /* Decline registration */
             // Change status of registration
-            if (registrationOptional.isPresent()){
-                Registration registration = registrationOptional.get();
-                registration.setStatus(status);
-                registrationRepository.save(registration);
-            } else {
-                return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
-            }
+            registration.setStatus(status);
+            registrationRepository.save(registration);
             // Get user
             Optional<User> userOptional = userRepository.findByUserId(userId);
-            if (userOptional.isPresent()){
+            if (userOptional.isPresent()) {
                 user = userOptional.get();
                 //  Send mess to Owner
                 String content = "Đơn đăng ký của bạn với hệ thống EIMS đã bị từ chối! Vui lòng liên hệ eims.contact " +
