@@ -5,8 +5,8 @@ import "../css/subscribe.css"
 import PropTypes from 'prop-types';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
-import {  toast } from 'react-toastify';
-import { useNavigate } from "react-router-dom";
+import { toast } from 'react-toastify';
+import { Link, useNavigate } from "react-router-dom";
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import WithPermission from "../utils.js/WithPermission";
@@ -105,105 +105,107 @@ export default function BasicTabs() {
           </Tabs>
         </Box>
         {/* Print out subscription list */}
-        {
-          subscriptionList && subscriptionList.length > 0
-            ? subscriptionList.map((item, index) =>
-              <Subscription value={value} index={0}>
-                <div className="wrapper">
-                  {item.recommended
-                    ?
-                    <div className="table premium">
-                      <div className="ribbon"><span>Khuyến nghị</span></div>
-                      <div className="price-section">
-                        <div className="price-area">
-                          <div className="inner-area">
-                            <span className="text">VNĐ</span>
-                            <span className="price">{item.cost.toLocaleString("de-DE")}</span>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="package-name">Gói {item.subscriptionId}</div>
-                      <ul className="features">
-                        <li>
-                          <span className="list-name">Thời gian hiệu lực {item.duration} ngày.</span>
-                          <span className="icon check"><i className="fas fa-check"></i></span>
-                        </li>
-                        <li>
-                          <span className="list-name">Tối đa sử dụng cho {item.machineQuota} máy.</span>
-                          <span className="icon check"><i className="fas fa-check"></i></span>
-                        </li>
-                      </ul>
-                      <div className="btn" onClick={() => routeChange(item.subscriptionId)}><button>Mua</button></div>
-                    </div>
-                    : <div className="table basic">
-                      <div className="price-section">
-                        <div className="price-area">
-                          <div className="inner-area">
-                          <span className="text">VNĐ</span>
-                            <span className="price">{item.cost.toLocaleString("de-DE")}</span>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="package-name">Gói {item.subscriptionId}</div>
-                      <ul className="features">
-                        <li>
-                          <span className="list-name">Thời gian hiệu lực {item.duration} ngày.</span>
-                          <span className="icon check"><i className="fas fa-check"></i></span>
-                        </li>
-                        <li>
-                          <span className="list-name">Tối đa sử dụng cho {item.machineQuota} máy.</span>
-                          <span className="icon check"><i className="fas fa-check"></i></span>
-                        </li>
-                      </ul>
-                      <div className="btn" onClick={() => routeChange(item.subscriptionId)}><button>Mua</button></div>
-                    </div>
-                  }
+        <Subscription value={value} index={0}>
+          <div className="container">
+            <div className="row">
+              <div className="col-md-4 col-sm-6">
+                <div className="pricingTable">
+                  <h3 className="title">STANDARD</h3>
+                  <div className="price-value">
+                    <span className="amount">500.000</span>
+                    <span className="currency">VNĐ</span>
+                    <span className="month">/tháng</span>
+                  </div>
+                  <ul className="pricing-content">
+                    <li><b>50GB</b> Disk Space</li>
+                    <li><b>50</b> Email Accounts</li>
+                    <li><b>50GB</b> Bandwidth</li>
+                    <li><b>10</b> Subdomains</li>
+                    <li><b>15</b> Domains</li>
+                  </ul>
+                  <Link className="pricingTable-signup">Order Now</Link>
                 </div>
-              </Subscription>
-            )
-            : 'Không tìm thấy gói đăng ký khả dụng'
-        }
-      <Subscription value={value} index={1}>
-        <section className="u-align-center u-clearfix u-section-1" id="sec-b42b">
-          <div className="u-clearfix u-sheet u-sheet-1">
-
-            <div className="u-expanded-width u-table u-table-responsive u-table-1">
-              <table className="u-table-entity u-table-entity-1">
-                <colgroup>
-                  <col width="5%" />
-                  <col width="35%" />
-                  <col width="30%" />
-                  <col width="30%" />
-                </colgroup>
-                <thead className="u-palette-4-base u-table-header u-table-header-1">
-                  <tr style={{ height: "21px" }}>
-                    <th className="u-border-1 u-border-custom-color-1 u-palette-2-base u-table-cell u-table-cell-1">STT</th>
-                    <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-2">Tên gói</th>
-                    <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-3">Ngày đăng ký</th>
-                    <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-5">Giá gói</th>
-                  </tr>
-                </thead>
-                <tbody className="u-table-body">
-                  <tr style={{ height: "76px" }}>
-                    <td className="u-border-1 u-border-grey-30 u-first-column u-grey-5 u-table-cell u-table-cell-5">1</td>
-                    <td className="u-border-1 u-border-grey-30 u-table-cell">Gói 1 tháng</td>
-                    <td className="u-border-1 u-border-grey-30 u-table-cell">01/12/2022</td>
-                    <td className="u-border-1 u-border-grey-30 u-table-cell ">100.000 VNĐ</td>
-                  </tr>
-                  <tr style={{ height: "76px" }}>
-                    <td className="u-border-1 u-border-grey-30 u-first-column u-grey-5 u-table-cell u-table-cell-9">2</td>
-                    <td className="u-border-1 u-border-grey-30 u-table-cell">Gói 1 tháng</td>
-                    <td className="u-border-1 u-border-grey-30 u-table-cell">01/01/2023</td>
-                    <td className="u-border-1 u-border-grey-30 u-table-cell ">100.000 VNĐ</td>
-                  </tr>
-                </tbody>
-              </table>
+              </div>
+              <div className="col-md-4 col-sm-6">
+                <div className="pricingTable pink">
+                  <h3 className="title">BUSINESS</h3>
+                  <div className="price-value">
+                    <span className="amount">1.000.000</span>
+                    <span className="currency">VNĐ</span>
+                    <span className="month">/tháng</span>
+                  </div>
+                  <ul className="pricing-content">
+                    <li><b>60GB</b> Disk Space</li>
+                    <li><b>60</b> Email Accounts</li>
+                    <li><b>60GB</b> Bandwidth</li>
+                    <li><b>15</b> Subdomains</li>
+                    <li><b>20</b> Domains</li>
+                  </ul>
+                  <Link className="pricingTable-signup">Order Now</Link>
+                </div>
+              </div>
+              <div className="col-md-4 col-sm-6">
+                <div className="pricingTable blue">
+                  <h3 className="title">PREMIUM</h3>
+                  <div className="price-value">
+                    <span className="amount">10.500.000</span>
+                    <span className="currency">VNĐ</span>
+                    <span className="month">/tháng</span>
+                  </div>
+                  <ul className="pricing-content">
+                    <li><b>70GB</b> Disk Space</li>
+                    <li><b>70</b> Email Accounts</li>
+                    <li><b>70GB</b> Bandwidth</li>
+                    <li><b>20</b> Subdomains</li>
+                    <li><b>25</b> Domains</li>
+                  </ul>
+                  <Link className="pricingTable-signup">Order Now</Link>
+                </div>
+              </div>
             </div>
-            
           </div>
-        </section>
-      </Subscription>
-    </Box>
+        </Subscription>
+        <Subscription value={value} index={1}>
+          <section className="u-align-center u-clearfix u-section-1" id="sec-b42b">
+            <div className="u-clearfix u-sheet u-sheet-1">
+
+              <div className="u-expanded-width u-table u-table-responsive u-table-1">
+                <table className="u-table-entity u-table-entity-1">
+                  <colgroup>
+                    <col width="5%" />
+                    <col width="35%" />
+                    <col width="30%" />
+                    <col width="30%" />
+                  </colgroup>
+                  <thead className="u-palette-4-base u-table-header u-table-header-1">
+                    <tr style={{ height: "21px" }}>
+                      <th className="u-border-1 u-border-custom-color-1 u-palette-2-base u-table-cell u-table-cell-1">STT</th>
+                      <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-2">Tên gói</th>
+                      <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-3">Ngày đăng ký</th>
+                      <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-5">Giá gói</th>
+                    </tr>
+                  </thead>
+                  <tbody className="u-table-body">
+                    <tr style={{ height: "76px" }}>
+                      <td className="u-border-1 u-border-grey-30 u-first-column u-grey-5 u-table-cell u-table-cell-5">1</td>
+                      <td className="u-border-1 u-border-grey-30 u-table-cell">Gói 1 tháng</td>
+                      <td className="u-border-1 u-border-grey-30 u-table-cell">01/12/2022</td>
+                      <td className="u-border-1 u-border-grey-30 u-table-cell ">100.000 VNĐ</td>
+                    </tr>
+                    <tr style={{ height: "76px" }}>
+                      <td className="u-border-1 u-border-grey-30 u-first-column u-grey-5 u-table-cell u-table-cell-9">2</td>
+                      <td className="u-border-1 u-border-grey-30 u-table-cell">Gói 1 tháng</td>
+                      <td className="u-border-1 u-border-grey-30 u-table-cell">01/01/2023</td>
+                      <td className="u-border-1 u-border-grey-30 u-table-cell ">100.000 VNĐ</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+            </div>
+          </section>
+        </Subscription>
+      </Box>
     </WithPermission >
 
   );

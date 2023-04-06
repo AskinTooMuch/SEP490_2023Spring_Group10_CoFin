@@ -57,33 +57,44 @@ export default function SubscriptionPayment() {
     }
 
     return (
-        <div className='row'>
+        <div className='row' style={{marginTop:"50px"}}>
             <div className='col-md-3' />
             <div className='col-md-6'>
-                {subscriptionInformation !== ""
-                    ? <div>
-                        <h2>Thanh toán</h2>
-                        <p>Gói {subscriptionInformation.subscriptionId}</p>
-                        <p> - Giới hạn {subscriptionInformation.machineQuota} máy sử dụng cùng lúc.</p>
-                        {subscriptionInformation.machineRunning >> subscriptionInformation.machineQuota
-                            ? <p className='text-warning'>Hiện tại cơ sở đang có {subscriptionInformation.machineRunning} máy đang hoạt động. 
-                            Vui lòng chuyển lô trứng về {subscriptionInformation.machineQuota} máy hoặc ít hơn
-                                trước khi chuyển sang gói này.</p>
+                <div className="container">
+                    <div className="pricingTable orange">
+                        <h3 className="title">Gói {subscriptionInformation.subscriptionId}</h3>
+                        <div className="price-value">
+                            <span className="amount">500.000</span>
+                            <span className="currency">VNĐ</span>
+                            <span className="month">/tháng</span>
+                        </div>
+                        {subscriptionInformation !== ""
+                            ?
+
+                            <ul className="pricing-content">
+                                <li> <b> - Giới hạn {subscriptionInformation.machineQuota} máy sử dụng cùng lúc.</b>
+                                    {subscriptionInformation.machineRunning >> subscriptionInformation.machineQuota
+                                        ? <b className='text-warning'>Hiện tại cơ sở đang có {subscriptionInformation.machineRunning} máy đang hoạt động.
+                                            Vui lòng chuyển lô trứng về {subscriptionInformation.machineQuota} máy hoặc ít hơn
+                                            trước khi chuyển sang gói này.</b>
+                                        : <></>
+                                    }</li>
+                                <li>  <b> - Sử dụng trong vòng {subscriptionInformation.duration} ngày kể từ lúc thanh toán thành công.</b></li>
+                                <li><b>Giá gói   : {subscriptionInformation.cost.toLocaleString('vi', { style: 'currency', currency: 'VND' })}</b></li>
+                                <li> <b>Giảm giá  : {subscriptionInformation.discount.toLocaleString('vi', { style: 'currency', currency: 'VND' })}</b></li>
+                                <li><b>Thành tiền: {final.toLocaleString('vi', { style: 'currency', currency: 'VND' })}</b></li>
+                            </ul>
+
+
                             : <></>
+
                         }
-                        <p> - Sử dụng trong vòng {subscriptionInformation.duration} ngày kể từ lúc thanh toán thành công.</p>
-                        <p>Giá gói   : {subscriptionInformation.cost.toLocaleString('vi', { style: 'currency', currency: 'VND' })}</p>
-                        <p>Giảm giá  : {subscriptionInformation.discount.toLocaleString('vi', { style: 'currency', currency: 'VND' })}</p>
-                        <p>Thành tiền: {final.toLocaleString('vi', { style: 'currency', currency: 'VND' })}</p>
+                        <h4 style={{color:"#ffb58d"}}>Thanh toán</h4>
+                        <Elements stripe={stripeTestPromise}>
+                            <PaymentForm data={{ id: id, final: final }} />
+                        </Elements>
                     </div>
-
-                    : <></>
-
-                }
-
-                <Elements stripe={stripeTestPromise}>
-                    <PaymentForm data={{ id: id, final: final }} />
-                </Elements>
+                </div>
             </div>
             <div className='col-md-3'></div>
 

@@ -2,23 +2,20 @@ import React, { useState, useRef, useEffect } from 'react';
 import { CardElement, useElements, useStripe } from '@stripe/react-stripe-js';
 import axios from 'axios';
 import { toast } from 'react-toastify';
-
+import "../css/subscribe.css"
 const CARD_OPTIONS = {
     iconStyle: 'solid',
     style: {
         base: {
-            iconColor: '#C4F0FF',
-            color: '#000000',
-            fontWeight: 500,
-            fontFamily: 'Roboto, Open Sands, Segoe UI, sans-serif',
-            fontSize: '16px',
-            fontSmoothing: 'antialiased',
-            ':-webkit-autofill': { color: "#fce883" },
-            '::placeholder': { color: '#87BBFD' }
-        },
-        invalid: {
-            iconColor: '#FFC7EE',
-            color: '#FFC7EE'
+            iconColor: '#ffb58d',
+            color: '#f46110',
+            lineHeight: '40px',
+            fontWeight: 300,
+            fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
+            fontSize: '20px',
+            '::placeholder': {
+                color: '#ffb58d',
+            }
         }
     }
 }
@@ -74,22 +71,28 @@ export default function PaymentForm(props) {
             console.log(error.message);
         }
     }
+
     return (
         <>
             {!success
                 ? <form onSubmit={handleSubmit}>
-                    <fieldset className='formGroup'>
+                    <fieldset className='formGroup' style={{ borderRadius: "15px" }}>
                         <div className='formRow'>
-                            <CardElement options={CARD_OPTIONS} />
+                            <CardElement style={{
+
+                            }} options={CARD_OPTIONS} />
                         </div>
                     </fieldset>
-                    <button>Pay</button>
+                    <br />
+                    <div style={{ textAlign: "center" }}>
+                        <button style={{ display: "inline-block", width: "50%" }} className='btn btn-light'>Pay</button>
+                    </div>
                 </form>
                 : <div>
                     <h2>Success</h2>
                 </div>
             }
-           
+
         </>
     )
 }
