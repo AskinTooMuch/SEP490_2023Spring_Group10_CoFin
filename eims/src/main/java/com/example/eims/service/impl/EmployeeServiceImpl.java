@@ -6,7 +6,8 @@
  *
  * Record of change:<br>
  * DATE         Version     Author      DESCRIPTION<br>
- * 15/03/2023   1.0         DuongVV     First Deploy<br>
+ * 18/03/2023   1.0         DuongNH     First Deploy<br>
+ * 21/03/2023   2.0         DuongNH     Add function<br>
  * 23/03/2023   1.1         ChucNV      Update code according to new relations<br>
  */
 package com.example.eims.service.impl;
@@ -21,7 +22,9 @@ import com.example.eims.repository.SalaryHistoryRepository;
 import com.example.eims.repository.UserRepository;
 import com.example.eims.repository.WorkInRepository;
 import com.example.eims.service.interfaces.IEmployeeService;
+import com.example.eims.utils.AddressPojo;
 import com.example.eims.utils.StringDealer;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -51,6 +54,8 @@ public class EmployeeServiceImpl implements IEmployeeService {
     @Autowired
     private final PasswordEncoder passwordEncoder;
 
+    private final ObjectMapper objectMapper = new ObjectMapper();
+
     public EmployeeServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, WorkInRepository workInRepository,
                                FacilityRepository facilityRepository) {
         this.userRepository = userRepository;
@@ -68,10 +73,6 @@ public class EmployeeServiceImpl implements IEmployeeService {
      */
     @Override
     public ResponseEntity<?> createNewEmployee(CreateEmployeeDTO createEmployeeDTO) {
-        Optional<Facility> facility = facilityRepository.findByFacilityId(createEmployeeDTO.getFacilityId());
-        if(!facility.isPresent()){
-            return new ResponseEntity<>("Cơ sở hiện không được hoạt động", HttpStatus.BAD_REQUEST);
-        }
         if (createEmployeeDTO.getEmployeeName() == null || stringDealer.trimMax(createEmployeeDTO.getEmployeeName()).equals("")) { /* Username is empty */
             return new ResponseEntity<>("Tên không được để trống", HttpStatus.BAD_REQUEST);
         }
@@ -90,7 +91,7 @@ public class EmployeeServiceImpl implements IEmployeeService {
         }
         String phone = stringDealer.trimMax(createEmployeeDTO.getEmployeePhone());
         if (!stringDealer.checkPhoneRegex(phone)) { /* Phone number is not valid*/
-            return new ResponseEntity<>("Số điện thoại không đúng đinh dạng", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Số điện thoại không đúng định dạng", HttpStatus.BAD_REQUEST);
         }
         if (userRepository.existsByPhone(phone)) {/* Phone number is existed*/
             return new ResponseEntity<>("Số điện thoại đã được sử dụng", HttpStatus.BAD_REQUEST);
@@ -110,7 +111,35 @@ public class EmployeeServiceImpl implements IEmployeeService {
         if (createEmployeeDTO.getEmployeeAddress() == null || stringDealer.trimMax(createEmployeeDTO.getEmployeeAddress()).equals("")) { /* Address is empty */
             return new ResponseEntity<>("Địa chỉ không được để trống", HttpStatus.BAD_REQUEST);
         }
-        String address = stringDealer.trimMax(createEmployeeDTO.getEmployeeAddress());
+        String userAddress = stringDealer.trimMax(createEmployeeDTO.getEmployeeAddress());
+        if(userAddress.equals("")){
+            return new ResponseEntity<>("Địa chỉ không được để trống", HttpStatus.BAD_REQUEST);
+        }
+        try {
+            AddressPojo address = objectMapper.readValue(userAddress, AddressPojo.class);
+            address.city = stringDealer.trimMax(address.city);
+            address.district = stringDealer.trimMax(address.district);
+            address.ward = stringDealer.trimMax(address.ward);
+            address.street = stringDealer.trimMax(address.street);
+            if (address.street.equals("")) {
+                return new ResponseEntity<>("Số nhà không được để trống", HttpStatus.BAD_REQUEST);
+            }
+            if (address.street.length() > 30) {
+                return new ResponseEntity<>("Số nhà không được dài hơn 30 ký tự", HttpStatus.BAD_REQUEST);
+            }
+            if (address.city.equals("")) {
+                return new ResponseEntity<>("Thành phố không được để trống", HttpStatus.BAD_REQUEST);
+            }
+            if (address.district.equals("")) {
+                return new ResponseEntity<>("Huyện không được để trống", HttpStatus.BAD_REQUEST);
+            }
+            if (address.ward.equals("")) {
+                return new ResponseEntity<>("Xã không được để trống", HttpStatus.BAD_REQUEST);
+            }
+            userAddress = objectMapper.writeValueAsString(address);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
         // Password
         if (createEmployeeDTO.getEmployeePassword() == null || stringDealer.trimMax(createEmployeeDTO.getEmployeePassword()).equals("")) { /* Password is empty */
             return new ResponseEntity<>("Mật khẩu không được để trống", HttpStatus.BAD_REQUEST);
@@ -123,6 +152,12 @@ public class EmployeeServiceImpl implements IEmployeeService {
             return new ResponseEntity<>("Mật khẩu không được dài quá 20 ký tự", HttpStatus.BAD_REQUEST);
         }
         Float salary = createEmployeeDTO.getSalary();
+        if(salary < 0){
+            return new ResponseEntity<>("Tiền lương không được bé hơn 0", HttpStatus.BAD_REQUEST);
+        }
+        if(salary >= 9999999999999.99){
+            return new ResponseEntity<>("Tiền lương không được vượt quá 9999999999999.99", HttpStatus.BAD_REQUEST);
+        }
 
         //set employee information
         User employeeInformation = new User();
@@ -131,7 +166,7 @@ public class EmployeeServiceImpl implements IEmployeeService {
         Date date = stringDealer.convertToDateAndFormat(sDate);
         employeeInformation.setDob(date);
         employeeInformation.setPhone(phone);
-        employeeInformation.setAddress(address);
+        employeeInformation.setAddress(userAddress);
         List roleList = new ArrayList<Role>();
         roleList.add(new Role(3, "ROLE_EMPLOYEE", true));
         employeeInformation.setRoles(roleList);     /* Role EMPLOYEE */
@@ -172,11 +207,6 @@ public class EmployeeServiceImpl implements IEmployeeService {
     @Override
     public ResponseEntity<?> updateEmployee(UpdateEmployeeDTO updateEmployeeDTO) {
         //facility check
-        Optional<Facility> facility = facilityRepository.findByFacilityId(updateEmployeeDTO.getFacilityId());
-        if(!facility.isPresent()){
-            return new ResponseEntity<>("Cơ sở hiện không được hoạt động", HttpStatus.BAD_REQUEST);
-        }
-
         Long employeeId = updateEmployeeDTO.getEmployeeId();
         Optional<User> oldEmployeeInfo = userRepository.findByUserId(employeeId);
         //check if employee id exist
@@ -212,7 +242,10 @@ public class EmployeeServiceImpl implements IEmployeeService {
         }
         String phone = stringDealer.trimMax(updateEmployeeDTO.getEmployeePhone());
         if (!stringDealer.checkPhoneRegex(phone)) { /* Phone number is not valid*/
-            return new ResponseEntity<>("Số điện thoại không đúng đinh dạng", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Số điện thoại không đúng định dạng", HttpStatus.BAD_REQUEST);
+        }
+        if (!phone.equals(oldEmployeeInfo.get().getPhone()) && userRepository.existsByPhone(phone)) {/* Phone number is existed*/
+            return new ResponseEntity<>("Số điện thoại đã được sử dụng", HttpStatus.BAD_REQUEST);
         }
         // Email
         String email = "";
@@ -229,9 +262,49 @@ public class EmployeeServiceImpl implements IEmployeeService {
         if (updateEmployeeDTO.getEmployeeAddress() == null || stringDealer.trimMax(updateEmployeeDTO.getEmployeeAddress()).equals("")) { /* Address is empty */
             return new ResponseEntity<>("Địa chỉ không được để trống", HttpStatus.BAD_REQUEST);
         }
-        String address = stringDealer.trimMax(updateEmployeeDTO.getEmployeeAddress());
+        String userAddress = stringDealer.trimMax(updateEmployeeDTO.getEmployeeAddress());
+        if(userAddress.equals("")){
+            return new ResponseEntity<>("Địa chỉ không được để trống", HttpStatus.BAD_REQUEST);
+        }
+        try {
+            AddressPojo address = objectMapper.readValue(userAddress, AddressPojo.class);
+            address.city = stringDealer.trimMax(address.city);
+            address.district = stringDealer.trimMax(address.district);
+            address.ward = stringDealer.trimMax(address.ward);
+            address.street = stringDealer.trimMax(address.street);
+            if (address.street.equals("")) {
+                return new ResponseEntity<>("Số nhà không được để trống", HttpStatus.BAD_REQUEST);
+            }
+            if (address.street.length() > 30) {
+                return new ResponseEntity<>("Số nhà không được dài hơn 30 ký tự", HttpStatus.BAD_REQUEST);
+            }
+            if (address.city.equals("")) {
+                return new ResponseEntity<>("Thành phố không được để trống", HttpStatus.BAD_REQUEST);
+            }
+            if (address.district.equals("")) {
+                return new ResponseEntity<>("Huyện không được để trống", HttpStatus.BAD_REQUEST);
+            }
+            if (address.ward.equals("")) {
+                return new ResponseEntity<>("Xã không được để trống", HttpStatus.BAD_REQUEST);
+            }
+            userAddress = objectMapper.writeValueAsString(address);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
         Float salary = updateEmployeeDTO.getSalary();
+        if(salary < 0){
+            return new ResponseEntity<>("Tiền lương không được bé hơn 0", HttpStatus.BAD_REQUEST);
+        }
+        if(salary >= 9999999999999.99){
+            return new ResponseEntity<>("Tiền lương không được vượt quá 9999999999999.99", HttpStatus.BAD_REQUEST);
+        }
+
+        int status = updateEmployeeDTO.getStatus();
+        if(status !=0 && status != 2){
+            return new ResponseEntity<>("Trạng thái mới không hợp lệ", HttpStatus.BAD_REQUEST);
+        }
+
         if (oldEmployeeInfo.isPresent()){
             User oldEmployeInfor = oldEmployeeInfo.get();
 
@@ -243,11 +316,11 @@ public class EmployeeServiceImpl implements IEmployeeService {
             Date date = stringDealer.convertToDateAndFormat(sDate);
             employeeNewInformation.setDob(date);
             employeeNewInformation.setPhone(phone);
-            employeeNewInformation.setAddress(address);
+            employeeNewInformation.setAddress(userAddress);
             List roleList = new ArrayList<Role>();
             roleList.add(new Role(3, "ROLE_EMPLOYEE", true));
             employeeNewInformation.setRoles(roleList);     /* Role EMPLOYEE */
-            employeeNewInformation.setStatus(updateEmployeeDTO.getStatus());
+            employeeNewInformation.setStatus(status);
             employeeNewInformation.setPassword(oldEmployeInfor.getPassword());
             employeeNewInformation.setSalary(salary);
             try {
@@ -330,6 +403,9 @@ public class EmployeeServiceImpl implements IEmployeeService {
      */
     @Override
     public ResponseEntity<?> viewAllEmployee(Long facilityId) {
+        if(!facilityRepository.existsByFacilityId(facilityId)){
+            return new ResponseEntity<>("Cơ sở không hợp lệ",HttpStatus.BAD_REQUEST);
+        }
         //get id of all employee work in facility
         Optional<List<WorkIn>> workInListOpt = workInRepository.findAllByFacilityId(facilityId);
         if(workInListOpt.isPresent()){
@@ -360,6 +436,9 @@ public class EmployeeServiceImpl implements IEmployeeService {
      */
     @Override
     public ResponseEntity<?> searchEmployeeByNameOrPhone(Long facilityId, String searchKey) {
+        if(!facilityRepository.existsByFacilityId(facilityId)){
+            return new ResponseEntity<>("Cơ sở không hợp lệ",HttpStatus.BAD_REQUEST);
+        }
         if(searchKey == null || stringDealer.trimMax(searchKey).equals("")){
             return new ResponseEntity<>("Nhập từ khóa để tìm kiếm",HttpStatus.BAD_REQUEST);
         }

@@ -6,7 +6,9 @@
  *
  * Record of change:<br>
  * DATE         Version     Author      DESCRIPTION<br>
- * 15/03/2023   1.0         DuongVV     First Deploy<br>
+ * 18/03/2023   1.0         DuongNH     First Deploy<br>
+ * 18/03/2023   2.0         DuongNH     Add function<br>
+ * 29/03/2023   3.0         DuongNH     Add search function<br>
  */
 
 package com.example.eims.controller;
