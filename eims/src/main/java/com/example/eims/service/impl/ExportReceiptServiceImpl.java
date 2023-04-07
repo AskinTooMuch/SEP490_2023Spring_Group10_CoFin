@@ -82,7 +82,8 @@ public class ExportReceiptServiceImpl implements IExportReceiptService {
      */
     @Override
     public ResponseEntity<?> viewExportsByFacility(Long facilityId) {
-        Optional<List<ExportReceipt>> exportReceiptListOptional = exportReceiptRepository.findByFacilityId(facilityId);
+        Optional<List<ExportReceipt>> exportReceiptListOptional = exportReceiptRepository
+                .findByFacilityIdOrderByExportDateDesc(facilityId);
         if (exportReceiptListOptional.isPresent()) {
             List<ExportReceipt> exportReceiptList = exportReceiptListOptional.get();
             List<ExportReceiptListItemDTO> listDTO = new ArrayList<>();

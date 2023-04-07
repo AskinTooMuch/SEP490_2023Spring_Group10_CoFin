@@ -23,6 +23,7 @@ import java.util.Optional;
 
 public interface ImportReceiptRepository extends JpaRepository<ImportReceipt, Long> {
     Optional<List<ImportReceipt>> findByFacilityId(Long facilityId);
+    Optional<List<ImportReceipt>> findByFacilityIdOrderByImportDateDesc(Long facilityId);
     Optional<List<ImportReceipt>> findByUserId(Long userId);
     Optional<List<ImportReceipt>> findBySupplierId(Long supplierId);
     Optional<ImportReceipt> findByImportId(Long importId);

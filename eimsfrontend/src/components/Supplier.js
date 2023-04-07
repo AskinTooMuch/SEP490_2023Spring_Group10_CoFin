@@ -412,7 +412,10 @@ const Supplier = () => {
                       </td>
                     }
                   </tr>
-                ) : 'Loading'
+                ) :
+                <tr>
+                  <td colSpan='5'>Hiện tại không có nhà cung cấp nào được lưu trong hệ thống</td>
+                </tr>
             }
           </tbody>
         </table>

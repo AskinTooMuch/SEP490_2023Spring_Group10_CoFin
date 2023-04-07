@@ -79,7 +79,8 @@ public class ImportReceiptServiceImpl implements IImportReceiptService {
      */
     @Override
     public ResponseEntity<?> viewImportsByFacility(Long facilityId) {
-        Optional<List<ImportReceipt>> importReceiptListOptional = importReceiptRepository.findByFacilityId(facilityId);
+        Optional<List<ImportReceipt>> importReceiptListOptional = importReceiptRepository
+                .findByFacilityIdOrderByImportDateDesc(facilityId);
         if (importReceiptListOptional.isPresent()) {
             List<ImportReceipt> importReceiptList = importReceiptListOptional.get();
             List<ImportReceiptListItemDTO> listDTO = new ArrayList<>();

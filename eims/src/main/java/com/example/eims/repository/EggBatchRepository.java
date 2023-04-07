@@ -19,5 +19,6 @@ import java.util.Optional;
 
 public interface EggBatchRepository extends JpaRepository<EggBatch, Long> {
     Optional<List<EggBatch>> findByImportId(Long importId);
+    Optional<List<EggBatch>> findByImportIdOrderByStatusDesc(Long importId);
     Optional<EggBatch> findByEggBatchId(Long eggBatchId);
 }

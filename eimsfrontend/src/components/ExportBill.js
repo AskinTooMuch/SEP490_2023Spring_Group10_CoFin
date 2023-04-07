@@ -1,4 +1,4 @@
-import React, { useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from "react-router-dom";
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import ImportExportIcon from '@mui/icons-material/ImportExport';
@@ -39,7 +39,7 @@ const ExportBill = () => {
                     },
                     withCredentials: true
                 });
-                console.log(JSON.stringify(result.data))
+            console.log(JSON.stringify(result.data))
             setExportList(result.data);
             // Toast message
             if (mess) {
@@ -58,7 +58,7 @@ const ExportBill = () => {
             }
         }
     }
-    
+
     let navigate = useNavigate();
     const routeChange = (eid) => {
         navigate('/exportbilldetail', { state: { id: eid } });
@@ -108,9 +108,9 @@ const ExportBill = () => {
                                 </thead>
                                 <tbody className="u-table-body">
 
-                                {
+                                    {
                                         exportList && exportList.length > 0 ?
-                                        exportList.map((item, index) =>
+                                            exportList.map((item, index) =>
                                                 <tr className='trclick' style={{ height: "76px" }} onClick={() => routeChange(item.exportId)}>
                                                     <td className="u-border-1 u-border-grey-30 u-first-column u-grey-5 u-table-cell u-table-cell-5">{index + 1}</td>
                                                     <td className="u-border-1 u-border-grey-30 u-table-cell">{item.exportId}</td>
@@ -128,7 +128,10 @@ const ExportBill = () => {
                                                                 Chưa thanh toán đủ</td>
                                                     }
                                                 </tr>
-                                            ) : 'Nothing'
+                                            ) :
+                                            <tr>
+                                                <td colSpan='5'>Chưa có hóa đơn xuất nào được lưu lên hệ thống</td>
+                                            </tr>
                                     }
 
                                 </tbody>

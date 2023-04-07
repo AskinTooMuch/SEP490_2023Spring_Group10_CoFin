@@ -303,7 +303,10 @@ export default function BasicTabs() {
                                                             </td>
                                                         }
                                                     </tr>
-                                                ) : 'Nothing'
+                                                ) : 
+                                                <tr>
+                                                    <td colSpan='5'>Chưa có máy nào được lưu lên hệ thống</td>
+                                                </tr>
                                         }
 
                                     </tbody>

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import SearchIcon from '@mui/icons-material/Search';
-import {toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import axios from 'axios';
 
 const StockReport = () => {
@@ -62,7 +62,7 @@ const StockReport = () => {
     // handle choose product
     const handleFilter = (event) => {
         let actualValue = event.target.value;
-            loadOneAvailable(actualValue);
+        loadOneAvailable(actualValue);
     }
 
     // Load list egg product available
@@ -166,7 +166,10 @@ const StockReport = () => {
                                                                 <td className="u-border-1 u-border-grey-30 u-table-cell">{item.incubationDate.replace("T", " ")}</td>
                                                             </tr>
                                                         )
-                                                        : 'Nothing'
+                                                        :
+                                                        <tr>
+                                                            <td colSpan='5'>Hiện tại không có sản phẩm nào</td>
+                                                        </tr>
                                                 }
                                             </tbody>
                                         </table>
@@ -218,7 +221,10 @@ const StockReport = () => {
                                                                 <td className="u-border-1 u-border-grey-30 u-table-cell">{item.incubationDate.replace("T", " ")}</td>
                                                             </tr>
                                                         )
-                                                        : 'Nothing'
+                                                        :
+                                                        <tr>
+                                                            <td colSpan='5'>Hiện tại không có sản phẩm nào</td>
+                                                        </tr>
                                                 }
                                             </tbody>
                                         </table>
@@ -229,7 +235,7 @@ const StockReport = () => {
                     </div>
                 </section>
             </div>
-           
+
         </div >
 
     );
