@@ -115,7 +115,8 @@ public class AuthServiceImpl implements IAuthService {
                 return new ResponseEntity<>("Đơn đăng ký chưa được chấp thuận", HttpStatus.BAD_REQUEST);
             }
             if (registration.getStatus() == 1L) { /* status = 1 (rejected) */
-                return new ResponseEntity<>("Đơn đăng ký bị từ chối ", HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>("Đơn đăng ký bị từ chối, liên hệ EIMS.contact để biết thêm thông tin",
+                        HttpStatus.BAD_REQUEST);
             }
         }
         // Check status of Account

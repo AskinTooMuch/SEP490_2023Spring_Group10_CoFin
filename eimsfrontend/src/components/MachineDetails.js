@@ -75,6 +75,7 @@ export default function BasicTabs() {
     //DTO
     // DTO for update machine
     const [updateMachineDTO, setUpdateMachineDTO] = useState({
+        facilityId: sessionStorage.getItem("facilityId"),
         machineId: "",
         machineName: "",
         status: "",
@@ -119,6 +120,7 @@ export default function BasicTabs() {
 
         // Set inf
         setUpdateMachineDTO({
+            facilityId: sessionStorage.getItem("facilityId"),
             machineId: result.data.machineId,
             machineName: result.data.machineName,
             status: result.data.status,

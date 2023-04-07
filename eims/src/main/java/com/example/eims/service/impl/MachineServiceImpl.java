@@ -57,12 +57,18 @@ public class MachineServiceImpl implements IMachineService {
     private final SpecieRepository specieRepository;
     @Autowired
     private final IncubationPhaseRepository incubationPhaseRepository;
+    @Autowired
+    private final SubscriptionRepository subscriptionRepository;
+    @Autowired
+    private final UserSubscriptionRepository userSubscriptionRepository;
     private final StringDealer stringDealer;
 
     public MachineServiceImpl(MachineRepository machineRepository, FacilityRepository facilityRepository,
                               EggLocationRepository eggLocationRepository, MachineTypeRepository machineTypeRepository,
                               EggProductRepository eggProductRepository, BreedRepository breedRepository,
-                              SpecieRepository specieRepository, IncubationPhaseRepository incubationPhaseRepository) {
+                              SpecieRepository specieRepository, IncubationPhaseRepository incubationPhaseRepository,
+                              SubscriptionRepository subscriptionRepository,
+                              UserSubscriptionRepository userSubscriptionRepository) {
         this.machineRepository = machineRepository;
         this.facilityRepository = facilityRepository;
         this.eggLocationRepository = eggLocationRepository;
@@ -71,6 +77,8 @@ public class MachineServiceImpl implements IMachineService {
         this.breedRepository = breedRepository;
         this.specieRepository = specieRepository;
         this.incubationPhaseRepository = incubationPhaseRepository;
+        this.subscriptionRepository = subscriptionRepository;
+        this.userSubscriptionRepository = userSubscriptionRepository;
         this.stringDealer = new StringDealer();
     }
 
@@ -270,7 +278,27 @@ public class MachineServiceImpl implements IMachineService {
         // Retrieve machine's new information
         Optional<Machine> machineOptional = machineRepository.findByMachineId(updateMachineDTO.getMachineId());
         if (machineOptional.isPresent()) {
+            Long facilityId = updateMachineDTO.getFacilityId();
             Machine machine = machineOptional.get();
+
+            // Check subscription
+            int machineNumber = machineRepository.countActiveMachine(updateMachineDTO.getFacilityId());
+            Optional<UserSubscription> userSubscriptionOptional = userSubscriptionRepository
+                    .getUserSubscriptionByFacilityIdAndStatus(facilityId, true);
+            if (userSubscriptionOptional.isEmpty()) {
+                return new ResponseEntity<>("Chưa đăng kí hoặc gói đăng kí đã hết hạn", HttpStatus.BAD_REQUEST);
+            }
+            UserSubscription userSubscription = userSubscriptionOptional.get();
+            Subscription subscription = subscriptionRepository
+                    .findBySubscriptionId(userSubscription.getSubscriptionId()).get();
+            // Update active machine surpass the machine quota of subscription
+            if (machineNumber == subscription.getMachineQuota()
+                    && machine.getActive() == 0
+                    && updateMachineDTO.getActive() == 1) {
+                return new ResponseEntity<>(" Vượt quá giới hạn máy của gói đăng ký (" +
+                        subscription.getMachineQuota() + " máy), vui lòng nâng cấp gói", HttpStatus.BAD_REQUEST);
+            }
+
             // Check blank input
             // Machine's name
             String name = stringDealer.trimMax(updateMachineDTO.getMachineName());

@@ -19,6 +19,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
+import java.util.Optional;
+
 public interface UserSubscriptionRepository extends JpaRepository<UserSubscription, Long> {
     @Query(value = "SELECT COALESCE(FLOOR(ROUND((SELECT S.cost*0.3*(datediff(US.expire_date, now())/S.duration) \n" +
             "FROM subscription S JOIN user_subscription US ON S.subscription_id = US.subscription_id\n" +
@@ -39,4 +41,5 @@ public interface UserSubscriptionRepository extends JpaRepository<UserSubscripti
 @Query(value="SELECT COALESCE((SELECT us_id FROM user_subscription US JOIN subscription S ON US.subscription_id WHERE US.status = 1 AND facility_id = ?1\n" +
         "AND S.machine_quota >= (SELECT COUNT(machine_id) AS RunningMachine FROM machine WHERE facility_id = ?1 AND active = 1 LIMIT 1) ORDER BY subscribe_date DESC LIMIT 1), 0) AS us_id; ", nativeQuery = true)
     Long getValidSubscription(Long facilityId);
+    Optional<UserSubscription> getUserSubscriptionByFacilityIdAndStatus(Long facilityId, boolean status);
 }

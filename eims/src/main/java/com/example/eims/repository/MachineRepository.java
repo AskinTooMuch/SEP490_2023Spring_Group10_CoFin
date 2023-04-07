@@ -35,4 +35,6 @@ public interface MachineRepository extends JpaRepository<Machine, Long> {
             nativeQuery = true)
     int getCurrentAmount(Long machineId);
     Optional<List<Machine>> findByFacilityIdAndActive(Long facilityId, int active);
+    @Query(value = " SELECT COUNT(*) FROM eims.machine WHERE facility_id = ?1 AND active = true", nativeQuery = true)
+    int countActiveMachine(Long facilityId);
 }

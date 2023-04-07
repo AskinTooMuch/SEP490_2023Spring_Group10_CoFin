@@ -60,28 +60,25 @@ const StockReport = () => {
     });
 
     // handle choose product
-    const handleFilter = (event, field) => {
-        let actualValue = event.target.value
-        setPhaseNumber({
-            ...phaseNumber,
-            [field]: actualValue
-        })
+    const handleFilter = (event) => {
+        let actualValue = event.target.value;
+            loadOneAvailable(actualValue);
     }
 
     // Load list egg product available
-    const loadOneAvailable = async (phaseNumber) => {
-        if (phaseNumber == -1 || phaseNumber == null) {
+    const loadOneAvailable = async (number) => {
+        if (number == -1 || number == null) {
             loadAllAvailable();
             setDataLoaded(true);
         } else {
-            console.log(phaseNumber);
+            console.log(number);
             var list = ["0", "2", "3", "4", "6"];
             try {
                 const result = await axios.get(EGG_PRODUCT_AVAILBLE_ONE,
                     {
                         params: {
                             facilityId: sessionStorage.getItem("facilityId"),
-                            phaseNumber: phaseNumber
+                            phaseNumber: number
                         },
                         headers: {
                             'Content-Type': 'application/json',
@@ -90,7 +87,7 @@ const StockReport = () => {
                         withCredentials: true
                     });
                 console.log(JSON.stringify(result.data))
-                if (list.includes(phaseNumber)) {
+                if (list.includes(number)) {
                     setAllList({
                         eggStocks: result.data
                     });
@@ -127,7 +124,7 @@ const StockReport = () => {
                     {/* Tab kho trứng */}
                     <div className="content content-1">
                         <nav className="navbar justify-content-between" style={{ margin: "20px 0" }}>
-                            <select onChange={(e) => handleFilter(e, "egg")}
+                            <select onChange={(e) => handleFilter(e)}
                                 style={{ width: "" }} id="selectEgg" name="selectEgg" className="form-select" aria-label="Default select example">
                                 <option value="-1" selected>Tất cả</option>
                                 <option value="0">Trứng vỡ/dập</option>
@@ -136,11 +133,8 @@ const StockReport = () => {
                                 <option value="4">Trứng lộn</option>
                                 <option value="6">Trứng tắc</option>
                             </select>
-                            <div className="input-group-prepend">
-                                <button id="filterEgg" onClick={() => loadOneAvailable(phaseNumber.egg)}><span className="input-group-text" ><SearchIcon /></span></button>
-                            </div>
                         </nav>
-                        <br /><br />
+                        <br />
                         <div>
                             <section className="u-align-center u-clearfix u-section-1" id="sec-b42b">
                                 <div className="u-clearfix u-sheet u-sheet-1">
@@ -186,18 +180,15 @@ const StockReport = () => {
                     <div className="content content-2">
                         <nav className="navbar justify-content-between" style={{ margin: "20px 0" }}>
 
-                            <select onChange={(e) => handleFilter(e, "poultry")}
+                            <select onChange={(e) => handleFilter(e)}
                                 style={{ width: "" }} id="selectPoultry" name="selectPoultry" className="form-select" aria-label="Default select example">
                                 <option value="-1" selected>Tất cả</option>
                                 <option value="7">Con nở</option>
                                 <option value="8">Con đực</option>
                                 <option value="9">Con cái</option>
                             </select>
-                            <div className="input-group-prepend">
-                                <button id="filterPoultry" onClick={() => loadOneAvailable(phaseNumber.poultry)}><span className="input-group-text" ><SearchIcon /></span></button>
-                            </div>
                         </nav>
-                        <br /><br />
+                        <br />
                         <div>
                             <section className="u-align-center u-clearfix u-section-1" id="sec-b42b">
                                 <div className="u-clearfix u-sheet u-sheet-1">

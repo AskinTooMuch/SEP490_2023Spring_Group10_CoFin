@@ -32,16 +32,18 @@ const TotalIncome = () => {
         incomeLast: ""
     });
 
+    
+    // var year to search
+    var year = new Date().getFullYear();
+
     // Set value
     useEffect(() => {
         if (dataLoaded) return;
-        loadDefaultInMonth();
+        //loadInMonth(year);
         loadInYear();
         setDataLoaded(true);
     }, [dataLoaded]);
 
-    // var year to search
-    var year = new Date().getFullYear();
 
     // load report in month for current year
     const loadDefaultInMonth = async () => {
@@ -117,7 +119,7 @@ const TotalIncome = () => {
 
     // handle choose year
     const handleFilter = (event) => {
-        let actualValue = event.target.value
+        let actualValue = event.target.value;
         loadInMonth(actualValue);
     }
 
@@ -171,24 +173,33 @@ const TotalIncome = () => {
                     <div className="content content-1">
                         <select onChange={(e) => handleFilter(e)}
                             style={{ width: "fit-content" }} id="selectEgg" name="selectEgg" className="form-select" aria-label="Default select example">
-                            <option value={year} selected>Hiện tại</option>
+                            <option value = {0} disabled selected>Chọn năm</option>
                             {
                                 inYearList.yearList && inYearList.yearList.length > 0
                                     ? inYearList.yearList.map((item) =>
-                                        <option value={item}>{item}</option>
+                                    <option value={item}>{item}</option>
                                     )
                                     : ''
                             }
                         </select>
                         <br />
                         <table className="table table-bordered" >
+                            <colgroup>
+                                <col width="4%" />
+                                <col width="16%" />
+                                <col width="16%" />
+                                <col width="16%" />
+                                <col width="16%" />
+                                <col width="16%" />
+                                <col width="16%" />
+                            </colgroup>
                             <thead>
                                 <tr>
                                     <th scope="col">Tháng</th>
                                     <th scope="col">Chi phí</th>
                                     <th scope="col">Tiền lương</th>
-                                    <th scope="col">Chi</th>
-                                    <th scope="col">Thu</th>
+                                    <th scope="col">Nhập</th>
+                                    <th scope="col">Xuất</th>
                                     <th scope="col">Tổng thu</th>
                                     <th scope="col">Thực thu</th>
                                 </tr>
@@ -227,8 +238,8 @@ const TotalIncome = () => {
                                     <th scope="col">Năm</th>
                                     <th scope="col">Chi phí</th>
                                     <th scope="col">Tiền lương</th>
-                                    <th scope="col">Chi</th>
-                                    <th scope="col">Thu</th>
+                                    <th scope="col">Nhập</th>
+                                    <th scope="col">Xuất</th>
                                     <th scope="col">Tổng thu</th>
                                     <th scope="col">Thực thu</th>
                                 </tr>
