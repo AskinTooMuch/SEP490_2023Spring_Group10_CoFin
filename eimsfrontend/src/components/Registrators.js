@@ -64,15 +64,31 @@ const Registrators = () => {
 
     // Request Registration list and load the Registration list into the table rows
     const loadRegistrationList = async () => {
-        const result = await axios.get(REGISTRATION_GET_LIST,
-            {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Access-Control-Allow-Origin': '*'
-                },
-                withCredentials: true
-            });
-        setRegistrationList(result.data);
+        try {
+            const result = await axios.get(REGISTRATION_GET_LIST,
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Access-Control-Allow-Origin': '*'
+                    },
+                    withCredentials: true
+                });
+            setRegistrationList(result.data);
+        } catch (err) {
+            if (!err?.response) {
+                toast.error('Server không phản hồi');
+            } else {
+                if (err.response.data === '' || err.response.data === null) {
+                    toast.error('Lỗi không xác định');
+                } else {
+                    if ((err.response.data === null) || (err.response.data === '')) {
+                        toast.error('Có lỗi xảy ra, vui lòng thử lại');
+                    } else {
+                        toast.error(err.response.data);
+                    }
+                }
+            }
+        }
     }
 
     // Handle get Registration detail
@@ -90,6 +106,7 @@ const Registrators = () => {
         setRegistrationDetail(result.data);
         setUserAddress(JSON.parse(result.data.address));
         setFaciAddress(JSON.parse(result.data.facilityAddress));
+        console.log(registrationList);
     }
 
     // Handle Approve or Decline registration
@@ -122,11 +139,11 @@ const Registrators = () => {
             if (!err?.response) {
                 toast.error('Server không phản hồi');
             } else {
-                if ((err.response.data === null) || (err.response.data === '') ) {
-          toast.error('Có lỗi xảy ra, vui lòng thử lại');
-        } else {
-          toast.error(err.response.data);
-        }
+                if ((err.response.data === null) || (err.response.data === '')) {
+                    toast.error('Có lỗi xảy ra, vui lòng thử lại');
+                } else {
+                    toast.error(err.response.data);
+                }
             }
         }
     }
@@ -161,11 +178,11 @@ const Registrators = () => {
             if (!err?.response) {
                 toast.error('Server không phản hồi');
             } else {
-                if ((err.response.data === null) || (err.response.data === '') ) {
-          toast.error('Có lỗi xảy ra, vui lòng thử lại');
-        } else {
-          toast.error(err.response.data);
-        }
+                if ((err.response.data === null) || (err.response.data === '')) {
+                    toast.error('Có lỗi xảy ra, vui lòng thử lại');
+                } else {
+                    toast.error(err.response.data);
+                }
             }
         }
     }
@@ -315,7 +332,7 @@ const Registrators = () => {
                                                     <td className="u-border-1 u-border-grey-30 u-table-cell">{item.businessLicenseNumber}</td>
                                                     <td className="u-border-1 u-border-grey-30 u-table-cell">{item.registerDate}</td>
                                                 </tr>
-                                            ) : 
+                                            ) :
                                             <tr>
                                                 <td colSpan='5'>Hiện tại không có tài khoản nào đăng ký vào hệ thống</td>
                                             </tr>

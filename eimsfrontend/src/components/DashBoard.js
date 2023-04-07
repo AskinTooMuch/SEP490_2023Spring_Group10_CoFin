@@ -86,7 +86,13 @@ const Dashboard = () => {
                     </div>
                   </div>
                 )
-                : 'Loading'
+                : 
+                <div>
+                <h4>
+                  Hiện tại không có máy nào đang ấp
+                </h4>
+                </div>
+                
             }
           </div>
         </div>

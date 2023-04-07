@@ -168,7 +168,7 @@ const StockReport = () => {
                                                         )
                                                         :
                                                         <tr>
-                                                            <td colSpan='5'>Hiện tại không có sản phẩm nào</td>
+                                                            <td colSpan='6'>Hiện tại không có sản phẩm nào</td>
                                                         </tr>
                                                 }
                                             </tbody>
@@ -223,7 +223,7 @@ const StockReport = () => {
                                                         )
                                                         :
                                                         <tr>
-                                                            <td colSpan='5'>Hiện tại không có sản phẩm nào</td>
+                                                            <td colSpan='6'>Hiện tại không có sản phẩm nào</td>
                                                         </tr>
                                                 }
                                             </tbody>

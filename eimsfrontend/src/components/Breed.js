@@ -352,7 +352,7 @@ const Breed = () => {
                     </thead>
                     <tbody>
                         { /**JSX to load breed list */}
-                        {breedList &&
+                        {breedList && breedList.length > 0 ?
                             breedList.map((item, index) => (
                                 item.status &&
                                 <tr className='trclick' onClick={() => routeChange(item.breedId)} key={item.breedId}>
@@ -364,11 +364,15 @@ const Breed = () => {
                                     <td>{item.growthTime}</td>
                                 </tr>
                             ))
+                            :
+                            <tr>
+                                <td colSpan='6'>Hiện tại không có loài nào được lưu trong hệ thống</td>
+                            </tr>
                         }
                     </tbody>
                 </table>
             </div>
-            
+
         </div>
     );
 }

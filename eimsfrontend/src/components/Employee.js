@@ -15,7 +15,7 @@ import { faStarOfLife } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from 'axios';
 //Toast
-import {toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import { padding } from '@mui/system';
 function Employee(props) {
     const { children, value, index, ...other } = props;
@@ -429,8 +429,8 @@ export default function BasicTabs() {
                                     <div className="col-md-6">
                                         <input style={{ width: "100%" }} placeholder="0"
                                             type='number'
-                                            onChange={(e) => handleCreateEmployeeChange(e, "salary")} 
-                                            defaultValue="0"/>
+                                            onChange={(e) => handleCreateEmployeeChange(e, "salary")}
+                                            defaultValue="0" />
                                     </div>
                                 </div>
                             </Modal.Body>
@@ -453,7 +453,7 @@ export default function BasicTabs() {
                                     <button type='submit'><span className="input-group-text" ><SearchIcon /></span></button>
                                 </div>
                                 <input type="text" className="form-control" placeholder="Tìm kiếm" aria-label="Username" aria-describedby="basic-addon1"
-                                onChange={(e) => handleSearchEmployeeChange((e))}   />
+                                    onChange={(e) => handleSearchEmployeeChange((e))} />
                             </div>
                         </form>
                     </div>
@@ -495,8 +495,10 @@ export default function BasicTabs() {
                                                             </td>
                                                         }
                                                     </tr>
-                                                ) : "Nothing"
-
+                                                ) :
+                                                <tr>
+                                                    <td colSpan='4'>Hiện tại không có nhân viên nào được lưu trong hệ thống</td>
+                                                </tr>
                                         }
                                     </tbody>
                                 </table>
@@ -505,7 +507,7 @@ export default function BasicTabs() {
                     </section>
                 </div>
             </Employee>
-           
+
         </Box>
     );
 }

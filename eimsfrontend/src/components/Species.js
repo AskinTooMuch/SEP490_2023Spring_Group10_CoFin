@@ -415,7 +415,8 @@ const Species = () => {
                 </thead>
                 <tbody id="specie_list_table_body" className="u-table-body">
                   { /**JSX to load rows */}
-                  {
+                  {specieList && specieList.length > 0 ?
+
                     specieList.map((item, index) => (
                       item.status &&
                       <tr key={item.specieId} data-key={index} className='trclick2' style={{ height: "21px" }}>
@@ -423,12 +424,16 @@ const Species = () => {
                         <td className="u-border-1 u-border-grey-30 u-table-cell" onClick={() => LoadData(index)}>{item.specieName}</td>
                         <td className="u-border-1 u-border-grey-30 u-table-cell" onClick={() => LoadData(index)}>{item.incubationPeriod} (ngày)</td>
                         <td className="u-border-1 u-border-grey-30 u-table-cell" style={{ textAlign: "center" }}><button className='btn btn-light' style={{ width: "50%" }} onClick={() => openDelete()}>Xoá</button>
-                          <ConfirmBox open={open} closeDialog={() => setOpen(false)} title={"Xóa loài"} 
-                          content={"Xác nhận xóa loài: "+item.specieName} deleteFunction={() => handleDelete(index)}
+                          <ConfirmBox open={open} closeDialog={() => setOpen(false)} title={"Xóa loài"}
+                            content={"Xác nhận xóa loài: " + item.specieName} deleteFunction={() => handleDelete(index)}
                           />
                         </td>
                       </tr>
                     ))
+                    :
+                    <tr>
+                      <td colSpan='6'>Hiện tại không có loại nào được lưu trong hệ thống</td>
+                    </tr>
                   }
                   {/**Popup edit spicies */}
                   <Modal show={show2} onHide={() => handleClose2}

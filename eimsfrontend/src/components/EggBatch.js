@@ -103,7 +103,7 @@ const EggBatch = () => {
                                     </tr>
                                 ) :
                                 <tr>
-                                    <td colSpan='5'>Chưa có lô trứng nào được lưu lên hệ thống</td>
+                                    <td colSpan='9'>Chưa có lô trứng nào được lưu lên hệ thống</td>
                                 </tr>
                         }
 

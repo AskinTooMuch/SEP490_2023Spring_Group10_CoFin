@@ -127,7 +127,7 @@ const ImportBill = () => {
                                                 </tr>
                                             ) : 
                                             <tr>
-                                                <td colSpan='5'>Chưa có hóa đơn nhập nào được lưu lên hệ thống</td>
+                                                <td colSpan='7'>Chưa có hóa đơn nhập nào được lưu lên hệ thống</td>
                                             </tr>
                                     }
                                 </tbody>

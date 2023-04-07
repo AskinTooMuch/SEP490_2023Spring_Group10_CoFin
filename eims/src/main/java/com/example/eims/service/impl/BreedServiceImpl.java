@@ -35,6 +35,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 @Service
@@ -247,7 +248,7 @@ public class BreedServiceImpl implements IBreedService {
 //        if (breedOpt.isPresent()) {
 //            return new ResponseEntity<>(breedOpt.get(), HttpStatus.OK);
 //        }
-        return new ResponseEntity<>("Không tìm thấy loại", HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
     }
 
     @Override

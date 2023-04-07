@@ -216,8 +216,10 @@ const Customer = () => {
 
     //Navigate to detail Page
     let navigate = useNavigate();
-    const routeChange = (cid) => {
-        navigate('/customerdetail', { state: { id: cid } });
+    const routeChange = (item) => {
+        if (item.customerName !== "Khách lẻ") {
+            navigate('/customerdetail', { state: { id: item.customerId } });
+        }
     }
 
     return (
@@ -390,7 +392,7 @@ const Customer = () => {
                         {
                             customerList && customerList.length > 0 ?
                                 customerList.map((item, index) =>
-                                    <tr className='trclick' onClick={() => routeChange(item.customerId)} key={item.userId}>
+                                    <tr className='trclick' onClick={() => routeChange(item)} key={item.userId}>
                                         <th scope="row">{index + 1}</th>
                                         <td>{item.customerName}</td>
                                         <td>{item.customerPhone}</td>
@@ -405,7 +407,7 @@ const Customer = () => {
                                     </tr>
                                 ) :
                                 <tr>
-                                    <td colSpan='5'>Hiện tại không có khách hàng nào được lưu trong hệ thống</td>
+                                    <td colSpan='4'>Hiện tại không có khách hàng nào được lưu trong hệ thống</td>
                                 </tr>
                         }
                     </tbody>
