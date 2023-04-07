@@ -9,6 +9,7 @@
  * 04/04/2023    1.0        ChucNV      First Deploy<br>
  * 05/04/2023    2.0        ChucNV      Add get discount<br>
  * 05/04/2023    2.0        ChucNV      Add flipStatusSubscription and getRunningMachineByFacility <br>
+ * 05/04/2023    2.0        ChucNV      Add getValidSubscription <br>
  */
 package com.example.eims.repository;
 
@@ -35,6 +36,7 @@ public interface UserSubscriptionRepository extends JpaRepository<UserSubscripti
             "SET status = false\n" +
             "WHERE facility_id = ?1 AND us_id != ?2", nativeQuery = true)
     void flipStatusSubscription(Long facilityId, Long usId);
-
-
+@Query(value="SELECT COALESCE((SELECT us_id FROM user_subscription US JOIN subscription S ON US.subscription_id WHERE US.status = 1 AND facility_id = ?1\n" +
+        "AND S.machine_quota >= (SELECT COUNT(machine_id) AS RunningMachine FROM machine WHERE facility_id = ?1 AND active = 1 LIMIT 1) ORDER BY subscribe_date DESC LIMIT 1), 0) AS us_id; ", nativeQuery = true)
+    Long getValidSubscription(Long facilityId);
 }

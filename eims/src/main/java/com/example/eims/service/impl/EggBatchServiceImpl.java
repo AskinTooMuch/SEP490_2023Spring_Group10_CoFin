@@ -57,6 +57,8 @@ public class EggBatchServiceImpl implements IEggBatchService {
     private final IncubationPhaseRepository incubationPhaseRepository;
     @Autowired
     private final MachineTypeRepository machineTypeRepository;
+    @Autowired
+    private final UserSubscriptionRepository usRepository;
     private final StringDealer stringDealer;
 
     public EggBatchServiceImpl(EggBatchRepository eggBatchRepository, ImportReceiptRepository importReceiptRepository,
@@ -64,7 +66,7 @@ public class EggBatchServiceImpl implements IEggBatchService {
                                BreedRepository breedRepository, EggProductRepository eggProductRepository,
                                EggLocationRepository eggLocationRepository, MachineRepository machineRepository,
                                IncubationPhaseRepository incubationPhaseRepository,
-                               MachineTypeRepository machineTypeRepository) {
+                               MachineTypeRepository machineTypeRepository, UserSubscriptionRepository usRepository) {
         this.eggBatchRepository = eggBatchRepository;
         this.importReceiptRepository = importReceiptRepository;
         this.supplierRepository = supplierRepository;
@@ -75,6 +77,7 @@ public class EggBatchServiceImpl implements IEggBatchService {
         this.machineRepository = machineRepository;
         this.incubationPhaseRepository = incubationPhaseRepository;
         this.machineTypeRepository = machineTypeRepository;
+        this.usRepository = usRepository;
         this.stringDealer = new StringDealer();
     }
 
@@ -317,11 +320,13 @@ public class EggBatchServiceImpl implements IEggBatchService {
     @Override
     @Transactional
     public ResponseEntity<?> updateEggBatch(UpdateEggBatchDTO updateEggBatchDTO) {
+
         // Get incubation phase list
         List<IncubationPhase> incubationPhaseList = incubationPhaseRepository.
                 getListIncubationPhaseForEggBatch(updateEggBatchDTO.getEggBatchId());
         // List item (incubationPhaseId)    | 0| 1| 2| 3| 4| 5| 6| 7| 8| 9| 10|
         // phase number                     |-1| 0| 1| 2| 3| 4| 5| 6| 7| 8| 9 |
+
 
         // Egg Batch
         Optional<EggBatch> eggBatchOptional = eggBatchRepository.findByEggBatchId(updateEggBatchDTO.getEggBatchId());
