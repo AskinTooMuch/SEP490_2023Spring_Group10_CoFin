@@ -89,7 +89,6 @@ export default function SubscriptionPayment() {
                             : <></>
 
                         }
-                        <h4 style={{color:"#ffb58d"}}>Thanh toán</h4>
                         <Elements stripe={stripeTestPromise}>
                             <PaymentForm data={{ id: id, final: final }} />
                         </Elements>

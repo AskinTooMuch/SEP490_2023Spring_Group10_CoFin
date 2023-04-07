@@ -108,60 +108,29 @@ export default function BasicTabs() {
         <Subscription value={value} index={0}>
           <div className="container">
             <div className="row">
-              <div className="col-md-4 col-sm-6">
-                <div className="pricingTable">
-                  <h3 className="title">STANDARD</h3>
-                  <div className="price-value">
-                    <span className="amount">500.000</span>
-                    <span className="currency">VNĐ</span>
-                    <span className="month">/tháng</span>
-                  </div>
-                  <ul className="pricing-content">
-                    <li><b>50GB</b> Disk Space</li>
-                    <li><b>50</b> Email Accounts</li>
-                    <li><b>50GB</b> Bandwidth</li>
-                    <li><b>10</b> Subdomains</li>
-                    <li><b>15</b> Domains</li>
-                  </ul>
-                  <Link className="pricingTable-signup">Order Now</Link>
-                </div>
-              </div>
-              <div className="col-md-4 col-sm-6">
-                <div className="pricingTable pink">
-                  <h3 className="title">BUSINESS</h3>
-                  <div className="price-value">
-                    <span className="amount">1.000.000</span>
-                    <span className="currency">VNĐ</span>
-                    <span className="month">/tháng</span>
-                  </div>
-                  <ul className="pricing-content">
-                    <li><b>60GB</b> Disk Space</li>
-                    <li><b>60</b> Email Accounts</li>
-                    <li><b>60GB</b> Bandwidth</li>
-                    <li><b>15</b> Subdomains</li>
-                    <li><b>20</b> Domains</li>
-                  </ul>
-                  <Link className="pricingTable-signup">Order Now</Link>
-                </div>
-              </div>
-              <div className="col-md-4 col-sm-6">
-                <div className="pricingTable blue">
-                  <h3 className="title">PREMIUM</h3>
-                  <div className="price-value">
-                    <span className="amount">10.500.000</span>
-                    <span className="currency">VNĐ</span>
-                    <span className="month">/tháng</span>
-                  </div>
-                  <ul className="pricing-content">
-                    <li><b>70GB</b> Disk Space</li>
-                    <li><b>70</b> Email Accounts</li>
-                    <li><b>70GB</b> Bandwidth</li>
-                    <li><b>20</b> Subdomains</li>
-                    <li><b>25</b> Domains</li>
-                  </ul>
-                  <Link className="pricingTable-signup">Order Now</Link>
-                </div>
-              </div>
+              {
+                subscriptionList && subscriptionList.length > 0
+                  ? subscriptionList.map((item, index) => {
+                    return (
+                      <div className="col-md-4 col-sm-6">
+                        <div className={`pricingTable ${item.recommended ? '' : 'pink'}`}>
+                          <h3 className="title">GÓI {item.subscriptionId}</h3>
+                          <div className="price-value">
+                            <span className="amount">{item.cost.toLocaleString("de-DE")}</span>
+                            <span className="currency">VNĐ</span>
+                          </div>
+                          <ul className="pricing-content">
+                            <li>Thời gian hiệu lực <b>{item.duration} ngày</b>.</li>
+                            <li>Tối đa sử dụng cho <b>{item.machineQuota} máy</b>.</li>
+                          </ul>
+                          <button className='btn' onClick={() => routeChange(item.subscriptionId)}><Link className="pricingTable-signup" >Đăng ký</Link></button>
+                        </div>
+                      </div>
+                    )
+                  })
+                  : <div>Không tìm thấy gói đăng ký khả dụng.</div>
+              }
+
             </div>
           </div>
         </Subscription>

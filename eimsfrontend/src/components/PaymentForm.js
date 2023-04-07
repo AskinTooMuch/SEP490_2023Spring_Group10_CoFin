@@ -89,7 +89,7 @@ export default function PaymentForm(props) {
                     </div>
                 </form>
                 : <div>
-                    <h2>Success</h2>
+                    <b className='text-success'>Thanh toán thành công {props.data.final.toLocaleString('vi', { style: 'currency', currency: 'VND' })} cho gói {props.data.id}. </b>
                 </div>
             }
 
