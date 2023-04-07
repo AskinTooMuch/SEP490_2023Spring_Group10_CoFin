@@ -73,71 +73,6 @@ public class AuthController {
     }
 
     /**
-     * Send OTP to reset password.
-     *
-     * @param phone the phone number of the account
-     * @return
-     */
-    @GetMapping("/forgotPassword/sendOTP")
-    public ResponseEntity<?> sendOTPForgotPassword(@RequestParam String phone) throws IOException{
-        return authService.sendOTPResetPass(phone);
-    }
-
-    /**
-     * Verify OTP forgot password.
-     *
-     * @param verifyOtpDTO
-     * @return
-     */
-    @PostMapping("/forgotPassword/verifyOTP")
-    public ResponseEntity<?> verifyOTPForgotPassword(@RequestBody VerifyOtpDTO verifyOtpDTO) {
-        return authService.verifyOTPResetPass(verifyOtpDTO);
-    }
-
-    /**
-     * Re-send OTP forgot password.
-     *
-     * @return
-     */
-    @GetMapping("/forgotPassword/resendOTP")
-    public ResponseEntity<?> resendOTPForgotPassword(@RequestParam String phone) throws IOException{
-        return authService.resendOTPResetPass(phone);
-    }
-
-    /**
-     * Send OTP to reset password.
-     *
-     * @param phone the phone number of the account
-     * @return
-     */
-    @GetMapping("/register/sendOTP")
-    public ResponseEntity<?> sendOTPRegisterOwner(@RequestParam String phone) throws IOException{
-        return authService.sendOTPRegister(phone);
-    }
-
-    /**
-     * Verify OTP forgot password.
-     *
-     * @param verifyOtpDTO
-     * @return
-     */
-    @PostMapping("/register/verifyOTP")
-    public ResponseEntity<?> verifyOTPRegisterOwner(@RequestBody VerifyOtpDTO verifyOtpDTO) {
-        return authService.verifyOTPRegister(verifyOtpDTO);
-    }
-
-    /**
-     * Re-send OTP forgot password.
-     *
-     * @param phone
-     * @return
-     */
-    @GetMapping("/register/resendOTP")
-    public ResponseEntity<?> resendOTPRegisterOwner(@RequestParam String phone) throws IOException {
-        return authService.resendOTPRegister(phone);
-    }
-
-    /**
      * Change password after verify OTP.
      *
      * @param forgotPasswordDTO contains the new password, login phone
@@ -155,7 +90,7 @@ public class AuthController {
      * @return
      */
     @GetMapping("/register/check")
-    public ResponseEntity<?> checkPhone(@RequestParam String phone) {
+    public ResponseEntity<?> checkPhoneRegister(@RequestParam String phone) {
         return authService.checkPhoneRegister(phone);
     }
     /**
