@@ -9,6 +9,7 @@
  * 04/04/2023    1.0        ChucNV      First Deploy<br>
  * 05/04/2023    2.0        ChucNV      Add get discount<br>
  * 06/04/2023    3.0        ChucNV      Modify get discount<br>
+ * 07/04/2023    4.0        ChucNV      Add getAllSubscriptionByFacilityId<br>
  */
 package com.example.eims.service.interfaces;
 
@@ -33,4 +34,11 @@ public interface ISubscriptionService {
      * @return Discount of the pack or error message
      */
     public ResponseEntity<?> getDiscountByFacilityId(Long subscriptionId, Long facilityId);
+
+    /**
+     * Get all subscriptions of a facility
+     * @param facilityId
+     * @return
+     */
+    public ResponseEntity<?> getAllSubscriptionByFacilityId(Long facilityId);
 }

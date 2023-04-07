@@ -46,9 +46,11 @@ function a11yProps(index) {
 export default function BasicTabs() {
   //URL
   const GET_ALL_ACTIVE_SUBSCRIPTION = '/api/subscription/getActive';
+  const GET_HISTORY_SUBSCRIPTION = '/api/subscription/getHistory';
 
   //DATA
   const [subscriptionList, setSubscriptionList] = useState([]);
+  const [subscriptionHistory, setSubscriptionHistory] = useState([]);
 
   // Get list of subscription packs and show
   //Get subscription pack list
@@ -69,6 +71,41 @@ export default function BasicTabs() {
         });
       setSubscriptionList(result.data);
       console.log(subscriptionList);
+    } catch (err) {
+      if (!err?.response) {
+        toast.error('Server không phản hồi');
+      } else {
+        if ((err.response.data === null) || (err.response.data === '')) {
+          toast.error('Có lỗi xảy ra, vui lòng thử lại');
+        } else {
+          toast.error(err.response.data);
+        }
+      }
+    }
+  }
+
+  //Get subscription pack list
+  useEffect(() => {
+    loadSubscriptionHistory();
+  }, []);
+
+  // Request supplier list and load the supplier list into the table rows
+  const loadSubscriptionHistory = async () => {
+    try {
+      const result = await axios.get(GET_HISTORY_SUBSCRIPTION,
+        {
+          params:
+          {
+            facilityId: sessionStorage.getItem("facilityId")
+          },
+          headers: {
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*'
+          },
+          withCredentials: true
+        });
+      setSubscriptionHistory(result.data);
+      console.log(subscriptionHistory);
     } catch (err) {
       if (!err?.response) {
         toast.error('Server không phản hồi');
@@ -142,31 +179,36 @@ export default function BasicTabs() {
                 <table className="u-table-entity u-table-entity-1">
                   <colgroup>
                     <col width="5%" />
-                    <col width="35%" />
-                    <col width="30%" />
-                    <col width="30%" />
+                    <col width="20%" />
+                    <col width="25%" />
+                    <col width="25%" />
+                    <col width="25%" />
                   </colgroup>
                   <thead className="u-palette-4-base u-table-header u-table-header-1">
                     <tr style={{ height: "21px" }}>
                       <th className="u-border-1 u-border-custom-color-1 u-palette-2-base u-table-cell u-table-cell-1">STT</th>
                       <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-2">Tên gói</th>
                       <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-3">Ngày đăng ký</th>
-                      <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-5">Giá gói</th>
+                      <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-3">Ngày hết hạn</th>
+                      <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-5">Đã thanh toán</th>
                     </tr>
                   </thead>
                   <tbody className="u-table-body">
-                    <tr style={{ height: "76px" }}>
-                      <td className="u-border-1 u-border-grey-30 u-first-column u-grey-5 u-table-cell u-table-cell-5">1</td>
-                      <td className="u-border-1 u-border-grey-30 u-table-cell">Gói 1 tháng</td>
-                      <td className="u-border-1 u-border-grey-30 u-table-cell">01/12/2022</td>
-                      <td className="u-border-1 u-border-grey-30 u-table-cell ">100.000 VNĐ</td>
-                    </tr>
-                    <tr style={{ height: "76px" }}>
-                      <td className="u-border-1 u-border-grey-30 u-first-column u-grey-5 u-table-cell u-table-cell-9">2</td>
-                      <td className="u-border-1 u-border-grey-30 u-table-cell">Gói 1 tháng</td>
-                      <td className="u-border-1 u-border-grey-30 u-table-cell">01/01/2023</td>
-                      <td className="u-border-1 u-border-grey-30 u-table-cell ">100.000 VNĐ</td>
-                    </tr>
+                    {
+                      subscriptionHistory && subscriptionHistory.length > 0
+                        ? subscriptionHistory.map((item, index) => {
+                          return (
+                            <tr style={{ height: "76px" }}>
+                              <td className="u-border-1 u-border-grey-30 u-first-column u-grey-5 u-table-cell u-table-cell-5">1</td>
+                              <td className="u-border-1 u-border-grey-30 u-table-cell">Gói {item.subscriptionId}</td>
+                              <td className="u-border-1 u-border-grey-30 u-table-cell">{item.subscribeDate}</td>
+                              <td className="u-border-1 u-border-grey-30 u-table-cell">{item.expireDate}</td>
+                              <td className="u-border-1 u-border-grey-30 u-table-cell ">{item.paid ? item.paid.toLocaleString('vi', { style: 'currency', currency: 'VND' }) : '0 ₫'}</td>
+                            </tr>
+                          )
+                        })
+                        : <div>Lịch sử đăng ký trống.</div>
+                    }
                   </tbody>
                 </table>
               </div>

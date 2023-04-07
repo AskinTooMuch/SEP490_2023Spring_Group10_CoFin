@@ -58,4 +58,14 @@ public class SubscriptionController {
     public ResponseEntity<?> getDiscountByFacilityId(@RequestParam Long subscriptionId, @RequestParam Long facilityId) throws Exception {
         return subscriptionService.getDiscountByFacilityId(subscriptionId, facilityId);
     }
+
+    /**
+     * Get all subscription by facility
+     * @return
+     * @throws Exception
+     */
+    @GetMapping("/getHistory")
+    public ResponseEntity<?> getAllSubscriptionByFacilityId(@RequestParam Long facilityId) throws Exception {
+        return subscriptionService.getAllSubscriptionByFacilityId(facilityId);
+    }
 }

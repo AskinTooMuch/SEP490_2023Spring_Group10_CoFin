@@ -19,6 +19,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface UserSubscriptionRepository extends JpaRepository<UserSubscription, Long> {
@@ -38,8 +39,10 @@ public interface UserSubscriptionRepository extends JpaRepository<UserSubscripti
             "SET status = false\n" +
             "WHERE facility_id = ?1 AND us_id != ?2", nativeQuery = true)
     void flipStatusSubscription(Long facilityId, Long usId);
-@Query(value="SELECT COALESCE((SELECT us_id FROM user_subscription US JOIN subscription S ON US.subscription_id WHERE US.status = 1 AND facility_id = ?1\n" +
+    @Query(value="SELECT COALESCE((SELECT us_id FROM user_subscription US JOIN subscription S ON US.subscription_id WHERE US.status = 1 AND facility_id = ?1\n" +
         "AND S.machine_quota >= (SELECT COUNT(machine_id) AS RunningMachine FROM machine WHERE facility_id = ?1 AND active = 1 LIMIT 1) ORDER BY subscribe_date DESC LIMIT 1), 0) AS us_id; ", nativeQuery = true)
     Long getValidSubscription(Long facilityId);
     Optional<UserSubscription> getUserSubscriptionByFacilityIdAndStatus(Long facilityId, boolean status);
+
+    Optional<List<UserSubscription>> getAllSubscriptionByFacilityId(Long facilityId);
 }
