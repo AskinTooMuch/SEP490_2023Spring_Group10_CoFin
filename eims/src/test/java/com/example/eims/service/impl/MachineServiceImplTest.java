@@ -151,7 +151,7 @@ class MachineServiceImplTest {
         machine.setCurCapacity(0);
         machine.setMaxCapacity(6000);
         machine.setAddedDate(Date.valueOf("2019-02-17"));
-        machine.setStatus(1);
+        machine.setActive(1);
 
         EggLocation eggLocation1 = new EggLocation();
         eggLocation1.setProductId(1L);
@@ -496,7 +496,7 @@ class MachineServiceImplTest {
         UpdateMachineDTO dto = new UpdateMachineDTO();
         dto.setMachineId(1L);
         dto.setMachineName("Máy nở nhỏ 3");
-        dto.setStatus(0);
+        dto.setActive(0);
         // Define behaviour of repository
         when(machineRepository.findByMachineId(1L)).thenReturn(Optional.of(machine));
         // Run service method
@@ -514,7 +514,7 @@ class MachineServiceImplTest {
         UpdateMachineDTO dto = new UpdateMachineDTO();
         dto.setMachineId(1L);
         dto.setMachineName("abcdefgh");
-        dto.setStatus(1);
+        dto.setActive(1);
         // Define behaviour of repository
         when(machineRepository.findByMachineId(1L)).thenReturn(Optional.of(machine));
         // Run service method
@@ -532,7 +532,7 @@ class MachineServiceImplTest {
         UpdateMachineDTO dto = new UpdateMachineDTO();
         dto.setMachineId(1L);
         dto.setMachineName("12345678");
-        dto.setStatus(0);
+        dto.setActive(0);
         // Define behaviour of repository
         when(machineRepository.findByMachineId(1L)).thenReturn(Optional.of(machine));
         // Run service method
@@ -550,7 +550,7 @@ class MachineServiceImplTest {
         UpdateMachineDTO dto = new UpdateMachineDTO();
         dto.setMachineId(1L);
         dto.setMachineName("        ");
-        dto.setStatus(0);
+        dto.setActive(0);
         // Define behaviour of repository
         when(machineRepository.findByMachineId(1L)).thenReturn(Optional.of(machine));
         // Run service method
@@ -568,7 +568,7 @@ class MachineServiceImplTest {
         UpdateMachineDTO dto = new UpdateMachineDTO();
         dto.setMachineId(1L);
         dto.setMachineName(null);
-        dto.setStatus(1);
+        dto.setActive(1);
         // Define behaviour of repository
         when(machineRepository.findByMachineId(1L)).thenReturn(Optional.of(machine));
         // Run service method
@@ -586,7 +586,7 @@ class MachineServiceImplTest {
         UpdateMachineDTO dto = new UpdateMachineDTO();
         dto.setMachineId(1L);
         dto.setMachineName("Máy nở nhỏ 3");
-        dto.setStatus(2);
+        dto.setActive(2);
         // Define behaviour of repository
         when(machineRepository.findByMachineId(1L)).thenReturn(Optional.of(machine));
         // Run service method
@@ -603,7 +603,7 @@ class MachineServiceImplTest {
         UpdateMachineDTO dto = new UpdateMachineDTO();
         dto.setMachineId(0L);
         dto.setMachineName("Máy nở nhỏ 3");
-        dto.setStatus(2);
+        dto.setActive(2);
         // Define behaviour of repository
         when(machineRepository.findByMachineId(0L)).thenReturn(Optional.empty());
         // Run service method
@@ -620,7 +620,7 @@ class MachineServiceImplTest {
         Machine machine = new Machine();
         machine.setMachineId(1L);
         machine.setMachineName("name");
-        machine.setStatus(1);
+        machine.setActive(1);
         // Define behaviour of repository
         when(machineRepository.existsByMachineId(1L)).thenReturn(true);
         when(eggLocationRepository.existsByMachineId(1L)).thenReturn(false);
@@ -638,7 +638,7 @@ class MachineServiceImplTest {
         Machine machine = new Machine();
         machine.setMachineId(0L);
         machine.setMachineName("name");
-        machine.setStatus(1);
+        machine.setActive(1);
         // Define behaviour of repository
         when(machineRepository.existsByMachineId(0L)).thenReturn(false);
         // Run service method
@@ -655,7 +655,7 @@ class MachineServiceImplTest {
         Machine machine = new Machine();
         machine.setMachineId(1L);
         machine.setMachineName("name");
-        machine.setStatus(1);
+        machine.setActive(1);
         // Define behaviour of repository
         when(machineRepository.existsByMachineId(1L)).thenReturn(true);
         when(eggLocationRepository.existsByMachineId(1L)).thenReturn(true);

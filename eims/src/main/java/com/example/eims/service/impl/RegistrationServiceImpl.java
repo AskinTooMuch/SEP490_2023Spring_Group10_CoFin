@@ -106,9 +106,7 @@ public class RegistrationServiceImpl implements IRegistrationService {
     @Override
     @Transactional
     public ResponseEntity<?> registrationApproval(Long userId, Long facilityId, boolean approval) throws IOException {
-        System.out.println(approval);
         int status = (approval ? 2 : 1); /*1-rejected 2-approved */
-        System.out.println(status);
         User user;
         Optional<Registration> registrationOptional = registrationRepository.findByUserId(userId);
         if (!registrationOptional.isPresent()) {
@@ -175,7 +173,7 @@ public class RegistrationServiceImpl implements IRegistrationService {
             } else {
                 return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
             }
-            
+
             return new ResponseEntity<>("Đã từ chối đơn đăng ký", HttpStatus.OK);
         }
     }

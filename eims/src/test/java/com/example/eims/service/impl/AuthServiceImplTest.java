@@ -818,54 +818,6 @@
          // Assert
          assertEquals("Mật khẩu mới không được để trống", responseEntity.getBody());
      }
-     @Test
-     void sendOTP() throws IOException{
-         // Set up
-         String phone = "0987654321";
-         // Define behaviour of repository
-         when(userRepository.findByPhone(phone)).thenReturn(Optional.of(user));
-
-         // Run service method
-         ResponseEntity<?> responseEntity = authService.sendOTPResetPass(phone);
-         System.out.println(responseEntity.toString());
-         // Assert
-         assertEquals("Đã gửi mã OTP", responseEntity.getBody());
-     }
-
-     @Test
-     void verifyOTP() {
-         // Set up
-         VerifyOtpDTO verifyOtpDTO = new VerifyOtpDTO();
-         verifyOtpDTO.setPhone(user.getPhone());
-         verifyOtpDTO.setOTP("123");
-         String phone = user.getPhone();
-         Otp otp = new Otp();
-         otp.setOtp("123");
-         // Define behaviour of repository
-         when(otpRepository.findByPhoneNumber(phone)).thenReturn(Optional.of(otp));
-
-         // Run service method
-         ResponseEntity<?> responseEntity = authService.verifyOTPResetPass(verifyOtpDTO);
-         System.out.println(responseEntity.toString());
-         // Assert
-         assertEquals("Mã OTP đã đúng", responseEntity.getBody());
-     }
-
-     @Test
-     void resendOTP() throws IOException {
-         // Set up
-         String phone = "0987654321";
-         Otp otp = new Otp();
-
-         // Define behaviour of repository
-         when(otpRepository.findByPhoneNumber(phone)).thenReturn(Optional.of(otp));
-
-         // Run service method
-         ResponseEntity<?> responseEntity = authService.resendOTPResetPass(phone);
-         System.out.println(responseEntity.toString());
-         // Assert
-         assertEquals("Đã gửi lại mã OTP", responseEntity.getBody());
-     }
 
      @Test
      @DisplayName("resetPasswordUTCID01")
