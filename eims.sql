@@ -55,7 +55,7 @@ CREATE TABLE user(
     salary		decimal(15,2),
     password	varchar(511)	NOT NULL, -- When entering check is max length 20, this length is for encoded passwords.
     address		varchar(511),
-	status		boolean			NOT NULL
+	status		integer			NOT NULL
 );
 
 CREATE TABLE user_role(
