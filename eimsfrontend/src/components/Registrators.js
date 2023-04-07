@@ -315,7 +315,10 @@ const Registrators = () => {
                                                     <td className="u-border-1 u-border-grey-30 u-table-cell">{item.businessLicenseNumber}</td>
                                                     <td className="u-border-1 u-border-grey-30 u-table-cell">{item.registerDate}</td>
                                                 </tr>
-                                            ) : ''
+                                            ) : 
+                                            <tr>
+                                                <td colSpan='5'>Hiện tại không có tài khoản nào đăng ký vào hệ thống</td>
+                                            </tr>
                                     }
                                 </tbody>
                             </table>

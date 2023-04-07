@@ -162,7 +162,7 @@ const Customer = () => {
                 district: "",
                 ward: "",
                 street: ""
-              });
+            });
 
             console.log(response);
             loadCustomerList();
@@ -403,13 +403,16 @@ const Customer = () => {
                                             </td>
                                         }
                                     </tr>
-                                ) : 'Loading'
+                                ) :
+                                <tr>
+                                    <td colSpan='5'>Hiện tại không có khách hàng nào được lưu trong hệ thống</td>
+                                </tr>
                         }
                     </tbody>
                 </table>
             </div>
             {/* End: Table for customer list */}
-            
+
         </div>
     );
 }

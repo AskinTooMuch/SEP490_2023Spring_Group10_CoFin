@@ -230,12 +230,14 @@ public class EggBatchServiceImpl implements IEggBatchService {
      */
     @Override
     public ResponseEntity<?> viewListEggBatch(Long facilityId) {
-        Optional<List<ImportReceipt>> importReceiptListOptional = importReceiptRepository.findByFacilityId(facilityId);
+        Optional<List<ImportReceipt>> importReceiptListOptional = importReceiptRepository
+                .findByFacilityIdOrderByImportDateDesc(facilityId);
         if (importReceiptListOptional.isPresent()) {
             List<ImportReceipt> importReceiptList = importReceiptListOptional.get();
             List<EggBatchViewListItemDTO> dtoList = new ArrayList<>();
             for (ImportReceipt importReceipt : importReceiptList) {
-                List<EggBatch> eggBatchList = eggBatchRepository.findByImportId(importReceipt.getImportId()).get();
+                List<EggBatch> eggBatchList = eggBatchRepository
+                        .findByImportIdOrderByStatusDesc(importReceipt.getImportId()).get();
                 for (EggBatch eggBatch : eggBatchList) {
                     // List egg batch
                     EggBatchViewListItemDTO dto = new EggBatchViewListItemDTO();
