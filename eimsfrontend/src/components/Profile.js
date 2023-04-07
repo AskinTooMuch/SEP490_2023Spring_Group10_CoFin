@@ -537,6 +537,7 @@ const Profile = () => {
     // Update user's information
     const handleUpdateUserSave = async (event) => {
         event.preventDefault();
+        saveAddressJsonUser(street);
         setUpdateUserDTO({
             ...updateUserDTO,
             ["address"]: JSON.stringify(addressUserEdit)
@@ -574,6 +575,7 @@ const Profile = () => {
     // Update facility's information
     const handleUpdateFacilitySave = async (event) => {
         event.preventDefault();
+        saveAddressJsonFacility(street1);
         setUpdateFacilityDTO({
             ...updateFacilityDTO,
             ["facilityAddress"]: JSON.stringify(addressFaciEdit)

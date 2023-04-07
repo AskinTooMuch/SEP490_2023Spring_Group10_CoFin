@@ -429,7 +429,8 @@ export default function BasicTabs() {
                                     <div className="col-md-6">
                                         <input style={{ width: "100%" }} placeholder="0"
                                             type='number'
-                                            onChange={(e) => handleCreateEmployeeChange(e, "salary")} />
+                                            onChange={(e) => handleCreateEmployeeChange(e, "salary")} 
+                                            defaultValue="0"/>
                                     </div>
                                 </div>
                             </Modal.Body>

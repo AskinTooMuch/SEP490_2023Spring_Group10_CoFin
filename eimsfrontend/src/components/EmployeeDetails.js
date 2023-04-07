@@ -214,6 +214,28 @@ export default function BasicTabs() {
         // Get index of dropdowns
         console.log("load values");
         console.log(fullAddresses);
+
+        const result = await axios.get(EMPLOYEE_GET,
+            {
+                params: { employeeId: id },
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Access-Control-Allow-Origin': '*'
+                },
+                withCredentials: true
+            });
+        console.log(result);
+        const responseJson = result.data;
+        updateEmployeeDTO.employeeId = responseJson.employeeId;
+        updateEmployeeDTO.employeeName = responseJson.employeeName;
+        updateEmployeeDTO.employeeDob = responseJson.employeeDob;
+        updateEmployeeDTO.employeePhone = responseJson.employeePhone;
+        updateEmployeeDTO.employeeAddress = responseJson.employeeAddress;
+        updateEmployeeDTO.email = responseJson.email;
+        updateEmployeeDTO.salary = responseJson.salary;
+        updateEmployeeDTO.status = responseJson.status;
+        setUpdateAddress(JSON.parse(updateEmployeeDTO.employeeAddress))
+
         console.log(updateAddress);
         for (let i in city) {
             console.log(i);
@@ -530,7 +552,7 @@ export default function BasicTabs() {
                                                 onChange={(e) => saveEmployeeAddress(e.target.value)}
 
                                                 className="form-control"
-                                                value={employeeAddress.street} />
+                                                value={street} />
                                         </div>
                                     </div>
 
@@ -550,6 +572,7 @@ export default function BasicTabs() {
                                         </div>
                                         <div className="col-md-6">
                                             <input style={{ width: "100%" }}
+                                            defaultValue="0"
                                                 type='number'
                                                 onChange={(e) => handleUpdateEmployeeChange(e, "salary")}
                                                 value={updateEmployeeDTO.salary} />
