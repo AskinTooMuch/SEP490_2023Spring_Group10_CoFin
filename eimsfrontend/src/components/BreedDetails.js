@@ -380,7 +380,7 @@ export default function BasicTabs() {
                                                 id="updateBreedImg"
                                                 type="file" multiple
                                                 accept="image/*" onChange={onImageChange} />
-                                            {imageURLs.map(imageSrc => <img style={{ width: "100%", minHeight: "100%" }} alt='' src={imageSrc} />)}
+                                            {imageURLs.map(imageSrc => <img style={{ maxWidth: "60vw", maxHeight: "40vh" }} alt='' src={imageSrc} />)}
                                         </div>
                                     </div>
                                 </div>
