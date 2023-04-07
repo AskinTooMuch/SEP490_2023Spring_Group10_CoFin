@@ -16,8 +16,12 @@ export default function SubscriptionPayment() {
     const SUBSCRIPTION_GET_ID = "/api/subscription/getById";
     const DISCOUNT_GET = "/api/subscription/getDiscount";
 
-    const [subscriptionInformation, setSubscriptionInformation] = useState("");
-    const [final, setFinal] = useState("");
+    const [subscriptionInformation, setSubscriptionInformation] = useState({
+        cost: 0,
+        machineQuota: 0,
+        discount: 0
+    });
+    const [final, setFinal] = useState(0);
 
     //Get sent params
     const { state } = useLocation();
@@ -64,9 +68,9 @@ export default function SubscriptionPayment() {
                     <div className="pricingTable orange">
                         <h3 className="title">Gói {subscriptionInformation.subscriptionId}</h3>
                         <div className="price-value">
-                            <span className="amount">500.000</span>
+                            <span className="amountAlt"><s>{subscriptionInformation.cost.toLocaleString('vi', { style: 'currency', currency: 'VND' })}</s></span><br/>
+                            <span className="amount">{final.toLocaleString("de-DE")}</span>
                             <span className="currency">VNĐ</span>
-                            <span className="month">/tháng</span>
                         </div>
                         {subscriptionInformation !== ""
                             ?
@@ -78,10 +82,11 @@ export default function SubscriptionPayment() {
                                             Vui lòng chuyển lô trứng về {subscriptionInformation.machineQuota} máy hoặc ít hơn
                                             trước khi chuyển sang gói này.</b>
                                         : <></>
-                                    }</li>
-                                <li>  <b> - Sử dụng trong vòng {subscriptionInformation.duration} ngày kể từ lúc thanh toán thành công.</b></li>
-                                <li><b>Giá gói   : {subscriptionInformation.cost.toLocaleString('vi', { style: 'currency', currency: 'VND' })}</b></li>
-                                <li> <b>Giảm giá  : {subscriptionInformation.discount.toLocaleString('vi', { style: 'currency', currency: 'VND' })}</b></li>
+                                    }
+                                </li>
+                                <li><b> - Sử dụng trong vòng {subscriptionInformation.duration} ngày kể từ lúc thanh toán thành công.</b></li>
+                                <li><b>Giá gói : {subscriptionInformation.cost.toLocaleString('vi', { style: 'currency', currency: 'VND' })}</b></li>
+                                <li><b>Giảm giá (cho gói hiện có) : {subscriptionInformation.discount.toLocaleString('vi', { style: 'currency', currency: 'VND' })}</b></li>
                                 <li><b>Thành tiền: {final.toLocaleString('vi', { style: 'currency', currency: 'VND' })}</b></li>
                             </ul>
 
@@ -89,6 +94,7 @@ export default function SubscriptionPayment() {
                             : <></>
 
                         }
+                        
                         <Elements stripe={stripeTestPromise}>
                             <PaymentForm data={{ id: id, final: final }} />
                         </Elements>

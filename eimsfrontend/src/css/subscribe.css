@@ -21,6 +21,13 @@
   font-weight: 700
 }
 
+.pricingTable .price-value .amountAlt {
+  display: inline-block;
+  font-size: 20px;
+  font-weight: 500;
+  color: darkgrey;
+}
+
 .pricingTable .price-value .month {
   display: block;
   font-size: 20px;

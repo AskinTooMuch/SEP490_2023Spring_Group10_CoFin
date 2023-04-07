@@ -309,16 +309,16 @@ const Breed = () => {
                                     </div>
                                     <div className="col-md-8">
                                         <input className="form-control mt-1" id="createBreedImg" type="file" multiple accept="image/*" onChange={onImageChange} />
-                                        {imageURLs.map(imageSrc => <img style={{ width: "100%", minHeight: "100%" }} alt='' src={imageSrc} />)}
+                                        {imageURLs.map(imageSrc => <img style={{ maxWidth: "60vw", maxHeight: "40vh" }} alt='' src={imageSrc} />)}
                                     </div>
                                 </div>
                             </div>
                         </Modal.Body>
                         <div className='model-footer'>
-                            <button style={{ width: "20%" }} type="submit" className="col-md-6 btn-light" id="confirmCreateBreed">
+                            <button style={{ width: "20%" }} type="submit" className="col-md-6 btn-light mt-2" id="confirmCreateBreed">
                                 Tạo
                             </button>
-                            <button className='btn btn-light' type="button" style={{ width: "20%" }} onClick={handleNewCancel} id="cancelCreateBreed">
+                            <button className='btn btn-light' type="button mt-2" style={{ width: "20%" }} onClick={handleNewCancel} id="cancelCreateBreed">
                                 Huỷ
                             </button>
                         </div>

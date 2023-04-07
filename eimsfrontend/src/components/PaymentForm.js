@@ -29,15 +29,51 @@ export default function PaymentForm(props) {
     const handleSubmit = async (e) => {
         e.preventDefault();
         console.log("Get card things");
-        const { error, paymentMethod } = await stripe.createPaymentMethod({
-            type: 'card',
-            card: elements.getElement(CardElement)
-        });
+        if (props.data.final !== 0) {
+            const { error, paymentMethod } = await stripe.createPaymentMethod({
+                type: 'card',
+                card: elements.getElement(CardElement)
+            });
+            if (!error) {
+                console.log("Not error, sending to backend");
+                try {
+                    const { id } = paymentMethod;
+                    const response = await axios.post(CREATE_PAYMENT,
+                        {
+                            subscriptionId: props.data.id,
+                            facilityId: sessionStorage.getItem("facilityId"),
+                            amount: props.data.final,
+                            currency: 'vnd',
+                            method: id
+                        },
+                        {
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Access-Control-Allow-Origin': '*'
+                            },
+                            withCredentials: true
+                        });
 
-        if (!error) {
-            console.log("Not error, sending to backend");
+                    console.log("Successful payment");
+                    setSuccess(true);
+                } catch (err) {
+                    if (!err?.response) {
+                        toast.error('Server không phản hồi');
+                    } else {
+                        if ((err.response.data === null) || (err.response.data === '')) {
+                            toast.error('Có lỗi xảy ra, vui lòng thử lại');
+                        } else {
+                            toast.error(err.response.data);
+                        }
+                    }
+                }
+            } else {
+                console.log("Axios" + error.message);
+            }
+
+        } else {
             try {
-                const { id } = paymentMethod;
+                const { id } = "paymentMethod";
                 const response = await axios.post(CREATE_PAYMENT,
                     {
                         subscriptionId: props.data.id,
@@ -67,25 +103,30 @@ export default function PaymentForm(props) {
                     }
                 }
             }
-        } else {
-            console.log(error.message);
         }
+
+
+
     }
 
     return (
         <>
             {!success
                 ? <form onSubmit={handleSubmit}>
-                    <fieldset className='formGroup' style={{ borderRadius: "15px" }}>
-                        <div className='formRow'>
-                            <CardElement style={{
+                    {props.data.final === 0
+                        ? <></>
+                        : <fieldset className='formGroup' style={{ borderRadius: "15px" }}>
+                            <div className='formRow'>
+                                <CardElement style={{
 
-                            }} options={CARD_OPTIONS} />
-                        </div>
-                    </fieldset>
+                                }} options={CARD_OPTIONS} />
+                            </div>
+                        </fieldset>
+
+                    }
                     <br />
                     <div style={{ textAlign: "center" }}>
-                        <button style={{ display: "inline-block", width: "50%" }} className='btn btn-light'>Pay</button>
+                        <button style={{ display: "inline-block", width: "50%" }} className='btn btn-light'>Thanh toán</button>
                     </div>
                 </form>
                 : <div>
