@@ -309,7 +309,7 @@ const Breed = () => {
                                     </div>
                                     <div className="col-md-8">
                                         <input className="form-control mt-1" id="createBreedImg" type="file" multiple accept="image/*" onChange={onImageChange} />
-                                        {imageURLs.map(imageSrc => <img style={{ maxWidth: "60vw", maxHeight: "40vh" }} alt='' src={imageSrc} />)}
+                                        {imageURLs.map(imageSrc => <img style={{ maxWidth: "25vw", maxHeight: "40vh" }} alt='' src={imageSrc} />)}
                                     </div>
                                 </div>
                             </div>
