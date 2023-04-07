@@ -8,11 +8,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
 
-const PHONE_REGEX = /(0)(3|5|7|8|9)+([0-9]{8})\b/;
 const TestOTP = () => {
     // API URL
     const CHECK_PHONE = "/api/auth/register/check"
-
+    //
     const [phoneNumber, setPhoneNumber] = useState("");
     const [otp, setOtp] = useState('');
     const [step, setStep] = useState('INPUT_PHONE_NUMBER');
@@ -34,6 +33,7 @@ const TestOTP = () => {
         }
     }
 
+    // Check phone number
     const checkPhone = async (e) => {
         e.preventDefault();
         let response;

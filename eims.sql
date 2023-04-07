@@ -267,15 +267,6 @@ CREATE TABLE notification(
     status				boolean
 );
 
-CREATE TABLE otp(
-	otp_id			integer			AUTO_INCREMENT PRIMARY KEY,
-    phone_number	varchar(11)		NOT NULL,
-    otp				varchar(10) 	DEFAULT "",
-    time 			datetime,
-    status			boolean
-);
-
-
 -- Add the foreign keys and references to created tables.
 ALTER TABLE facility 
 ADD FOREIGN KEY (user_id) 		REFERENCES user(user_id);

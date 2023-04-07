@@ -106,7 +106,9 @@ public class RegistrationServiceImpl implements IRegistrationService {
     @Override
     @Transactional
     public ResponseEntity<?> registrationApproval(Long userId, Long facilityId, boolean approval) throws IOException {
+        System.out.println(approval);
         int status = (approval ? 2 : 1); /*1-rejected 2-approved */
+        System.out.println(status);
         User user;
         Optional<Registration> registrationOptional = registrationRepository.findByUserId(userId);
         if (!registrationOptional.isPresent()) {
@@ -124,7 +126,7 @@ public class RegistrationServiceImpl implements IRegistrationService {
             Optional<User> userOptional = userRepository.findByUserId(userId);
             if (userOptional.isPresent()) {
                 user = userOptional.get();
-                user.setStatus(1);
+                user.setStatus(status);
                 userRepository.save(user);
             } else {
                 return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
@@ -158,21 +160,23 @@ public class RegistrationServiceImpl implements IRegistrationService {
             // Change status of registration
             registration.setStatus(status);
             registrationRepository.save(registration);
-            // Get user
+            // Change status of Owner's account
             Optional<User> userOptional = userRepository.findByUserId(userId);
             if (userOptional.isPresent()) {
                 user = userOptional.get();
+                user.setStatus(status);
+                userRepository.save(user);
                 //  Send mess to Owner
                 String content = "Đơn đăng ký của bạn với hệ thống EIMS đã bị từ chối! Vui lòng liên hệ eims.contact " +
                         "để biết thêm thông tin chi tiết.";
                 //String userInfo = speedSMS.getUserInfo();
                 //String response = speedSMS.sendSMS(user.getPhone(), content, 5, SENDER);
                 System.out.println(content);
-                //
-                return new ResponseEntity<>("Đã từ chối đơn đăng ký", HttpStatus.OK);
             } else {
                 return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
             }
+            
+            return new ResponseEntity<>("Đã từ chối đơn đăng ký", HttpStatus.OK);
         }
     }
 }
