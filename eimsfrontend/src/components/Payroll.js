@@ -38,7 +38,7 @@ const Payroll = () => {
             employeeName: "",
             employeePhone: "",
             payrollItem: "",
-            payrollAmount: "",
+            payrollAmount: "0",
             issueDate: "",
             note: "",
             status: ""
@@ -76,7 +76,7 @@ const Payroll = () => {
         employeeName: "",
         employeePhone: "",
         payrollItem: "",
-        payrollAmount: "",
+        payrollAmount: "0",
         issueDate: "",
         note: "",
         status: ""
@@ -236,7 +236,7 @@ const Payroll = () => {
                 employeeName: "",
                 employeePhone: "",
                 payrollItem: "",
-                payrollAmount: "",
+                payrollAmount: "0",
                 issueDate: "",
                 note: "",
                 status: ""

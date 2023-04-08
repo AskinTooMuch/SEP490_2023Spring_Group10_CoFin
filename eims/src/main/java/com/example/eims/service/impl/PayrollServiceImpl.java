@@ -1,12 +1,13 @@
 /*
- * Copyright (C) 2023, FPT University <br>
- * SEP490 - SEP490_G10 <br>
- * EIMS <br>
- * Eggs Incubating Management System <br>
+ * Copyright (C) 2023, FPT University<br>
+ * SEP490 - SEP490_G10<br>
+ * EIMS<br>
+ * Eggs Incubating Management System<br>
  *
  * Record of change:<br>
- * DATE          Version    Author           DESCRIPTION<br>
- * 29/03/2023    1.0        DuongNH          First Deploy<br>
+ * DATE         Version     Author      DESCRIPTION<br>
+ * 28/03/2023   1.0         DuongNH     First Deploy<br>
+ * 28/03/2023   2.0         DuongNH     Add function<br>
  */
 
 package com.example.eims.service.impl;
@@ -29,6 +30,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -94,21 +96,21 @@ public class PayrollServiceImpl implements IPayrollService {
      */
     @Override
     public ResponseEntity<?> getPayrollByID(Long payrollId) {
-        Optional<Payroll> payrollListOtp = payrollRepository.findByPayrollId(payrollId);
-        if(!payrollListOtp.isPresent()){
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        Optional<Payroll> payrollOtp = payrollRepository.findByPayrollId(payrollId);
+        if(!payrollOtp.isPresent()){
+            return new ResponseEntity<>("Tiền lương không tồn tại", HttpStatus.BAD_REQUEST);
+        } else {
+            Payroll payroll = payrollOtp.get();
+            PayrollDetailDTO payrollDetailDTO = new PayrollDetailDTO();
+            Long employeeId = payroll.getEmployeeId();
+            Optional<User> employeeOpt = userRepository.findByUserId(employeeId);
+            if (employeeOpt.isPresent()) {
+                User employee = employeeOpt.get();
+                payrollDetailDTO.getFromEntity(payroll, employee.getUsername());
+                return new ResponseEntity<>(payrollDetailDTO, HttpStatus.OK);
+            }
         }
-
-        Payroll payroll = payrollListOtp.get();
-        PayrollDetailDTO payrollDetailDTO = new PayrollDetailDTO();
-        Long employeeId = payroll.getEmployeeId();
-        Optional<User> employeeOpt = userRepository.findByUserId(employeeId);
-        if(employeeOpt.isPresent()){
-            User employee = employeeOpt.get();
-            payrollDetailDTO.getFromEntity(payroll,employee.getUsername());
-            return new ResponseEntity<>(payrollDetailDTO, HttpStatus.OK);
-        }
-        return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(null,HttpStatus.BAD_REQUEST);
     }
 
     /**
@@ -129,11 +131,6 @@ public class PayrollServiceImpl implements IPayrollService {
         if(!workInOpt.isPresent()){
             return new ResponseEntity<>("Nhân viên đã nghỉ việc",HttpStatus.BAD_REQUEST);
         }
-        //check if facility still working
-        Long facilityId = workInOpt.get().getFacilityId();
-        if(!facilityRepository.getStatusById(facilityId)){
-            return new ResponseEntity<>("Cơ sở đã ngừng hoạt động", HttpStatus.BAD_REQUEST);
-        }
         //check if owner id valid
         if(!userRepository.existsById(createPayrollDTO.getOwnerId())){
             return new ResponseEntity<>("Tài khoản không hợp lệ", HttpStatus.BAD_REQUEST);
@@ -151,11 +148,18 @@ public class PayrollServiceImpl implements IPayrollService {
         if(payrollAmount <= 0 ){
             return new ResponseEntity<>("Số tiền phải lớn hơn 0", HttpStatus.BAD_REQUEST);
         }
+        if(payrollAmount >= 9999999999999.99){
+            return new ResponseEntity<>("Tiền lương không được vượt quá 9999999999999.99", HttpStatus.BAD_REQUEST);
+        }
         // Paid date
         if (createPayrollDTO.getIssueDate() == null || stringDealer.trimMax(createPayrollDTO.getIssueDate()).equals("")) { /* Date of birth is empty */
             return new ResponseEntity<>("Ngày trả không được để trống", HttpStatus.BAD_REQUEST);
         }
         String sDate = stringDealer.trimMax(createPayrollDTO.getIssueDate());
+        Date date = stringDealer.convertToDateAndFormat(sDate);
+        if (date.after(Date.valueOf(LocalDate.now()))){
+            return new ResponseEntity<>("Ngày trả không được sau hôm nay", HttpStatus.BAD_REQUEST);
+        }
         String note = "";
         if(createPayrollDTO.getNote() != null && !stringDealer.trimMax(createPayrollDTO.getNote()).equals("")){
             note = stringDealer.trimMax(createPayrollDTO.getNote());
@@ -170,7 +174,6 @@ public class PayrollServiceImpl implements IPayrollService {
         newPayroll.setPhone(employee.get().getPhone());
         newPayroll.setPayrollItem(payrollItem);
         newPayroll.setPayrollAmount(payrollAmount);
-        Date date = stringDealer.convertToDateAndFormat(sDate);
         newPayroll.setIssueDate(date);
         newPayroll.setNote(note);
         newPayroll.setStatus(true);
@@ -193,7 +196,6 @@ public class PayrollServiceImpl implements IPayrollService {
             return new ResponseEntity<>("Khoản tiền lương không tồn tại", HttpStatus.BAD_REQUEST);
         }
         Payroll updatePayroll = oldPayrollOpt.get();
-
         //check payroll item
         if(updatePayrollDTO.getPayrollItem() == null || stringDealer.trimMax(updatePayrollDTO.getPayrollItem()).equals("")){
             return new ResponseEntity<>("Khoản tiền không được để trống", HttpStatus.BAD_REQUEST);
@@ -207,12 +209,18 @@ public class PayrollServiceImpl implements IPayrollService {
         if(payrollAmount <= 0 ){
             return new ResponseEntity<>("Số tiền phải lớn hơn 0", HttpStatus.BAD_REQUEST);
         }
+        if(payrollAmount >= 9999999999999.99){
+            return new ResponseEntity<>("Tiền lương không được vượt quá 9999999999999.99", HttpStatus.BAD_REQUEST);
+        }
         // Paid date
         if (updatePayrollDTO.getIssueDate() == null || stringDealer.trimMax(updatePayrollDTO.getIssueDate()).equals("")) { /* Date of birth is empty */
             return new ResponseEntity<>("Ngày trả không được để trống", HttpStatus.BAD_REQUEST);
         }
         String sDate = stringDealer.trimMax(updatePayrollDTO.getIssueDate());
         Date date = stringDealer.convertToDateAndFormat(sDate);
+        if (date.after(Date.valueOf(LocalDate.now()))){
+            return new ResponseEntity<>("Ngày trả không được sau hôm nay", HttpStatus.BAD_REQUEST);
+        }
         //check valid note
         String note = "";
         if(updatePayrollDTO.getNote() != null && !stringDealer.trimMax(updatePayrollDTO.getNote()).equals("")){

@@ -6,7 +6,7 @@
  *
  * Record of change:<br>
  * DATE         Version     Author      DESCRIPTION<br>
- * 15/03/2023   1.0         DuongVV     First Deploy<br>
+ * 18/03/2023   1.0         DuongNH     First Deploy<br>
  */
 package com.example.eims.dto.employee;
 

@@ -1,14 +1,14 @@
 /*
- * Copyright (C) 2023, FPT University <br>
- * SEP490 - SEP490_G10 <br>
- * EIMS <br>
- * Eggs Incubating Management System <br>
+ * Copyright (C) 2023, FPT University<br>
+ * SEP490 - SEP490_G10<br>
+ * EIMS<br>
+ * Eggs Incubating Management System<br>
  *
  * Record of change:<br>
- * DATE          Version    Author           DESCRIPTION<br>
- * 27/03/2023    1.0        DuongNH          First Deploy<br>
+ * DATE         Version     Author      DESCRIPTION<br>
+ * 27/03/2023   1.0         DuongNH     First Deploy<br>
+ * 27/03/2023   2.0         DuongNH     Add function<br>
  */
-
 package com.example.eims.service.impl;
 
 import com.example.eims.dto.cost.CostDetailDTO;
@@ -45,6 +45,13 @@ public class CostServiceImpl implements ICostService {
 
     @Autowired
     FacilityRepository facilityRepository;
+
+    public CostServiceImpl(UserRepository userRepository, CostRepository costRepository, FacilityRepository facilityRepository) {
+        this.userRepository = userRepository;
+        this.costRepository = costRepository;
+        this.facilityRepository = facilityRepository;
+    }
+
     /**
      * Get all cost of a user
      *
@@ -57,17 +64,13 @@ public class CostServiceImpl implements ICostService {
             return new ResponseEntity<>("Tài khoản không hợp lệ", HttpStatus.BAD_REQUEST);
         }
         Optional<List<Cost>> costOpt = costRepository.findAllByUserId(userId);
-        if(costOpt.isPresent()){
+        if(costOpt.isPresent() && !costOpt.get().isEmpty()){
             List<Cost> costList= costOpt.get();
             List<CostDetailDTO> costDetailList = new ArrayList<>();
             for (Cost cost: costList){
                 CostDetailDTO costDetailDTO = new CostDetailDTO();
                 costDetailDTO.getFromEntity(cost);
                 costDetailList.add(costDetailDTO);
-            }
-            for (CostDetailDTO h: costDetailList){
-
-                System.out.println(h.getCostItem());
             }
             return new ResponseEntity<>(costDetailList,HttpStatus.OK);
         }else {
@@ -106,9 +109,6 @@ public class CostServiceImpl implements ICostService {
         if(!facility.isPresent()){ //check if facility exist
             return new ResponseEntity<>("Cơ sở hiện không được hoạt động", HttpStatus.BAD_REQUEST);
         }
-        if(facility.get().getStatus() == 0){ // check if facility is active
-            return new ResponseEntity<>("Cơ sở hiện không được hoạt động", HttpStatus.BAD_REQUEST);
-        }
         // check if user is valid
         if(!userRepository.existsById(createCostDTO.getUserId())){
             return new ResponseEntity<>("Tài khoản không hợp lệ", HttpStatus.BAD_REQUEST);
@@ -126,10 +126,16 @@ public class CostServiceImpl implements ICostService {
         if(costAmount <= 0){
             return new ResponseEntity<>("Tổng chi phí phải lớn hơn 0", HttpStatus.BAD_REQUEST);
         }
+        if(costAmount >= 9999999999999.99){
+            return new ResponseEntity<>("Tổng chi phí không được vượt quá 9999999999999.99", HttpStatus.BAD_REQUEST);
+        }
         // check paid amount
         Float paidAmount = createCostDTO.getPaidAmount();
         if(paidAmount < 0){
             return new ResponseEntity<>("Số tiền đã thanh toán không được bé hơn 0", HttpStatus.BAD_REQUEST);
+        }
+        if(paidAmount >= 9999999999999.99){
+            return new ResponseEntity<>("Số tiền đã thanh toán không được vượt quá 9999999999999.99", HttpStatus.BAD_REQUEST);
         }
         if(paidAmount > costAmount){
             return new ResponseEntity<>("Số tiền đã thanh toán không được lớn hơn tổng chi phí", HttpStatus.BAD_REQUEST);
@@ -171,9 +177,6 @@ public class CostServiceImpl implements ICostService {
         if(!facility.isPresent()){ //check if facility exist
             return new ResponseEntity<>("Cơ sở hiện không được hoạt động", HttpStatus.BAD_REQUEST);
         }
-        if(facility.get().getStatus() == 0){ // check if facility is active
-            return new ResponseEntity<>("Cơ sở hiện không được hoạt động", HttpStatus.BAD_REQUEST);
-        }
         // check if user is valid
         if(!userRepository.existsById(updateCostDTO.getUserId())){
             return new ResponseEntity<>("Tài khoản không hợp lệ", HttpStatus.BAD_REQUEST);
@@ -191,10 +194,16 @@ public class CostServiceImpl implements ICostService {
         if(costAmount <= 0){
             return new ResponseEntity<>("Tổng chi phí phải lớn hơn 0", HttpStatus.BAD_REQUEST);
         }
+        if(costAmount >= 9999999999999.99){
+            return new ResponseEntity<>("Tổng chi phí không được vượt quá 9999999999999.99", HttpStatus.BAD_REQUEST);
+        }
         // check paid amount
         Float paidAmount = updateCostDTO.getPaidAmount();
-        if(paidAmount <= 0){
+        if(paidAmount < 0){
             return new ResponseEntity<>("Số tiền đã thanh toán không được bé hơn 0", HttpStatus.BAD_REQUEST);
+        }
+        if(paidAmount >= 9999999999999.99){
+            return new ResponseEntity<>("Số tiền đã thanh toán không được vượt quá 9999999999999.99", HttpStatus.BAD_REQUEST);
         }
         if(paidAmount > costAmount){
             return new ResponseEntity<>("Số tiền đã thanh toán không được lớn hơn tổng chi phí", HttpStatus.BAD_REQUEST);
@@ -222,7 +231,7 @@ public class CostServiceImpl implements ICostService {
 
         // save new cost
         costRepository.save(newCost);
-        return new ResponseEntity<>("Thêm chi phí thành công", HttpStatus.OK);
+        return new ResponseEntity<>("Cập nhật chi phí thành công", HttpStatus.OK);
     }
 
     /**
@@ -253,19 +262,5 @@ public class CostServiceImpl implements ICostService {
             costDetailList.add(costDetailDTO);
         }
         return new ResponseEntity<>(costDetailList, HttpStatus.OK);
-    }
-
-    /**
-     * Get all of user's cost with Paging.
-     *
-     * @param userId the id of the Owner
-     * @param page   the page number
-     * @param size   the size of page
-     * @param sort   sorting type
-     * @return list of Cost
-     */
-    @Override
-    public ResponseEntity<?> getAllCostPaging(Long userId, Integer page, Integer size, String sort) {
-        return null;
     }
 }

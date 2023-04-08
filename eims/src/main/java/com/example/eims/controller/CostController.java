@@ -1,3 +1,14 @@
+/*
+ * Copyright (C) 2023, FPT University<br>
+ * SEP490 - SEP490_G10<br>
+ * EIMS<br>
+ * Eggs Incubating Management System<br>
+ *
+ * Record of change:<br>
+ * DATE         Version     Author      DESCRIPTION<br>
+ * 27/03/2023   1.0         DuongNH     First Deploy<br>
+ * 27/03/2023   2.0         DuongNH     Add function<br>
+ */
 package com.example.eims.controller;
 
 import com.example.eims.dto.cost.CreateCostDTO;
@@ -80,23 +91,5 @@ public class CostController {
     @Secured({"ROLE_OWNER"})
     public ResponseEntity<?> searchCost(@RequestParam Long userId,@RequestParam String costName){
         return costService.searchCostByName(userId,costName);
-    }
-
-    /**
-     * Get all of user's cost with Paging.
-     *
-     * @param userId the id of the Owner
-     * @param page   the page number
-     * @param size   the size of page
-     * @param sort   sorting type
-     * @return list of Cost
-     */
-    @GetMapping("/allPaging")
-    @Secured({"ROLE_OWNER"})
-    public ResponseEntity<?> getAllCustomerPaging(@RequestParam(name = "userId") Long userId,
-                                                  @RequestParam(name = "page", required = false, defaultValue = "0") Integer page,
-                                                  @RequestParam(name = "size", required = false, defaultValue = "5") Integer size,
-                                                  @RequestParam(name = "sort", required = false, defaultValue = "ASC") String sort) {
-        return costService.getAllCostPaging(userId, page, size, sort);
     }
 }
