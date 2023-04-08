@@ -20,7 +20,7 @@ const Payroll = () => {
             employeeName: "",
             employeePhone: "",
             payrollItem: "",
-            payrollAmount: "",
+            payrollAmount: "0",
             issueDate: "",
             note: "",
             status: ""
@@ -340,10 +340,11 @@ const Payroll = () => {
                                             onChange={(e) => handleCreatePayrollChange(e, "payrollItem")} />
                                     </div>
                                     <div className="col-md-6">
-                                        <p>Số tiền </p>
+                                        <p>Số tiền <FontAwesomeIcon className="star" icon={faStarOfLife} /> </p>
                                     </div>
                                     <div className="col-md-6">
                                         <input style={{ width: "100%" }} placeholder="1.000.000"
+                                        defaultValue={0}
                                             onChange={(e) => handleCreatePayrollChange(e, "payrollAmount")} />
                                     </div>
                                     <div className="col-md-6">
@@ -462,10 +463,11 @@ const Payroll = () => {
                                         onChange={(e) => handleEditPayrollChange(e, "payrollItem")} />
                                 </div>
                                 <div className="col-md-6">
-                                    <p>Số tiền </p>
+                                    <p>Số tiền <FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                 </div>
                                 <div className="col-md-6">
                                     <input style={{ width: "100%" }} placeholder="1.000.000"
+                                    defaultValue={0}
                                         value={payrollDetailDTO.payrollAmount}
                                         onChange={(e) => handleEditPayrollChange(e, "payrollAmount")} />
                                 </div>

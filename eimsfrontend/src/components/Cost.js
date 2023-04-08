@@ -262,6 +262,7 @@ const Cost = () => {
                                     </div>
                                     <div className="col-md-6">
                                         <input style={{ width: "100%" }} placeholder="0"
+                                        defaultValue={0}
                                             type='number'
                                             onChange={(e) => handleCreateCostChange(e, "costAmount")} />
                                     </div>
@@ -272,6 +273,7 @@ const Cost = () => {
                                     </div>
                                     <div className="col-md-6">
                                         <input style={{ width: "100%" }} placeholder="0"
+                                        defaultValue={0}
                                             type='number'
                                             onChange={(e) => handleCreateCostChange(e, "paidAmount")} />
                                     </div>
@@ -386,6 +388,7 @@ const Cost = () => {
                                 </div>
                                 <div className="col-md-6">
                                     <input style={{ width: "100%" }} placeholder="0"
+                                    defaultValue={0}
                                         type='number'
                                         step='0.000000000000000001'
                                         onChange={(e) => handleEditCostChange(e, "costAmount")}
@@ -402,6 +405,7 @@ const Cost = () => {
                                         type='number'
                                         step='0.000000000000000001'
                                         value={editCostDTO.paidAmount}
+                                        defaultValue={0}
                                         onChange={(e) => handleEditCostChange(e, "paidAmount")} />
                                 </div>
                                 <div className="col-md-6">

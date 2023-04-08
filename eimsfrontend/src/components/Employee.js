@@ -104,7 +104,7 @@ export default function BasicTabs() {
         employeePassword: "",
         employeeAddress: "",
         email: "",
-        salary: "",
+        salary: "0",
         facilityId: sessionStorage.getItem("facilityId")
     })
 
@@ -430,7 +430,7 @@ export default function BasicTabs() {
                                         <input style={{ width: "100%" }} placeholder="0"
                                             type='number'
                                             onChange={(e) => handleCreateEmployeeChange(e, "salary")}
-                                            defaultValue="0" />
+                                            defaultValue={0} />
                                     </div>
                                 </div>
                             </Modal.Body>
