@@ -43,6 +43,7 @@ const Supplier = () => {
   //API URLs
   const SUPPLIER_ALL = '/api/supplier/all';
   const SUPPLIER_CREATE = "/api/supplier/create";
+  const SUPPLIER_SEARCH = "/api/supplier/search";
 
   //DTOs
   //CreateSupplierDTO
@@ -55,6 +56,16 @@ const Supplier = () => {
     supplierMail: ""
   })
 
+  // Mess empty
+  const [messEmpty, setMessEmpty] = useState("Hiện tại không có nhà cung cấp nào được lưu trong hệ thống");
+
+  // Search key
+  const [searchKey, setSearchKey] = useState("");
+  // Search key onChange
+  const handleSearchKeyChange = (event) => {
+    let actualValue = event.target.value;
+    setSearchKey(actualValue);
+  }
 
   //Handle Change functions:
   //CreateSupplier
@@ -69,7 +80,9 @@ const Supplier = () => {
   // Set value for address fields
   //User
   useEffect(() => {
+    if (dataLoaded) return;
     loadAddress();
+    setDataLoaded(true);
   }, [dataLoaded]);
 
   const loadAddress = async () => {
@@ -201,6 +214,38 @@ const Supplier = () => {
         });
       setSupplierList(result.data);
       console.log(supplierList);
+    } catch (err) {
+      if (!err?.response) {
+        toast.error('Server không phản hồi');
+      } else {
+        if ((err.response.data === null) || (err.response.data === '')) {
+          toast.error('Có lỗi xảy ra, vui lòng thử lại');
+        } else {
+          toast.error(err.response.data);
+        }
+      }
+    }
+  }
+
+  const searchSupplier = async (event) => {
+    event.preventDefault();
+    let response;
+    try {
+      response = await axios.get(SUPPLIER_SEARCH,
+        {
+          params: {
+            userId: sessionStorage.getItem("curUserId"),
+            key: searchKey
+          },
+          headers: {
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*'
+          },
+          withCredentials: true
+        });
+      setSupplierList(response.data);
+      setMessEmpty("Không có nhà cung cấp nào có tên hoặc số điện thoại giống với từ khóa tìm kiếm: \"" + searchKey+"\"");
+
     } catch (err) {
       if (!err?.response) {
         toast.error('Server không phản hồi');
@@ -373,12 +418,12 @@ const Supplier = () => {
         <div className='filter my-2 my-lg-0'>
           <p><FilterAltIcon />Lọc</p>
           <p><ImportExportIcon />Sắp xếp</p>
-          <form className="form-inline">
+          <form className="form-inline" onSubmit={searchSupplier}>
             <div className="input-group">
               <div className="input-group-prepend">
-                <button ><span className="input-group-text" ><SearchIcon /></span></button>
+                <button type='submit'><span className="input-group-text" ><SearchIcon /></span></button>
               </div>
-              <input id="searchSupplier" type="text" className="form-control" placeholder="Tìm kiếm" aria-label="Username" aria-describedby="basic-addon1" />
+              <input onChange={(e) => handleSearchKeyChange(e)} id="searchSupplier" type="text" className="form-control" placeholder="Tìm kiếm" aria-label="Username" aria-describedby="basic-addon1" />
             </div>
           </form>
         </div>
@@ -414,7 +459,7 @@ const Supplier = () => {
                   </tr>
                 ) :
                 <tr>
-                  <td colSpan='5'>Hiện tại không có nhà cung cấp nào được lưu trong hệ thống</td>
+                  <td colSpan='5'>{messEmpty}</td>
                 </tr>
             }
           </tbody>

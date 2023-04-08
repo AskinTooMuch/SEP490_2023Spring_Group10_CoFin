@@ -38,6 +38,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -355,7 +356,7 @@ public class SupplierServiceImpl implements ISupplierService {
         if (supplierList.isPresent()) {
             return new ResponseEntity<>(supplierList.get(), HttpStatus.OK);
         } else {
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
         }
     }
 

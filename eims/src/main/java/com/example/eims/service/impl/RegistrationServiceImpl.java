@@ -141,8 +141,9 @@ public class RegistrationServiceImpl implements IRegistrationService {
             // Create Khách lẻ
             Customer customer = new Customer();
             customer.setCustomerName("Khách lẻ");
-            customer.setCustomerAddress("");
+            customer.setCustomerAddress("Khách lẻ");
             customer.setCustomerPhone("Khách lẻ");
+            customer.setCustomerMail("Khách lẻ");
             customer.setStatus(1);
             customer.setUserId(userId);
             customerRepository.save(customer);

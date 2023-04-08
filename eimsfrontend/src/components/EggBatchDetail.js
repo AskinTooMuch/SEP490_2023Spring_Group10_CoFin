@@ -75,20 +75,19 @@ export default function BasicTabs() {
                     amountUpdate: eggBatchDetail.machineList[i].amount
                 });
             }
-
             setRowsData(rows);
             setShow(true);
-        } else
-            if (eggBatchDetail.status == 1 && eggBatchDetail.needAction == 1 && eggBatchDetail.progress >= 7) {
-                const rows = [...rowsData];
-                setRowsData(rows);
-                setShow(true);
-            } else if (eggBatchDetail.status == 0) {
-                toast.warning("Lô trứng đã hoàn thành, không thể cập nhật")
-            } else if (eggBatchDetail.status == 1 && eggBatchDetail.needAction == 0) {
-                toast.warning("Chưa đến giai đoạn cập nhật lô trứng")
-            }
-
+        } else if (eggBatchDetail.status == 1 && eggBatchDetail.progress >= 7) {
+            setShow(true);
+        } else if (eggBatchDetail.status == 1 && eggBatchDetail.needAction == 1) {
+            const rows = [...rowsData];
+            setRowsData(rows);
+            setShow(true);
+        } else if (eggBatchDetail.status == 0) {
+            toast.warning("Lô trứng đã hoàn thành, không thể cập nhật")
+        } else if (eggBatchDetail.status == 1 && eggBatchDetail.needAction == 0) {
+            toast.warning("Chưa đến giai đoạn cập nhật lô trứng")
+        }
     }
     const [show2, setShow2] = useState(false);
     const handleClose2 = () => setShow2(false);
@@ -521,6 +520,11 @@ export default function BasicTabs() {
                                         : ''
                                 }
                                 {
+                                    eggBatchDetail.status === 1 && eggBatchDetail.needAction === 1 && eggBatchDetail.progress == 5
+                                        ? <td className='text-red'>Cần cập nhật</td>
+                                        : ''
+                                }
+                                {
                                     eggBatchDetail.status === 1 && eggBatchDetail.progress > 5
                                         ? <td className='text-green'>Đã nở</td>
                                         : ''
@@ -677,7 +681,7 @@ export default function BasicTabs() {
                                                 <label>Trứng hao hụt: </label>
                                             </div>
                                             <div className="col-md-3">
-                                                <input className='form-control' id="eggWasted" name="eggWasted" type="number"
+                                                <input defaultValue="0" className='form-control' id="eggWasted" name="eggWasted" type="number"
                                                     onChange={(e) => handleUpdateEggBatchChange(e, "eggWasted")} />
                                             </div>
                                             {
@@ -734,10 +738,10 @@ export default function BasicTabs() {
                                                 <label>Số lượng cập nhật</label>
                                             </div>
                                             <div className="col-md-3">
-                                                <input disabled className='form-control' id="amount" name="amount" type="number"
+                                                <input defaultValue="0" disabled className='form-control' id="amount" name="amount" type="number"
                                                     onChange={(e) => handleUpdateEggBatchChange(e, "amount")} />
                                             </div>
-                                            
+
                                             {
                                                 eggBatchDetail.progress == 0
                                                     || (eggBatchDetail.progress <= 5 && eggBatchDetail.eggProductList[2].amount !== 0)
@@ -766,7 +770,7 @@ export default function BasicTabs() {
                                                     </>
                                                     : ''
                                             }
-                                            <br/>
+                                            <br />
                                             {
                                                 (eggBatchDetail.progress == 6 || eggBatchDetail.progress == 0)
                                                     ? ''

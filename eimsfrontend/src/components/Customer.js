@@ -43,7 +43,7 @@ const Customer = () => {
     //API URLs
     const CUSTOMER_ALL = '/api/customer/all';
     const CUSTOMER_CREATE = "/api/customer/create";
-
+    const CUSTOMER_SEARCH = "/api/customer/search";
 
     //DTOs
     //CreateSupplierDTO
@@ -55,6 +55,16 @@ const Customer = () => {
         customerMail: ""
     })
 
+    // Mess empty
+    const [messEmpty, setMessEmpty] = useState("Hiện tại không có nhà cung cấp nào được lưu trong hệ thống");
+
+    // Search key
+    const [searchKey, setSearchKey] = useState("");
+    // Search key onChange
+    const handleSearchKeyChange = (event) => {
+        let actualValue = event.target.value;
+        setSearchKey(actualValue);
+    }
 
     //Handle Change functions:
     //CreateCustomer
@@ -69,7 +79,9 @@ const Customer = () => {
     // Set value for address fields
     //User
     useEffect(() => {
+        if (dataLoaded) return;
         loadAddress();
+        setDataLoaded(true);
     }, [dataLoaded]);
 
     const loadAddress = async () => {
@@ -201,6 +213,38 @@ const Customer = () => {
                 });
             setCustomerList(result.data);
             console.log(customerList);
+        } catch (err) {
+            if (!err?.response) {
+                toast.error('Server không phản hồi');
+            } else {
+                if ((err.response.data === null) || (err.response.data === '')) {
+                    toast.error('Có lỗi xảy ra, vui lòng thử lại');
+                } else {
+                    toast.error(err.response.data);
+                }
+            }
+        }
+    }
+
+    const searchCustomer = async (event) => {
+        event.preventDefault();
+        let response;
+        try {
+            response = await axios.get(CUSTOMER_SEARCH,
+                {
+                    params: {
+                        userId: sessionStorage.getItem("curUserId"),
+                        key: searchKey
+                    },
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Access-Control-Allow-Origin': '*'
+                    },
+                    withCredentials: true
+                });
+            setCustomerList(response.data);
+            setMessEmpty("Không có khách hàng nào có tên hoặc số điện thoại giống với từ khóa tìm kiếm: \"" + searchKey+"\"");
+
         } catch (err) {
             if (!err?.response) {
                 toast.error('Server không phản hồi');
@@ -366,12 +410,12 @@ const Customer = () => {
                 <div className='filter my-2 my-lg-0'>
                     <p><FilterAltIcon />Lọc</p>
                     <p><ImportExportIcon />Sắp xếp</p>
-                    <form className="form-inline">
+                    <form className="form-inline" onSubmit={searchCustomer}>
                         <div className="input-group">
                             <div className="input-group-prepend">
-                                <button ><span className="input-group-text" ><SearchIcon /></span></button>
+                                <button type='submit'><span className="input-group-text" ><SearchIcon /></span></button>
                             </div>
-                            <input type="text" className="form-control" placeholder="Tìm kiếm" aria-label="Username" aria-describedby="basic-addon1" />
+                            <input onChange={(e) => handleSearchKeyChange(e)} type="text" className="form-control" placeholder="Tìm kiếm" aria-label="Username" aria-describedby="basic-addon1" />
                         </div>
                     </form>
                 </div>
@@ -407,7 +451,7 @@ const Customer = () => {
                                     </tr>
                                 ) :
                                 <tr>
-                                    <td colSpan='4'>Hiện tại không có khách hàng nào được lưu trong hệ thống</td>
+                                    <td colSpan='4'>{messEmpty}</td>
                                 </tr>
                         }
                     </tbody>

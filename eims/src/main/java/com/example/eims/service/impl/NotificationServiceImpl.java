@@ -27,6 +27,7 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Date;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -63,7 +64,7 @@ public class NotificationServiceImpl implements INotificationService {
         Optional<List<Notification>> notificationListOptional = notificationRepository
                 .findAllByFacilityIdAndDate(facilityId, today);
         if (notificationListOptional.isEmpty()) {
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
         }
         return new ResponseEntity<>(notificationListOptional.get(), HttpStatus.OK);
     }
@@ -81,7 +82,7 @@ public class NotificationServiceImpl implements INotificationService {
         Optional<List<Notification>> notificationListOptional = notificationRepository
                 .findAllByFacilityIdAndDateBefore(facilityId, today);
         if (notificationListOptional.isEmpty()) {
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
         }
         return new ResponseEntity<>(notificationListOptional.get(), HttpStatus.OK);
     }
@@ -99,7 +100,7 @@ public class NotificationServiceImpl implements INotificationService {
                 .findAllByFacilityIdAndDate(facilityId, today);
 
         if (notificationListOptional.isEmpty()) {
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
         }
         List<Notification> notificationList = notificationListOptional.get();
         for (Notification notification : notificationList) {

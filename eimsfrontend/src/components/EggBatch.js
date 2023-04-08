@@ -58,7 +58,7 @@ const EggBatch = () => {
                         <tr>
                             <th scope="col">STT</th>
                             <th scope="col">Mã lô</th>
-                            <th scope="col">Tên lô</th>
+                            <th scope="col">Tên loại</th>
                             <th scope="col">Mã hoá đơn</th>
                             <th scope="col">Nhà cung cấp</th>
                             <th scope="col">Số lượng</th>

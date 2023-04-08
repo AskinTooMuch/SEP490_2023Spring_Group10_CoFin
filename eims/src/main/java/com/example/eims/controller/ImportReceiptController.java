@@ -46,66 +46,6 @@ public class ImportReceiptController {
     }
 
     /**
-     * Get all import bill from suppliers of an Owner with paging.
-     *
-     * @param userId the id of current logged-in user.
-     * @param page the page number
-     * @param size the size of page
-     * @param sort sorting type
-     * @return list of import receipts
-     */
-    @GetMapping("/allImportByUserPaging")
-    @Secured({"ROLE_OWNER"})
-    public ResponseEntity<?> viewImportsByUserPaging(@RequestParam(name = "userId") Long userId,
-                                                  @RequestParam(name = "page", required = false, defaultValue = "0") Integer page,
-                                                  @RequestParam(name = "size", required = false, defaultValue = "5") Integer size,
-                                                  @RequestParam(name = "sort", required = false, defaultValue = "ASC") String sort) {
-        return importReceiptService.viewImportsByOwnerPaging(userId, page, size, sort);
-    }
-
-    /**
-     * Get all import bill from a supplier of an owner.
-     *
-     * @param supplierId the id of the supplier
-     * @return list of import receipts
-     */
-    @Secured({"ROLE_OWNER"})
-    @GetMapping("/allBySupplier")
-    public ResponseEntity<?> viewImportsBySupplier(@RequestParam Long supplierId) {
-        return importReceiptService.viewImportsBySupplier(supplierId);
-    }
-
-    /**
-     * Get all import bill from suppliers of an Owner with paging.
-     *
-     * @param supplierId the id of current logged-in user.
-     * @param page the page number
-     * @param size the size of page
-     * @param sort sorting type
-     * @return list of import receipts
-     */
-    @GetMapping("/allByUserPaging")
-    @Secured({"ROLE_OWNER"})
-    public ResponseEntity<?> viewImportsBySupplierPaging(@RequestParam(name = "supplierId") Long supplierId,
-                                                     @RequestParam(name = "page", required = false, defaultValue = "0") Integer page,
-                                                     @RequestParam(name = "size", required = false, defaultValue = "5") Integer size,
-                                                     @RequestParam(name = "sort", required = false, defaultValue = "ASC") String sort) {
-        return importReceiptService.viewImportsBySupplierPaging(supplierId, page, size, sort);
-    }
-
-    /**
-     * Get imports statistics of an owner.
-     *
-     * @param userId the id of the owner
-     * @return list of import receipts
-     */
-    @Secured({"ROLE_OWNER"})
-    @GetMapping("/statistic")
-    public ResponseEntity<?> viewImportStatistic(@RequestParam Long userId) {
-        return importReceiptService.viewImportStatistic(userId);
-    }
-
-    /**
      * Create an import.
      *
      * @param createImportDTO contains supplier's id, user's id who create the import, facility's id, import date,

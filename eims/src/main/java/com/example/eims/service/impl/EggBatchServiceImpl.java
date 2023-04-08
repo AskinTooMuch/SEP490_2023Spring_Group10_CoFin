@@ -306,7 +306,7 @@ public class EggBatchServiceImpl implements IEggBatchService {
             }
             return new ResponseEntity<>(dtoList, HttpStatus.OK);
         } else {
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
         }
     }
 
@@ -326,7 +326,6 @@ public class EggBatchServiceImpl implements IEggBatchService {
         // List item (incubationPhaseId)    | 0| 1| 2| 3| 4| 5| 6| 7| 8| 9| 10|
         // phase number                     |-1| 0| 1| 2| 3| 4| 5| 6| 7| 8| 9 |
 
-
         // Egg Batch
         Optional<EggBatch> eggBatchOptional = eggBatchRepository.findByEggBatchId(updateEggBatchDTO.getEggBatchId());
         if (eggBatchOptional.isEmpty()) {
@@ -334,14 +333,8 @@ public class EggBatchServiceImpl implements IEggBatchService {
         }
         EggBatch eggBatch = eggBatchOptional.get();
         int eggBatchAmount = eggBatch.getAmount();
+        LocalDateTime dateAction = eggBatch.getDateAction();
 
-        // Need action
-        int needActionUpdate = updateEggBatchDTO.getNeedAction();
-        int needActionEggBatch = eggBatch.getNeedAction();
-
-        if (needActionEggBatch == 0) {
-            return new ResponseEntity<>("Chưa đến giai đoạn cần cập nhật", HttpStatus.BAD_REQUEST);
-        }
         // Get latest phase
         int progress = 0;
         Optional<EggProduct> eggProductLastPhaseOptional = eggProductRepository.
@@ -350,6 +343,21 @@ public class EggBatchServiceImpl implements IEggBatchService {
             Long incubationPhaseId = eggProductLastPhaseOptional.get().getIncubationPhaseId();
             IncubationPhase phase = incubationPhaseRepository.findByIncubationPhaseId(incubationPhaseId).get();
             progress = phase.getPhaseNumber();
+        }
+
+        // Need action
+        int needActionUpdate = updateEggBatchDTO.getNeedAction();
+        int needActionEggBatch = eggBatch.getNeedAction();
+        LocalDateTime now = LocalDateTime.now();
+        long dateDiff = stringDealer
+                .dateDiff(Date.valueOf(dateAction.minusHours(7).toLocalDate()), Date.valueOf(now.toLocalDate()));
+        if ((needActionEggBatch == 0 || dateDiff != 0) && progress < 7) {
+            System.out.println(now);
+            System.out.println(dateAction);
+            System.out.println(needActionEggBatch);
+            System.out.println(dateDiff);
+            System.out.println(progress);
+            return new ResponseEntity<>("Chưa đến giai đoạn cần cập nhật", HttpStatus.BAD_REQUEST);
         }
 
         // Get eggs amount
@@ -365,7 +373,10 @@ public class EggBatchServiceImpl implements IEggBatchService {
         }
         // Get phase number of egg to insert
         int phaseNumber = updateEggBatchDTO.getPhaseNumber();
-        LocalDateTime now = LocalDateTime.now();
+        List<Integer> listPhase = Arrays.asList(0, 2, 3, 4, 5, 6, 8, 9);
+        if (!listPhase.contains(phaseNumber)) {
+            return new ResponseEntity<>("Giai đoạn cập nhật không hợp lệ", HttpStatus.BAD_REQUEST);
+        }
         // Get Machine list
         List<EggLocationUpdateEggBatchDTO> eggLocationDTOs = updateEggBatchDTO.getEggLocationUpdateEggBatchDTOS();
 
@@ -490,14 +501,20 @@ public class EggBatchServiceImpl implements IEggBatchService {
             // Update before moving to hatching
             // Update Trứng hao hụt (-1), trứng đang nở (1), Trứng trắng (2)/trứng loãng (3)/trứng lộn (4)
             // Create new (2/3/4) if not exist
-            if ((phaseNumber == 0 || phaseNumber == 2 || phaseNumber == 3 || phaseNumber == 4)
-                    && progress > phaseNumber) {
+            if ((phaseNumber == 2 || phaseNumber == 3 || phaseNumber == 4)
+                    && progress < phaseNumber - 1) {
+                return new ResponseEntity<>("Chưa đến giai đoạn cập nhật " +
+                        incubationPhaseList.get(phaseNumber + 1).getPhaseDescription(),
+                        HttpStatus.BAD_REQUEST);
+            }
+            if ((phaseNumber == 2 || phaseNumber == 3 || phaseNumber == 4)
+                    && progress > phaseNumber - 1) {
                 return new ResponseEntity<>("Đã qua giai đoạn cập nhật " +
                         incubationPhaseList.get(phaseNumber + 1).getPhaseDescription(),
                         HttpStatus.BAD_REQUEST);
             }
             if ((phaseNumber == 2 || phaseNumber == 3 || phaseNumber == 4)
-                    && progress <= phaseNumber) {
+                    && progress == phaseNumber - 1) {
                 IncubationPhase incubationPhase = incubationPhaseList.get(phaseNumber + 1);
                 // Trứng hao hụt egg-1
                 EggProduct eggWasted = eggProductRepository.
@@ -520,37 +537,41 @@ public class EggBatchServiceImpl implements IEggBatchService {
                             "nhỏ hơn hoặc bằng số Trứng đang ấp(" + eggIncubating.getAmount() + ")",
                             HttpStatus.BAD_REQUEST);
                 }
-                // Check machine list
-                if (eggLocationDTOs.isEmpty()) {
-                    return new ResponseEntity<>("Chưa cập nhật vị trí trứng", HttpStatus.BAD_REQUEST);
-                }
-                Set inputSet = new HashSet(eggLocationDTOs);
-                if (inputSet.size() < eggLocationDTOs.size()) {
-                    return new ResponseEntity<>("Có máy bị trùng lặp", HttpStatus.BAD_REQUEST);
-                }
-                // Check total eggs in list Machines
-                int total = 0;
-                for (EggLocationUpdateEggBatchDTO eggLocationDTO : eggLocationDTOs) {
-                    Machine machine = machineRepository.findByMachineId(eggLocationDTO.getMachineId()).get();
-                    if (machine.getMachineTypeId() == 2) {
-                        return new ResponseEntity<>("Chỉ được chọn máy ấp trong giai đoạn này",
+                // Not Update all incubating egg
+                if (amount != eggIncubating.getAmount()) {
+                    // Check machine list
+                    if (eggLocationDTOs.isEmpty()) {
+                        return new ResponseEntity<>("Chưa cập nhật vị trí trứng", HttpStatus.BAD_REQUEST);
+                    }
+                    Set inputSet = new HashSet(eggLocationDTOs);
+                    if (inputSet.size() < eggLocationDTOs.size()) {
+                        return new ResponseEntity<>("Có máy bị trùng lặp", HttpStatus.BAD_REQUEST);
+                    }
+                    // Check total eggs in list Machines
+                    int total = 0;
+                    for (EggLocationUpdateEggBatchDTO eggLocationDTO : eggLocationDTOs) {
+                        Machine machine = machineRepository.findByMachineId(eggLocationDTO.getMachineId()).get();
+                        if (machine.getMachineTypeId() == 2) {
+                            return new ResponseEntity<>("Chỉ được chọn máy ấp trong giai đoạn này",
+                                    HttpStatus.BAD_REQUEST);
+                        }
+                        if (eggLocationDTO.getAmountUpdate() < 0
+                                || eggLocationDTO.getAmountUpdate() > (eggLocationDTO.getCapacity() - eggLocationDTO.getAmountCurrent())
+                                || eggLocationDTO.getAmountUpdate() > eggIncubating.getAmount()) {
+                            return new ResponseEntity<>("Số lượng trứng trong danh sách máy không hợp lệ",
+                                    HttpStatus.BAD_REQUEST);
+                        }
+                        total += eggLocationDTO.getAmountUpdate();
+                    }
+                    if (total != eggIncubating.getAmount() - eggWastedAmount - amount) {
+                        return new ResponseEntity<>("Số lượng trứng trong danh sách máy không hợp lệ. Tổng số trứng" +
+                                " trong danh sách máy(" + total + ") phải bằng số Trứng đang ấp trước đó(" +
+                                eggIncubating.getAmount() + ") trừ đi số Trứng hư tổn, hao hụt(" + eggWastedAmount + ")" +
+                                " và số " + incubationPhase.getPhaseDescription() + "(" + amount + ")",
                                 HttpStatus.BAD_REQUEST);
                     }
-                    if (eggLocationDTO.getAmountUpdate() < 0
-                            || eggLocationDTO.getAmountUpdate() > (eggLocationDTO.getCapacity() - eggLocationDTO.getAmountCurrent())
-                            || eggLocationDTO.getAmountUpdate() > eggIncubating.getAmount()) {
-                        return new ResponseEntity<>("Số lượng trứng trong danh sách máy không hợp lệ",
-                                HttpStatus.BAD_REQUEST);
-                    }
-                    total += eggLocationDTO.getAmountUpdate();
                 }
-                if (total != eggIncubating.getAmount() - eggWastedAmount - amount) {
-                    return new ResponseEntity<>("Số lượng trứng trong danh sách máy không hợp lệ. Tổng số trứng" +
-                            " trong danh sách máy(" + total + ") phải bằng số Trứng đang ấp trước đó(" +
-                            eggIncubating.getAmount() + ") trừ đi số Trứng hư tổn, hao hụt(" + eggWastedAmount + ")" +
-                            " và số " + incubationPhase.getPhaseDescription() + "(" + amount + ")",
-                            HttpStatus.BAD_REQUEST);
-                }
+
                 // Update Trứng hao hụt - egg-1
                 eggWasted.setAmount(eggWasted.getAmount() + eggWastedAmount);
                 eggWasted.setCurAmount(eggWasted.getCurAmount() + eggWastedAmount);
@@ -578,28 +599,21 @@ public class EggBatchServiceImpl implements IEggBatchService {
                 EggProduct egg1Inserted = eggProductRepository.save(eggIncubating);
 
                 // Update egg batch
-                if (needActionUpdate == 1) {
-                    eggBatch.setNeedAction(needActionUpdate);
-                    eggBatch.setDateAction(now);
-                }
-                if (needActionUpdate == 0) {
-                    eggBatch.setNeedAction(needActionUpdate);
-                    if (phaseNumber == 2) {
-                        eggBatch.setDateAction(eggIncubating.getIncubationDate()
-                                .plusDays(incubationPhaseList.get(4).getPhasePeriod()));
+                if (egg1Inserted.getAmount() == 0) {
+                    eggBatch.setNeedAction(0);
+                    eggBatch.setStatus(0);
+                } else {
+                    if (needActionUpdate == 1) {
+                        eggBatch.setNeedAction(1);
+                        eggBatch.setDateAction(now);
                     }
-                    if (phaseNumber == 3) {
+                    if (needActionUpdate == 0) {
+                        eggBatch.setNeedAction(0);
                         eggBatch.setDateAction(eggIncubating.getIncubationDate()
-                                .plusDays(incubationPhaseList.get(5).getPhasePeriod()));
-                    }
-                    if (phaseNumber == 4) {
-                        eggBatch.setDateAction(eggIncubating.getIncubationDate()
-                                .plusDays(incubationPhaseList.get(6).getPhasePeriod()));
+                                .plusDays(incubationPhaseList.get(phaseNumber + 2).getPhasePeriod()));
                     }
                 }
-
-                EggBatch returnn = eggBatchRepository.save(eggBatch);
-                System.out.println("after: " + returnn);
+                eggBatchRepository.save(eggBatch);
 
                 // Update egg location
                 List<EggLocation> eggLocations = eggLocationRepository
@@ -631,7 +645,7 @@ public class EggBatchServiceImpl implements IEggBatchService {
             // Update trứng đang ấp (1)
             // Create/Update trứng đang nở (5)
             if (phaseNumber == 5) {
-                if (progress <= 0) {
+                if (progress < 4) {
                     return new ResponseEntity<>("Chưa đến giai đoạn cập nhật Trứng đang nở", HttpStatus.BAD_REQUEST);
                 }
                 if (progress > 5) {
@@ -647,9 +661,6 @@ public class EggBatchServiceImpl implements IEggBatchService {
                 EggProduct eggIncubating = eggProductRepository.
                         findByEggBatchIdAndIncubationPhaseId(eggBatch.getEggBatchId(),
                                 incubationPhaseList.get(2).getIncubationPhaseId()).get();
-                if (progress == 5 && eggIncubating.getAmount() == 0) {
-                    return new ResponseEntity<>("Đã qua giai đoạn cập nhật Trứng đang nở", HttpStatus.BAD_REQUEST);
-                }
 
                 // Vẫn còn trứng đang ấp, không được đánh dấu hoàn thành giai đoạn
                 if (needActionUpdate == 0 && eggIncubating.getAmount() > amount) {
@@ -964,10 +975,14 @@ public class EggBatchServiceImpl implements IEggBatchService {
             }
 
             // Update sau khi phân loại Đực/Cái
-            // Update Trứng hao hụt (-1), Con nở (7) , Con đực (8),
-            if (phaseNumber == 8) {
+            // Update Trứng hao hụt (-1), Con nở (7) , Con đực (8) / Con cái
+            if (phaseNumber == 8 || phaseNumber == 9) {
+                // incubation phase
+                IncubationPhase incubationPhase = incubationPhaseList.get(phaseNumber + 1);
+
                 if (progress <= 6) {
-                    return new ResponseEntity<>("Chưa đến giai đoạn cập nhật Con đực", HttpStatus.BAD_REQUEST);
+                    return new ResponseEntity<>("Chưa đến giai đoạn cập nhật " + incubationPhase.getPhaseDescription()
+                            , HttpStatus.BAD_REQUEST);
                 }
 
                 // Trứng hao hụt
@@ -985,12 +1000,14 @@ public class EggBatchServiceImpl implements IEggBatchService {
                 }
                 // Check amounts
                 if (amount > hatchedAmount) {
-                    return new ResponseEntity<>("Số Con đực không được vượt quá số lượng Con nở",
+                    return new ResponseEntity<>("Số " + incubationPhase.getPhaseDescription() + " " +
+                            "không được vượt quá số lượng Con nở",
                             HttpStatus.BAD_REQUEST);
                 }
                 if (amount + eggWastedAmount > hatchedAmount) {
-                    return new ResponseEntity<>("Tổng số Con đực(" + amount + ") và Trứng hao hụt mới (" +
-                            eggWastedAmount + ") không được vượt quá số lượng Con nở(" + hatchedAmount + ")",
+                    return new ResponseEntity<>("Tổng số " + incubationPhase.getPhaseDescription() + " ("
+                            + amount + ") và Trứng hao hụt mới (" + eggWastedAmount + ") không được vượt quá " +
+                            "số lượng Con nở (" + hatchedAmount + ")",
                             HttpStatus.BAD_REQUEST);
                 }
                 // Update Trứng hao hụt - egg-1
@@ -999,7 +1016,7 @@ public class EggBatchServiceImpl implements IEggBatchService {
                 EggProduct eggWastedInserted = eggProductRepository.save(eggWasted);
 
                 if (eggProductOptional.isEmpty()) {
-                    // Create Con đực - egg8
+                    // Create
                     eggProduct = new EggProduct();
                     eggProduct.setEggBatchId(eggBatch.getEggBatchId());
                     eggProduct.setIncubationPhaseId(incubationPhaseList.get(phaseNumber + 1).getIncubationPhaseId());
@@ -1007,7 +1024,7 @@ public class EggBatchServiceImpl implements IEggBatchService {
                     eggProduct.setAmount(amount);
                     eggProduct.setCurAmount(amount);
                     eggProduct.setStatus(true);
-                    EggProduct male = eggProductRepository.save(eggProduct);
+                    eggProductRepository.save(eggProduct);
 
                     // Update  Con nở - egg7
                     eggHatched.setAmount(hatchedAmount - amount - eggWastedAmount);
@@ -1018,9 +1035,8 @@ public class EggBatchServiceImpl implements IEggBatchService {
                         eggBatch.setStatus(0);
                         eggBatchRepository.save(eggBatch);
                     }
-
                 } else {
-                    // Update Con đực - egg8
+                    // Update
                     eggProduct = eggProductOptional.get();
                     eggProduct.setAmount(eggProduct.getAmount() + amount);
                     eggProduct.setCurAmount(eggProduct.getCurAmount() + amount);
@@ -1035,78 +1051,8 @@ public class EggBatchServiceImpl implements IEggBatchService {
                         eggBatchRepository.save(eggBatch);
                     }
                 }
-                return new ResponseEntity<>("Cập nhật lô trứng thành công", HttpStatus.OK);
             }
 
-            // Update sau khi phân loại Đực/Cái
-            // Update Trứng hao hụt (-1), Con nở (7), Con cái (9),
-            if (phaseNumber == 9) {
-                if (progress <= 6) {
-                    return new ResponseEntity<>("Chưa đến giai đoạn cập nhật Trứng hao hụt", HttpStatus.BAD_REQUEST);
-                }
-
-                // Trứng hao hụt
-                EggProduct eggWasted = eggProductRepository.
-                        findByEggBatchIdAndIncubationPhaseId(eggBatch.getEggBatchId(),
-                                incubationPhaseList.get(0).getIncubationPhaseId()).get();
-
-                // Con nở egg7
-                EggProduct eggHatched = eggProductRepository.
-                        findByEggBatchIdAndIncubationPhaseId(eggBatch.getEggBatchId(),
-                                incubationPhaseList.get(8).getIncubationPhaseId()).get();
-                int hatchedAmount = eggHatched.getCurAmount();
-                if (hatchedAmount == 0) {
-                    return new ResponseEntity<>("Đã phân biệt đực/cái hết số con nở", HttpStatus.BAD_REQUEST);
-                }
-                // Check amounts
-                if (amount > hatchedAmount) {
-                    return new ResponseEntity<>("Số Con cái(" + amount + ") không được vượt quá số lượng Con nở(" +
-                            hatchedAmount + ")", HttpStatus.BAD_REQUEST);
-                }
-                if (amount + eggWastedAmount > hatchedAmount) {
-                    return new ResponseEntity<>("Tổng số Con cái(" + amount + ") và Trứng hao hụt mới(" +
-                            eggWastedAmount + ") không được vượt quá số lượng Con nở(" + hatchedAmount + ")",
-                            HttpStatus.BAD_REQUEST);
-                }
-                // Update Trứng hao hụt - egg-1
-                eggWasted.setAmount(eggWasted.getAmount() + eggWastedAmount);
-                eggWasted.setCurAmount(eggWasted.getCurAmount() + eggWastedAmount);
-                EggProduct eggWastedInserted = eggProductRepository.save(eggWasted);
-
-                if (eggProductOptional.isEmpty()) {
-                    // Create Con cái - egg9
-                    eggProduct = new EggProduct();
-                    eggProduct.setEggBatchId(eggBatch.getEggBatchId());
-                    eggProduct.setIncubationPhaseId(incubationPhaseList.get(phaseNumber + 1).getIncubationPhaseId());
-                    eggProduct.setIncubationDate(now);
-                    eggProduct.setAmount(amount);
-                    eggProduct.setCurAmount(amount);
-                    eggProduct.setStatus(true);
-                    EggProduct female = eggProductRepository.save(eggProduct);
-
-                    // Update  Con nở - egg7
-                    eggHatched.setAmount(hatchedAmount - amount - eggWastedAmount);
-                    eggHatched.setCurAmount(hatchedAmount - amount - eggWastedAmount);
-                    eggProductRepository.save(eggHatched);
-
-                } else {
-                    // Update Con đực - egg9
-                    eggProduct = eggProductOptional.get();
-                    eggProduct.setAmount(eggProduct.getAmount() + amount);
-                    eggProduct.setCurAmount(eggProduct.getCurAmount() + amount);
-                    EggProduct female = eggProductRepository.save(eggProduct);
-                    // Update  Con nở - egg7
-                    eggHatched.setAmount(hatchedAmount - amount - eggWastedAmount);
-                    eggHatched.setCurAmount(hatchedAmount - amount - eggWastedAmount);
-                    eggProductRepository.save(eggHatched);
-                }
-                // Set done
-                if (hatchedAmount - amount - eggWastedAmount == 0) {
-                    eggBatch.setStatus(0);
-                }
-                eggBatch.setNeedAction(needActionUpdate);
-                eggBatchRepository.save(eggBatch);
-            }
         } catch (IllegalArgumentException iae) {
             return new ResponseEntity<>(iae.getMessage(), HttpStatus.BAD_REQUEST);
         }
@@ -1134,7 +1080,10 @@ public class EggBatchServiceImpl implements IEggBatchService {
             return new ResponseEntity<>("Không tìm thấy lô trứng", HttpStatus.BAD_REQUEST);
         }
         EggBatch eggBatch = eggBatchOptional.get();
-
+        // Egg batch done
+        if (eggBatch.getStatus() == 0) {
+            return new ResponseEntity<>("Lô trứng đã hoàn thành, không thê cập nhật", HttpStatus.BAD_REQUEST);
+        }
         // Get latest phase
         int progress = 0;
         Optional<EggProduct> eggProductLastPhaseOptional = eggProductRepository.
@@ -1174,12 +1123,6 @@ public class EggBatchServiceImpl implements IEggBatchService {
             // Set status
             eggBatch.setStatus(0);
             eggBatchRepository.save(eggBatch);
-        }
-        if (!done && eggBatch.getStatus() == 0) {
-            // Set status
-            eggBatch.setStatus(1);
-            eggBatchRepository.save(eggBatch);
-            return new ResponseEntity<>("Đã hủy hoàn thành lô trứng", HttpStatus.OK);
         }
         return new ResponseEntity<>("Đã hoàn thành lô trứng", HttpStatus.OK);
     }

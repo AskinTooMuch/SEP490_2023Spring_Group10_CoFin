@@ -1,3 +1,4 @@
+-- V0.12.1: Insert data customer table : Khách lẻ
 -- V0.12.1: Modify update_status_trigger
 -- V0.12.0: Add attributes to user_subscription table, add 1 triggers
 -- V0.11.2: Add attributes to export_detail table attribute
@@ -20,7 +21,7 @@
 -- V0.2.0: Add foreign key constraint
 -- V0.2.1: Change attribute _name, re-route foreign key constraint
 -- V0.2.2: Add CHECK constraint
--- Last update: 06/04/2023
+-- Last update: 08/04/2023
 -- Script for generating EIMS - Eggs Incubating Management System.
 -- Check if database already exist. If yes then drop the database to ensure the script runs successfully with no variations.
 DROP DATABASE IF EXISTS eims;
@@ -152,8 +153,8 @@ CREATE TABLE egg_batch(
 	breed_id		integer			NOT NULL,
     amount			integer 		NOT NULL,
     price			decimal(15,2)	NOT NULL,
-    need_action		boolean			NOT NULL,
-    date_action		datetime		NOT NULL,
+    need_action		boolean			,
+    date_action		datetime		,
     status			boolean 		NOT NULL
 );
 
@@ -562,8 +563,9 @@ VALUES (2, 'Vũ Hồng Nam', 'Trang trại gà hòa phát', '0978456331', '{"cit
        
 -- customer
 INSERT INTO customer(user_id, customer_name, customer_phone, customer_address, customer_mail, status)
-VALUES (2, 'Anh Tiến', '0978456341', '{"city":"Tỉnh Hà Giang","district":"Huyện Quản Bạ","ward":"Xã Thái An","street":"Thôn 3"}', 'tienchinngon@gmail.com', 1),
-	   (2, 'Chị Hương Giang', '0978456342', '{"city":"Tỉnh Hà Giang","district":"Huyện Quản Bạ","ward":"Xã Thái An","street":"Thôn 5"}', 'huongchaykhongmui@gmail.com', 1);
+VALUES 	(2, 'Khách lẻ', 'Khách lẻ', 'Khách lẻ', 'Khách lẻ', 1),
+		(2, 'Anh Tiến', '0978456341', '{"city":"Tỉnh Hà Giang","district":"Huyện Quản Bạ","ward":"Xã Thái An","street":"Thôn 3"}', 'tienchinngon@gmail.com', 1),
+		(2, 'Chị Hương Giang', '0978456342', '{"city":"Tỉnh Hà Giang","district":"Huyện Quản Bạ","ward":"Xã Thái An","street":"Thôn 5"}', 'huongchaykhongmui@gmail.com', 1);
         
         
 -- specie

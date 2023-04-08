@@ -53,7 +53,7 @@ export default function BasicTabs() {
 
     //URL
     const CUSTOMER_UPDATE_SAVE = "/api/customer/update/save";
-    const CUSTOMER_UPDATE_GET = "/api/customer/update/get";
+    const CUSTOMER_UPDATE_GET = "/api/customer/get";
 
     const userRef = useRef();
     const [value, setValue] = React.useState(0);

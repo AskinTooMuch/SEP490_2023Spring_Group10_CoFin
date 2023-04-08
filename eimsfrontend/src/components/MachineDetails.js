@@ -50,7 +50,6 @@ export default function BasicTabs() {
     const [dataLoaded, setDataLoaded] = useState(false);
     //URL
     const MACHINE_UPDATE_SAVE = "/api/machine/update/save";
-    const MACHINE_UPDATE_GET = "/api/machine/update/get";
     const MACHINE_GET = "/api/machine/get";
     const MACHINE_DELETE = "/api/machine/delete";
     //ConfirmBox

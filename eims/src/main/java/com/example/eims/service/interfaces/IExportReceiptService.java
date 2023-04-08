@@ -13,7 +13,6 @@ package com.example.eims.service.interfaces;
 
 import com.example.eims.dto.exportReceipt.CreateExportDTO;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 public interface IExportReceiptService {
@@ -32,7 +31,6 @@ public interface IExportReceiptService {
      * @param facilityId the id of the facility.
      * @return
      */
-    @GetMapping("/getData")
     public ResponseEntity<?> getExportData(@RequestParam Long facilityId);
 
     /**

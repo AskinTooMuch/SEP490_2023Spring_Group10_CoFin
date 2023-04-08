@@ -24,44 +24,6 @@ public interface IImportReceiptService {
     public ResponseEntity<?> viewImportsByFacility(Long facilityId);
 
     /**
-     * Get all import bill from suppliers of an Owner with paging.
-     *
-     * @param userId the id of current logged-in user.
-     * @param page the page number
-     * @param size the size of page
-     * @param sort sorting type
-     * @return list of import receipts
-     */
-    public ResponseEntity<?> viewImportsByOwnerPaging(Long userId, Integer page, Integer size, String sort);
-
-    /**
-     * Get all import bill from a supplier of an owner.
-     *
-     * @param supplierId the id of the supplier
-     * @return list of import receipts
-     */
-    public ResponseEntity<?> viewImportsBySupplier(Long supplierId);
-
-    /**
-     * Get all import bill from suppliers of an Owner with paging.
-     *
-     * @param supplierId the id of current logged-in user.
-     * @param page the page number
-     * @param size the size of page
-     * @param sort sorting type
-     * @return list of import receipts
-     */
-    public ResponseEntity<?> viewImportsBySupplierPaging(Long supplierId, Integer page, Integer size, String sort);
-
-    /**
-     * Get imports statistics of an owner.
-     *
-     * @param userId the id of the owner
-     * @return list of import receipts
-     */
-    public ResponseEntity<?> viewImportStatistic(Long userId);
-
-    /**
      * Create an import.
      *
      * @param createImportDTO contains supplier's id, user's id who create the import, facility's id, import date

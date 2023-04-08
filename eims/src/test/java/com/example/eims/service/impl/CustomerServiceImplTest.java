@@ -744,7 +744,7 @@ class CustomerServiceImplTest {
         ResponseEntity<?> responseEntity = customerService.searchCustomer(ownerId, customerKey);
         System.out.println(responseEntity.toString());
         // Assert
-        assertEquals(null, responseEntity.getBody());
+        assertEquals(new ArrayList<>(), responseEntity.getBody());
     }
 
     @Test
