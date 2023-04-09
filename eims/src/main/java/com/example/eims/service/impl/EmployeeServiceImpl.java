@@ -153,10 +153,10 @@ public class EmployeeServiceImpl implements IEmployeeService {
             return new ResponseEntity<>("Mật khẩu không được dài quá 20 ký tự", HttpStatus.BAD_REQUEST);
         }
         Float salary = createEmployeeDTO.getSalary();
-        if(salary < 0){
+        if(salary < 0F){
             return new ResponseEntity<>("Tiền lương không được bé hơn 0", HttpStatus.BAD_REQUEST);
         }
-        if(salary >= 9999999999999.99){
+        if(salary >= 9999999999999.99F){
             return new ResponseEntity<>("Tiền lương không được vượt quá 9999999999999.99", HttpStatus.BAD_REQUEST);
         }
 
@@ -294,10 +294,10 @@ public class EmployeeServiceImpl implements IEmployeeService {
         }
 
         Float salary = updateEmployeeDTO.getSalary();
-        if(salary < 0){
+        if(salary < 0F){
             return new ResponseEntity<>("Tiền lương không được bé hơn 0", HttpStatus.BAD_REQUEST);
         }
-        if(salary >= 9999999999999.99){
+        if(salary >= 9999999999999.99F){
             return new ResponseEntity<>("Tiền lương không được vượt quá 9999999999999.99", HttpStatus.BAD_REQUEST);
         }
 
