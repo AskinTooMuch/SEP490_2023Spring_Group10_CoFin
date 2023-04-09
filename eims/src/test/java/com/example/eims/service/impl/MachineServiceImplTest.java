@@ -80,7 +80,7 @@ class MachineServiceImplTest {
         machineType.setMachineTypeName("type1");
         // Define behaviour of repository
         when(machineRepository.findByFacilityId(1L)).thenReturn(Optional.of(machineList));
-        when(machineTypeRepository.findByMachineTypeId(1L)).thenReturn(machineType);
+        when(machineTypeRepository.findByMachineTypeId(1L)).thenReturn(Optional.of(machineType));
 
         // Run service method
         ResponseEntity<?> responseEntity = machineService.getAllMachine(facilityId);
@@ -185,7 +185,7 @@ class MachineServiceImplTest {
 
         // Define behaviour of repository
         when(machineRepository.findById(1L)).thenReturn(Optional.of(machine));
-        when(machineTypeRepository.findByMachineTypeId(1L)).thenReturn(machineType);
+        when(machineTypeRepository.findByMachineTypeId(1L)).thenReturn(Optional.of(machineType));
         when(eggLocationRepository.getAllByMachineId(1L)).thenReturn(Optional.of(eggLocationList));
         when(eggProductRepository.getByProductId(1L)).thenReturn(Optional.of(eggProduct));
         when(breedRepository.getBreedOfProduct(1L)).thenReturn(breed);

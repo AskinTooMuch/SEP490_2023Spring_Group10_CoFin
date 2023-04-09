@@ -101,7 +101,7 @@ public class ExportReceiptServiceImpl implements IExportReceiptService {
             }
             return new ResponseEntity<>(listDTO, HttpStatus.OK);
         } else {
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
         }
     }
 
@@ -150,18 +150,14 @@ public class ExportReceiptServiceImpl implements IExportReceiptService {
             dtoItem.setBreedName(breed.getBreedName());
             eggBatchListDto.add(dtoItem);
         }
-        System.out.println("list:"+eggBatchListDto);
-        // No available
-        if (eggBatchListDto.size() == 0) {
-            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
-        }
+
         // List product's phase number
         List<Integer> phases = Arrays.asList(0, 2, 3, 4, 6, 7, 8, 9);
         ArrayList<Integer> phaseList = new ArrayList<>(phases);
 
         // Check sold out
         for (int i = 0; i < eggBatchListDto.size(); i++) {
-        //for (EggBatchDataForExportItemDTO eggBatch : eggBatchListDto) {
+            //for (EggBatchDataForExportItemDTO eggBatch : eggBatchListDto) {
             EggBatchDataForExportItemDTO eggBatch = eggBatchListDto.get(i);
             boolean soldOut = true;
             List<EggProduct> eggProductList = eggProductRepository.findByEggBatchId(eggBatch.getEggBatchId()).get();
@@ -193,10 +189,7 @@ public class ExportReceiptServiceImpl implements IExportReceiptService {
             }
         }
 
-        if (eggProductListDto.size() == 0) {
-            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
-        }
-        for (int i = 0; i< eggBatchListDto.size(); i++) {
+        for (int i = 0; i < eggBatchListDto.size(); i++) {
             CreateExportDataItemDTO dto = new CreateExportDataItemDTO();
             dto.setEggBatch(eggBatchListDto.get(i));
             dto.setEggProductList(eggProductListDto.get(i));
@@ -272,13 +265,13 @@ public class ExportReceiptServiceImpl implements IExportReceiptService {
                 exportDetailRepository.save(exportDetail);
 
                 EggProduct eggProduct = eggProductRepository.getByProductId(dto.getEggProductId()).get();
-                eggProduct.setCurAmount(eggProduct.getCurAmount()-dto.getExportAmount());
+                eggProduct.setCurAmount(eggProduct.getCurAmount() - dto.getExportAmount());
                 eggProductRepository.save(eggProduct);
 
             }
             return new ResponseEntity<>("Tạo hóa đơn xuất thành công", HttpStatus.OK);
         } catch (IllegalArgumentException iae) {
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Tạo hóa đơn xuất thất bại", HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -307,27 +300,25 @@ public class ExportReceiptServiceImpl implements IExportReceiptService {
             // Egg product - Export detail
             List<EggProductViewExportDetailDTO> eggProductList = new ArrayList<>();
             Optional<List<ExportDetail>> exportDetailListOptional = exportDetailRepository.findByExportId(exportId);
-            if (exportDetailListOptional.isEmpty()) {
-                dto.setEggProductList(new ArrayList<>());
-            } else {
-                for (ExportDetail exportDetail : exportDetailListOptional.get()) {
-                    EggProductViewExportDetailDTO dtoItem = new EggProductViewExportDetailDTO();
-                    EggProduct eggProduct = eggProductRepository.findById(exportDetail.getProductId()).get();
-                    IncubationPhase incubationPhase = incubationPhaseRepository
-                            .findByIncubationPhaseId(eggProduct.getIncubationPhaseId()).get();
-                    EggBatch eggBatch = eggBatchRepository.findByEggBatchId(eggProduct.getEggBatchId()).get();
-                    Breed breed = breedRepository.findByBreedId(eggBatch.getBreedId()).get();
-                    // Set
-                    dtoItem.setBreedId(breed.getBreedId());
-                    dtoItem.setBreedName(breed.getBreedName());
-                    dtoItem.setProductName(incubationPhase.getPhaseDescription());
-                    dtoItem.setEggBatchId(eggBatch.getEggBatchId());
-                    dtoItem.setExportAmount(exportDetail.getAmount());
-                    dtoItem.setVaccine(exportDetail.getVaccinePrice());
-                    dtoItem.setPrice(exportDetail.getPrice());
-                    eggProductList.add(dtoItem);
-                }
+
+            for (ExportDetail exportDetail : exportDetailListOptional.get()) {
+                EggProductViewExportDetailDTO dtoItem = new EggProductViewExportDetailDTO();
+                EggProduct eggProduct = eggProductRepository.findById(exportDetail.getProductId()).get();
+                IncubationPhase incubationPhase = incubationPhaseRepository
+                        .findByIncubationPhaseId(eggProduct.getIncubationPhaseId()).get();
+                EggBatch eggBatch = eggBatchRepository.findByEggBatchId(eggProduct.getEggBatchId()).get();
+                Breed breed = breedRepository.findByBreedId(eggBatch.getBreedId()).get();
+                // Set
+                dtoItem.setBreedId(breed.getBreedId());
+                dtoItem.setBreedName(breed.getBreedName());
+                dtoItem.setProductName(incubationPhase.getPhaseDescription());
+                dtoItem.setEggBatchId(eggBatch.getEggBatchId());
+                dtoItem.setExportAmount(exportDetail.getAmount());
+                dtoItem.setVaccine(exportDetail.getVaccinePrice());
+                dtoItem.setPrice(exportDetail.getPrice());
+                eggProductList.add(dtoItem);
             }
+
             dto.setEggProductList(eggProductList);
             return new ResponseEntity<>(dto, HttpStatus.OK);
         } else {

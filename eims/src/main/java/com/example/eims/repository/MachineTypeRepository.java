@@ -14,7 +14,9 @@ package com.example.eims.repository;
 import com.example.eims.entity.MachineType;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.Optional;
+
 public interface MachineTypeRepository extends JpaRepository<MachineType, Long> {
 
-    MachineType findByMachineTypeId(Long machineTypeId);
+    Optional<MachineType> findByMachineTypeId(Long machineTypeId);
 }

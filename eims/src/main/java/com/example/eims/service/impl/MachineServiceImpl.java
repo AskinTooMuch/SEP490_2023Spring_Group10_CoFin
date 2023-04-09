@@ -97,7 +97,7 @@ public class MachineServiceImpl implements IMachineService {
         if (machineListOptional.isPresent()) {
             for (Machine machine : machineListOptional.get()) {
                 // Get and set attribute to DTO
-                MachineType machineType = machineTypeRepository.findByMachineTypeId(machine.getMachineTypeId());
+                MachineType machineType = machineTypeRepository.findByMachineTypeId(machine.getMachineTypeId()).get();
                 String machineTypeName = machineType.getMachineTypeName();
                 MachineListItemDTO machineListItemDTO = new MachineListItemDTO();
                 machineListItemDTO.setMachineTypeName(machineTypeName);
@@ -125,7 +125,7 @@ public class MachineServiceImpl implements IMachineService {
             // Get and add attribute to DTO
             MachineDetailDTO machineDetailDTO = new MachineDetailDTO();
             machineDetailDTO.getFromEntity(machine);
-            MachineType machineType = machineTypeRepository.findByMachineTypeId(machine.getMachineTypeId());
+            MachineType machineType = machineTypeRepository.findByMachineTypeId(machine.getMachineTypeId()).get();
             machineDetailDTO.setMachineTypeName(machineType.getMachineTypeName());
             List<EggLocationMachineDetailDTO> eggLocations = new ArrayList<>();
             Optional<List<EggLocation>> eggsOpt = eggLocationRepository.getAllByMachineId(machineId);
@@ -182,7 +182,7 @@ public class MachineServiceImpl implements IMachineService {
         if (machineListOptional.isPresent()) {
             for (Machine machine : machineListOptional.get()) {
                 // Get and set attribute to DTO
-                MachineType machineType = machineTypeRepository.findByMachineTypeId(machine.getMachineTypeId());
+                MachineType machineType = machineTypeRepository.findByMachineTypeId(machine.getMachineTypeId()).get();
                 String machineTypeName = machineType.getMachineTypeName();
                 MachineListItemDTO machineListItemDTO = new MachineListItemDTO();
                 machineListItemDTO.setMachineTypeName(machineTypeName);
@@ -391,7 +391,7 @@ public class MachineServiceImpl implements IMachineService {
             // Get and add attribute to DTO
             MachineDetailDTO machineDetailDTO = new MachineDetailDTO();
             machineDetailDTO.getFromEntity(machine);
-            MachineType machineType = machineTypeRepository.findByMachineTypeId(machine.getMachineTypeId());
+            MachineType machineType = machineTypeRepository.findByMachineTypeId(machine.getMachineTypeId()).get();
             machineDetailDTO.setMachineTypeName(machineType.getMachineTypeName());
             List<EggLocationMachineDetailDTO> eggLocations = new ArrayList<>();
             Optional<List<EggLocation>> eggsOpt = eggLocationRepository.getAllByMachineId(machine.getMachineId());

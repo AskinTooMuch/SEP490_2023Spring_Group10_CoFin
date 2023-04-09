@@ -25,5 +25,4 @@ public class UpdateEggBatchDTO {
     private int amount;
     private List<EggLocationUpdateEggBatchDTO> eggLocationUpdateEggBatchDTOS;
     private int needAction;
-    private boolean done;
 }

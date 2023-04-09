@@ -98,7 +98,7 @@ public class ImportReceiptServiceImpl implements IImportReceiptService {
             }
             return new ResponseEntity<>(listDTO, HttpStatus.OK);
         } else {
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -183,7 +183,7 @@ public class ImportReceiptServiceImpl implements IImportReceiptService {
             }
             return new ResponseEntity<>("Tạo hóa đơn nhập thành công", HttpStatus.OK);
         } catch (IllegalArgumentException iae) {
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Tạo hóa đơn thất bại", HttpStatus.BAD_REQUEST);
         }
     }
 
