@@ -145,10 +145,10 @@ public class PayrollServiceImpl implements IPayrollService {
         }
         //check payroll amount
         Float payrollAmount = createPayrollDTO.getPayrollAmount();
-        if(payrollAmount <= 0 ){
+        if(payrollAmount <= 0F ){
             return new ResponseEntity<>("Số tiền phải lớn hơn 0", HttpStatus.BAD_REQUEST);
         }
-        if(payrollAmount >= 9999999999999.99){
+        if(payrollAmount >= 9999999999999.99F){
             return new ResponseEntity<>("Tiền lương không được vượt quá 9999999999999.99", HttpStatus.BAD_REQUEST);
         }
         // Paid date
@@ -206,10 +206,10 @@ public class PayrollServiceImpl implements IPayrollService {
         }
         //check payroll amount
         Float payrollAmount = updatePayrollDTO.getPayrollAmount();
-        if(payrollAmount <= 0 ){
+        if(payrollAmount <= 0F ){
             return new ResponseEntity<>("Số tiền phải lớn hơn 0", HttpStatus.BAD_REQUEST);
         }
-        if(payrollAmount >= 9999999999999.99){
+        if(payrollAmount >= 9999999999999.99F){
             return new ResponseEntity<>("Tiền lương không được vượt quá 9999999999999.99", HttpStatus.BAD_REQUEST);
         }
         // Paid date
