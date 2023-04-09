@@ -80,9 +80,8 @@ const Supplier = () => {
   // Set value for address fields
   //User
   useEffect(() => {
-    if (dataLoaded) return;
+    console.log("Load address");
     loadAddress();
-    setDataLoaded(true);
   }, [dataLoaded]);
 
   const loadAddress = async () => {
