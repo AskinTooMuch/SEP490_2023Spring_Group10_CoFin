@@ -9,6 +9,7 @@
  * 07/03/2023   1.0         ChucNV      First Deploy<br>
  * 12/03/2023   2.0         ChucNV      Fix edit breed<br>
  * 29/03/2023   3.0         ChucNV      Refine code<br>
+ * 09/04/2023   4.0         ChucNV      Fix bugs<br>
  */
 package com.example.eims.service.impl;
 
@@ -97,10 +98,10 @@ public class BreedServiceImpl implements IBreedService {
             String commonDisease = stringDealer.trimMax(newBreedDTO.getCommonDisease());
             if (commonDisease.length() > 1000) {  return new ResponseEntity<>("Bệnh thường gặp không được dài hơn 1000 ký tự", HttpStatus.BAD_REQUEST); }
             // Number fields: DTO has automatically caught any error/exceptions
-            if(newBreedDTO.getAverageWeightMale() < 0.01 || newBreedDTO.getAverageWeightFemale() < 0.01){
-                return new ResponseEntity<>("Cân nặng trung bình phải lớn hơn 0.01", HttpStatus.BAD_REQUEST);
+            if(newBreedDTO.getAverageWeightMale() < 0.01F || newBreedDTO.getAverageWeightFemale() < 0.01F){
+                return new ResponseEntity<>("Cân nặng trung bình phải lớn hơn hoặc bằng 0.01kg", HttpStatus.BAD_REQUEST);
             }
-            if(newBreedDTO.getAverageWeightMale() > 1000 || newBreedDTO.getAverageWeightFemale() > 1000){
+            if(newBreedDTO.getAverageWeightMale() > 1000F || newBreedDTO.getAverageWeightFemale() > 1000F){
                 return new ResponseEntity<>("Cân nặng trung bình không được lớn hơn 1000kg", HttpStatus.BAD_REQUEST);
             }
             breed.setSpecieId(specie.getSpecieId());
@@ -111,7 +112,10 @@ public class BreedServiceImpl implements IBreedService {
 
             //growth time
             if (newBreedDTO.getGrowthTime() <= 0){
-                return new ResponseEntity<>("Thời gian lớn lên phải lớn hơn 0", HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>("Thời gian lớn lên phải lớn hơn 0 ngày", HttpStatus.BAD_REQUEST);
+            }
+            if (newBreedDTO.getGrowthTime() > 10000){
+                return new ResponseEntity<>("Thời gian lớn lên phải nhỏ hơn hoặc bằng 10000 ngày", HttpStatus.BAD_REQUEST);
             }
             breed.setGrowthTime(newBreedDTO.getGrowthTime());
 
@@ -155,14 +159,18 @@ public class BreedServiceImpl implements IBreedService {
         String name = stringDealer.trimMax(editBreedDTO.getBreedName());
         if (name.equals("")) {  return new ResponseEntity<>("Tên loại không được để trống", HttpStatus.BAD_REQUEST); }
         if (name.length() > 32) {  return new ResponseEntity<>("Tên loại không được dài hơn 32 ký tự", HttpStatus.BAD_REQUEST); }
+        breed.setBreedName(name);
 
         // Number fields: DTO has automatically caught any error/exceptions
-        if(editBreedDTO.getAverageWeightMale() <= 0.01 || editBreedDTO.getAverageWeightFemale() <= 0.01){ return new ResponseEntity<>("Cân nặng trung bình phải lớn hơn hoặc bằng 0.01 kg", HttpStatus.BAD_REQUEST); }
+        if(editBreedDTO.getAverageWeightMale() < 0.01F || editBreedDTO.getAverageWeightFemale() < 0.01F){ return new ResponseEntity<>("Cân nặng trung bình phải lớn hơn hoặc bằng 0.01 kg", HttpStatus.BAD_REQUEST); }
         if(editBreedDTO.getAverageWeightMale() > 1000 || editBreedDTO.getAverageWeightFemale() > 1000){ return new ResponseEntity<>("Cân nặng trung bình phải nhỏ hơn hoặc bằng 1000 kg", HttpStatus.BAD_REQUEST); }
         breed.setAverageWeightMale(editBreedDTO.getAverageWeightMale());
         breed.setAverageWeightFemale(editBreedDTO.getAverageWeightFemale());
         //growth time
-        if (editBreedDTO.getGrowthTime() <= 0){ return new ResponseEntity<>("Thời gian lớn lên phải lớn hơn 0", HttpStatus.BAD_REQUEST); }
+        if (editBreedDTO.getGrowthTime() <= 0){ return new ResponseEntity<>("Thời gian lớn lên phải lớn hơn 0 ngày", HttpStatus.BAD_REQUEST); }
+        if (editBreedDTO.getGrowthTime() > 10000){
+            return new ResponseEntity<>("Thời gian lớn lên phải nhỏ hơn hoặc bằng 10000 ngày", HttpStatus.BAD_REQUEST);
+        }
         breed.setGrowthTime(editBreedDTO.getGrowthTime());
         breed.setCommonDisease(stringDealer.trimMax(editBreedDTO.getCommonDisease()));
         //The user not allowed to deactivate a breed in this form, only through delete tab

@@ -249,8 +249,11 @@ export default function BasicTabs() {
                 }
             );
             console.log(JSON.stringify(response?.data));
+            loadSpecieList();
+            loadBreed();
+            loadImage();
+            setShow(false);
             toast.success("Lưu thông tin loài thành công");
-            window.location.reload();
         } catch (err) {
             if (!err?.response) {
                 toast.error('Server không phản hồi');
@@ -262,6 +265,13 @@ export default function BasicTabs() {
                 }
             }
         }
+    }
+
+    const handleCancel = () => {
+        loadSpecieList();
+        loadBreed();
+        loadImage();
+        handleClose();
     }
 
     return (
@@ -389,7 +399,7 @@ export default function BasicTabs() {
                                 <button style={{ width: "30%" }} className="col-md-6 btn-light" type='submit' id="confirmUpdateBreed">
                                     Cập nhật
                                 </button>
-                                <button style={{ width: "20%" }} type='button' onClick={handleClose} className="btn btn-light" id="cancelUpdateBreed">
+                                <button style={{ width: "20%" }} type='button' onClick={handleCancel} className="btn btn-light" id="cancelUpdateBreed">
                                     Huỷ
                                 </button>
                             </div>
