@@ -118,7 +118,6 @@ public class ImportReportServiceImpl implements IImportReportService {
         if (!list.isPresent()) {
             return new ResponseEntity<>("Chưa có giao dịch với nhà cung cấp", HttpStatus.BAD_REQUEST);
         }
-        List<String> yearList = list.get();
         List<ReportItem> yearReportList;
         //get report for each year
         Query query ;

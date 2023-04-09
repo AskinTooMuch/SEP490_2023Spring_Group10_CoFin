@@ -115,7 +115,6 @@ public class ExportReportServiceImpl implements IExportReportService {
         if (!list.isPresent()) {
             return new ResponseEntity<>("Chưa có giao dịch với khách hàng", HttpStatus.BAD_REQUEST);
         }
-        List<String> yearList = list.get();
         List<ReportItem> yearReportList;
         //get report for each year
         Query query ;
