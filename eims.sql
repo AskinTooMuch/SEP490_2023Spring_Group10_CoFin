@@ -225,7 +225,7 @@ CREATE TABLE cost(
 	cost_id 	integer 		AUTO_INCREMENT PRIMARY KEY,
     user_id		integer			NOT NULL,
     facility_id	integer 		NOT NULL,
-    cost_item	varchar(50) 	NOT NULL,
+    cost_item	varchar(32) 	NOT NULL,
     cost_amount	decimal(15,2) 	NOT NULL,
     paid_amount	decimal(15,2) 	NOT NULL,
     issue_date	date		NOT NULL,
