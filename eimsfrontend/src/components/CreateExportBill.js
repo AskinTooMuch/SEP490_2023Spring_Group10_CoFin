@@ -332,64 +332,70 @@ const CreateExportBill = () => {
                     <div style={{ textAlign: "center" }}>
                         <button className="btn btn-light" type='button' onClick={handleShow2} >+</button>
                         <Modal show={show2} onHide={handleClose2}
-                            size="lg"
+                            dialogClassName="modal-big"
                             aria-labelledby="contained-modal-title-vcenter"
                             centered >
                             <Modal.Header closeButton onClick={handleClose2}>
                                 <Modal.Title>Sản phẩm có sẵn</Modal.Title>
                             </Modal.Header>
                             <Modal.Body>
-                                <div className="table-wrapper-scroll-y my-custom-scrollbar">
-                                    <table style={{ overflowY: "scroll" }} className="table table-bordered">
-                                        {
-                                            allList.eggStocks.length === 0 && allList.poultryStocks.length === 0
-                                                ? 'Hiện tại không có sản phẩm nào'
-                                                :
-                                                <>
-                                                    <thead className="u-palette-4-base u-table-header u-table-header-1">
-                                                        <tr style={{ height: "21px" }}>
-                                                            <th className="u-border-1 u-border-custom-color-1 u-palette-2-base u-table-cell u-table-cell-1">STT</th>
-                                                            <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-3">Loại</th>
-                                                            <th className="u-border-1 u-border-custom-color-1 u-palette-2-base u-table-cell u-table-cell-1">Mã lô</th>
-                                                            <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-4">Sản phẩm</th>
-                                                            <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-5">Số lượng trong kho</th>
-                                                            <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-6">Ngày xuất</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody className="u-table-body">
+                                <div className="table-wrapper-scroll-y my-custom-scrollbar-exportbill">
+                                    <section className="u-align-center u-clearfix u-section-1" id="sec-b42b">
+                                        <div className="u-clearfix u-sheet u-sheet-1">
+                                            <div className="u-expanded-width u-table u-table-responsive u-table-1">
+                                                <table style={{ overflowY: "scroll" }} className="u-table-entity u-table-entity-1">
+                                                    {
+                                                        allList.eggStocks.length === 0 && allList.poultryStocks.length === 0
+                                                            ? 'Hiện tại không có sản phẩm nào'
+                                                            :
+                                                            <>
+                                                                <thead className="u-palette-4-base u-table-header u-table-header-1">
+                                                                    <tr style={{ height: "21px" }}>
+                                                                        <th className="u-border-1 u-border-custom-color-1 u-palette-2-base u-table-cell u-table-cell-1">STT</th>
+                                                                        <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-2">Loại</th>
+                                                                        <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-3">Mã lô</th>
+                                                                        <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-4">Sản phẩm</th>
+                                                                        <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-5">Số lượng trong kho</th>
+                                                                        <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-6">Ngày xuất</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody className="u-table-body">
 
-                                                        {
-                                                            allList.eggStocks && allList.eggStocks.length > 0
-                                                                ? allList.eggStocks.map((item, index) =>
-                                                                    <tr onClick={() => addTableRows(item)} className='trclick' style={{ height: "76px" }} >
-                                                                        <td className="u-border-1 u-border-grey-30 u-first-column u-grey-5 u-table-cell u-table-cell-5">{index + 1}</td>
-                                                                        <td className="u-border-1 u-border-grey-30 u-table-cell">{item.breedName}</td>
-                                                                        <td className="u-border-1 u-border-grey-30 u-table-cell">{item.eggBatchId}</td>
-                                                                        <td className="u-border-1 u-border-grey-30 u-table-cell">{item.phaseDescription}</td>
-                                                                        <td className="u-border-1 u-border-grey-30 u-table-cell">{item.curAmount}</td>
-                                                                        <td className="u-border-1 u-border-grey-30 u-table-cell">{item.incubationDate.replace("T", " ")}</td>
-                                                                    </tr>
-                                                                )
-                                                                : ''
-                                                        }
-                                                        {
-                                                            allList.poultryStocks && allList.poultryStocks.length > 0
-                                                                ? allList.poultryStocks.map((item, index) =>
-                                                                    <tr onClick={() => addTableRows(item)} className='trclick' style={{ height: "76px" }} >
-                                                                        <td className="u-border-1 u-border-grey-30 u-first-column u-grey-5 u-table-cell u-table-cell-5">{index + 1}</td>
-                                                                        <td className="u-border-1 u-border-grey-30 u-table-cell">{item.breedName}</td>
-                                                                        <td className="u-border-1 u-border-grey-30 u-table-cell">{item.eggBatchId}</td>
-                                                                        <td className="u-border-1 u-border-grey-30 u-table-cell">{item.phaseDescription}</td>
-                                                                        <td className="u-border-1 u-border-grey-30 u-table-cell">{item.curAmount}</td>
-                                                                        <td className="u-border-1 u-border-grey-30 u-table-cell">{item.incubationDate.replace("T", " ")}</td>
-                                                                    </tr>
-                                                                )
-                                                                : ''
-                                                        }
-                                                    </tbody>
-                                                </>
-                                        }
-                                    </table>
+                                                                    {
+                                                                        allList.eggStocks && allList.eggStocks.length > 0
+                                                                            ? allList.eggStocks.map((item, index) =>
+                                                                                <tr onClick={() => addTableRows(item)} className='trclick' style={{ height: "76px" }} >
+                                                                                    <td className="u-border-1 u-border-grey-30 u-first-column u-grey-5 u-table-cell u-table-cell-1">{index + 1}</td>
+                                                                                    <td className="u-border-1 u-border-grey-30 u-table-cell">{item.breedName}</td>
+                                                                                    <td className="u-border-1 u-border-grey-30 u-table-cell">{item.eggBatchId}</td>
+                                                                                    <td className="u-border-1 u-border-grey-30 u-table-cell">{item.phaseDescription}</td>
+                                                                                    <td className="u-border-1 u-border-grey-30 u-table-cell">{item.curAmount}</td>
+                                                                                    <td className="u-border-1 u-border-grey-30 u-table-cell">{item.incubationDate.replace("T", " ")}</td>
+                                                                                </tr>
+                                                                            )
+                                                                            : ''
+                                                                    }
+                                                                    {
+                                                                        allList.poultryStocks && allList.poultryStocks.length > 0
+                                                                            ? allList.poultryStocks.map((item, index) =>
+                                                                                <tr onClick={() => addTableRows(item)} className='trclick' style={{ height: "76px" }} >
+                                                                                    <td className="u-border-1 u-border-grey-30 u-first-column u-grey-5 u-table-cell u-table-cell-5">{index + 1}</td>
+                                                                                    <td className="u-border-1 u-border-grey-30 u-table-cell">{item.breedName}</td>
+                                                                                    <td className="u-border-1 u-border-grey-30 u-table-cell">{item.eggBatchId}</td>
+                                                                                    <td className="u-border-1 u-border-grey-30 u-table-cell">{item.phaseDescription}</td>
+                                                                                    <td className="u-border-1 u-border-grey-30 u-table-cell">{item.curAmount}</td>
+                                                                                    <td className="u-border-1 u-border-grey-30 u-table-cell">{item.incubationDate.replace("T", " ")}</td>
+                                                                                </tr>
+                                                                            )
+                                                                            : ''
+                                                                    }
+                                                                </tbody>
+                                                            </>
+                                                    }
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </section>
                                 </div>
                             </Modal.Body>
                         </Modal>
@@ -400,7 +406,7 @@ const CreateExportBill = () => {
                         <button style={{ width: "10%" }} className="col-md-6 btn-light" type='submit'>
                             Tạo
                         </button>
-                        <button style={{ width: "10%" }} onClick={() => navigate("/exportbill")} className="btn btn-light" type='button'>
+                        <button style={{ width: "10%" }} onClick={() => navigate("/order")} className="btn btn-light" type='button'>
                             Huỷ
                         </button>
                     </div>

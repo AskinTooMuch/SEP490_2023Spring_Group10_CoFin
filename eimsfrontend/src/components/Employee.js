@@ -461,7 +461,6 @@ export default function BasicTabs() {
                 <div>
                     <section className="u-align-center u-clearfix u-section-1" id="sec-b42b">
                         <div className="u-clearfix u-sheet u-sheet-1">
-
                             <div className="u-expanded-width u-table u-table-responsive u-table-1">
                                 <table className="u-table-entity u-table-entity-1">
                                     <colgroup>
@@ -483,7 +482,7 @@ export default function BasicTabs() {
                                             employeeList && employeeList.length > 0 ?
                                                 employeeList.map((item, index) =>
                                                     <tr style={{ height: "76px" }} className='trclick' onClick={() => routeChange(item.employeeId)}>
-                                                        <td className="u-border-1 u-border-grey-30 u-first-column u-grey-5 u-table-cell u-table-cell-9">{index + 1}</td>
+                                                        <td className="u-border-1 u-border-grey-30 u-first-column u-grey-5 u-table-cell u-table-cell-1">{index + 1}</td>
                                                         <td className="u-border-1 u-border-grey-30 u-table-cell">{item.employeeName}</td>
                                                         <td className="u-border-1 u-border-grey-30 u-table-cell">{item.employeePhone}</td>
                                                         {item.status === 2

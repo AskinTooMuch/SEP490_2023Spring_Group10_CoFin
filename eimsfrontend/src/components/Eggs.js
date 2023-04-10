@@ -59,9 +59,8 @@ export default function BasicTabs() {
           }} value={value} onChange={handleChange} aria-label="basic tabs example">
             <Tab id="eggBatchTab" style={{ textTransform: "capitalize" }} label="Lô trứng" {...a11yProps(0)} />
             <Tab id="eggStockTab" style={{ textTransform: "capitalize" }} label="Sản phẩm" {...a11yProps(1)} />
-            <Tab id="monitorPriceTab" style={{ textTransform: "capitalize" }} label="Theo dõi giá" {...a11yProps(2)} />
-            <Tab id="speciesTab" style={{ textTransform: "capitalize" }} label="Loài" {...a11yProps(3)} />
-            <Tab id="breedTab" style={{ textTransform: "capitalize" }} label="Loại" {...a11yProps(4)} />
+            <Tab id="speciesTab" style={{ textTransform: "capitalize" }} label="Loài" {...a11yProps(2)} />
+            <Tab id="breedTab" style={{ textTransform: "capitalize" }} label="Loại" {...a11yProps(3)} />
           </Tabs>
         </Box>
         <Egg value={value} index={0}>
@@ -71,11 +70,9 @@ export default function BasicTabs() {
           <StockReport/>
         </Egg>
         <Egg value={value} index={2}>
-        </Egg>
-        <Egg value={value} index={3}>
           <Species />
         </Egg>
-        <Egg value={value} index={4}>
+        <Egg value={value} index={3}>
           <Breed />
         </Egg>
       </WithPermission>

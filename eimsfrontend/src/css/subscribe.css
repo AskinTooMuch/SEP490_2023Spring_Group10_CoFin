@@ -95,7 +95,6 @@
 .pricingTable .currency {
   display: inline-block;
   font-size: 30px;
-  vertical-align: top;
   margin-top: 8px
 }
 
@@ -202,9 +201,15 @@
   border-top: 15px solid #f46110
 }
 
-@media only screen and (max-width:990px) {
+@media only screen and (max-width:1585px) {
   .pricingTable {
       margin-bottom: 30px
+  }
+
+  .pricingTable .price-value .amount {
+    display: inline-block;
+    font-size: 30px;
+    font-weight: 700
   }
 }
 

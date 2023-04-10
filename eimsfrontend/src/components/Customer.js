@@ -242,7 +242,7 @@ const Customer = () => {
                     withCredentials: true
                 });
             setCustomerList(response.data);
-            setMessEmpty("Không có khách hàng nào có tên hoặc số điện thoại giống với từ khóa tìm kiếm: \"" + searchKey+"\"");
+            setMessEmpty("Không có khách hàng nào có tên hoặc số điện thoại giống với từ khóa tìm kiếm: \"" + searchKey + "\"");
 
         } catch (err) {
             if (!err?.response) {
@@ -422,39 +422,51 @@ const Customer = () => {
             </nav>
             {/* Start: Table for customer list */}
             <div>
-                <table className="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th scope="col">STT</th>
-                            <th scope="col">Khách hàng</th>
-                            <th scope="col">Số điện thoại</th>
-                            <th scope="col">Trạng thái</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {
-                            customerList && customerList.length > 0 ?
-                                customerList.map((item, index) =>
-                                    <tr className='trclick' onClick={() => routeChange(item)} key={item.userId}>
-                                        <th scope="row">{index + 1}</th>
-                                        <td>{item.customerName}</td>
-                                        <td>{item.customerPhone}</td>
-                                        {item.status === 1
-                                            ? <td className='text-green'>
-                                                Đang hoạt động
-                                            </td>
-                                            : <td className='text-red'>
-                                                Ngừng hoạt động
-                                            </td>
-                                        }
+                <section className="u-align-center u-clearfix u-section-1" id="sec-b42b">
+                    <div className="u-clearfix u-sheet u-sheet-1">
+                        <div className="u-expanded-width u-table u-table-responsive u-table-1">
+                            <table className="u-table-entity u-table-entity-1">
+                                <colgroup>
+                                    <col width="5%" />
+                                    <col width="35%" />
+                                    <col width="30%" />
+                                    <col width="30%" />
+                                </colgroup>
+                                <thead className="u-palette-4-base u-table-header u-table-header-1">
+                                    <tr style={{ height: "21px" }}>
+                                        <th className="u-border-1 u-border-custom-color-1 u-palette-2-base u-table-cell u-table-cell-1" scope="col">STT</th>
+                                        <th className="u-border-1 u-border-custom-color-1 u-palette-2-base u-table-cell u-table-cell-2" scope="col">Khách hàng</th>
+                                        <th className="u-border-1 u-border-custom-color-1 u-palette-2-base u-table-cell u-table-cell-3" scope="col">Số điện thoại</th>
+                                        <th className="u-border-1 u-border-custom-color-1 u-palette-2-base u-table-cell u-table-cell-4" scope="col">Trạng thái</th>
                                     </tr>
-                                ) :
-                                <tr>
-                                    <td colSpan='4'>{messEmpty}</td>
-                                </tr>
-                        }
-                    </tbody>
-                </table>
+                                </thead>
+                                <tbody className="u-table-body">
+                                    {
+                                        customerList && customerList.length > 0 ?
+                                            customerList.map((item, index) =>
+                                                <tr style={{ height: "76px" }} className='trclick' onClick={() => routeChange(item)} key={item.userId}>
+                                                    <th className="u-border-1 u-border-grey-30 u-first-column u-grey-5 u-table-cell u-table-cell-1" scope="row">{index + 1}</th>
+                                                    <td className="u-border-1 u-border-grey-30 u-table-cell">{item.customerName}</td>
+                                                    <td className="u-border-1 u-border-grey-30 u-table-cell">{item.customerPhone}</td>
+                                                    {item.status === 1
+                                                        ? <td className='u-border-1 u-border-grey-30 u-table-cell text-green'>
+                                                            Đang hoạt động
+                                                        </td>
+                                                        : <td className='u-border-1 u-border-grey-30 u-table-cell text-red'>
+                                                            Ngừng hoạt động
+                                                        </td>
+                                                    }
+                                                </tr>
+                                            ) :
+                                            <tr>
+                                                <td colSpan='4'>{messEmpty}</td>
+                                            </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
             </div>
             {/* End: Table for customer list */}
 

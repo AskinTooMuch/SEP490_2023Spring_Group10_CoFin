@@ -230,7 +230,7 @@ const Breed = () => {
                                     <div className="col-md-8">
                                         <select className="form-control mt-1" aria-label="Default select example"
                                             onChange={e => handleChange(e, "specieId")}>
-                                            <option disabled value="" selected>Chọn loài</option>
+                                            <option disabled value="" defaultValue>Chọn loài</option>
                                             { /**JSX to load options */}
                                             {specieList &&
                                                 specieList.map((item, index) => (
@@ -339,38 +339,52 @@ const Breed = () => {
                 </div>
             </nav>
             <div>
-                <table className="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th scope="col">STT</th>
-                            <th scope="col">Tên loài</th>
-                            <th scope="col">Tên loại</th>
-                            <th scope="col">Cân nặng con đực</th>
-                            <th scope="col">Cân nặng con cái</th>
-                            <th scope="col">Thời gian lớn</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        { /**JSX to load breed list */}
-                        {breedList && breedList.length > 0 ?
-                            breedList.map((item, index) => (
-                                item.status &&
-                                <tr className='trclick' onClick={() => routeChange(item.breedId)} key={item.breedId}>
-                                    <th scope="row">{index + 1}</th>
-                                    <td>{item.specieName}</td>
-                                    <td>{item.breedName}</td>
-                                    <td>{item.averageWeightMale}</td>
-                                    <td>{item.averageWeightFemale}</td>
-                                    <td>{item.growthTime}</td>
-                                </tr>
-                            ))
-                            :
-                            <tr>
-                                <td colSpan='6'>Hiện tại không có loài nào được lưu trong hệ thống</td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
+                <section className="u-align-center u-clearfix u-section-1" id="sec-b42b">
+                    <div className="u-clearfix u-sheet u-sheet-1">
+                        <div className="u-expanded-width u-table u-table-responsive u-table-1">
+                            <table className="u-table-entity u-table-entity-1">
+                                <colgroup>
+                                    <col width="5%" />
+                                    <col width="30%" />
+                                    <col width="20%" />
+                                    <col width="25%" />
+                                    <col width="10%" />
+                                    <col width="10%" />
+                                </colgroup>
+                                <thead className="u-palette-4-base u-table-header u-table-header-1">
+                                    <tr style={{ height: "21px" }}>
+                                        <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-1" scope="col">STT</th>
+                                        <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-2" scope="col">Tên loài</th>
+                                        <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-3" scope="col">Tên loại</th>
+                                        <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-4" scope="col">Cân nặng con đực</th>
+                                        <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-5" scope="col">Cân nặng con cái</th>
+                                        <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-6" scope="col">Thời gian lớn</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    { /**JSX to load breed list */}
+                                    {breedList && breedList.length > 0 ?
+                                        breedList.map((item, index) => (
+                                            item.status &&
+                                            <tr style={{ height: "76px" }} className='trclick' onClick={() => routeChange(item.breedId)} key={item.breedId}>
+                                                <th scope="row" className='u-border-1 u-border-grey-30 u-first-column u-grey-5 u-table-cell u-table-cell-1'>{index + 1}</th>
+                                                <td className='u-border-1 u-border-grey-30 u-table-cell'>{item.specieName}</td>
+                                                <td className='u-border-1 u-border-grey-30 u-table-cell'>{item.breedName}</td>
+                                                <td className='u-border-1 u-border-grey-30 u-table-cell'>{item.averageWeightMale}</td>
+                                                <td className='u-border-1 u-border-grey-30 u-table-cell'>{item.averageWeightFemale}</td>
+                                                <td className='u-border-1 u-border-grey-30 u-table-cell'>{item.growthTime}</td>
+                                            </tr>
+                                        ))
+                                        :
+                                        <tr>
+                                            <td colSpan='6'>Hiện tại không có loài nào được lưu trong hệ thống</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
             </div>
 
         </div>

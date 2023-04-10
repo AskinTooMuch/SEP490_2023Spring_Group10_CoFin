@@ -23,6 +23,12 @@
   max-width: none !important;
 }
 
+.modal-big {
+  width: 50%;
+  height: 700px;
+  max-width: none !important;
+}
+
 #primary-search-account-menu li:hover {
   background-color: #f46110;
   color: white;
@@ -49,6 +55,11 @@
 .my-custom-scrollbar {
   position: relative;
   height: 200px;
+  overflow: auto;
+}
+.my-custom-scrollbar-exportbill {
+  position: relative;
+  height: 700px;
   overflow: auto;
 }
 

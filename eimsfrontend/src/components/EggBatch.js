@@ -53,64 +53,82 @@ const EggBatch = () => {
                 </div>
             </nav>
             <div>
-                <table className="table table-bordered" id="list_specie_table">
-                    <thead>
-                        <tr>
-                            <th scope="col">STT</th>
-                            <th scope="col">Mã lô</th>
-                            <th scope="col">Tên loại</th>
-                            <th scope="col">Mã hoá đơn</th>
-                            <th scope="col">Nhà cung cấp</th>
-                            <th scope="col">Số lượng</th>
-                            <th scope="col">Ngày nhập</th>
-                            <th scope="col">Tiến trình</th>
-                            <th scope="col">Trạng thái</th>
-                        </tr>
-                    </thead>
-                    <tbody id="specie_list_table_body">
-                        {
-                            eggBatchList && eggBatchList.length > 0 ?
-                                eggBatchList.map((item, index) =>
-                                    <tr className='trclick' style={{ height: "76px" }} onClick={() => routeChange(item.eggBatchId)}>
-                                        <th scope="row">{index + 1}</th>
-                                        <td>{item.eggBatchId}</td>
-                                        <td>{item.breedName}</td>
-                                        <td>{item.importId}</td>
-                                        <td>{item.supplierName}</td>
-                                        <td>{item.amount.toLocaleString()}</td>
-                                        <td>{item.importDate.replace("T", " ")}</td>
-                                        <td>({item.progress}) Ngày {item.progressInDays}/{item.incubationPeriod}</td>
-                                        {
-                                            item.status === 0
-                                                ? <td className=''>Đã hoàn thành</td>
-                                                : ''
-                                        }
-                                        {
-                                            item.status === 1 && item.needAction === 1
-                                                ? <td className='text-red'>Cần cập nhật</td>
-                                                : ''
-                                        }
-                                        {
-                                            item.status === 1 && item.needAction === 0 && item.progress < 5
-                                                ? <td className='text-green'>Đang ấp</td>
-                                                : ''
-                                        }
-                                        {
-                                            item.status === 1 && item.needAction === 0 && item.progress >= 5
-                                                ? <td className='text-green'>Đang nở</td>
-                                                : ''
-                                        }
+                <section className="u-align-center u-clearfix u-section-1" id="sec-b42b">
+                    <div className="u-clearfix u-sheet u-sheet-1">
+                        <div className="u-expanded-width u-table u-table-responsive u-table-1">
+                            <table className="u-table-entity u-table-entity-1" id="list_specie_table">
+                                <colgroup>
+                                    <col width="5%" />
+                                    <col width="5%" />
+                                    <col width="10%" />
+                                    <col width="10%" />
+                                    <col width="10%" />
+                                    <col width="5%" />
+                                    <col width="15%" />
+                                    <col width="20%" />
+                                    <col width="20%" />
+                                </colgroup>
+                                <thead className="u-palette-4-base u-table-header u-table-header-1">
+                                    <tr style={{ height: "21px" }}>
+                                        <th className="u-border-1 u-border-custom-color-1 u-palette-2-base u-table-cell u-table-cell-1" scope="col">STT</th>
+                                        <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-2" scope="col">Mã lô</th>
+                                        <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-3" scope="col">Tên loại</th>
+                                        <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-4" scope="col">Mã hoá đơn</th>
+                                        <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-5" scope="col">Nhà cung cấp</th>
+                                        <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-6" scope="col">Số lượng</th>
+                                        <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-7" scope="col">Ngày nhập</th>
+                                        <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-8" scope="col">Tiến trình</th>
+                                        <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-9" scope="col">Trạng thái</th>
                                     </tr>
-                                ) :
-                                <tr>
-                                    <td colSpan='9'>Chưa có lô trứng nào được lưu lên hệ thống</td>
-                                </tr>
-                        }
+                                </thead>
+                                <tbody  className="u-table-body" id="specie_list_table_body">
+                                    {
+                                        eggBatchList && eggBatchList.length > 0 ?
+                                            eggBatchList.map((item, index) =>
+                                                <tr className='trclick' style={{ height: "76px" }} onClick={() => routeChange(item.eggBatchId)}>
+                                                    <th className="u-border-1 u-border-grey-30 u-first-column u-grey-5 u-table-cell u-table-cell-1" scope="row">{index + 1}</th>
+                                                    <td className="u-border-1 u-border-grey-30 u-table-cell">{item.eggBatchId}</td>
+                                                    <td className="u-border-1 u-border-grey-30 u-table-cell">{item.breedName}</td>
+                                                    <td className="u-border-1 u-border-grey-30 u-table-cell">{item.importId}</td>
+                                                    <td className="u-border-1 u-border-grey-30 u-table-cell">{item.supplierName}</td>
+                                                    <td className="u-border-1 u-border-grey-30 u-table-cell">{item.amount.toLocaleString()}</td>
+                                                    <td className="u-border-1 u-border-grey-30 u-table-cell">{item.importDate.replace("T", " ")}</td>
+                                                    <td className="u-border-1 u-border-grey-30 u-table-cell">({item.progress}) Ngày {item.progressInDays}/{item.incubationPeriod}</td>
+                                                    {
+                                                        item.status === 0
+                                                            ? <td className="u-border-1 u-border-grey-30 u-table-cell">Đã hoàn thành</td>
+                                                            : ''
+                                                    }
+                                                    {
+                                                        item.status === 1 && item.needAction === 1
+                                                            ? <td className='u-border-1 u-border-grey-30 u-table-cell text-red'>Cần cập nhật</td>
+                                                            : ''
+                                                    }
+                                                    {
+                                                        item.status === 1 && item.needAction === 0 && item.progress < 5
+                                                            ? <td className='u-border-1 u-border-grey-30 u-table-cell text-green'>Đang ấp</td>
+                                                            : ''
+                                                    }
+                                                    {
+                                                        item.status === 1 && item.needAction === 0 && item.progress >= 5
+                                                            ? <td className='u-border-1 u-border-grey-30 u-table-cell text-green'>Đang nở</td>
+                                                            : ''
+                                                    }
+                                                </tr>
+                                            ) :
+                                            <tr>
+                                                <td colSpan='9'>Chưa có lô trứng nào được lưu lên hệ thống</td>
+                                            </tr>
+                                    }
 
-                    </tbody>
-                </table>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
             </div>
         </div>
+
     );
 }
 export default EggBatch;

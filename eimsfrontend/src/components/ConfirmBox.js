@@ -24,6 +24,7 @@ function ConfirmBox({ open, closeDialog, title, content, deleteFunction }) {
             onClose={closeDialog}
             onBackdropClick={closeDialog}
             TransitionComponent={Transition}
+            style={{zIndex:"10000"}}
         >
             <DialogContent sx={{ px: 8, py: 6, position: "relative" }}>
                 <IconButton
@@ -56,10 +57,10 @@ function ConfirmBox({ open, closeDialog, title, content, deleteFunction }) {
                         sx={{ display: "flex", justifyContent: "flex-end", gap: "1rem" }}
                     >
                         <button onClick={closeDialog} size="medium" className="btn btn-light" >
-                            Huỷ
+                            Không
                         </button>
                         <button onClick={deleteFunction} size="medium" className="btn btn-light">
-                            Xoá
+                            Có
                         </button>{" "}
                     </Grid>
                 </Grid>

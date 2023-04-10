@@ -503,7 +503,7 @@ export default function BasicTabs() {
                             </div>
                             <div className="col-md-4 ">
                                 <div className='button'>
-                                    <button id="startEditSupplier" className='btn btn-success' onClick={handleUpdateClick}>Sửa</button>
+                                    <button id="startEditSupplier" className='btn btn-light' onClick={handleUpdateClick}>Sửa</button>
                                 </div>
                             </div>
                         </div>

@@ -149,12 +149,12 @@ export default function BasicTabs() {
                 subscriptionList && subscriptionList.length > 0
                   ? subscriptionList.map((item, index) => {
                     return (
-                      <div className="col-md-4 col-sm-6">
-                        <div className={`pricingTable ${item.recommended ? '' : 'pink'}`}>
+                      <div className="col-md-3 col-sm-6">
+                        <div className={`pricingTable ${item.recommended ? 'orange' : 'green'}`}>
                           <h3 className="title">GÓI {item.subscriptionId}</h3>
-                          <div className="price-value">
-                            <span className="amount">{item.cost.toLocaleString("de-DE")}</span>
-                            <span className="currency">VNĐ</span>
+                          <div className="price-value ">
+                            <p className="amount">{item.cost.toLocaleString("de-DE")}</p>
+                            <p className="currency">VNĐ</p>
                           </div>
                           <ul className="pricing-content">
                             <li>Thời gian hiệu lực <b>{item.duration} ngày</b>.</li>
