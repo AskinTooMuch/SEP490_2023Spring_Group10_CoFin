@@ -214,7 +214,7 @@ CREATE TABLE payroll(
     owner_id		integer			NOT NULL,
 	employee_id		integer			NOT NULL,
     phone			varchar(11)		NOT NULL,
-    payroll_item	varchar(50)		NOT NULL,
+    payroll_item	varchar(32)		NOT NULL,
     payroll_amount	decimal(15,2)	NOT NULL,
 	issue_date		date			NOT NULL,
     note			varchar(255),
