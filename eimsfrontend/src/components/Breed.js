@@ -345,10 +345,10 @@ const Breed = () => {
                             <table className="u-table-entity u-table-entity-1">
                                 <colgroup>
                                     <col width="5%" />
-                                    <col width="30%" />
-                                    <col width="20%" />
                                     <col width="25%" />
-                                    <col width="10%" />
+                                    <col width="20%" />
+                                    <col width="20%" />
+                                    <col width="20%" />
                                     <col width="10%" />
                                 </colgroup>
                                 <thead className="u-palette-4-base u-table-header u-table-header-1">

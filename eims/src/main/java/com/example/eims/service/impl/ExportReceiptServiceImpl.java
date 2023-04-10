@@ -52,16 +52,13 @@ public class ExportReceiptServiceImpl implements IExportReceiptService {
     private final CustomerRepository customerRepository;
     @Autowired
     private final IncubationPhaseRepository incubationPhaseRepository;
-    private final StringDealer stringDealer;
-    @PersistenceContext
-    private final EntityManager em;
 
     public ExportReceiptServiceImpl(ExportReceiptRepository exportReceiptRepository,
                                     ExportDetailRepository exportDetailRepository,
                                     ImportReceiptRepository importReceiptRepository,
                                     EggBatchRepository eggBatchRepository, EggProductRepository eggProductRepository,
                                     BreedRepository breedRepository, CustomerRepository customerRepository,
-                                    IncubationPhaseRepository incubationPhaseRepository, EntityManager em) {
+                                    IncubationPhaseRepository incubationPhaseRepository) {
         this.exportReceiptRepository = exportReceiptRepository;
         this.exportDetailRepository = exportDetailRepository;
         this.importReceiptRepository = importReceiptRepository;
@@ -70,8 +67,6 @@ public class ExportReceiptServiceImpl implements IExportReceiptService {
         this.breedRepository = breedRepository;
         this.customerRepository = customerRepository;
         this.incubationPhaseRepository = incubationPhaseRepository;
-        this.stringDealer = new StringDealer();
-        this.em = em;
     }
 
     /**
@@ -122,7 +117,7 @@ public class ExportReceiptServiceImpl implements IExportReceiptService {
         List<EggBatch> eggBatchList = new ArrayList<>();
         Optional<List<ImportReceipt>> importReceiptListOptional = importReceiptRepository.findByFacilityId(facilityId);
         if (importReceiptListOptional.isEmpty()) {
-            return new ResponseEntity<>("Không có sản phầm nào", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(dtoList, HttpStatus.OK);
         }
         // Find egg batches
         for (ImportReceipt importReceipt : importReceiptListOptional.get()) {
@@ -232,11 +227,14 @@ public class ExportReceiptServiceImpl implements IExportReceiptService {
             if (eggProduct.getExportAmount() <= 0 || eggProduct.getExportAmount() > eggProduct.getCurAmount()) { // Amount export must be less than current amount
                 return new ResponseEntity<>("Số lượng xuất không hợp lệ", HttpStatus.BAD_REQUEST);
             }
+            if (eggProduct.getPrice() < 0 || eggProduct.getPrice() > 9999999999999.99) { // Price over limit
+                return new ResponseEntity<>("Đơn giá không hợp lệ", HttpStatus.BAD_REQUEST);
+            }
             if (eggProduct.getVaccine() < 0 || eggProduct.getVaccine() > 9999999999999.99) { // Price over limit
                 return new ResponseEntity<>("Đơn giá vaccine không hợp lệ", HttpStatus.BAD_REQUEST);
             }
-            if (eggProduct.getPrice() < 0 || eggProduct.getPrice() > 9999999999999.99) { // Price over limit
-                return new ResponseEntity<>("Đơn giá không hợp lệ", HttpStatus.BAD_REQUEST);
+            if (eggProduct.getExportAmount() * (eggProduct.getVaccine() + eggProduct.getPrice()) > 9999999999999.99) { // over floww
+                return new ResponseEntity<>("Tổng giá trị đơn hàng quá lớn", HttpStatus.BAD_REQUEST);
             }
             total += eggProduct.getExportAmount() * (eggProduct.getVaccine() + eggProduct.getPrice());
         }
@@ -343,9 +341,9 @@ public class ExportReceiptServiceImpl implements IExportReceiptService {
             }
             exportReceipt.setPaid(paid);
             exportReceiptRepository.save(exportReceipt);
-            return new ResponseEntity<>("Cập nhật số tiền đã trả", HttpStatus.OK);
+            return new ResponseEntity<>("Cập nhật số tiền đã trả thành công", HttpStatus.OK);
         } else {
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Không tìm thấy hóa đơn xuất", HttpStatus.BAD_REQUEST);
         }
     }
 }

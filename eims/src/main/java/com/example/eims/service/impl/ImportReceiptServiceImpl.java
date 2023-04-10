@@ -119,10 +119,9 @@ public class ImportReceiptServiceImpl implements IImportReceiptService {
         }
         // Import date
         if (createImportDTO.getImportDate() == null || createImportDTO.getImportDate().equals("")) { // Import date empty
-            return new ResponseEntity<>("Hãy nhập ngày nhập hóa đơn", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Hãy nhập ngày nhập", HttpStatus.BAD_REQUEST);
         }
         LocalDateTime now = LocalDateTime.now();
-        System.out.println(now);
         if (createImportDTO.getImportDate().isAfter(now)) { // Import date must be before today
             String time = now.toString().replace("T", " ");
             String timeNow = time.subSequence(0, 18).toString();
@@ -245,9 +244,9 @@ public class ImportReceiptServiceImpl implements IImportReceiptService {
             }
             importReceipt.setPaid(paid);
             importReceiptRepository.save(importReceipt);
-            return new ResponseEntity<>("Cập nhật số tiền đã trả", HttpStatus.OK);
+            return new ResponseEntity<>("Cập nhật số tiền đã trả thành công", HttpStatus.OK);
         } else {
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Không tìm thấy hóa đơn nhập", HttpStatus.BAD_REQUEST);
         }
     }
 }

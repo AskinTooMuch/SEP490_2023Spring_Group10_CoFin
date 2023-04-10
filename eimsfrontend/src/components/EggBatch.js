@@ -59,14 +59,14 @@ const EggBatch = () => {
                             <table className="u-table-entity u-table-entity-1" id="list_specie_table">
                                 <colgroup>
                                     <col width="5%" />
-                                    <col width="5%" />
+                                    <col width="6%" />
+                                    <col width="9%" />
                                     <col width="10%" />
-                                    <col width="10%" />
-                                    <col width="10%" />
-                                    <col width="5%" />
                                     <col width="15%" />
-                                    <col width="20%" />
-                                    <col width="20%" />
+                                    <col width="10%" />
+                                    <col width="15%" />
+                                    <col width="15%" />
+                                    <col width="10%" />
                                 </colgroup>
                                 <thead className="u-palette-4-base u-table-header u-table-header-1">
                                     <tr style={{ height: "21px" }}>

@@ -48,8 +48,8 @@ const CreateImportBill = () => {
     const addTableRows = () => {
         const rowsInput = {
             breedId: '',
-            amount: '',
-            price: ''
+            amount: 0,
+            price: 0
         }
         setRowsData([...rowsData, rowsInput])
     }

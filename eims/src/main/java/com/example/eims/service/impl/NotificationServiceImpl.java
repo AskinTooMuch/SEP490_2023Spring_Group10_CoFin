@@ -7,6 +7,7 @@
  * Record of change:<br>
  * DATE         Version     Author      DESCRIPTION<br>
  * 29/03/2023   1.0         DuongVV     First Deploy<br>
+ * 02/04/2023   1.1         DuongVV     Update functions<br>
  */
 
 package com.example.eims.service.impl;
@@ -111,8 +112,6 @@ public class NotificationServiceImpl implements INotificationService {
             // Set new notification's brief
             String brief = "";
             EggBatch eggBatch = eggBatchRepository.findByEggBatchId(notification.getEggBatchId()).get();
-            Optional<EggProduct> eggProductOptional = eggProductRepository
-                    .findEggProductByPhaseNumber(eggBatch.getEggBatchId(), 1);
 
             // Get latest phase
             int progress = 0;
@@ -151,10 +150,10 @@ public class NotificationServiceImpl implements INotificationService {
     public ResponseEntity<?> deleteNotification(Long notificationId) {
         Optional<Notification> notificationOptional = notificationRepository.findById(notificationId);
         if (notificationOptional.isEmpty()) { // Null
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Không tìm thấy thông báo", HttpStatus.BAD_REQUEST);
         } else {
             notificationRepository.delete(notificationOptional.get());
-            return new ResponseEntity<>("Hoàn thành", HttpStatus.OK);
+            return new ResponseEntity<>("Xác nhận hoàn thành", HttpStatus.OK);
         }
     }
 }

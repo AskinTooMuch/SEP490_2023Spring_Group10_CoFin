@@ -127,7 +127,7 @@ const NotificationList = () => {
                 });
             handleClosePopup();
             loadListNotiNew();
-        loadListNotiOld();
+            loadListNotiOld();
         } catch (err) {
             if (!err?.response) {
                 toast.error('Server không phản hồi');
@@ -183,6 +183,15 @@ const NotificationList = () => {
                                 : ''
                         }
 
+                        {
+                            listNotiOld && listNotiNew && listNotiOld.length == 0 && listNotiNew.length == 0
+                                ?
+                                <div className="text-center">
+                                    <Link className="dark-link">Hiện tại không có thông báo nào</Link>
+                                </div>
+                                : ''
+                        }
+
                         {/* Popup detail notification */}
                         <Modal show={show} onHide={handleClosePopup}
                             size="lg"
@@ -215,10 +224,6 @@ const NotificationList = () => {
                             </div>
                         </Modal>
 
-
-                        <div className="text-center">
-                            <Link className="dark-link">Load more activity</Link>
-                        </div>
                     </div>
                 </div>
             </section >

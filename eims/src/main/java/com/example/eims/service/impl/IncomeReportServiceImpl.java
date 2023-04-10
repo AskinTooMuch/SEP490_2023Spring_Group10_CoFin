@@ -1,3 +1,14 @@
+/*
+ * Copyright (C) 2023, FPT University <br>
+ * SEP490 - SEP490_G10 <br>
+ * EIMS <br>
+ * Eggs Incubating Management System <br>
+ *
+ * Record of change:<br>
+ * DATE         Version     Author      DESCRIPTION<br>
+ * 05/04/2023   1.0         DuongVV     First Deploy<br>
+ */
+
 package com.example.eims.service.impl;
 
 import com.example.eims.dto.report.IncomeReportDTO;
@@ -28,18 +39,15 @@ public class IncomeReportServiceImpl implements IIncomeReportService {
     private final ImportReceiptRepository importReceiptRepository;
     @Autowired
     private final ExportReceiptRepository exportReceiptRepository;
-    @PersistenceContext
-    private final EntityManager em;
 
     public IncomeReportServiceImpl(FacilityRepository facilityRepository, CostRepository costRepository,
                                    PayrollRepository payrollRepository, ImportReceiptRepository importReceiptRepository,
-                                   ExportReceiptRepository exportReceiptRepository, EntityManager em) {
+                                   ExportReceiptRepository exportReceiptRepository) {
         this.facilityRepository = facilityRepository;
         this.costRepository = costRepository;
         this.payrollRepository = payrollRepository;
         this.importReceiptRepository = importReceiptRepository;
         this.exportReceiptRepository = exportReceiptRepository;
-        this.em = em;
     }
 
     /**
@@ -173,24 +181,19 @@ public class IncomeReportServiceImpl implements IIncomeReportService {
 
         // cost year
         List<String> listYearCost = costRepository.getAllYear(facility.getFacilityId()).get();
-        System.out.println("listYearCost:" + listYearCost);
         listYear.addAll(listYearCost);
         // payroll year
         List<String> listYearPayroll = payrollRepository.getAllYear(userId).get();
-        System.out.println("listYearPayroll:" + listYearPayroll);
         listYear.addAll(listYearPayroll);
         // import year
         List<String> listYearImport = importReceiptRepository.getAllYear(facility.getFacilityId()).get();
-        System.out.println("listYearImport:" + listYearImport);
         listYear.addAll(listYearImport);
         // export year
         List<String> listYearExport = exportReceiptRepository.getAllYear(facility.getFacilityId()).get();
-        System.out.println("listYearExport:" + listYearExport);
         listYear.addAll(listYearExport);
         // remove duplicate year
         Set inputSet = new HashSet(listYear);
         listYear = new ArrayList<>(inputSet);
-        System.out.println("listYear:" + listYear);
 
         // cost
         for (String year : listYear) {
