@@ -26,6 +26,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.sql.Date;
@@ -126,7 +127,7 @@ public class CostServiceImpl implements ICostService {
         if(costAmount <= 0F){
             return new ResponseEntity<>("Tổng chi phí phải lớn hơn 0", HttpStatus.BAD_REQUEST);
         }
-        if(costAmount >= 9999999999999.99F){
+        if(costAmount - (9999999999999.99F) >= 0.0000000000000000000F){
             return new ResponseEntity<>("Tổng chi phí không được vượt quá 9999999999999.99", HttpStatus.BAD_REQUEST);
         }
         // check paid amount
@@ -134,8 +135,8 @@ public class CostServiceImpl implements ICostService {
         if(paidAmount < 0F){
             return new ResponseEntity<>("Số tiền đã thanh toán không được bé hơn 0", HttpStatus.BAD_REQUEST);
         }
-        if(paidAmount >= 9999999999999.99F){
-            return new ResponseEntity<>("Số tiền đã thanh toán không được vượt quá 9999999999999.99", HttpStatus.BAD_REQUEST);
+        if(paidAmount - (9999999999999.99F) >= 0.0000000000000000000F){
+            return new ResponseEntity<>("Tổng chi phí không được vượt quá 9999999999999.99", HttpStatus.BAD_REQUEST);
         }
         if(paidAmount > costAmount){
             return new ResponseEntity<>("Số tiền đã thanh toán không được lớn hơn tổng chi phí", HttpStatus.BAD_REQUEST);
@@ -194,7 +195,7 @@ public class CostServiceImpl implements ICostService {
         if(costAmount <= 0F){
             return new ResponseEntity<>("Tổng chi phí phải lớn hơn 0", HttpStatus.BAD_REQUEST);
         }
-        if(costAmount >= 9999999999999.99F){
+        if(costAmount - (9999999999999.99F) >= 0.0000000000000000000F){
             return new ResponseEntity<>("Tổng chi phí không được vượt quá 9999999999999.99", HttpStatus.BAD_REQUEST);
         }
         // check paid amount
@@ -202,8 +203,8 @@ public class CostServiceImpl implements ICostService {
         if(paidAmount < 0F){
             return new ResponseEntity<>("Số tiền đã thanh toán không được bé hơn 0", HttpStatus.BAD_REQUEST);
         }
-        if(paidAmount >= 9999999999999.99F){
-            return new ResponseEntity<>("Số tiền đã thanh toán không được vượt quá 9999999999999.99", HttpStatus.BAD_REQUEST);
+        if(paidAmount - (9999999999999.99F) >= 0.0000000000000000000F){
+            return new ResponseEntity<>("Tổng chi phí không được vượt quá 9999999999999.99", HttpStatus.BAD_REQUEST);
         }
         if(paidAmount > costAmount){
             return new ResponseEntity<>("Số tiền đã thanh toán không được lớn hơn tổng chi phí", HttpStatus.BAD_REQUEST);

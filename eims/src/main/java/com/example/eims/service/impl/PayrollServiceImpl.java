@@ -148,7 +148,7 @@ public class PayrollServiceImpl implements IPayrollService {
         if(payrollAmount <= 0F ){
             return new ResponseEntity<>("Số tiền phải lớn hơn 0", HttpStatus.BAD_REQUEST);
         }
-        if(payrollAmount >= 9999999999999.99F){
+        if(payrollAmount - (9999999999999.99F) >= 0.0000000000000000000F){
             return new ResponseEntity<>("Tiền lương không được vượt quá 9999999999999.99", HttpStatus.BAD_REQUEST);
         }
         // Paid date
@@ -209,7 +209,7 @@ public class PayrollServiceImpl implements IPayrollService {
         if(payrollAmount <= 0F ){
             return new ResponseEntity<>("Số tiền phải lớn hơn 0", HttpStatus.BAD_REQUEST);
         }
-        if(payrollAmount >= 9999999999999.99F){
+        if(payrollAmount - (9999999999999.99F) >= 0.0000000000000000000F){
             return new ResponseEntity<>("Tiền lương không được vượt quá 9999999999999.99", HttpStatus.BAD_REQUEST);
         }
         // Paid date
