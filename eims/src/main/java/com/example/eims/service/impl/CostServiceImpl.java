@@ -251,7 +251,7 @@ public class CostServiceImpl implements ICostService {
         if(costName == null || stringDealer.trimMax(costName).equals("")){
             return new ResponseEntity<>("Nhập từ khóa để tìm kiếm", HttpStatus.BAD_REQUEST);
         }
-        Optional<List<Cost>> costList = costRepository.searchCostByName(userId,costName);
+        Optional<List<Cost>> costList = costRepository.searchCostByName(userId,stringDealer.trimMax(costName));
         if(!costList.isPresent() || costList.get().isEmpty()){
             return new ResponseEntity<>("Không tìm thấy khoản chi phí phù hợp", HttpStatus.BAD_REQUEST);
         }

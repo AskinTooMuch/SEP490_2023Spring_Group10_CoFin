@@ -443,7 +443,7 @@ public class EmployeeServiceImpl implements IEmployeeService {
         if(searchKey == null || stringDealer.trimMax(searchKey).equals("")){
             return new ResponseEntity<>("Nhập từ khóa để tìm kiếm",HttpStatus.BAD_REQUEST);
         }
-        Optional<List<User>> employeeOpt = userRepository.searchEmployeeByPhoneOrName(facilityId,searchKey);
+        Optional<List<User>> employeeOpt = userRepository.searchEmployeeByPhoneOrName(facilityId,stringDealer.trimMax(searchKey));
         if(!employeeOpt.isPresent() || employeeOpt.get().isEmpty()){
             return new ResponseEntity<>("Không tìm thấy nhân viên phù hợp",HttpStatus.BAD_REQUEST);
         }
