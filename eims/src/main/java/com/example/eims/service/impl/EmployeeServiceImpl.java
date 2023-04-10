@@ -156,7 +156,7 @@ public class EmployeeServiceImpl implements IEmployeeService {
         if(salary < 0F){
             return new ResponseEntity<>("Tiền lương không được bé hơn 0", HttpStatus.BAD_REQUEST);
         }
-        if(salary >= 9999999999999.99F){
+        if(salary - (9999999999999.99F) >= 0.0000000000000000000F){
             return new ResponseEntity<>("Tiền lương không được vượt quá 9999999999999.99", HttpStatus.BAD_REQUEST);
         }
 
@@ -297,7 +297,7 @@ public class EmployeeServiceImpl implements IEmployeeService {
         if(salary < 0F){
             return new ResponseEntity<>("Tiền lương không được bé hơn 0", HttpStatus.BAD_REQUEST);
         }
-        if(salary >= 9999999999999.99F){
+        if(salary - (9999999999999.99F) >= 0.0000000000000000000F){
             return new ResponseEntity<>("Tiền lương không được vượt quá 9999999999999.99", HttpStatus.BAD_REQUEST);
         }
 
@@ -443,7 +443,7 @@ public class EmployeeServiceImpl implements IEmployeeService {
         if(searchKey == null || stringDealer.trimMax(searchKey).equals("")){
             return new ResponseEntity<>("Nhập từ khóa để tìm kiếm",HttpStatus.BAD_REQUEST);
         }
-        Optional<List<User>> employeeOpt = userRepository.searchEmployeeByPhoneOrName(facilityId,searchKey);
+        Optional<List<User>> employeeOpt = userRepository.searchEmployeeByPhoneOrName(facilityId,stringDealer.trimMax(searchKey));
         if(!employeeOpt.isPresent() || employeeOpt.get().isEmpty()){
             return new ResponseEntity<>("Không tìm thấy nhân viên phù hợp",HttpStatus.BAD_REQUEST);
         }
