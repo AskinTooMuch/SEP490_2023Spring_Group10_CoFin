@@ -80,8 +80,8 @@ const Cost = () => {
                 userId: sessionStorage.getItem("curUserId"),
                 facilityId: sessionStorage.getItem("facilityId"),
                 costItem: "",
-                costAmount: "",
-                paidAmount: "",
+                costAmount: "0",
+                paidAmount: "0",
                 issueDate: "",
                 note: ""
             });
