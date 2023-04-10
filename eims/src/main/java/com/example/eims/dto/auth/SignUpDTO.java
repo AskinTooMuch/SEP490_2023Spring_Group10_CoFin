@@ -24,6 +24,7 @@ public class SignUpDTO {
     private String userEmail;
     private String userAddress;
     private String userPassword;
+    private String userRePassword;
     private String facilityName;
     private String facilityFoundDate;
     private String facilityHotline;

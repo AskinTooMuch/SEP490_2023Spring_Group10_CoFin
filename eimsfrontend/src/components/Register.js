@@ -81,6 +81,7 @@ const Register = () => {
         userEmail: "",
         userAddress: "",
         userPassword: "",
+        userRePassword: "",
         //Facility
         facilityName: "",
         facilityFoundDate: "",
@@ -232,6 +233,7 @@ const Register = () => {
             return;
         }
         signUpDTO.userPassword = password;
+        signUpDTO.userRePassword = matchPwd;
         try {
             const response = await axios.post(REGISTER_URL,
                 signUpDTO,
@@ -442,6 +444,7 @@ const Register = () => {
                                                                         className="tip invalid" ><FontAwesomeIcon icon={faInfoCircle} /></span>
                                                                     <input type={passwordShown2 ? "text" : "password"} id="confirm_pwd"
                                                                         onChange={(e) => setMatchPwd(e.target.value)}
+                                                                        value={matchPwd}
                                                                         aria-invalid={validMatch ? "false" : "true"}
                                                                         aria-describedby="confirmnote" className="form-control " />
                                                                     <i onClick={togglePasswordVisiblity2}>{eye}</i>

@@ -153,7 +153,6 @@ public class CustomerServiceImpl implements ICustomerService {
         if (createCustomerDTO.getCustomerAddress() == null || customerAddress.equals("")) { /* Address is empty */
             return new ResponseEntity<>("Địa chỉ không được để trống", HttpStatus.BAD_REQUEST);
         }
-
         JSONObject addressObj;
         System.out.println(customerAddress);
         try {

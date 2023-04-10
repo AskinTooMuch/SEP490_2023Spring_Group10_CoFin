@@ -106,6 +106,7 @@ const Customer = () => {
             districtList[i] = { value: districtList[i].Id, label: districtList[i].Name }
         }
         setDistrict(districtList);
+        loadWard(0);
     }
 
     //Load user ward list
@@ -118,6 +119,7 @@ const Customer = () => {
             wardList[i] = { value: wardList[i].Id, label: wardList[i].Name }
         }
         setWard(wardList);
+        saveWard(0);
     }
 
     function saveWard(index) {
@@ -174,11 +176,19 @@ const Customer = () => {
                 ward: "",
                 street: ""
             });
-
-            console.log(response);
             loadCustomerList();
             toast.success(response.data);
             setShow(false);
+            setAddressJson({
+                city: "",
+                district: "",
+                ward: "",
+                street: ""
+            });
+            setCityIndex(0);
+            setDistrictIndex(0);
+            setWardIndex(0);
+            setStreet("");
         } catch (err) {
             if (!err?.response) {
                 toast.error('Server không phản hồi');
@@ -223,6 +233,25 @@ const Customer = () => {
                 }
             }
         }
+    }
+
+    const handleCancel = () => {
+        handleClose();
+        setAddressJson({
+            city: "",
+            district: "",
+            ward: "",
+            street: ""
+        });
+        const cityList = fullAddresses.slice();
+        for (let i in cityList) {
+            cityList[i] = { value: cityList[i].Id, label: cityList[i].Name }
+        }
+        setCity(cityList);
+        setCityIndex(0);
+        setDistrictIndex(0);
+        setWardIndex(0);
+        setStreet("");
     }
 
     const searchCustomer = async (event) => {
@@ -397,7 +426,7 @@ const Customer = () => {
                             <button id="confirmCreateCustomer" style={{ width: "20%" }} type="submit" className="col-md-6 btn-light" >
                                 Tạo
                             </button>
-                            <button id="cancelCreateCustomer" className='btn btn-light' style={{ width: "20%" }} onClick={handleClose} type='button'>
+                            <button id="cancelCreateCustomer" className='btn btn-light' style={{ width: "20%" }} onClick={handleCancel} type='button'>
                                 Huỷ
                             </button>
                         </div>

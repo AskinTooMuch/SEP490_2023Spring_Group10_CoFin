@@ -27,6 +27,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.configurationprocessor.json.JSONException;
+import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -218,6 +220,37 @@ public class AuthServiceImpl implements IAuthService {
         if (address.equals("")) { /* Address is empty */
             return new ResponseEntity<>("Địa chỉ không được để trống", HttpStatus.BAD_REQUEST);
         }
+        JSONObject addressObj;
+        try {
+            addressObj = new JSONObject(address);
+            String city = stringDealer.trimMax((String) addressObj.get("city"));
+            String district = stringDealer.trimMax((String) addressObj.get("district"));
+            String ward = stringDealer.trimMax((String) addressObj.get("ward"));
+            String street = stringDealer.trimMax((String) addressObj.get("street"));
+            if (city == null || city.equals("")) {
+                return new ResponseEntity<>("Thành phố không được để trống", HttpStatus.BAD_REQUEST);
+            }
+            if (district == null || district.equals("")) {
+                return new ResponseEntity<>("Quận/Huyện không được để trống", HttpStatus.BAD_REQUEST);
+            }
+            if (ward == null || ward.equals("")) {
+                return new ResponseEntity<>("Phường xã không được để trống", HttpStatus.BAD_REQUEST);
+            }
+            if (street == null || street.equals("")) {
+                return new ResponseEntity<>("Số nhà không được để trống", HttpStatus.BAD_REQUEST);
+            }
+            if (street.length() > 30) {
+                return new ResponseEntity<>("Số nhà không được quá 30 kí tự", HttpStatus.BAD_REQUEST);
+            }
+            addressObj = new JSONObject();
+            addressObj.put("city", city);
+            addressObj.put("district", district);
+            addressObj.put("ward", ward);
+            addressObj.put("street", street);
+            address = addressObj.toString();
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
         // Password
         String password = stringDealer.trimMax(signUpDTO.getUserPassword());
         if (password.equals("")) { /* Password is empty */
@@ -227,10 +260,7 @@ public class AuthServiceImpl implements IAuthService {
             return new ResponseEntity<>("Mật khẩu không đúng định dạng", HttpStatus.BAD_REQUEST);
         }
         // Confirm password
-        String rePassword = stringDealer.trimMax(signUpDTO.getUserPassword());
-        if (rePassword.equals("")) { /* Confirm password is empty */
-            return new ResponseEntity<>("Mật khẩu không được để trống", HttpStatus.BAD_REQUEST);
-        }
+        String rePassword = stringDealer.trimMax(signUpDTO.getUserRePassword());
         // Password match
         if (!password.equals(rePassword)) { /* Password not match */
             return new ResponseEntity<>("Mật khẩu không khớp", HttpStatus.BAD_REQUEST);
@@ -285,6 +315,37 @@ public class AuthServiceImpl implements IAuthService {
             if (fAddress.equals("")) { /* Address is empty */
                 return new ResponseEntity<>("Địa chỉ cơ sở không được để trống", HttpStatus.BAD_REQUEST);
             }
+            JSONObject addressObjFaci;
+            try {
+                addressObjFaci = new JSONObject(fAddress);
+                String city = stringDealer.trimMax((String) addressObjFaci.get("city"));
+                String district = stringDealer.trimMax((String) addressObjFaci.get("district"));
+                String ward = stringDealer.trimMax((String) addressObjFaci.get("ward"));
+                String street = stringDealer.trimMax((String) addressObjFaci.get("street"));
+                if (city == null || city.equals("")) {
+                    return new ResponseEntity<>("Thành phố không được để trống", HttpStatus.BAD_REQUEST);
+                }
+                if (district == null || district.equals("")) {
+                    return new ResponseEntity<>("Quận/Huyện không được để trống", HttpStatus.BAD_REQUEST);
+                }
+                if (ward == null || ward.equals("")) {
+                    return new ResponseEntity<>("Phường xã không được để trống", HttpStatus.BAD_REQUEST);
+                }
+                if (street == null || street.equals("")) {
+                    return new ResponseEntity<>("Số nhà không được để trống", HttpStatus.BAD_REQUEST);
+                }
+                if (street.length() > 30) {
+                    return new ResponseEntity<>("Số nhà không được quá 30 kí tự", HttpStatus.BAD_REQUEST);
+                }
+                addressObjFaci = new JSONObject();
+                addressObjFaci.put("city", city);
+                addressObjFaci.put("district", district);
+                addressObjFaci.put("ward", ward);
+                addressObjFaci.put("street", street);
+                fAddress = addressObj.toString();
+            } catch (JSONException e) {
+                throw new RuntimeException(e);
+            }
             facility.setFacilityAddress(fAddress);
             // Business license number
             String licenseNumber = stringDealer.trimMax(signUpDTO.getBusinessLicenseNumber());
@@ -294,15 +355,19 @@ public class AuthServiceImpl implements IAuthService {
             facility.setBusinessLicenseNumber(licenseNumber);
 
             facility.setStatus(0);  /* Inactivated, need registration's approval */
-            facilityRepository.save(facility);
-
-            // Registration
-            Registration registration = new Registration();
-            registration.setUserId(returnUser.getUserId());
-            registration.setRegisterDate(Date.valueOf(LocalDate.now()));
-            registration.setStatus(0);
-            registrationRepository.save(registration);
-            return new ResponseEntity<>("Đăng kí thành công, vui lòng đợi xác nhận tài khoản", HttpStatus.OK);
+            try {
+                facilityRepository.save(facility);
+                // Registration
+                Registration registration = new Registration();
+                registration.setUserId(returnUser.getUserId());
+                registration.setRegisterDate(Date.valueOf(LocalDate.now()));
+                registration.setStatus(0);
+                registrationRepository.save(registration);
+                return new ResponseEntity<>("Đăng kí thành công, vui lòng đợi xác nhận tài khoản", HttpStatus.OK);
+            } catch (IllegalArgumentException iae) {
+                userRepository.delete(user);
+                return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            }
         } catch (IllegalArgumentException iae) {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
