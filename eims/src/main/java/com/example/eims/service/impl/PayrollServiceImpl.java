@@ -29,6 +29,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -140,15 +142,15 @@ public class PayrollServiceImpl implements IPayrollService {
             return new ResponseEntity<>("Khoản tiền không được để trống", HttpStatus.BAD_REQUEST);
         }
         String payrollItem = stringDealer.trimMax(createPayrollDTO.getPayrollItem());
-        if (payrollItem.length() > 50){
+        if (payrollItem.length() > 32){
             return new ResponseEntity<>("Khoản tiền không được dài quá 50 ký tự", HttpStatus.BAD_REQUEST);
         }
         //check payroll amount
-        Float payrollAmount = createPayrollDTO.getPayrollAmount();
-        if(payrollAmount <= 0F ){
-            return new ResponseEntity<>("Số tiền phải lớn hơn 0", HttpStatus.BAD_REQUEST);
+        BigDecimal payrollAmount = createPayrollDTO.getPayrollAmount().setScale(2, RoundingMode.FLOOR);
+        if(payrollAmount.compareTo(new BigDecimal("0")) <= 0 ){
+            return new ResponseEntity<>("Số tiền phải lớn hơn 0.01", HttpStatus.BAD_REQUEST);
         }
-        if(payrollAmount - (9999999999999.99F) >= 0.0000000000000000000F){
+        if(payrollAmount.compareTo(new BigDecimal("9999999999999.99")) > 0){
             return new ResponseEntity<>("Tiền lương không được vượt quá 9999999999999.99", HttpStatus.BAD_REQUEST);
         }
         // Paid date
@@ -201,15 +203,15 @@ public class PayrollServiceImpl implements IPayrollService {
             return new ResponseEntity<>("Khoản tiền không được để trống", HttpStatus.BAD_REQUEST);
         }
         String payrollItem = stringDealer.trimMax(updatePayrollDTO.getPayrollItem());
-        if (payrollItem.length() > 50){
+        if (payrollItem.length() > 32){
             return new ResponseEntity<>("Khoản tiền không được dài quá 50 ký tự", HttpStatus.BAD_REQUEST);
         }
         //check payroll amount
-        Float payrollAmount = updatePayrollDTO.getPayrollAmount();
-        if(payrollAmount <= 0F ){
-            return new ResponseEntity<>("Số tiền phải lớn hơn 0", HttpStatus.BAD_REQUEST);
+        BigDecimal payrollAmount = updatePayrollDTO.getPayrollAmount().setScale(2, RoundingMode.FLOOR);
+        if(payrollAmount.compareTo(new BigDecimal("0")) <= 0 ){
+            return new ResponseEntity<>("Số tiền phải lớn hơn 0.01", HttpStatus.BAD_REQUEST);
         }
-        if(payrollAmount - (9999999999999.99F) >= 0.0000000000000000000F){
+        if(payrollAmount.compareTo(new BigDecimal("9999999999999.99")) > 0){
             return new ResponseEntity<>("Tiền lương không được vượt quá 9999999999999.99", HttpStatus.BAD_REQUEST);
         }
         // Paid date

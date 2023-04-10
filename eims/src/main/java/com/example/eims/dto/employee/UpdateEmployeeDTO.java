@@ -15,6 +15,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 @Data
@@ -25,7 +26,7 @@ public class UpdateEmployeeDTO {
     private String employeePhone;
     private String employeeAddress;
     private String email;
-    private Float salary;
+    private BigDecimal salary;
     private int status;
     private Long facilityId;
 }

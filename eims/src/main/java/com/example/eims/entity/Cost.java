@@ -15,6 +15,7 @@ package com.example.eims.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 @Data
@@ -27,8 +28,8 @@ public class Cost {
     private Long userId;
     private Long facilityId;
     private String costItem;
-    private Float costAmount;
-    private Float paidAmount;
+    private BigDecimal costAmount;
+    private BigDecimal paidAmount;
     private Date issueDate;
     private String note;
     private boolean status;

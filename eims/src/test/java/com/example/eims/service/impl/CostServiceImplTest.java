@@ -30,6 +30,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 
+import java.math.BigDecimal;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
@@ -162,8 +163,8 @@ class CostServiceImplTest {
         dto.setUserId(ownerId);
         dto.setFacilityId(facilityId);
         dto.setCostItem("Tiền điện");
-        dto.setCostAmount(100F);
-        dto.setPaidAmount(0F);
+        dto.setCostAmount(new BigDecimal("100"));
+        dto.setPaidAmount(new BigDecimal("0"));
         dto.setNote("Tra tien thang 1");
 
         // Define behaviour of repository
@@ -190,8 +191,8 @@ class CostServiceImplTest {
          dto.setUserId(ownerId);
          dto.setFacilityId(facilityId);
          dto.setCostItem("Tiền điện");
-         dto.setCostAmount(100F);
-         dto.setPaidAmount(0F);  
+         dto.setCostAmount(new BigDecimal("100"));
+         dto.setPaidAmount(new BigDecimal("0"));  
          dto.setNote("Tra tien thang 1");
 
          // Define behaviour of repository
@@ -218,8 +219,8 @@ class CostServiceImplTest {
          dto.setUserId(ownerId);
          dto.setFacilityId(facilityId);
          dto.setCostItem("");
-         dto.setCostAmount(100F);
-         dto.setPaidAmount(0F);  
+         dto.setCostAmount(new BigDecimal("100"));
+         dto.setPaidAmount(new BigDecimal("0"));  
          dto.setNote("Tra tien thang 1");
 
          // Define behaviour of repository
@@ -246,8 +247,8 @@ class CostServiceImplTest {
          dto.setUserId(ownerId);
          dto.setFacilityId(facilityId);
          dto.setCostItem(null);
-         dto.setCostAmount(100F);
-         dto.setPaidAmount(0F);  
+         dto.setCostAmount(new BigDecimal("100"));
+         dto.setPaidAmount(new BigDecimal("0"));  
          dto.setNote("Tra tien thang 1");
 
          // Define behaviour of repository
@@ -274,8 +275,8 @@ class CostServiceImplTest {
          dto.setUserId(ownerId);
          dto.setFacilityId(facilityId);
          dto.setCostItem("Tiền điện");
-         dto.setCostAmount(0F);
-         dto.setPaidAmount(0F); 
+         dto.setCostAmount(new BigDecimal("0"));
+         dto.setPaidAmount(new BigDecimal("0")); 
          dto.setNote("Tra tien thang 1");
 
          // Define behaviour of repository
@@ -285,7 +286,7 @@ class CostServiceImplTest {
          ResponseEntity<?> responseEntity = costService.createCost(dto);
          System.out.println(responseEntity.toString());
          // Assert
-         assertEquals("Tổng chi phí phải lớn hơn 0", responseEntity.getBody());
+         assertEquals("Tổng chi phí phải lớn hơn 0.01", responseEntity.getBody());
      }
 
      @Test
@@ -302,8 +303,8 @@ class CostServiceImplTest {
          dto.setUserId(ownerId);
          dto.setFacilityId(facilityId);
          dto.setCostItem("Tiền điện");
-         dto.setCostAmount(-100F);
-         dto.setPaidAmount(0F);
+         dto.setCostAmount(new BigDecimal("-100"));
+         dto.setPaidAmount(new BigDecimal("0"));
          dto.setNote("Tra tien thang 1");
 
          // Define behaviour of repository
@@ -313,7 +314,7 @@ class CostServiceImplTest {
          ResponseEntity<?> responseEntity = costService.createCost(dto);
          System.out.println(responseEntity.toString());
          // Assert
-         assertEquals("Tổng chi phí phải lớn hơn 0", responseEntity.getBody());
+         assertEquals("Tổng chi phí phải lớn hơn 0.01", responseEntity.getBody());
      }
 
      @Test
@@ -330,8 +331,8 @@ class CostServiceImplTest {
          dto.setUserId(ownerId);
          dto.setFacilityId(facilityId);
          dto.setCostItem("Tiền điện");
-         dto.setCostAmount(100F);
-         dto.setPaidAmount(0F);
+         dto.setCostAmount(new BigDecimal("100"));
+         dto.setPaidAmount(new BigDecimal("0"));
          dto.setNote("");
 
          // Define behaviour of repository
@@ -358,8 +359,8 @@ class CostServiceImplTest {
          dto.setUserId(ownerId);
          dto.setFacilityId(facilityId);
          dto.setCostItem("Tiền điện");
-         dto.setCostAmount(100F);
-         dto.setPaidAmount(0F);
+         dto.setCostAmount(new BigDecimal("100"));
+         dto.setPaidAmount(new BigDecimal("0"));
          dto.setNote(null);
 
          // Define behaviour of repository
@@ -386,8 +387,8 @@ class CostServiceImplTest {
          dto.setUserId(ownerId);
          dto.setFacilityId(facilityId);
          dto.setCostItem("Tiền điện");
-         dto.setCostAmount(100F);
-         dto.setPaidAmount(100F);
+         dto.setCostAmount(new BigDecimal("100"));
+         dto.setPaidAmount(new BigDecimal("100"));
          dto.setNote("Tra tien thang 1");
 
          // Define behaviour of repository
@@ -414,8 +415,8 @@ class CostServiceImplTest {
          dto.setUserId(ownerId);
          dto.setFacilityId(facilityId);
          dto.setCostItem("Tiền điện");
-         dto.setCostAmount(100F);
-         dto.setPaidAmount(200F);
+         dto.setCostAmount(new BigDecimal("100"));
+         dto.setPaidAmount( new BigDecimal("200"));
          dto.setNote("Tra tien thang 1");
 
          // Define behaviour of repository
@@ -442,8 +443,8 @@ class CostServiceImplTest {
          dto.setUserId(ownerId);
          dto.setFacilityId(facilityId);
          dto.setCostItem("Tiền điện");
-         dto.setCostAmount(100F);
-         dto.setPaidAmount(-100F);
+         dto.setCostAmount(new BigDecimal("100"));
+         dto.setPaidAmount(new BigDecimal("-200"));
          dto.setNote("Tra tien thang 1");
 
          // Define behaviour of repository
@@ -470,8 +471,8 @@ class CostServiceImplTest {
          dto.setUserId(ownerId);
          dto.setFacilityId(facilityId);
          dto.setCostItem("Tiền điện");
-         dto.setCostAmount(100F);
-         dto.setPaidAmount(0F);
+         dto.setCostAmount(new BigDecimal("100"));
+         dto.setPaidAmount(new BigDecimal("0"));
          dto.setNote("Tra tien thang 1");
 
          // Define behaviour of repository
@@ -497,8 +498,8 @@ class CostServiceImplTest {
          dto.setUserId(ownerId);
          dto.setFacilityId(facilityId);
          dto.setCostItem("Tiền điện");
-         dto.setCostAmount(100F);
-         dto.setPaidAmount(0F);
+         dto.setCostAmount(new BigDecimal("100"));
+         dto.setPaidAmount(new BigDecimal("0"));
          dto.setNote("Tra tien thang 1");
 
          // Define behaviour of repository
@@ -525,8 +526,8 @@ class CostServiceImplTest {
          dto.setUserId(ownerId);
          dto.setFacilityId(facilityId);
          dto.setCostItem("Tiền điện");
-         dto.setCostAmount(100F);
-         dto.setPaidAmount(0F);
+         dto.setCostAmount(new BigDecimal("100"));
+         dto.setPaidAmount(new BigDecimal("0"));
          dto.setNote("Tra tien thang 1");
 
          // Define behaviour of repository
@@ -553,8 +554,8 @@ class CostServiceImplTest {
          dto.setUserId(ownerId);
          dto.setFacilityId(facilityId);
          dto.setCostItem("");
-         dto.setCostAmount(100F);
-         dto.setPaidAmount(0F);
+         dto.setCostAmount(new BigDecimal("100"));
+         dto.setPaidAmount(new BigDecimal("0"));
          dto.setNote("Tra tien thang 1");
 
          // Define behaviour of repository
@@ -581,8 +582,8 @@ class CostServiceImplTest {
          dto.setUserId(ownerId);
          dto.setFacilityId(facilityId);
          dto.setCostItem(null);
-         dto.setCostAmount(100F);
-         dto.setPaidAmount(0F);
+         dto.setCostAmount(new BigDecimal("100"));
+         dto.setPaidAmount(new BigDecimal("0"));
          dto.setNote("Tra tien thang 1");
 
          // Define behaviour of repository
@@ -609,8 +610,8 @@ class CostServiceImplTest {
          dto.setUserId(ownerId);
          dto.setFacilityId(facilityId);
          dto.setCostItem("Tiền điện");
-         dto.setCostAmount(0F);
-         dto.setPaidAmount(0F);
+         dto.setCostAmount(new BigDecimal("0"));
+         dto.setPaidAmount(new BigDecimal("0"));
          dto.setNote("Tra tien thang 1");
 
          // Define behaviour of repository
@@ -620,7 +621,7 @@ class CostServiceImplTest {
          ResponseEntity<?> responseEntity = costService.updateCost(dto);
          System.out.println(responseEntity.toString());
          // Assert
-         assertEquals("Tổng chi phí phải lớn hơn 0", responseEntity.getBody());
+         assertEquals("Tổng chi phí phải lớn hơn 0.01", responseEntity.getBody());
      }
 
      @Test
@@ -637,8 +638,8 @@ class CostServiceImplTest {
          dto.setUserId(ownerId);
          dto.setFacilityId(facilityId);
          dto.setCostItem("Tiền điện");
-         dto.setCostAmount(-100F);
-         dto.setPaidAmount(0F);
+         dto.setCostAmount(new BigDecimal("-100"));
+         dto.setPaidAmount(new BigDecimal("0"));
          dto.setNote("Tra tien thang 1");
 
          // Define behaviour of repository
@@ -648,7 +649,7 @@ class CostServiceImplTest {
          ResponseEntity<?> responseEntity = costService.updateCost(dto);
          System.out.println(responseEntity.toString());
          // Assert
-         assertEquals("Tổng chi phí phải lớn hơn 0", responseEntity.getBody());
+         assertEquals("Tổng chi phí phải lớn hơn 0.01", responseEntity.getBody());
      }
 
      @Test
@@ -665,8 +666,8 @@ class CostServiceImplTest {
          dto.setUserId(ownerId);
          dto.setFacilityId(facilityId);
          dto.setCostItem("Tiền điện");
-         dto.setCostAmount(100F);
-         dto.setPaidAmount(0F);
+         dto.setCostAmount(new BigDecimal("100"));
+         dto.setPaidAmount(new BigDecimal("0"));
          dto.setNote("");
 
          // Define behaviour of repository
@@ -693,8 +694,8 @@ class CostServiceImplTest {
          dto.setUserId(ownerId);
          dto.setFacilityId(facilityId);
          dto.setCostItem("Tiền điện");
-         dto.setCostAmount(100F);
-         dto.setPaidAmount(0F);
+         dto.setCostAmount(new BigDecimal("100"));
+         dto.setPaidAmount(new BigDecimal("0"));
          dto.setNote(null);
 
          // Define behaviour of repository
@@ -721,8 +722,8 @@ class CostServiceImplTest {
          dto.setUserId(ownerId);
          dto.setFacilityId(facilityId);
          dto.setCostItem("Tiền điện");
-         dto.setCostAmount(100F);
-         dto.setPaidAmount(100F);
+         dto.setCostAmount(new BigDecimal("100"));
+         dto.setPaidAmount(new BigDecimal("100"));
          dto.setNote("Tra tien thang 1");
 
          // Define behaviour of repository
@@ -749,8 +750,8 @@ class CostServiceImplTest {
          dto.setUserId(ownerId);
          dto.setFacilityId(facilityId);
          dto.setCostItem("Tiền điện");
-         dto.setCostAmount(100F);
-         dto.setPaidAmount(200F);
+         dto.setCostAmount(new BigDecimal("100"));
+         dto.setPaidAmount( new BigDecimal("200"));
          dto.setNote("Tra tien thang 1");
 
          // Define behaviour of repository
@@ -777,8 +778,8 @@ class CostServiceImplTest {
          dto.setUserId(ownerId);
          dto.setFacilityId(facilityId);
          dto.setCostItem("Tiền điện");
-         dto.setCostAmount(100F);
-         dto.setPaidAmount(-100F);
+         dto.setCostAmount(new BigDecimal("100"));
+         dto.setPaidAmount(new BigDecimal("-200"));
          dto.setNote("Tra tien thang 1");
 
          // Define behaviour of repository
@@ -805,8 +806,8 @@ class CostServiceImplTest {
          dto.setUserId(ownerId);
          dto.setFacilityId(facilityId);
          dto.setCostItem("Tiền điện");
-         dto.setCostAmount(100F);
-         dto.setPaidAmount(0F);
+         dto.setCostAmount(new BigDecimal("100"));
+         dto.setPaidAmount(new BigDecimal("0"));
          dto.setNote("Tra tien thang 1");
 
          // Define behaviour of repository

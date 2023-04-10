@@ -15,11 +15,13 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
+import java.math.BigDecimal;
+
 @Data
 public class UpdatePayrollDTO {
     private Long payrollId;
     private String payrollItem;
-    private Float payrollAmount;
+    private BigDecimal payrollAmount;
     private String issueDate;
     private String note;
 }

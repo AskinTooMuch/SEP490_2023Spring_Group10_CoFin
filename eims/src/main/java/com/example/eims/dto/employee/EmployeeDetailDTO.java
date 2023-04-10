@@ -12,6 +12,8 @@ package com.example.eims.dto.employee;
 
 import com.example.eims.entity.User;
 import lombok.Data;
+
+import java.math.BigDecimal;
 import java.util.Date;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -28,7 +30,7 @@ public class EmployeeDetailDTO {
     private String employeePhone;
     private String employeeAddress;
     private String email;
-    private Float salary;
+    private BigDecimal salary;
     private int status;
 
     public void getFromEntity(User user){

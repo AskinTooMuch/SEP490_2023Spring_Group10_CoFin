@@ -31,6 +31,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -152,11 +154,11 @@ public class EmployeeServiceImpl implements IEmployeeService {
         if(password.length() > 20){
             return new ResponseEntity<>("Mật khẩu không được dài quá 20 ký tự", HttpStatus.BAD_REQUEST);
         }
-        Float salary = createEmployeeDTO.getSalary();
-        if(salary < 0F){
+        BigDecimal salary = createEmployeeDTO.getSalary().setScale(2, RoundingMode.FLOOR);
+        if(salary.compareTo(new BigDecimal("0")) < 0){
             return new ResponseEntity<>("Tiền lương không được bé hơn 0", HttpStatus.BAD_REQUEST);
         }
-        if(salary - (9999999999999.99F) >= 0.0000000000000000000F){
+        if(salary.compareTo(new BigDecimal("9999999999999.99")) > 0){
             return new ResponseEntity<>("Tiền lương không được vượt quá 9999999999999.99", HttpStatus.BAD_REQUEST);
         }
 
@@ -293,11 +295,11 @@ public class EmployeeServiceImpl implements IEmployeeService {
             throw new RuntimeException(e);
         }
 
-        Float salary = updateEmployeeDTO.getSalary();
-        if(salary < 0F){
+        BigDecimal salary = updateEmployeeDTO.getSalary().setScale(2, RoundingMode.FLOOR);
+        if(salary.compareTo(new BigDecimal("0")) < 0){
             return new ResponseEntity<>("Tiền lương không được bé hơn 0", HttpStatus.BAD_REQUEST);
         }
-        if(salary - (9999999999999.99F) >= 0.0000000000000000000F){
+        if(salary.compareTo(new BigDecimal("9999999999999.99")) > 0){
             return new ResponseEntity<>("Tiền lương không được vượt quá 9999999999999.99", HttpStatus.BAD_REQUEST);
         }
 

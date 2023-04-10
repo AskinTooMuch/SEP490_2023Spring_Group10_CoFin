@@ -64,6 +64,7 @@ const Cost = () => {
     //Handle submit new Cost
     const handleCreateCostSubmit = async (event) => {
         event.preventDefault();
+        console.log(createCostDTO.costAmount)
         let response;
         try {
             response = await axios.post(COST_CREATE,
@@ -176,8 +177,8 @@ const Cost = () => {
                 userId: "",
                 facilityId: "",
                 costItem: "",
-                costAmount: "",
-                paidAmount: "",
+                costAmount: "0",
+                paidAmount: "0",
                 issueDate: "",
                 note: ""
             })
@@ -262,7 +263,8 @@ const Cost = () => {
                                     </div>
                                     <div className="col-md-6">
                                         <input style={{ width: "100%" }} placeholder="0"
-                                        defaultValue={0}
+                                        step={0.01}
+                                            defaultValue={0}
                                             type='number'
                                             onChange={(e) => handleCreateCostChange(e, "costAmount")} />
                                     </div>
@@ -273,6 +275,7 @@ const Cost = () => {
                                     </div>
                                     <div className="col-md-6">
                                         <input style={{ width: "100%" }} placeholder="0"
+                                        step={0.01}
                                         defaultValue={0}
                                             type='number'
                                             onChange={(e) => handleCreateCostChange(e, "paidAmount")} />
@@ -390,7 +393,7 @@ const Cost = () => {
                                     <input style={{ width: "100%" }} placeholder="0"
                                     defaultValue={0}
                                         type='number'
-                                        step='0.000000000000000001'
+                                        step='0.01'
                                         onChange={(e) => handleEditCostChange(e, "costAmount")}
                                         value={editCostDTO.costAmount} />
                                 </div>
@@ -403,7 +406,7 @@ const Cost = () => {
                                 <div className="col-md-6">
                                     <input style={{ width: "100%" }}
                                         type='number'
-                                        step='0.000000000000000001'
+                                        step='0.01'
                                         value={editCostDTO.paidAmount}
                                         defaultValue={0}
                                         onChange={(e) => handleEditCostChange(e, "paidAmount")} />

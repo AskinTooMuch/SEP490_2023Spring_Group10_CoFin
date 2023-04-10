@@ -17,6 +17,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.math.BigDecimal;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +34,7 @@ public class User {
     private Date dob;
     private String phone;
     private String email;
-    private Float salary;
+    private BigDecimal salary;
     private String password;
     private String address;
     private int status;
@@ -48,7 +49,7 @@ public class User {
     public User() {
     }
 
-    public User(Long userId, String username, Date dob, String phone, String email, Float salary,
+    public User(Long userId, String username, Date dob, String phone, String email, BigDecimal salary,
                 String password, String address, int status) {
         this.userId = userId;
         this.username = username;

@@ -16,6 +16,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
+import java.math.BigDecimal;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 
@@ -27,7 +28,7 @@ public class PayrollDetailDTO {
     private String employeeName;
     private String employeePhone;
     private String payrollItem;
-    private Float payrollAmount;
+    private BigDecimal payrollAmount;
     private String issueDate;
     private String note;
     private int status;

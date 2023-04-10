@@ -36,6 +36,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.math.BigDecimal;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -109,7 +110,7 @@ class EmployeeServiceImplTest {
         dto.setEmployeePassword("@User123");
         dto.setEmail("tungduong71@gmail.com");
         dto.setEmployeeAddress("{\"city\":\"Tỉnh Hải Dương\",\"district\":\"Huyện Gia Lộc\",\"ward\":\"Xã Hoàng Diệu\",\"street\":\"Thôn Nghĩa Hy\"}");
-        dto.setSalary(100F);
+        dto.setSalary(new BigDecimal("100.00"));
 
         User newEmployee = convertCreateEmployeeDaoToUser(dto);
 
@@ -143,7 +144,7 @@ class EmployeeServiceImplTest {
         dto.setEmployeePassword("@User123");
         dto.setEmail("tungduong71@gmail.com");
         dto.setEmployeeAddress("{\"city\":\"Tỉnh Hải Dương\",\"district\":\"Huyện Gia Lộc\",\"ward\":\"Xã Hoàng Diệu\",\"street\":\"Thôn Nghĩa Hy\"}");
-        dto.setSalary(100F);
+        dto.setSalary(new BigDecimal("100.00"));
 
         User newEmployee = convertCreateEmployeeDaoToUser(dto);
 
@@ -177,7 +178,7 @@ class EmployeeServiceImplTest {
         dto.setEmployeePassword("@User123");
         dto.setEmail("tungduong71@gmail.com");
         dto.setEmployeeAddress("{\"city\":\"Tỉnh Hải Dương\",\"district\":\"Huyện Gia Lộc\",\"ward\":\"Xã Hoàng Diệu\",\"street\":\"Thôn Nghĩa Hy\"}");
-        dto.setSalary(100F);
+        dto.setSalary(new BigDecimal("100.00"));
         // Run service method
         ResponseEntity<?> responseEntity = employeeService.createNewEmployee(dto);
         System.out.println(responseEntity.toString());
@@ -196,7 +197,7 @@ class EmployeeServiceImplTest {
         dto.setEmployeePassword("@User123");
         dto.setEmail("tungduong71@gmail.com");
         dto.setEmployeeAddress("{\"city\":\"Tỉnh Hải Dương\",\"district\":\"Huyện Gia Lộc\",\"ward\":\"Xã Hoàng Diệu\",\"street\":\"Thôn Nghĩa Hy\"}");
-        dto.setSalary(100F);
+        dto.setSalary(new BigDecimal("100.00"));
         // Run service method
         ResponseEntity<?> responseEntity = employeeService.createNewEmployee(dto);
         System.out.println(responseEntity.toString());
@@ -215,7 +216,7 @@ class EmployeeServiceImplTest {
         dto.setEmployeePassword("@User123");
         dto.setEmail("tungduong71@gmail.com");
         dto.setEmployeeAddress("{\"city\":\"Tỉnh Hải Dương\",\"district\":\"Huyện Gia Lộc\",\"ward\":\"Xã Hoàng Diệu\",\"street\":\"Thôn Nghĩa Hy\"}");
-        dto.setSalary(100F);
+        dto.setSalary(new BigDecimal("100.00"));
         // Run service method
         ResponseEntity<?> responseEntity = employeeService.createNewEmployee(dto);
         System.out.println(responseEntity.toString());
@@ -234,7 +235,7 @@ class EmployeeServiceImplTest {
         dto.setEmployeePassword("@User123");
         dto.setEmail("tungduong71@gmail.com");
         dto.setEmployeeAddress("{\"city\":\"Tỉnh Hải Dương\",\"district\":\"Huyện Gia Lộc\",\"ward\":\"Xã Hoàng Diệu\",\"street\":\"Thôn Nghĩa Hy\"}");
-        dto.setSalary(100F);
+        dto.setSalary(new BigDecimal("100.00"));
         // Run service method
         ResponseEntity<?> responseEntity = employeeService.createNewEmployee(dto);
         System.out.println(responseEntity.toString());
@@ -253,7 +254,7 @@ class EmployeeServiceImplTest {
         dto.setEmployeePassword("@User123");
         dto.setEmail("tungduong71@gmail.com");
         dto.setEmployeeAddress("{\"city\":\"Tỉnh Hải Dương\",\"district\":\"Huyện Gia Lộc\",\"ward\":\"Xã Hoàng Diệu\",\"street\":\"Thôn Nghĩa Hy\"}");
-        dto.setSalary(100F);
+        dto.setSalary(new BigDecimal("100.00"));
         // Run service method
         ResponseEntity<?> responseEntity = employeeService.createNewEmployee(dto);
         System.out.println(responseEntity.toString());
@@ -272,7 +273,7 @@ class EmployeeServiceImplTest {
         dto.setEmployeePassword("@User123");
         dto.setEmail("tungduong71@gmail.com");
         dto.setEmployeeAddress("{\"city\":\"Tỉnh Hải Dương\",\"district\":\"Huyện Gia Lộc\",\"ward\":\"Xã Hoàng Diệu\",\"street\":\"Thôn Nghĩa Hy\"}");
-        dto.setSalary(100F);
+        dto.setSalary(new BigDecimal("100.00"));
         // Run service method
         ResponseEntity<?> responseEntity = employeeService.createNewEmployee(dto);
         System.out.println(responseEntity.toString());
@@ -291,7 +292,7 @@ class EmployeeServiceImplTest {
         dto.setEmployeePassword("@User123");
         dto.setEmail("tungduong71@gmail.com");
         dto.setEmployeeAddress("{\"city\":\"Tỉnh Hải Dương\",\"district\":\"Huyện Gia Lộc\",\"ward\":\"Xã Hoàng Diệu\",\"street\":\"Thôn Nghĩa Hy\"}");
-        dto.setSalary(100F);
+        dto.setSalary(new BigDecimal("100.00"));
         // Run service method
         ResponseEntity<?> responseEntity = employeeService.createNewEmployee(dto);
         System.out.println(responseEntity.toString());
@@ -310,7 +311,7 @@ class EmployeeServiceImplTest {
         dto.setEmployeePassword("123456789");
         dto.setEmail("tungduong71@gmail.com");
         dto.setEmployeeAddress("{\"city\":\"Tỉnh Hải Dương\",\"district\":\"Huyện Gia Lộc\",\"ward\":\"Xã Hoàng Diệu\",\"street\":\"Thôn Nghĩa Hy\"}");
-        dto.setSalary(100F);
+        dto.setSalary(new BigDecimal("100.00"));
         // Run service method
         ResponseEntity<?> responseEntity = employeeService.createNewEmployee(dto);
         System.out.println(responseEntity.toString());
@@ -329,7 +330,7 @@ class EmployeeServiceImplTest {
         dto.setEmployeePassword("");
         dto.setEmail("tungduong71@gmail.com");
         dto.setEmployeeAddress("{\"city\":\"Tỉnh Hải Dương\",\"district\":\"Huyện Gia Lộc\",\"ward\":\"Xã Hoàng Diệu\",\"street\":\"Thôn Nghĩa Hy\"}");
-        dto.setSalary(100F);
+        dto.setSalary(new BigDecimal("100.00"));
         // Run service method
         ResponseEntity<?> responseEntity = employeeService.createNewEmployee(dto);
         System.out.println(responseEntity.toString());
@@ -348,7 +349,7 @@ class EmployeeServiceImplTest {
         dto.setEmployeePassword(null);
         dto.setEmail("tungduong71@gmail.com");
         dto.setEmployeeAddress("{\"city\":\"Tỉnh Hải Dương\",\"district\":\"Huyện Gia Lộc\",\"ward\":\"Xã Hoàng Diệu\",\"street\":\"Thôn Nghĩa Hy\"}");
-        dto.setSalary(100F);
+        dto.setSalary(new BigDecimal("100.00"));
         // Run service method
         ResponseEntity<?> responseEntity = employeeService.createNewEmployee(dto);
         System.out.println(responseEntity.toString());
@@ -367,7 +368,7 @@ class EmployeeServiceImplTest {
         dto.setEmployeePassword("@User123");
         dto.setEmail("a_b_c@gmail.com");
         dto.setEmployeeAddress("{\"city\":\"Tỉnh Hải Dương\",\"district\":\"Huyện Gia Lộc\",\"ward\":\"Xã Hoàng Diệu\",\"street\":\"Thôn Nghĩa Hy\"}");
-        dto.setSalary(100F);
+        dto.setSalary(new BigDecimal("100.00"));
         // Run service method
         ResponseEntity<?> responseEntity = employeeService.createNewEmployee(dto);
         System.out.println(responseEntity.toString());
@@ -386,7 +387,7 @@ class EmployeeServiceImplTest {
         dto.setEmployeePassword("@User123");
         dto.setEmail("12@3tungdt@gmail.com"	);
         dto.setEmployeeAddress("{\"city\":\"Tỉnh Hải Dương\",\"district\":\"Huyện Gia Lộc\",\"ward\":\"Xã Hoàng Diệu\",\"street\":\"Thôn Nghĩa Hy\"}");
-        dto.setSalary(100F);
+        dto.setSalary(new BigDecimal("100.00"));
         // Run service method
         ResponseEntity<?> responseEntity = employeeService.createNewEmployee(dto);
         System.out.println(responseEntity.toString());
@@ -405,7 +406,7 @@ class EmployeeServiceImplTest {
         dto.setEmployeePassword("@User123");
         dto.setEmail("12@3tungdt@gmail.com"	);
         dto.setEmployeeAddress("{\"city\":\"Tỉnh Hải Dương\",\"district\":\"Huyện Gia Lộc\",\"ward\":\"Xã Hoàng Diệu\",\"street\":\"Thôn Nghĩa Hy\"}");
-        dto.setSalary(100F);
+        dto.setSalary(new BigDecimal("100.00"));
         // Run service method
         ResponseEntity<?> responseEntity = employeeService.createNewEmployee(dto);
         System.out.println(responseEntity.toString());
@@ -424,7 +425,7 @@ class EmployeeServiceImplTest {
         dto.setEmployeePassword("@User123");
         dto.setEmail("");
         dto.setEmployeeAddress("{\"city\":\"Tỉnh Hải Dương\",\"district\":\"Huyện Gia Lộc\",\"ward\":\"Xã Hoàng Diệu\",\"street\":\"Thôn Nghĩa Hy\"}");
-        dto.setSalary(100F);
+        dto.setSalary(new BigDecimal("100.00"));
 
         User newEmployee = convertCreateEmployeeDaoToUser(dto);
 
@@ -458,7 +459,7 @@ class EmployeeServiceImplTest {
         dto.setEmployeePassword("@User123");
         dto.setEmail(null);
         dto.setEmployeeAddress("{\"city\":\"Tỉnh Hải Dương\",\"district\":\"Huyện Gia Lộc\",\"ward\":\"Xã Hoàng Diệu\",\"street\":\"Thôn Nghĩa Hy\"}");
-        dto.setSalary(100F);
+        dto.setSalary(new BigDecimal("100.00"));
 
         User newEmployee = convertCreateEmployeeDaoToUser(dto);
 
@@ -492,7 +493,7 @@ class EmployeeServiceImplTest {
         dto.setEmployeePassword("@User123");
         dto.setEmail("tungduong71@gmail.com");
         dto.setEmployeeAddress("");
-        dto.setSalary(100F);
+        dto.setSalary(new BigDecimal("100.00"));
         // Run service method
         ResponseEntity<?> responseEntity = employeeService.createNewEmployee(dto);
         System.out.println(responseEntity.toString());
@@ -511,7 +512,7 @@ class EmployeeServiceImplTest {
         dto.setEmployeePassword("@User123");
         dto.setEmail("tungduong71@gmail.com");
         dto.setEmployeeAddress(null);
-        dto.setSalary(100F);
+        dto.setSalary(new BigDecimal("100.00"));
         // Run service method
         ResponseEntity<?> responseEntity = employeeService.createNewEmployee(dto);
         System.out.println(responseEntity.toString());
@@ -530,7 +531,7 @@ class EmployeeServiceImplTest {
         dto.setEmployeePassword("@User123");
         dto.setEmail("tungduong71@gmail.com");
         dto.setEmployeeAddress("{\"city\":\"Tỉnh Hải Dương\",\"district\":\"Huyện Gia Lộc\",\"ward\":\"Xã Hoàng Diệu\",\"street\":\"Thôn Nghĩa Hy\"}");
-        dto.setSalary(0F);
+        dto.setSalary(new BigDecimal("0.00"));
 
         User newEmployee = convertCreateEmployeeDaoToUser(dto);
 
@@ -564,7 +565,7 @@ class EmployeeServiceImplTest {
         dto.setEmployeePassword("@User123");
         dto.setEmail("tungduong71@gmail.com");
         dto.setEmployeeAddress("{\"city\":\"Tỉnh Hải Dương\",\"district\":\"Huyện Gia Lộc\",\"ward\":\"Xã Hoàng Diệu\",\"street\":\"Thôn Nghĩa Hy\"}");
-        dto.setSalary(-1F);
+        dto.setSalary(new BigDecimal("-1"));
         // Run service method
         ResponseEntity<?> responseEntity = employeeService.createNewEmployee(dto);
         System.out.println(responseEntity.toString());
@@ -585,7 +586,7 @@ class EmployeeServiceImplTest {
         dto.setStatus(0);
         dto.setEmail("tungduong71@gmail.com");
         dto.setEmployeeAddress("{\"city\":\"Tỉnh Hải Dương\",\"district\":\"Huyện Gia Lộc\",\"ward\":\"Xã Hoàng Diệu\",\"street\":\"Thôn Nghĩa Hy\"}");
-        dto.setSalary(100F);
+        dto.setSalary(new BigDecimal("100.00"));
 
         WorkIn workIn = new WorkIn();
         workIn.setUserId(dto.getEmployeeId());
@@ -631,7 +632,7 @@ class EmployeeServiceImplTest {
         dto.setStatus(0);
         dto.setEmail("tungduong71@gmail.com");
         dto.setEmployeeAddress("{\"city\":\"Tỉnh Hải Dương\",\"district\":\"Huyện Gia Lộc\",\"ward\":\"Xã Hoàng Diệu\",\"street\":\"Thôn Nghĩa Hy\"}");
-        dto.setSalary(100F);
+        dto.setSalary(new BigDecimal("100.00"));
 
         WorkIn workIn = new WorkIn();
         workIn.setUserId(dto.getEmployeeId());
@@ -677,7 +678,7 @@ class EmployeeServiceImplTest {
         dto.setStatus(0);
         dto.setEmail("tungduong71@gmail.com");
         dto.setEmployeeAddress("{\"city\":\"Tỉnh Hải Dương\",\"district\":\"Huyện Gia Lộc\",\"ward\":\"Xã Hoàng Diệu\",\"street\":\"Thôn Nghĩa Hy\"}");
-        dto.setSalary(100F);
+        dto.setSalary(new BigDecimal("100.00"));
 
         WorkIn workIn = new WorkIn();
         workIn.setUserId(dto.getEmployeeId());
@@ -712,7 +713,7 @@ class EmployeeServiceImplTest {
         dto.setStatus(0);
         dto.setEmail("tungduong71@gmail.com");
         dto.setEmployeeAddress("{\"city\":\"Tỉnh Hải Dương\",\"district\":\"Huyện Gia Lộc\",\"ward\":\"Xã Hoàng Diệu\",\"street\":\"Thôn Nghĩa Hy\"}");
-        dto.setSalary(100F);
+        dto.setSalary(new BigDecimal("100.00"));
 
         WorkIn workIn = new WorkIn();
         workIn.setUserId(dto.getEmployeeId());
@@ -747,7 +748,7 @@ class EmployeeServiceImplTest {
         dto.setStatus(0);
         dto.setEmail("tungduong71@gmail.com");
         dto.setEmployeeAddress("{\"city\":\"Tỉnh Hải Dương\",\"district\":\"Huyện Gia Lộc\",\"ward\":\"Xã Hoàng Diệu\",\"street\":\"Thôn Nghĩa Hy\"}");
-        dto.setSalary(100F);
+        dto.setSalary(new BigDecimal("100.00"));
 
         WorkIn workIn = new WorkIn();
         workIn.setUserId(dto.getEmployeeId());
@@ -782,7 +783,7 @@ class EmployeeServiceImplTest {
         dto.setStatus(0);
         dto.setEmail("tungduong71@gmail.com");
         dto.setEmployeeAddress("{\"city\":\"Tỉnh Hải Dương\",\"district\":\"Huyện Gia Lộc\",\"ward\":\"Xã Hoàng Diệu\",\"street\":\"Thôn Nghĩa Hy\"}");
-        dto.setSalary(100F);
+        dto.setSalary(new BigDecimal("100.00"));
 
         WorkIn workIn = new WorkIn();
         workIn.setUserId(dto.getEmployeeId());
@@ -817,7 +818,7 @@ class EmployeeServiceImplTest {
         dto.setStatus(0);
         dto.setEmail("tungduong71@gmail.com");
         dto.setEmployeeAddress("{\"city\":\"Tỉnh Hải Dương\",\"district\":\"Huyện Gia Lộc\",\"ward\":\"Xã Hoàng Diệu\",\"street\":\"Thôn Nghĩa Hy\"}");
-        dto.setSalary(100F);
+        dto.setSalary(new BigDecimal("100.00"));
 
         WorkIn workIn = new WorkIn();
         workIn.setUserId(dto.getEmployeeId());
@@ -852,7 +853,7 @@ class EmployeeServiceImplTest {
         dto.setStatus(0);
         dto.setEmail("tungduong71@gmail.com");
         dto.setEmployeeAddress("{\"city\":\"Tỉnh Hải Dương\",\"district\":\"Huyện Gia Lộc\",\"ward\":\"Xã Hoàng Diệu\",\"street\":\"Thôn Nghĩa Hy\"}");
-        dto.setSalary(100F);
+        dto.setSalary(new BigDecimal("100.00"));
 
         WorkIn workIn = new WorkIn();
         workIn.setUserId(dto.getEmployeeId());
@@ -887,7 +888,7 @@ class EmployeeServiceImplTest {
         dto.setStatus(0);
         dto.setEmail("tungduong71@gmail.com");
         dto.setEmployeeAddress("{\"city\":\"Tỉnh Hải Dương\",\"district\":\"Huyện Gia Lộc\",\"ward\":\"Xã Hoàng Diệu\",\"street\":\"Thôn Nghĩa Hy\"}");
-        dto.setSalary(100F);
+        dto.setSalary(new BigDecimal("100.00"));
 
         WorkIn workIn = new WorkIn();
         workIn.setUserId(dto.getEmployeeId());
@@ -922,7 +923,7 @@ class EmployeeServiceImplTest {
         dto.setStatus(0);
         dto.setEmail("tungduong71@gmail.com");
         dto.setEmployeeAddress("{\"city\":\"Tỉnh Hải Dương\",\"district\":\"Huyện Gia Lộc\",\"ward\":\"Xã Hoàng Diệu\",\"street\":\"Thôn Nghĩa Hy\"}");
-        dto.setSalary(100F);
+        dto.setSalary(new BigDecimal("100.00"));
 
         WorkIn workIn = new WorkIn();
         workIn.setUserId(dto.getEmployeeId());
@@ -957,7 +958,7 @@ class EmployeeServiceImplTest {
         dto.setStatus(2);
         dto.setEmail("tungduong71@gmail.com");
         dto.setEmployeeAddress("{\"city\":\"Tỉnh Hải Dương\",\"district\":\"Huyện Gia Lộc\",\"ward\":\"Xã Hoàng Diệu\",\"street\":\"Thôn Nghĩa Hy\"}");
-        dto.setSalary(100F);
+        dto.setSalary(new BigDecimal("100.00"));
 
         WorkIn workIn = new WorkIn();
         workIn.setUserId(dto.getEmployeeId());
@@ -1003,7 +1004,7 @@ class EmployeeServiceImplTest {
         dto.setStatus(1);
         dto.setEmail("tungduong71@gmail.com");
         dto.setEmployeeAddress("{\"city\":\"Tỉnh Hải Dương\",\"district\":\"Huyện Gia Lộc\",\"ward\":\"Xã Hoàng Diệu\",\"street\":\"Thôn Nghĩa Hy\"}");
-        dto.setSalary(100F);
+        dto.setSalary(new BigDecimal("100.00"));
 
         WorkIn workIn = new WorkIn();
         workIn.setUserId(dto.getEmployeeId());
@@ -1038,7 +1039,7 @@ class EmployeeServiceImplTest {
         dto.setStatus(0);
         dto.setEmail("a_b_c@gmail.com");
         dto.setEmployeeAddress("{\"city\":\"Tỉnh Hải Dương\",\"district\":\"Huyện Gia Lộc\",\"ward\":\"Xã Hoàng Diệu\",\"street\":\"Thôn Nghĩa Hy\"}");
-        dto.setSalary(100F);
+        dto.setSalary(new BigDecimal("100.00"));
 
         WorkIn workIn = new WorkIn();
         workIn.setUserId(dto.getEmployeeId());
@@ -1073,7 +1074,7 @@ class EmployeeServiceImplTest {
         dto.setStatus(0);
         dto.setEmail("12@3tungdt@gmail.com");
         dto.setEmployeeAddress("{\"city\":\"Tỉnh Hải Dương\",\"district\":\"Huyện Gia Lộc\",\"ward\":\"Xã Hoàng Diệu\",\"street\":\"Thôn Nghĩa Hy\"}");
-        dto.setSalary(100F);
+        dto.setSalary(new BigDecimal("100.00"));
 
         WorkIn workIn = new WorkIn();
         workIn.setUserId(dto.getEmployeeId());
@@ -1108,7 +1109,7 @@ class EmployeeServiceImplTest {
         dto.setStatus(0);
         dto.setEmail("");
         dto.setEmployeeAddress("{\"city\":\"Tỉnh Hải Dương\",\"district\":\"Huyện Gia Lộc\",\"ward\":\"Xã Hoàng Diệu\",\"street\":\"Thôn Nghĩa Hy\"}");
-        dto.setSalary(100F);
+        dto.setSalary(new BigDecimal("100.00"));
 
         WorkIn workIn = new WorkIn();
         workIn.setUserId(dto.getEmployeeId());
@@ -1154,7 +1155,7 @@ class EmployeeServiceImplTest {
         dto.setStatus(0);
         dto.setEmail(null);
         dto.setEmployeeAddress("{\"city\":\"Tỉnh Hải Dương\",\"district\":\"Huyện Gia Lộc\",\"ward\":\"Xã Hoàng Diệu\",\"street\":\"Thôn Nghĩa Hy\"}");
-        dto.setSalary(100F);
+        dto.setSalary(new BigDecimal("100.00"));
 
         WorkIn workIn = new WorkIn();
         workIn.setUserId(dto.getEmployeeId());
@@ -1200,7 +1201,7 @@ class EmployeeServiceImplTest {
         dto.setStatus(0);
         dto.setEmail("tungduong71@gmail.com");
         dto.setEmployeeAddress("");
-        dto.setSalary(100F);
+        dto.setSalary(new BigDecimal("100.00"));
 
         WorkIn workIn = new WorkIn();
         workIn.setUserId(dto.getEmployeeId());
@@ -1235,7 +1236,7 @@ class EmployeeServiceImplTest {
         dto.setStatus(0);
         dto.setEmail("tungduong71@gmail.com");
         dto.setEmployeeAddress(null);
-        dto.setSalary(100F);
+        dto.setSalary(new BigDecimal("100.00"));
 
         WorkIn workIn = new WorkIn();
         workIn.setUserId(dto.getEmployeeId());
@@ -1270,7 +1271,7 @@ class EmployeeServiceImplTest {
         dto.setStatus(0);
         dto.setEmail("tungduong71@gmail.com"	);
         dto.setEmployeeAddress("{\"city\":\"Tỉnh Hải Dương\",\"district\":\"Huyện Gia Lộc\",\"ward\":\"Xã Hoàng Diệu\",\"street\":\"Thôn Nghĩa Hy\"}");
-        dto.setSalary(0F);
+        dto.setSalary(new BigDecimal("0.00"));
 
         WorkIn workIn = new WorkIn();
         workIn.setUserId(dto.getEmployeeId());
@@ -1316,7 +1317,7 @@ class EmployeeServiceImplTest {
         dto.setStatus(0);
         dto.setEmail("tungduong71@gmail.com");
         dto.setEmployeeAddress("{\"city\":\"Tỉnh Hải Dương\",\"district\":\"Huyện Gia Lộc\",\"ward\":\"Xã Hoàng Diệu\",\"street\":\"Thôn Nghĩa Hy\"}");
-        dto.setSalary(-1F);
+        dto.setSalary(new BigDecimal("-1"));
 
         WorkIn workIn = new WorkIn();
         workIn.setUserId(dto.getEmployeeId());

@@ -330,7 +330,7 @@ export default function BasicTabs() {
                                         <p>Số điện thoại<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                     </div>
                                     <div className="col-md-6">
-                                        <input style={{ width: "100%" }} placeholder="0"
+                                        <input style={{ width: "100%" }}
                                             onChange={(e) => handleCreateEmployeeChange(e, "employeePhone")} />
                                     </div>
                                 </div>
@@ -339,7 +339,7 @@ export default function BasicTabs() {
                                         <p>Mật khẩu<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                     </div>
                                     <div className="col-md-6">
-                                        <input style={{ width: "100%" }} placeholder="0"
+                                        <input style={{ width: "100%" }} 
                                             onChange={(e) => handleCreateEmployeeChange(e, "employeePassword")} />
                                     </div>
 
@@ -428,6 +428,7 @@ export default function BasicTabs() {
                                     </div>
                                     <div className="col-md-6">
                                         <input style={{ width: "100%" }} placeholder="0"
+                                            step={0.01}
                                             type='number'
                                             onChange={(e) => handleCreateEmployeeChange(e, "salary")}
                                             defaultValue={0} />

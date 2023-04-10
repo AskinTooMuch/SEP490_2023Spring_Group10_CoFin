@@ -26,6 +26,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -119,26 +121,26 @@ public class CostServiceImpl implements ICostService {
             return new ResponseEntity<>("Tên chi phí không thể để trống", HttpStatus.BAD_REQUEST);
         }
         String costItem = stringDealer.trimMax(createCostDTO.getCostItem());
-        if(costItem.length() > 50){
+        if(costItem.length() > 32){
             return new ResponseEntity<>("Tên chi phí không dài quá 50 ký tự", HttpStatus.BAD_REQUEST);
         }
         // check cost amount
-        Float costAmount = createCostDTO.getCostAmount();
-        if(costAmount <= 0F){
-            return new ResponseEntity<>("Tổng chi phí phải lớn hơn 0", HttpStatus.BAD_REQUEST);
+        BigDecimal costAmount = createCostDTO.getCostAmount().setScale(2, RoundingMode.FLOOR);
+        if(costAmount.compareTo(new BigDecimal("0")) <= 0){
+            return new ResponseEntity<>("Tổng chi phí phải lớn hơn 0.01", HttpStatus.BAD_REQUEST);
         }
-        if(costAmount - (9999999999999.99F) >= 0.0000000000000000000F){
+        if(costAmount.compareTo(new BigDecimal(9999999999999.99)) > 0){
             return new ResponseEntity<>("Tổng chi phí không được vượt quá 9999999999999.99", HttpStatus.BAD_REQUEST);
         }
         // check paid amount
-        Float paidAmount = createCostDTO.getPaidAmount();
-        if(paidAmount < 0F){
+        BigDecimal paidAmount = createCostDTO.getPaidAmount().setScale(2, RoundingMode.FLOOR);
+        if(paidAmount.compareTo(new BigDecimal("0")) < 0){
             return new ResponseEntity<>("Số tiền đã thanh toán không được bé hơn 0", HttpStatus.BAD_REQUEST);
         }
-        if(paidAmount - (9999999999999.99F) >= 0.0000000000000000000F){
+        if(paidAmount.compareTo(new BigDecimal("9999999999999.99")) > 0){
             return new ResponseEntity<>("Tổng chi phí không được vượt quá 9999999999999.99", HttpStatus.BAD_REQUEST);
         }
-        if(paidAmount > costAmount){
+        if(paidAmount.compareTo(costAmount) > 0 ){
             return new ResponseEntity<>("Số tiền đã thanh toán không được lớn hơn tổng chi phí", HttpStatus.BAD_REQUEST);
         }
         // check if note exist
@@ -187,26 +189,26 @@ public class CostServiceImpl implements ICostService {
             return new ResponseEntity<>("Tên chi phí không thể để trống", HttpStatus.BAD_REQUEST);
         }
         String costItem = stringDealer.trimMax(updateCostDTO.getCostItem());
-        if(costItem.length() > 50){
+        if(costItem.length() > 32){
             return new ResponseEntity<>("Tên chi phí không dài quá 50 ký tự", HttpStatus.BAD_REQUEST);
         }
         // check cost amount
-        Float costAmount = updateCostDTO.getCostAmount();
-        if(costAmount <= 0F){
-            return new ResponseEntity<>("Tổng chi phí phải lớn hơn 0", HttpStatus.BAD_REQUEST);
+        BigDecimal costAmount = updateCostDTO.getCostAmount().setScale(2, RoundingMode.FLOOR);
+        if(costAmount.compareTo(new BigDecimal("0")) <= 0){
+            return new ResponseEntity<>("Tổng chi phí phải lớn hơn 0.01", HttpStatus.BAD_REQUEST);
         }
-        if(costAmount - (9999999999999.99F) >= 0.0000000000000000000F){
+        if(costAmount.compareTo(new BigDecimal("9999999999999.99")) > 0){
             return new ResponseEntity<>("Tổng chi phí không được vượt quá 9999999999999.99", HttpStatus.BAD_REQUEST);
         }
         // check paid amount
-        Float paidAmount = updateCostDTO.getPaidAmount();
-        if(paidAmount < 0F){
+        BigDecimal paidAmount = updateCostDTO.getPaidAmount().setScale(2, RoundingMode.FLOOR);
+        if(paidAmount.compareTo(new BigDecimal("0")) < 0){
             return new ResponseEntity<>("Số tiền đã thanh toán không được bé hơn 0", HttpStatus.BAD_REQUEST);
         }
-        if(paidAmount - (9999999999999.99F) >= 0.0000000000000000000F){
+        if(paidAmount.compareTo(new BigDecimal("9999999999999.99")) > 0){
             return new ResponseEntity<>("Tổng chi phí không được vượt quá 9999999999999.99", HttpStatus.BAD_REQUEST);
         }
-        if(paidAmount > costAmount){
+        if(paidAmount.compareTo(costAmount) > 0 ){
             return new ResponseEntity<>("Số tiền đã thanh toán không được lớn hơn tổng chi phí", HttpStatus.BAD_REQUEST);
         }
         // check if note exist

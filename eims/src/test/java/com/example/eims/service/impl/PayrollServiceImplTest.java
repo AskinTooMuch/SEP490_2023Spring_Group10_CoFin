@@ -31,6 +31,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 
+import java.math.BigDecimal;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
@@ -183,7 +184,7 @@ class PayrollServiceImplTest {
         CreatePayrollDTO dto = new CreatePayrollDTO();
         dto.setEmployeeId(employee.getUserId());
         dto.setPayrollItem("Lương tháng 1");
-        dto.setPayrollAmount(100F);
+        dto.setPayrollAmount(new BigDecimal("100"));
         dto.setIssueDate("2023-01-01");
         dto.setNote("Tra tien thang 1");
         dto.setOwnerId(1L);
@@ -216,7 +217,7 @@ class PayrollServiceImplTest {
         CreatePayrollDTO dto = new CreatePayrollDTO();
         dto.setEmployeeId(employee.getUserId());
         dto.setPayrollItem("Lương tháng 1");
-        dto.setPayrollAmount(100F);
+        dto.setPayrollAmount(new BigDecimal("100"));
         dto.setIssueDate("2023-01-01");
         dto.setNote("Tra tien thang 1");
         dto.setOwnerId(1L);
@@ -247,7 +248,7 @@ class PayrollServiceImplTest {
         CreatePayrollDTO dto = new CreatePayrollDTO();
         dto.setEmployeeId(employee.getUserId());
         dto.setPayrollItem("");
-        dto.setPayrollAmount(100F);
+        dto.setPayrollAmount(new BigDecimal("100"));
         dto.setIssueDate("2023-01-01");
         dto.setNote("Tra tien thang 1");
         dto.setOwnerId(1L);
@@ -280,7 +281,7 @@ class PayrollServiceImplTest {
         CreatePayrollDTO dto = new CreatePayrollDTO();
         dto.setEmployeeId(employee.getUserId());
         dto.setPayrollItem(null);
-        dto.setPayrollAmount(100F);
+        dto.setPayrollAmount(new BigDecimal("100"));
         dto.setIssueDate("2023-01-01");
         dto.setNote("Tra tien thang 1");
         dto.setOwnerId(1L);
@@ -313,7 +314,7 @@ class PayrollServiceImplTest {
         CreatePayrollDTO dto = new CreatePayrollDTO();
         dto.setEmployeeId(employee.getUserId());
         dto.setPayrollItem("Lương tháng 1");
-        dto.setPayrollAmount(0F);
+        dto.setPayrollAmount(new BigDecimal("0"));
         dto.setIssueDate("2023-01-01");
         dto.setNote("Tra tien thang 1");
         dto.setOwnerId(1L);
@@ -326,7 +327,7 @@ class PayrollServiceImplTest {
         ResponseEntity<?> responseEntity = payrollService.createPayroll(dto);
         System.out.println(responseEntity.toString());
         // Assert
-        assertEquals("Số tiền phải lớn hơn 0", responseEntity.getBody());
+        assertEquals("Số tiền phải lớn hơn 0.01", responseEntity.getBody());
     }
 
     @Test
@@ -346,7 +347,7 @@ class PayrollServiceImplTest {
         CreatePayrollDTO dto = new CreatePayrollDTO();
         dto.setEmployeeId(employee.getUserId());
         dto.setPayrollItem("Lương tháng 1");
-        dto.setPayrollAmount(-100F);
+        dto.setPayrollAmount(new BigDecimal("-100"));
         dto.setIssueDate("2023-01-01");
         dto.setNote("Tra tien thang 1");
         dto.setOwnerId(1L);
@@ -359,7 +360,7 @@ class PayrollServiceImplTest {
         ResponseEntity<?> responseEntity = payrollService.createPayroll(dto);
         System.out.println(responseEntity.toString());
         // Assert
-        assertEquals("Số tiền phải lớn hơn 0", responseEntity.getBody());
+        assertEquals("Số tiền phải lớn hơn 0.01", responseEntity.getBody());
     }
 
     @Test
@@ -379,7 +380,7 @@ class PayrollServiceImplTest {
         CreatePayrollDTO dto = new CreatePayrollDTO();
         dto.setEmployeeId(employee.getUserId());
         dto.setPayrollItem("Lương tháng 1");
-        dto.setPayrollAmount(100F);
+        dto.setPayrollAmount(new BigDecimal("100"));
         dto.setIssueDate("3000-01-01");
         dto.setNote("Tra tien thang 1");
         dto.setOwnerId(1L);
@@ -412,7 +413,7 @@ class PayrollServiceImplTest {
         CreatePayrollDTO dto = new CreatePayrollDTO();
         dto.setEmployeeId(employee.getUserId());
         dto.setPayrollItem("Lương tháng 1");
-        dto.setPayrollAmount(100F);
+        dto.setPayrollAmount(new BigDecimal("100"));
         dto.setIssueDate("");
         dto.setNote("Tra tien thang 1");
         dto.setOwnerId(1L);
@@ -445,7 +446,7 @@ class PayrollServiceImplTest {
         CreatePayrollDTO dto = new CreatePayrollDTO();
         dto.setEmployeeId(employee.getUserId());
         dto.setPayrollItem("Lương tháng 1");
-        dto.setPayrollAmount(100F);
+        dto.setPayrollAmount(new BigDecimal("100"));
         dto.setIssueDate(null);
         dto.setNote("Tra tien thang 1");
         dto.setOwnerId(1L);
@@ -478,7 +479,7 @@ class PayrollServiceImplTest {
         CreatePayrollDTO dto = new CreatePayrollDTO();
         dto.setEmployeeId(employee.getUserId());
         dto.setPayrollItem("Lương tháng 1");
-        dto.setPayrollAmount(100F);
+        dto.setPayrollAmount(new BigDecimal("100"));
         dto.setIssueDate("2023-01-01");
         dto.setNote("");
         dto.setOwnerId(1L);
@@ -511,7 +512,7 @@ class PayrollServiceImplTest {
         CreatePayrollDTO dto = new CreatePayrollDTO();
         dto.setEmployeeId(employee.getUserId());
         dto.setPayrollItem("Lương tháng 1");
-        dto.setPayrollAmount(100F);
+        dto.setPayrollAmount(new BigDecimal("100"));
         dto.setIssueDate("2023-01-01");
         dto.setNote(null);
         dto.setOwnerId(1L);
@@ -540,7 +541,7 @@ class PayrollServiceImplTest {
         UpdatePayrollDTO dto = new UpdatePayrollDTO();
         dto.setPayrollId(payrollId);
         dto.setPayrollItem("Lương tháng 1");
-        dto.setPayrollAmount(100F);
+        dto.setPayrollAmount(new BigDecimal("100"));
         dto.setIssueDate("2023-01-01");
         dto.setNote("Tra tien thang 1");
 
@@ -566,7 +567,7 @@ class PayrollServiceImplTest {
         UpdatePayrollDTO dto = new UpdatePayrollDTO();
         dto.setPayrollId(payrollId);
         dto.setPayrollItem("Lương tháng 1");
-        dto.setPayrollAmount(100F);
+        dto.setPayrollAmount(new BigDecimal("100"));
         dto.setIssueDate("2023-01-01");
         dto.setNote("Tra tien thang 1");
 
@@ -592,7 +593,7 @@ class PayrollServiceImplTest {
         UpdatePayrollDTO dto = new UpdatePayrollDTO();
         dto.setPayrollId(payrollId);
         dto.setPayrollItem("");
-        dto.setPayrollAmount(100F);
+        dto.setPayrollAmount(new BigDecimal("100"));
         dto.setIssueDate("2023-01-01");
         dto.setNote("Tra tien thang 1");
 
@@ -618,7 +619,7 @@ class PayrollServiceImplTest {
         UpdatePayrollDTO dto = new UpdatePayrollDTO();
         dto.setPayrollId(payrollId);
         dto.setPayrollItem(null);
-        dto.setPayrollAmount(100F);
+        dto.setPayrollAmount(new BigDecimal("100"));
         dto.setIssueDate("2023-01-01");
         dto.setNote("Tra tien thang 1");
 
@@ -644,7 +645,7 @@ class PayrollServiceImplTest {
         UpdatePayrollDTO dto = new UpdatePayrollDTO();
         dto.setPayrollId(payrollId);
         dto.setPayrollItem("Lương tháng 1");
-        dto.setPayrollAmount(0F);
+        dto.setPayrollAmount(new BigDecimal("0"));
         dto.setIssueDate("2023-01-01");
         dto.setNote("Tra tien thang 1");
 
@@ -654,7 +655,7 @@ class PayrollServiceImplTest {
         ResponseEntity<?> responseEntity = payrollService.updatePayroll(dto);
         System.out.println(responseEntity.toString());
         // Assert
-        assertEquals("Số tiền phải lớn hơn 0", responseEntity.getBody());
+        assertEquals("Số tiền phải lớn hơn 0.01", responseEntity.getBody());
     }
 
     @Test
@@ -670,7 +671,7 @@ class PayrollServiceImplTest {
         UpdatePayrollDTO dto = new UpdatePayrollDTO();
         dto.setPayrollId(payrollId);
         dto.setPayrollItem("Lương tháng 1");
-        dto.setPayrollAmount(-100F);
+        dto.setPayrollAmount(new BigDecimal("-100"));
         dto.setIssueDate("2023-01-01");
         dto.setNote("Tra tien thang 1");
 
@@ -680,7 +681,7 @@ class PayrollServiceImplTest {
         ResponseEntity<?> responseEntity = payrollService.updatePayroll(dto);
         System.out.println(responseEntity.toString());
         // Assert
-        assertEquals("Số tiền phải lớn hơn 0", responseEntity.getBody());
+        assertEquals("Số tiền phải lớn hơn 0.01", responseEntity.getBody());
     }
 
     @Test
@@ -696,7 +697,7 @@ class PayrollServiceImplTest {
         UpdatePayrollDTO dto = new UpdatePayrollDTO();
         dto.setPayrollId(payrollId);
         dto.setPayrollItem("Lương tháng 1");
-        dto.setPayrollAmount(100F);
+        dto.setPayrollAmount(new BigDecimal("100"));
         dto.setIssueDate("3000-01-01");
         dto.setNote("Tra tien thang 1");
 
@@ -722,7 +723,7 @@ class PayrollServiceImplTest {
         UpdatePayrollDTO dto = new UpdatePayrollDTO();
         dto.setPayrollId(payrollId);
         dto.setPayrollItem("Lương tháng 1");
-        dto.setPayrollAmount(100F);
+        dto.setPayrollAmount(new BigDecimal("100"));
         dto.setIssueDate("");
         dto.setNote("Tra tien thang 1");
 
@@ -748,7 +749,7 @@ class PayrollServiceImplTest {
         UpdatePayrollDTO dto = new UpdatePayrollDTO();
         dto.setPayrollId(payrollId);
         dto.setPayrollItem("Lương tháng 1");
-        dto.setPayrollAmount(100F);
+        dto.setPayrollAmount(new BigDecimal("100"));
         dto.setIssueDate(null);
         dto.setNote("Tra tien thang 1");
 
@@ -774,7 +775,7 @@ class PayrollServiceImplTest {
         UpdatePayrollDTO dto = new UpdatePayrollDTO();
         dto.setPayrollId(payrollId);
         dto.setPayrollItem("Lương tháng 1");
-        dto.setPayrollAmount(100F);
+        dto.setPayrollAmount(new BigDecimal("100"));
         dto.setIssueDate("2023-01-01");
         dto.setNote("");
 
@@ -800,7 +801,7 @@ class PayrollServiceImplTest {
         UpdatePayrollDTO dto = new UpdatePayrollDTO();
         dto.setPayrollId(payrollId);
         dto.setPayrollItem("Lương tháng 1");
-        dto.setPayrollAmount(100F);
+        dto.setPayrollAmount(new BigDecimal("100"));
         dto.setIssueDate("2023-01-01");
         dto.setNote(null);
 

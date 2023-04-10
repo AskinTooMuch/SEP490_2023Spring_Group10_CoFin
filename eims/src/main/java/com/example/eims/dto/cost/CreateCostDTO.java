@@ -15,6 +15,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 @Data
@@ -22,8 +23,8 @@ public class CreateCostDTO {
     private Long userId;
     private Long facilityId;
     private String costItem;
-    private Float costAmount;
-    private Float paidAmount;
+    private BigDecimal costAmount;
+    private BigDecimal paidAmount;
     private Date issueDate;
     private String note;
     private boolean status;

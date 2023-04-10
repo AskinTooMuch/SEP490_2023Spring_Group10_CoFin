@@ -10,6 +10,7 @@ import lombok.Getter;
 import lombok.ToString;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.math.BigDecimal;
 import java.sql.Date;
 
 @Getter
@@ -20,7 +21,7 @@ public class SalaryHistory {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long salaryHistoryId;
     private Long userId;
-    private Float salary;
+    private BigDecimal salary;
     @DateTimeFormat(pattern="dd/MM/yyyy")
     private Date issueDate;
 }

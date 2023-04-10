@@ -15,6 +15,7 @@ package com.example.eims.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.math.BigDecimal;
 import java.sql.Date;
 
 @Data
@@ -28,7 +29,7 @@ public class Payroll {
     private Long employeeId;
     private String phone;
     private String payrollItem;
-    private Float payrollAmount;
+    private BigDecimal payrollAmount;
     private Date issueDate;
     private String note;
     private boolean status;

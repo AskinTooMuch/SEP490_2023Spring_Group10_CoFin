@@ -78,8 +78,8 @@ public class IncomeReportServiceImpl implements IIncomeReportService {
                 Float total = 0F;
                 Float paid = 0F;
                 for (Cost cost : costList) {
-                    total += cost.getCostAmount();
-                    paid += cost.getPaidAmount();
+                    total += cost.getCostAmount().floatValue();
+                    paid += cost.getPaidAmount().floatValue();
                 }
                 IncomeReportItemDTO item = new IncomeReportItemDTO(total, paid);
                 incomeNow -= paid;
@@ -99,8 +99,8 @@ public class IncomeReportServiceImpl implements IIncomeReportService {
                 Float total = 0F;
                 Float paid = 0F;
                 for (Payroll payroll : payrollList) {
-                    total += payroll.getPayrollAmount();
-                    paid += payroll.getPayrollAmount();
+                    total += payroll.getPayrollAmount().floatValue();
+                    paid += payroll.getPayrollAmount().floatValue();
                 }
                 IncomeReportItemDTO item = new IncomeReportItemDTO(total, paid);
                 incomeNow -= paid;
@@ -205,8 +205,8 @@ public class IncomeReportServiceImpl implements IIncomeReportService {
                 Float total = 0F;
                 Float paid = 0F;
                 for (Cost cost : costList) {
-                    total += cost.getCostAmount();
-                    paid += cost.getPaidAmount();
+                    total += cost.getCostAmount().floatValue();
+                    paid += cost.getPaidAmount().floatValue();
                 }
                 IncomeReportItemDTO item = new IncomeReportItemDTO(total, paid);
                 incomeNow -= paid;
@@ -226,8 +226,8 @@ public class IncomeReportServiceImpl implements IIncomeReportService {
                 Float total = 0F;
                 Float paid = 0F;
                 for (Payroll payroll : payrollList) {
-                    total += payroll.getPayrollAmount();
-                    paid += payroll.getPayrollAmount();
+                    total += payroll.getPayrollAmount().floatValue();
+                    paid += payroll.getPayrollAmount().floatValue();
                 }
                 IncomeReportItemDTO item = new IncomeReportItemDTO(total, paid);
                 incomeNow -= paid;

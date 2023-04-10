@@ -114,7 +114,7 @@ const Payroll = () => {
         employeeName: "",
         employeePhone: "",
         payrollItem: "",
-        payrollAmount: "",
+        payrollAmount: "0",
         issueDate: "",
         note: "",
         status: ""
@@ -275,7 +275,7 @@ const Payroll = () => {
                 employeeName: "",
                 employeePhone: "",
                 payrollItem: "",
-                payrollAmount: "",
+                payrollAmount: "0",
                 issueDate: "",
                 note: "",
                 status: ""
@@ -344,7 +344,8 @@ const Payroll = () => {
                                     </div>
                                     <div className="col-md-6">
                                         <input style={{ width: "100%" }} placeholder="1.000.000"
-                                        defaultValue={0}
+                                        step={0.01}
+                                            defaultValue={0}
                                             onChange={(e) => handleCreatePayrollChange(e, "payrollAmount")} />
                                     </div>
                                     <div className="col-md-6">
@@ -467,6 +468,7 @@ const Payroll = () => {
                                 </div>
                                 <div className="col-md-6">
                                     <input style={{ width: "100%" }} placeholder="1.000.000"
+                                    step="0.01"
                                     defaultValue={0}
                                         value={payrollDetailDTO.payrollAmount}
                                         onChange={(e) => handleEditPayrollChange(e, "payrollAmount")} />
