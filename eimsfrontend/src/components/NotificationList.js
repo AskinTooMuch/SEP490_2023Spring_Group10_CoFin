@@ -1,4 +1,4 @@
-import { faBell } from '@fortawesome/free-solid-svg-icons';
+import { faBell, fas } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom';
 import "../css/notification.css"
 import axios from '../api/axios';
 import { toast } from 'react-toastify';
+import ConfirmBox from './ConfirmBox';
 
 const NotificationList = () => {
     // Dependency
@@ -17,6 +18,11 @@ const NotificationList = () => {
     const NOTIFICATION_OLD = '/api/notification/all/old'
     const NOTIFICATION_DELETE = '/api/notification/delete'
 
+    //ConfirmBox
+    function openDelete() {
+        setOpen(true);
+    }
+    const [open, setOpen] = useState(false);
 
     // DTOs
     const [listNotiNew, setListNotiNew] = useState([]);
@@ -125,6 +131,7 @@ const NotificationList = () => {
                     },
                     withCredentials: true
                 });
+            setOpen(false)
             handleClosePopup();
             loadListNotiNew();
             loadListNotiOld();
@@ -218,12 +225,14 @@ const NotificationList = () => {
                                     Thoát
                                 </button>
                                 <button style={{ width: "30%", float: "left" }} className="col-md-6 btn-light" type="button"
-                                    onClick={() => deleteNoti(notiDetail.notificationId)}>
-                                    Xác nhận xong
+                                    onClick={() => setOpen(true)}>
+                                    Xác nhận hoàn thành
                                 </button>
                             </div>
                         </Modal>
-
+                        <ConfirmBox open={open} closeDialog={() => setOpen(false)} title={"Xác nhận hoàn thành"}
+                            content={"Xác nhận hoàn thành công việc cho mã lô " + notiDetail.eggBatchId} deleteFunction={() => deleteNoti(notiDetail.notificationId)}
+                        />
                     </div>
                 </div>
             </section >

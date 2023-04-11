@@ -11,6 +11,7 @@ import ClearIcon from '@mui/icons-material/Clear';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { padding } from '@mui/system';
+import ConfirmBox from './ConfirmBox';
 
 function EggBatchDetail(props) {
     const { children, value, index, ...other } = props;
@@ -53,6 +54,10 @@ export default function BasicTabs() {
     const EGGBATCH_UPDATE = "/api/eggBatch/update";
     const EGGBATCH_UPDATE_DONE = "/api/eggBatch/update/done";
     const MACHINE_NOT_FULL_GET = "/api/machine/notFull";
+
+    //ConfirmBox
+    const [open, setOpen] = useState(false);
+    const [open2, setOpen2] = useState(false);
 
     //Show-hide Popup
     const [value, setValue] = React.useState(0);
@@ -161,8 +166,8 @@ export default function BasicTabs() {
     const [updateEggBatchDTO, setUpdateEggBatchDTO] = useState({
         eggBatchId: 0,
         phaseNumber: "",
-        eggWasted: "",
-        amount: "",
+        eggWasted: 0,
+        amount: 0,
         needAction: "",
         eggLocationUpdateEggBatchDTOS: []
     })
@@ -319,6 +324,7 @@ export default function BasicTabs() {
                 }
             );
             setShow(false);
+            setOpen(false);
             setUpdateEggBatchDTO({
                 eggBatchId: id,
                 phaseNumber: "",
@@ -367,6 +373,7 @@ export default function BasicTabs() {
                     withCredentials: true
                 }
             );
+            setOpen2(false);
             setShow(false);
             loadEggBatch();
             setEggBatchLoaded(false);
@@ -658,7 +665,7 @@ export default function BasicTabs() {
                         aria-labelledby="contained-modal-title-vcenter"
                         centered
                         dialogClassName="modal-90w">
-                        <form onSubmit={handleUpdateEggBatchSubmit}>
+                        <form >
                             <Modal.Header closeButton onClick={handleClose}>
                                 <Modal.Title>Cập nhật Thông tin lô trứng</Modal.Title>
                             </Modal.Header>
@@ -786,6 +793,17 @@ export default function BasicTabs() {
                                             }
                                         </div>
                                     </div>
+                                    <ConfirmBox open={open} closeDialog={() => setOpen(false)} title={"Xác nhận cập nhật lô trứng"}
+                                        content={"Xác nhận cập nhật lô trứng với mã " + eggBatchDetail.eggBatchId
+                                            + ": cập nhật phase " + updateEggBatchDTO.phaseNumber
+                                            + ", số lượng cập nhật: " + updateEggBatchDTO.amount
+                                            + ", số lượng trứng hao hụt: " + updateEggBatchDTO.eggWasted}
+                                        deleteFunction={(e) => handleUpdateEggBatchSubmit(e)}
+                                    />
+                                    <ConfirmBox open={open2} closeDialog={() => setOpen2(false)} title={"Xác nhận hoàn thành lô trứng"}
+                                        content={"Xác nhận hoàn thành lô trứng với mã " + eggBatchDetail.eggBatchId}
+                                        deleteFunction={(e) => handleUpdateEggBatchDone(e)}
+                                    />
                                     <br />
                                     <div className='clear'>
                                         <table className="table table-bordered">
@@ -841,13 +859,14 @@ export default function BasicTabs() {
                                 </div>
                             </Modal.Body>
                             <div className='model-footer'>
-                                <button style={{ width: "20%" }} className="col-md-6 btn-light" type="submit">
+                                <button style={{ width: "20%" }} onClick={() => setOpen(true)}
+                                    className="col-md-6 btn-light" type="button">
                                     Xác nhận
                                 </button>
                                 <button style={{ width: "10%" }} onClick={handleClose} type='button' className="btn btn-light">
                                     Huỷ
                                 </button>
-                                <button style={{ width: "20%", float: "left" }} onClick={handleUpdateEggBatchDone} className="col-md-6 btn-light" type="button">
+                                <button style={{ width: "20%", float: "left" }} onClick={() => setOpen2(true)} className="col-md-6 btn-light" type="button">
                                     Hoàn thành
                                 </button>
                             </div>

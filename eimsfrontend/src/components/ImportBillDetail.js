@@ -7,7 +7,8 @@ import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import axios from 'axios';
-import {  toast } from 'react-toastify';
+import { toast } from 'react-toastify';
+import ConfirmBox from './ConfirmBox';
 
 function ImportBillDetail(props) {
     const { children, value, index, ...other } = props;
@@ -48,6 +49,10 @@ export default function BasicTabs() {
     //URL
     const IMPORT_GET = "/api/import/get";
     const IMPORT_UPDATE_PAID = "/api/import/update";
+
+    //ConfirmBox
+    const [open, setOpen] = useState(false);
+    const [open2, setOpen2] = useState(false);
 
     //Show-hide Popup
     const [value, setValue] = React.useState(0);
@@ -142,9 +147,48 @@ export default function BasicTabs() {
                     withCredentials: false
                 }
             );
+            setOpen(false);
             loadImport();
             console.log(response);
-            toast.success("Cập nhật thành công");
+            toast.success("Cập nhật số tiền đã trả thành công");
+            setShow(false);
+        } catch (err) {
+            if (!err?.response) {
+                toast.error('Server không phản hồi');
+            } else {
+                if ((err.response.data === null) || (err.response.data === '')) {
+                    toast.error('Có lỗi xảy ra, vui lòng thử lại');
+                } else {
+                    toast.error(err.response.data);
+                }
+            }
+        }
+    }
+
+    const handleUpdatePaidAllSubmit = async (event) => {
+        event.preventDefault();
+        let response;
+        try {
+            response = await axios.put(IMPORT_UPDATE_PAID, {},
+                {
+                    params:
+                    {
+                        importId: importDetail.importId,
+                        paid: importDetail.total
+                    }
+                },
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Access-Control-Allow-Origin': '*'
+                    },
+                    withCredentials: false
+                }
+            );
+            setOpen2(false);
+            loadImport();
+            console.log(response);
+            toast.success("Cập nhật số tiền đã trả thành công");
             setShow(false);
         } catch (err) {
             if (!err?.response) {
@@ -259,7 +303,7 @@ export default function BasicTabs() {
                             size="lg"
                             aria-labelledby="contained-modal-title-vcenter"
                             centered >
-                            <form onSubmit={handleUpdatePaidSubmit}>
+                            <form>
                                 <Modal.Header closeButton onClick={handleClose}>
                                     <Modal.Title>Cập nhật số tiền thanh toán</Modal.Title>
                                 </Modal.Header>
@@ -276,19 +320,32 @@ export default function BasicTabs() {
                                     </div>
                                 </Modal.Body>
                                 <div className='model-footer'>
-                                    <button style={{ width: "30%" }} className="col-md-6 btn-light" type="submit">
+                                    <button style={{ width: "30%" }} onClick={() => setOpen(true)}
+                                    className="col-md-6 btn-light" type="button">
                                         Cập nhật
+                                    </button>
+                                    <button style={{ width: "20%" }} onClick={() => setOpen2(true)}
+                                    className="btn btn-light" type="button">
+                                        Đã trả hết
                                     </button>
                                     <button style={{ width: "20%" }} onClick={handleClose} className="btn btn-light" type="button">
                                         Huỷ
                                     </button>
                                 </div>
                             </form>
+                            <ConfirmBox open={open} closeDialog={() => setOpen(false)} title={"Xác nhận cập nhật số tiền đã trả"}
+                                content={"Xác nhận cập nhật số tiền đã trả cho hóa đơn nhập mã " + importDetail.importId
+                            + ": " + paid.paid.toLocaleString('vi', { style: 'currency', currency: 'VND' })} deleteFunction={(e) => handleUpdatePaidSubmit(e)}
+                            />
+                            <ConfirmBox open={open2} closeDialog={() => setOpen2(false)} title={"Xác nhận cập nhật số tiền đã trả"}
+                                content={"Xác nhận trả hết cho hóa đơn nhập mã " + importDetail.importId
+                            + ": " + importDetail.total.toLocaleString('vi', { style: 'currency', currency: 'VND' })} deleteFunction={(e) => handleUpdatePaidAllSubmit(e)}
+                            />
                         </Modal>
                     </div>
                 </div>
             </ImportBillDetail>
-           
+
         </Box>
     );
 }

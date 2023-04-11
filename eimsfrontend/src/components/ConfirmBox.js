@@ -56,12 +56,12 @@ function ConfirmBox({ open, closeDialog, title, content, deleteFunction }) {
                         xs={12}
                         sx={{ display: "flex", justifyContent: "flex-end", gap: "1rem" }}
                     >
-                        <button onClick={closeDialog} size="medium" className="btn btn-light" >
-                            Không
+                        <button onClick={closeDialog} type="button" size="medium" className="btn btn-light btn-sm" >
+                            Hủy
                         </button>
-                        <button onClick={deleteFunction} size="medium" className="btn btn-light">
-                            Có
-                        </button>{" "}
+                        <button onClick={deleteFunction} type="button" size="medium" className="btn btn-light btn-sm">
+                            Đồng ý
+                        </button>
                     </Grid>
                 </Grid>
             </DialogContent>
