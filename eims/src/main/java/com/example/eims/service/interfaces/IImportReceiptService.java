@@ -14,6 +14,8 @@ package com.example.eims.service.interfaces;
 import com.example.eims.dto.importReceipt.CreateImportDTO;
 import org.springframework.http.ResponseEntity;
 
+import java.math.BigDecimal;
+
 public interface IImportReceiptService {
     /**
      * Get all import bill a facility.
@@ -43,7 +45,8 @@ public interface IImportReceiptService {
      * Update paid amount of import receipt.
      *
      * @param importId the id of import receipt.
+     * @param paid     the paid amount
      * @return
      */
-    public ResponseEntity<?> updatePaidOfImport(Long importId, Float paid);
+    public ResponseEntity<?> updatePaidOfImport(Long importId, BigDecimal paid);
 }

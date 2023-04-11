@@ -22,6 +22,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.ResponseEntity;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -54,25 +55,25 @@ class IncomeReportServiceImplTest {
         facility.setFacilityId(1L);
 
         Cost cost = new Cost();
-        cost.setCostAmount(1000F);
-        cost.setPaidAmount(1000F);
+        cost.setCostAmount(new BigDecimal(1000));
+        cost.setPaidAmount(new BigDecimal(1000));
         List<Cost> costList = new ArrayList<>();
         costList.add(cost);
 
         Payroll payroll = new Payroll();
-        payroll.setPayrollAmount(1000F);
+        payroll.setPayrollAmount(new BigDecimal(1000));
         List<Payroll> payrollList = new ArrayList<>();
         payrollList.add(payroll);
 
         ImportReceipt importReceipt = new ImportReceipt();
-        importReceipt.setTotal(1000F);
-        importReceipt.setPaid(1000F);
+        importReceipt.setTotal(new BigDecimal(1000));
+        importReceipt.setPaid(new BigDecimal(1000));
         List<ImportReceipt> importReceiptList = new ArrayList<>();
         importReceiptList.add(importReceipt);
 
         ExportReceipt exportReceipt = new ExportReceipt();
-        exportReceipt.setTotal(1000F);
-        exportReceipt.setPaid(1000F);
+        exportReceipt.setTotal(new BigDecimal(1000));
+        exportReceipt.setPaid(new BigDecimal(1000));
         List<ExportReceipt> exportReceiptList = new ArrayList<>();
         exportReceiptList.add(exportReceipt);
 
@@ -87,7 +88,7 @@ class IncomeReportServiceImplTest {
         ResponseEntity<?> responseEntity = incomeReportService.getIncomeReportInMonth(userId, year);
         IncomeReportDTO result = (IncomeReportDTO) responseEntity.getBody();
         // Assert
-        assertEquals(-2000, result.getIncomeNow());
+        assertEquals(new BigDecimal(-2000), result.getIncomeNow());
     }
     @Test
     @DisplayName("getIncomeReportInMonthUTCID02")
@@ -115,7 +116,7 @@ class IncomeReportServiceImplTest {
         ResponseEntity<?> responseEntity = incomeReportService.getIncomeReportInMonth(userId, year);
         IncomeReportDTO result = (IncomeReportDTO) responseEntity.getBody();
         // Assert
-        assertEquals(0, result.getIncomeNow());
+        assertEquals(new BigDecimal(0), result.getIncomeNow());
     }
     @Test
     @DisplayName("getIncomeReportInYearUTCID01")
@@ -128,25 +129,25 @@ class IncomeReportServiceImplTest {
         facility.setFacilityId(1L);
 
         Cost cost = new Cost();
-        cost.setCostAmount(1000F);
-        cost.setPaidAmount(1000F);
+        cost.setCostAmount(new BigDecimal(1000));
+        cost.setPaidAmount(new BigDecimal(1000));
         List<Cost> costList = new ArrayList<>();
         costList.add(cost);
 
         Payroll payroll = new Payroll();
-        payroll.setPayrollAmount(1000F);
+        payroll.setPayrollAmount(new BigDecimal(1000));
         List<Payroll> payrollList = new ArrayList<>();
         payrollList.add(payroll);
 
         ImportReceipt importReceipt = new ImportReceipt();
-        importReceipt.setTotal(1000F);
-        importReceipt.setPaid(1000F);
+        importReceipt.setTotal(new BigDecimal(1000));
+        importReceipt.setPaid(new BigDecimal(1000));
         List<ImportReceipt> importReceiptList = new ArrayList<>();
         importReceiptList.add(importReceipt);
 
         ExportReceipt exportReceipt = new ExportReceipt();
-        exportReceipt.setTotal(1000F);
-        exportReceipt.setPaid(1000F);
+        exportReceipt.setTotal(new BigDecimal(1000));
+        exportReceipt.setPaid(new BigDecimal(1000));
         List<ExportReceipt> exportReceiptList = new ArrayList<>();
         exportReceiptList.add(exportReceipt);
 
@@ -166,7 +167,7 @@ class IncomeReportServiceImplTest {
         ResponseEntity<?> responseEntity = incomeReportService.getIncomeReportInYear(userId);
         IncomeReportDTO result = (IncomeReportDTO) responseEntity.getBody();
         // Assert
-        assertEquals(-2000, result.getIncomeNow());
+        assertEquals(new BigDecimal(-2000), result.getIncomeNow());
     }
 
     @Test
@@ -191,6 +192,6 @@ class IncomeReportServiceImplTest {
         ResponseEntity<?> responseEntity = incomeReportService.getIncomeReportInYear(userId);
         IncomeReportDTO result = (IncomeReportDTO) responseEntity.getBody();
         // Assert
-        assertEquals(0, result.getIncomeNow());
+        assertEquals(new BigDecimal(0), result.getIncomeNow());
     }
 }

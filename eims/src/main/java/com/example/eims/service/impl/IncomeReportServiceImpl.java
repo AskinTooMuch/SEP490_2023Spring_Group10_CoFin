@@ -25,6 +25,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 @Service
@@ -66,24 +67,24 @@ public class IncomeReportServiceImpl implements IIncomeReportService {
         List<IncomeReportItemDTO> payrollListDto = new ArrayList<>();
         List<IncomeReportItemDTO> importListDto = new ArrayList<>();
         List<IncomeReportItemDTO> exportListDto = new ArrayList<>();
-        Float incomeNow = 0F;
-        Float incomeLast = 0F;
+        BigDecimal incomeNow = new BigDecimal(0);
+        BigDecimal incomeLast = new BigDecimal(0);
         // cost
         for (int i = 0; i < 12; i++) {
             Optional<List<Cost>> costListOptional = costRepository.getAllByYearAndMonth(facilityId, year, i + 1 + "");
             if (costListOptional.isEmpty()) {
-                costListDto.add(new IncomeReportItemDTO(0F, 0F));
+                costListDto.add(new IncomeReportItemDTO(new BigDecimal(0), new BigDecimal(0)));
             } else {
                 List<Cost> costList = costListOptional.get();
-                Float total = 0F;
-                Float paid = 0F;
+                BigDecimal total = new BigDecimal(0);
+                BigDecimal paid = new BigDecimal(0);
                 for (Cost cost : costList) {
-                    total += cost.getCostAmount().floatValue();
-                    paid += cost.getPaidAmount().floatValue();
+                    total = total.add(cost.getCostAmount());
+                    paid = paid.add(cost.getPaidAmount());
                 }
                 IncomeReportItemDTO item = new IncomeReportItemDTO(total, paid);
-                incomeNow -= paid;
-                incomeLast -= total;
+                incomeNow = incomeNow.subtract(paid);
+                incomeLast = incomeLast.subtract(total);
                 costListDto.add(item);
             }
         }
@@ -93,18 +94,18 @@ public class IncomeReportServiceImpl implements IIncomeReportService {
             Optional<List<Payroll>> payrollListOptional = payrollRepository
                     .getAllByYearAndMonth(userId, year, i + 1 + "");
             if (payrollListOptional.isEmpty()) {
-                payrollListDto.add(new IncomeReportItemDTO(0F, 0F));
+                payrollListDto.add(new IncomeReportItemDTO(new BigDecimal(0), new BigDecimal(0)));
             } else {
                 List<Payroll> payrollList = payrollListOptional.get();
-                Float total = 0F;
-                Float paid = 0F;
+                BigDecimal total = new BigDecimal(0);
+                BigDecimal paid = new BigDecimal(0);
                 for (Payroll payroll : payrollList) {
-                    total += payroll.getPayrollAmount().floatValue();
-                    paid += payroll.getPayrollAmount().floatValue();
+                    total.add(payroll.getPayrollAmount());
+                    paid = paid.add(payroll.getPayrollAmount());
                 }
-                IncomeReportItemDTO item = new IncomeReportItemDTO(total, paid);
-                incomeNow -= paid;
-                incomeLast -= total;
+                IncomeReportItemDTO item = new IncomeReportItemDTO(total = total, paid);
+                incomeNow = incomeNow.subtract(paid);
+                incomeLast = incomeLast.subtract(total);
                 payrollListDto.add(item);
             }
         }
@@ -114,18 +115,18 @@ public class IncomeReportServiceImpl implements IIncomeReportService {
             Optional<List<ImportReceipt>> importReceiptListOptional = importReceiptRepository
                     .getAllByYearAndMonth(facilityId, year, i + 1 + "");
             if (importReceiptListOptional.isEmpty()) {
-                importListDto.add(new IncomeReportItemDTO(0F, 0F));
+                importListDto.add(new IncomeReportItemDTO(new BigDecimal(0), new BigDecimal(0)));
             } else {
                 List<ImportReceipt> importList = importReceiptListOptional.get();
-                Float total = 0F;
-                Float paid = 0F;
+                BigDecimal total = new BigDecimal(0);
+                BigDecimal paid = new BigDecimal(0);
                 for (ImportReceipt importReceipt : importList) {
-                    total += importReceipt.getTotal();
-                    paid += importReceipt.getPaid();
+                    total = total.add(importReceipt.getTotal());
+                    paid = paid.add(importReceipt.getPaid());
                 }
                 IncomeReportItemDTO item = new IncomeReportItemDTO(total, paid);
-                incomeNow -= paid;
-                incomeLast -= total;
+                incomeNow = incomeNow.subtract(paid);
+                incomeLast = incomeLast.subtract(total);
                 importListDto.add(item);
             }
         }
@@ -135,18 +136,18 @@ public class IncomeReportServiceImpl implements IIncomeReportService {
             Optional<List<ExportReceipt>> exportReceiptListOptional = exportReceiptRepository
                     .getAllByYearAndMonth(facilityId, year, i + 1 + "");
             if (exportReceiptListOptional.isEmpty()) {
-                exportListDto.add(new IncomeReportItemDTO(0F, 0F));
+                exportListDto.add(new IncomeReportItemDTO(new BigDecimal(0), new BigDecimal(0)));
             } else {
                 List<ExportReceipt> exportList = exportReceiptListOptional.get();
-                Float total = 0F;
-                Float paid = 0F;
+                BigDecimal total = new BigDecimal(0);
+                BigDecimal paid = new BigDecimal(0);
                 for (ExportReceipt exportReceipt : exportList) {
-                    total += exportReceipt.getTotal();
-                    paid += exportReceipt.getPaid();
+                    total = total.add(exportReceipt.getTotal());
+                    paid = paid.add(exportReceipt.getPaid());
                 }
                 IncomeReportItemDTO item = new IncomeReportItemDTO(total, paid);
-                incomeNow += paid;
-                incomeLast += total;
+                incomeNow = incomeNow.add(paid);
+                incomeLast = incomeLast.add(total);
                 exportListDto.add(item);
             }
         }
@@ -176,8 +177,8 @@ public class IncomeReportServiceImpl implements IIncomeReportService {
         List<IncomeReportItemDTO> payrollListDto = new ArrayList<>();
         List<IncomeReportItemDTO> importListDto = new ArrayList<>();
         List<IncomeReportItemDTO> exportListDto = new ArrayList<>();
-        Float incomeNow = 0F;
-        Float incomeLast = 0F;
+        BigDecimal incomeNow = new BigDecimal(0);
+        BigDecimal incomeLast = new BigDecimal(0);
 
         // cost year
         List<String> listYearCost = costRepository.getAllYear(facility.getFacilityId()).get();
@@ -199,18 +200,18 @@ public class IncomeReportServiceImpl implements IIncomeReportService {
         for (String year : listYear) {
             Optional<List<Cost>> costListOptional = costRepository.getAllByYear(facilityId, year);
             if (costListOptional.isEmpty()) {
-                costListDto.add(new IncomeReportItemDTO(0F, 0F));
+                costListDto.add(new IncomeReportItemDTO(new BigDecimal(0), new BigDecimal(0)));
             } else {
                 List<Cost> costList = costListOptional.get();
-                Float total = 0F;
-                Float paid = 0F;
+                BigDecimal total = new BigDecimal(0);
+                BigDecimal paid = new BigDecimal(0);
                 for (Cost cost : costList) {
-                    total += cost.getCostAmount().floatValue();
-                    paid += cost.getPaidAmount().floatValue();
+                    total = total.add(cost.getCostAmount());
+                    paid = paid.add(cost.getPaidAmount());
                 }
                 IncomeReportItemDTO item = new IncomeReportItemDTO(total, paid);
-                incomeNow -= paid;
-                incomeLast -= total;
+                incomeNow = incomeNow.subtract(paid);
+                incomeLast = incomeLast.subtract(total);
                 costListDto.add(item);
             }
         }
@@ -220,18 +221,18 @@ public class IncomeReportServiceImpl implements IIncomeReportService {
             Optional<List<Payroll>> payrollListOptional = payrollRepository
                     .getAllByYear(userId, year);
             if (payrollListOptional.isEmpty()) {
-                payrollListDto.add(new IncomeReportItemDTO(0F, 0F));
+                payrollListDto.add(new IncomeReportItemDTO(new BigDecimal(0), new BigDecimal(0)));
             } else {
                 List<Payroll> payrollList = payrollListOptional.get();
-                Float total = 0F;
-                Float paid = 0F;
+                BigDecimal total = new BigDecimal(0);
+                BigDecimal paid = new BigDecimal(0);
                 for (Payroll payroll : payrollList) {
-                    total += payroll.getPayrollAmount().floatValue();
-                    paid += payroll.getPayrollAmount().floatValue();
+                    total = total.add(payroll.getPayrollAmount());
+                    paid = paid.add(payroll.getPayrollAmount());
                 }
                 IncomeReportItemDTO item = new IncomeReportItemDTO(total, paid);
-                incomeNow -= paid;
-                incomeLast -= total;
+                incomeNow = incomeNow.subtract(paid);
+                incomeLast = incomeLast.subtract(total);
                 payrollListDto.add(item);
             }
         }
@@ -241,18 +242,18 @@ public class IncomeReportServiceImpl implements IIncomeReportService {
             Optional<List<ImportReceipt>> importReceiptListOptional = importReceiptRepository
                     .getAllByYear(facilityId, year);
             if (importReceiptListOptional.isEmpty()) {
-                importListDto.add(new IncomeReportItemDTO(0F, 0F));
+                importListDto.add(new IncomeReportItemDTO(new BigDecimal(0), new BigDecimal(0)));
             } else {
                 List<ImportReceipt> importList = importReceiptListOptional.get();
-                Float total = 0F;
-                Float paid = 0F;
+                BigDecimal total = new BigDecimal(0);
+                BigDecimal paid = new BigDecimal(0);
                 for (ImportReceipt importReceipt : importList) {
-                    total += importReceipt.getTotal();
-                    paid += importReceipt.getPaid();
+                    total = total.add(importReceipt.getTotal());
+                    paid = paid.add(importReceipt.getPaid());
                 }
                 IncomeReportItemDTO item = new IncomeReportItemDTO(total, paid);
-                incomeNow -= paid;
-                incomeLast -= total;
+                incomeNow = incomeNow.subtract(paid);
+                incomeLast = incomeLast.subtract(total);
                 importListDto.add(item);
             }
         }
@@ -263,18 +264,18 @@ public class IncomeReportServiceImpl implements IIncomeReportService {
             Optional<List<ExportReceipt>> exportReceiptListOptional = exportReceiptRepository
                     .getAllByYear(facilityId, year);
             if (exportReceiptListOptional.isEmpty()) {
-                exportListDto.add(new IncomeReportItemDTO(0F, 0F));
+                exportListDto.add(new IncomeReportItemDTO(new BigDecimal(0), new BigDecimal(0)));
             } else {
                 List<ExportReceipt> exportList = exportReceiptListOptional.get();
-                Float total = 0F;
-                Float paid = 0F;
+                BigDecimal total = new BigDecimal(0);
+                BigDecimal paid = new BigDecimal(0);
                 for (ExportReceipt exportReceipt : exportList) {
-                    total += exportReceipt.getTotal();
-                    paid += exportReceipt.getPaid();
+                    total = total.add(exportReceipt.getTotal());
+                    paid = paid.add(exportReceipt.getPaid());
                 }
                 IncomeReportItemDTO item = new IncomeReportItemDTO(total, paid);
-                incomeNow += paid;
-                incomeLast += total;
+                incomeNow = incomeNow.add(paid);
+                incomeLast = incomeLast.add(total);
                 exportListDto.add(item);
             }
         }

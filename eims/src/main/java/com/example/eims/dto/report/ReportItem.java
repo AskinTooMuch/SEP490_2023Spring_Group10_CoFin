@@ -16,6 +16,8 @@ import jakarta.persistence.*;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
+import java.math.BigDecimal;
+
 @Data
 @NamedNativeQuery( name = "getImportReportItemByMonth",
 query = "select supplier_id as id,month(import_date) as report_name,sum(total) as total, sum(paid) as paid\n" +
@@ -47,10 +49,10 @@ public class ReportItem {
     private Long id;
     @Id
     private String reportName;
-    private Float total;
-    private Float paid;
+    private BigDecimal total;
+    private BigDecimal paid;
 
-    public ReportItem(String reportName, Float total, Float paid) {
+    public ReportItem(String reportName, BigDecimal total, BigDecimal paid) {
         this.reportName = reportName;
         this.total = total;
         this.paid = paid;

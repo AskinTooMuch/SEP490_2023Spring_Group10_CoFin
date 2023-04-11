@@ -15,6 +15,7 @@ package com.example.eims.dto.importReceipt;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.math.BigDecimal;
 import java.sql.Date;
 
 @Data
@@ -31,8 +32,8 @@ import java.sql.Date;
                 columns = {
                         @ColumnResult(name="supplierId", type = Long.class),
                         @ColumnResult(name="supplierName", type = String.class),
-                        @ColumnResult(name="total", type=Float.class),
-                        @ColumnResult(name="paid", type = Float.class)
+                        @ColumnResult(name="total", type= BigDecimal.class),
+                        @ColumnResult(name="paid", type = BigDecimal.class)
                 }
         )
 )
@@ -45,7 +46,7 @@ public class ImportReceiptStatisticDTO {
     @Column(name = "supplier_name")
     private String supplierName;
     @Column(name = "total")
-    private Float total;
+    private BigDecimal total;
     @Column(name = "paid")
-    private Float paid;
+    private BigDecimal paid;
 }

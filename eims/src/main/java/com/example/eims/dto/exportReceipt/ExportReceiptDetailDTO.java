@@ -15,6 +15,7 @@ import com.example.eims.dto.eggBatch.EggBatchViewImportDTO;
 import com.example.eims.dto.eggProduct.EggProductViewExportDetailDTO;
 import lombok.Data;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -25,7 +26,7 @@ public class ExportReceiptDetailDTO {
     private String customerName;
     private String customerPhone;
     private LocalDateTime exportDate;
-    private Float total;
-    private Float paid;
+    private BigDecimal total;
+    private BigDecimal paid;
     private List<EggProductViewExportDetailDTO> eggProductList;
 }

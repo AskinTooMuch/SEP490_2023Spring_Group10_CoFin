@@ -13,6 +13,8 @@ package com.example.eims.dto.eggProduct;
 
 import lombok.Data;
 
+import java.math.BigDecimal;
+
 @Data
 public class EggProductViewExportDetailDTO {
     private Long breedId;
@@ -20,6 +22,6 @@ public class EggProductViewExportDetailDTO {
     private String productName;
     private Long eggBatchId;
     private int exportAmount;
-    private Float price;
-    private Float vaccine;
+    private BigDecimal price;
+    private BigDecimal vaccine;
 }

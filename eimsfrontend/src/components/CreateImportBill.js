@@ -23,8 +23,8 @@ function TableRows({ rowsData, deleteTableRows, handleChange, breedList }) {
                             }
                         </select>
                     </td>
-                    <td><input type="number" value={amount} onChange={(evnt) => (handleChange(index, evnt))} name="amount" className="form-control" /> </td>
-                    <td><input type="number" value={price} onChange={(evnt) => (handleChange(index, evnt))} name="price" className="form-control" /> </td>
+                    <td><input type="number" step="1" value={amount} onChange={(evnt) => (handleChange(index, evnt))} name="amount" className="form-control" /> </td>
+                    <td><input type="number" step="1" value={price} onChange={(evnt) => (handleChange(index, evnt))} name="price" className="form-control" /> </td>
                     <td><input disabled type="text" value={(amount * price).toLocaleString('vi', { style: 'currency', currency: 'VND' })} name="total" className="form-control" /> </td>
                     <td><button className="btn btn-outline-danger" type='button' onClick={() => (deleteTableRows(index))}>x</button></td>
                 </tr>

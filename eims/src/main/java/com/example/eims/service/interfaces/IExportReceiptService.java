@@ -15,6 +15,8 @@ import com.example.eims.dto.exportReceipt.CreateExportDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.math.BigDecimal;
+
 public interface IExportReceiptService {
 
     /**
@@ -53,7 +55,8 @@ public interface IExportReceiptService {
      * Update paid amount of export receipt.
      *
      * @param exportId the id of export receipt.
+     * @param paid     the paid amount
      * @return
      */
-    public ResponseEntity<?> updatePaidOfExport(Long exportId, Float paid);
+    public ResponseEntity<?> updatePaidOfExport(Long exportId, BigDecimal paid);
 }

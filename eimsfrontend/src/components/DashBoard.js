@@ -67,7 +67,7 @@ const Dashboard = () => {
                   <div className="col-md-3 col-sm-6">
                     <div className="serviceBox orange" onClick={() => routeChange(item.machineId)}>
                       <div className="service-icon">
-                        <span>{item.machineTypeName}:{item.machineName}</span>
+                        <span>{item.machineName}</span>
                       </div>
                       <p className="description">
                         {

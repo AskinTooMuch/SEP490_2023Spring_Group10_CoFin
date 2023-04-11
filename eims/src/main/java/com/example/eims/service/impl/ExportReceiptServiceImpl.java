@@ -31,6 +31,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.*;
 import java.time.LocalDateTime;
 
@@ -219,7 +221,7 @@ public class ExportReceiptServiceImpl implements IExportReceiptService {
             return new ResponseEntity<>("Có sản phẩm bị trùng lặp", HttpStatus.BAD_REQUEST);
         }
         // Amount and Price
-        float total = 0;
+        BigDecimal total = new BigDecimal(0);
         for (EggProductCreateExportDTO eggProduct : eggProductList) {
             if (eggProduct.getEggProductId() == null) {
                 return new ResponseEntity<>("Chưa chọn loại", HttpStatus.BAD_REQUEST);
@@ -227,16 +229,21 @@ public class ExportReceiptServiceImpl implements IExportReceiptService {
             if (eggProduct.getExportAmount() <= 0 || eggProduct.getExportAmount() > eggProduct.getCurAmount()) { // Amount export must be less than current amount
                 return new ResponseEntity<>("Số lượng xuất không hợp lệ", HttpStatus.BAD_REQUEST);
             }
-            if (eggProduct.getPrice() < 0 || eggProduct.getPrice() > 9999999999999.99) { // Price over limit
+            BigDecimal price = eggProduct.getPrice().setScale(2, RoundingMode.FLOOR);
+            if (price.compareTo(new BigDecimal("0")) < 0
+                    || price.compareTo(new BigDecimal(9999999999999.99)) > 0) { // Price over limit
                 return new ResponseEntity<>("Đơn giá không hợp lệ", HttpStatus.BAD_REQUEST);
             }
-            if (eggProduct.getVaccine() < 0 || eggProduct.getVaccine() > 9999999999999.99) { // Price over limit
+            BigDecimal vaccine = eggProduct.getVaccine().setScale(2, RoundingMode.FLOOR);
+            if (vaccine.compareTo(new BigDecimal("0")) < 0
+                    || vaccine.compareTo(new BigDecimal(9999999999999.99)) > 0) { // Price over limit
                 return new ResponseEntity<>("Đơn giá vaccine không hợp lệ", HttpStatus.BAD_REQUEST);
             }
-            if (eggProduct.getExportAmount() * (eggProduct.getVaccine() + eggProduct.getPrice()) > 9999999999999.99) { // over floww
+            if ((price.add(vaccine).multiply(BigDecimal.valueOf(eggProduct.getExportAmount())))
+                    .compareTo(new BigDecimal(9999999999999.99)) > 0) { // over flow
                 return new ResponseEntity<>("Tổng giá trị đơn hàng quá lớn", HttpStatus.BAD_REQUEST);
             }
-            total += eggProduct.getExportAmount() * (eggProduct.getVaccine() + eggProduct.getPrice());
+            total = total.add(price.add(vaccine).multiply(BigDecimal.valueOf(eggProduct.getExportAmount())));
         }
         try {
             // Set attribute to save export receipt
@@ -246,7 +253,7 @@ public class ExportReceiptServiceImpl implements IExportReceiptService {
             exportReceipt.setFacilityId(createExportDTO.getFacilityId());
             exportReceipt.setExportDate(now);
             exportReceipt.setTotal(total);
-            exportReceipt.setPaid(0F);
+            exportReceipt.setPaid(new BigDecimal(0));
             exportReceipt.setStatus(1);
             ExportReceipt exportReceiptInserted = exportReceiptRepository.save(exportReceipt);
             Long exportId = exportReceiptInserted.getExportId();
@@ -328,15 +335,17 @@ public class ExportReceiptServiceImpl implements IExportReceiptService {
      * Update paid amount of export receipt.
      *
      * @param exportId the id of export receipt.
-     * @param paid
+     * @param paid the paid amount
      * @return
      */
     @Override
-    public ResponseEntity<?> updatePaidOfExport(Long exportId, Float paid) {
+    public ResponseEntity<?> updatePaidOfExport(Long exportId, BigDecimal paid) {
         Optional<ExportReceipt> exportReceiptOptional = exportReceiptRepository.findById(exportId);
         if (exportReceiptOptional.isPresent()) {
             ExportReceipt exportReceipt = exportReceiptOptional.get();
-            if (paid < 0F || paid > exportReceipt.getTotal() || paid > 9999999999999.99) {
+            if (paid.compareTo(new BigDecimal(0)) < 0
+                    || paid.compareTo(exportReceipt.getTotal()) > 0
+                    || paid.compareTo(new BigDecimal(9999999999999.99)) > 0 ) {
                 return new ResponseEntity<>("Số tiền đã trả không hợp lệ", HttpStatus.BAD_REQUEST);
             }
             exportReceipt.setPaid(paid);

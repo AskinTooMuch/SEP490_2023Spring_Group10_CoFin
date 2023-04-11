@@ -15,6 +15,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.math.BigDecimal;
 import java.sql.Date;
 @Data
 @NamedNativeQuery(name="GetUserDetail",
@@ -29,7 +30,7 @@ import java.sql.Date;
                         @ColumnResult(name = "username", type = String.class),
                         @ColumnResult(name = "userDob", type = Date.class),
                         @ColumnResult(name = "userEmail", type = String.class),
-                        @ColumnResult(name = "userSalary", type = Double.class),
+                        @ColumnResult(name = "userSalary", type = BigDecimal.class),
                         @ColumnResult(name = "userAddress", type = String.class),
                         @ColumnResult(name = "userStatus", type = Boolean.class),
                         @ColumnResult(name = "facilityId", type = Long.class),
@@ -81,7 +82,7 @@ public class UserDetailDTO {
     @Column(name = "email")
     private String userEmail;
     @Column(name = "salary")
-    private Float userSalary;
+    private BigDecimal userSalary;
     @Column(name = "address")
     private String userAddress;
     @Column(name = "USER_STATUS")
@@ -111,7 +112,7 @@ public class UserDetailDTO {
     private Boolean subStatus;
 
     public UserDetailDTO(Long userId, String userRoleName, String username, Date userDob, String userEmail,
-                         Float userSalary, String userAddress, boolean userStatus, Long facilityId, String facilityName,
+                         BigDecimal userSalary, String userAddress, boolean userStatus, Long facilityId, String facilityName,
                          String facilityAddress, Date facilityFoundDate, String hotline, boolean facilityStatus,
                          Date subscriptionExpirationDate, Long subscriptionId, Boolean subStatus) {
         this.userId = userId;

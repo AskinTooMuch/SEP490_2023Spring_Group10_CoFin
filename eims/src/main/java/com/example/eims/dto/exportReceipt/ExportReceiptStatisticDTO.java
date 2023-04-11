@@ -14,6 +14,8 @@ package com.example.eims.dto.exportReceipt;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.math.BigDecimal;
+
 @Data
 @NamedNativeQuery(name="getExportReceiptStatisticByUserId",
         query="select IR.customer_id, S.customer_name, sum(total) as total, sum(paid) as paid\n" +
@@ -29,8 +31,8 @@ import lombok.Data;
                 columns = {
                         @ColumnResult(name="customerId", type = Long.class),
                         @ColumnResult(name="customerName", type = String.class),
-                        @ColumnResult(name="total", type=Float.class),
-                        @ColumnResult(name="paid", type = Float.class)
+                        @ColumnResult(name="total", type= BigDecimal.class),
+                        @ColumnResult(name="paid", type = BigDecimal.class)
                 }
         )
 )
@@ -42,7 +44,7 @@ public class ExportReceiptStatisticDTO {
     @Column(name = "customer_name")
     private String customerName;
     @Column(name = "total")
-    private Float total;
+    private BigDecimal total;
     @Column(name = "paid")
-    private Float paid;
+    private BigDecimal paid;
 }

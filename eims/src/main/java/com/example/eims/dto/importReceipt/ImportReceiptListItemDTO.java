@@ -13,6 +13,7 @@ package com.example.eims.dto.importReceipt;
 
 import lombok.Data;
 
+import java.math.BigDecimal;
 import java.sql.Date;
 import java.time.LocalDateTime;
 
@@ -22,7 +23,7 @@ public class ImportReceiptListItemDTO {
     private Long supplierId;
     private String supplierName;
     private LocalDateTime importDate;
-    private Float total;
-    private Float paid;
+    private BigDecimal total;
+    private BigDecimal paid;
     private int status;
 }

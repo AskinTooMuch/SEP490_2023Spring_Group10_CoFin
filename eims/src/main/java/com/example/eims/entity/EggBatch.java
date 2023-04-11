@@ -16,6 +16,7 @@ package com.example.eims.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Data
@@ -28,7 +29,7 @@ public class EggBatch {
     private Long importId;
     private Long breedId;
     private int amount;
-    private Float price;
+    private BigDecimal price;
     private int needAction;
     private LocalDateTime dateAction;
     private int status;

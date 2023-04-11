@@ -17,6 +17,7 @@ import java.sql.Date;
 public interface IImportReportService {
     /**
      * Return all import report of owner
+     *
      * @param userId owner's id
      * @return List of import receipt static DTO
      */
@@ -24,14 +25,16 @@ public interface IImportReportService {
 
     /**
      * Get all import report by month
+     *
      * @param supplierId supplier's id
-     * @param year year
+     * @param year       year
      * @return List of ReportDetailDTO
      */
-    public ResponseEntity<?> getAllImportReportByMonth(Long supplierId,String year);
+    public ResponseEntity<?> getAllImportReportByMonth(Long supplierId, String year);
 
     /**
      * Get all import report by year
+     *
      * @param supplierId supplier's id
      * @return List of ReportDetailDTO
      */
@@ -39,7 +42,8 @@ public interface IImportReportService {
 
     /**
      * Get all year that owner have bought product from supplier
-     * @param userId owner's id
+     *
+     * @param userId     owner's id
      * @param supplierId supplier's id
      * @return String ArrayList
      */

@@ -13,9 +13,11 @@ package com.example.eims.dto.eggBatch;
 
 import lombok.Data;
 
+import java.math.BigDecimal;
+
 @Data
 public class CreateEggBatchDTO {
     private Long breedId;
     private int amount;
-    private Float price;
+    private BigDecimal price;
 }

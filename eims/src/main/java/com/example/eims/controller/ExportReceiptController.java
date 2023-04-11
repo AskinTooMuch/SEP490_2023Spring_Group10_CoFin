@@ -17,6 +17,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
+
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/api/export")
@@ -72,11 +74,11 @@ public class ExportReceiptController {
      * Update paid amount of export receipt.
      *
      * @param exportId the id of export receipt.
-     * @param paid
+     * @param paid the paid amount
      * @return
      */
     @PutMapping("/update")
-    public ResponseEntity<?> updatePaidOfExport(@RequestParam Long exportId, @RequestParam Float paid) {
+    public ResponseEntity<?> updatePaidOfExport(@RequestParam Long exportId, @RequestParam BigDecimal paid) {
         return exportReceiptService.updatePaidOfExport(exportId, paid);
     }
 }

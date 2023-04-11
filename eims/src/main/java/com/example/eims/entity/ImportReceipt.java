@@ -15,6 +15,7 @@ package com.example.eims.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.math.BigDecimal;
 import java.sql.Date;
 import java.time.LocalDateTime;
 
@@ -29,7 +30,7 @@ public class ImportReceipt {
     private Long userId;
     private Long facilityId;
     private LocalDateTime importDate;
-    private Float total;
-    private Float paid;
+    private BigDecimal total;
+    private BigDecimal paid;
     private int status;
 }

@@ -30,6 +30,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.ResponseEntity;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -112,7 +113,7 @@ class ImportReceiptServiceImplTest {
         CreateEggBatchDTO eggBatch1 = new CreateEggBatchDTO();
         eggBatch1.setBreedId(1L);
         eggBatch1.setAmount(2);
-        eggBatch1.setPrice(2F);
+        eggBatch1.setPrice(new BigDecimal(2));
 
         List<CreateEggBatchDTO> eggBatchList = new ArrayList<>();
         //eggBatchList.add(eggBatch1);
@@ -138,7 +139,7 @@ class ImportReceiptServiceImplTest {
         CreateEggBatchDTO eggBatch1 = new CreateEggBatchDTO();
         eggBatch1.setBreedId(1L);
         eggBatch1.setAmount(2);
-        eggBatch1.setPrice(2F);
+        eggBatch1.setPrice(new BigDecimal(2));
 
         List<CreateEggBatchDTO> eggBatchList = new ArrayList<>();
         //eggBatchList.add(eggBatch1);
@@ -164,7 +165,7 @@ class ImportReceiptServiceImplTest {
         CreateEggBatchDTO eggBatch1 = new CreateEggBatchDTO();
         eggBatch1.setBreedId(1L);
         eggBatch1.setAmount(2);
-        eggBatch1.setPrice(2F);
+        eggBatch1.setPrice(new BigDecimal(2));
 
         List<CreateEggBatchDTO> eggBatchList = new ArrayList<>();
         //eggBatchList.add(eggBatch1);
@@ -191,7 +192,7 @@ class ImportReceiptServiceImplTest {
         CreateEggBatchDTO eggBatch1 = new CreateEggBatchDTO();
         eggBatch1.setBreedId(1L);
         eggBatch1.setAmount(2);
-        eggBatch1.setPrice(2F);
+        eggBatch1.setPrice(new BigDecimal(2));
 
         List<CreateEggBatchDTO> eggBatchList = new ArrayList<>();
         //eggBatchList.add(eggBatch1);
@@ -216,7 +217,7 @@ class ImportReceiptServiceImplTest {
         CreateEggBatchDTO eggBatch1 = new CreateEggBatchDTO();
         eggBatch1.setBreedId(1L);
         eggBatch1.setAmount(2);
-        eggBatch1.setPrice(2F);
+        eggBatch1.setPrice(new BigDecimal(2));
 
         List<CreateEggBatchDTO> eggBatchList = new ArrayList<>();
         //eggBatchList.add(eggBatch1);
@@ -241,7 +242,7 @@ class ImportReceiptServiceImplTest {
         CreateEggBatchDTO eggBatch1 = new CreateEggBatchDTO();
         eggBatch1.setBreedId(null);
         eggBatch1.setAmount(2);
-        eggBatch1.setPrice(2F);
+        eggBatch1.setPrice(new BigDecimal(2));
 
         List<CreateEggBatchDTO> eggBatchList = new ArrayList<>();
         eggBatchList.add(eggBatch1);
@@ -265,7 +266,7 @@ class ImportReceiptServiceImplTest {
         CreateEggBatchDTO eggBatch1 = new CreateEggBatchDTO();
         eggBatch1.setBreedId(1L);
         eggBatch1.setAmount(-2);
-        eggBatch1.setPrice(2F);
+        eggBatch1.setPrice(new BigDecimal(2));
 
         List<CreateEggBatchDTO> eggBatchList = new ArrayList<>();
         eggBatchList.add(eggBatch1);
@@ -289,7 +290,7 @@ class ImportReceiptServiceImplTest {
         CreateEggBatchDTO eggBatch1 = new CreateEggBatchDTO();
         eggBatch1.setBreedId(1L);
         eggBatch1.setAmount(2);
-        eggBatch1.setPrice(-2F);
+        eggBatch1.setPrice(new BigDecimal(-2));
 
         List<CreateEggBatchDTO> eggBatchList = new ArrayList<>();
         eggBatchList.add(eggBatch1);
@@ -313,7 +314,7 @@ class ImportReceiptServiceImplTest {
         CreateEggBatchDTO eggBatch1 = new CreateEggBatchDTO();
         eggBatch1.setBreedId(1L);
         eggBatch1.setAmount(2);
-        eggBatch1.setPrice(9999999999999.99F);
+        eggBatch1.setPrice(BigDecimal.valueOf(9999999999999.99));
 
         List<CreateEggBatchDTO> eggBatchList = new ArrayList<>();
         eggBatchList.add(eggBatch1);
@@ -337,7 +338,7 @@ class ImportReceiptServiceImplTest {
         CreateEggBatchDTO eggBatch1 = new CreateEggBatchDTO();
         eggBatch1.setBreedId(1L);
         eggBatch1.setAmount(2);
-        eggBatch1.setPrice(2F);
+        eggBatch1.setPrice(new BigDecimal(2));
 
         List<CreateEggBatchDTO> eggBatchList = new ArrayList<>();
         eggBatchList.add(eggBatch1);
@@ -410,9 +411,9 @@ class ImportReceiptServiceImplTest {
         //Set up
         ImportReceipt importReceipt = new ImportReceipt();
         importReceipt.setImportId(-1L);
-        importReceipt.setTotal(1000F);
+        importReceipt.setTotal(new BigDecimal(1000));
 
-        Float paid = 1000F;
+        BigDecimal paid = new BigDecimal(1000);
         // Define behaviour of repository
         when(importReceiptRepository.findByImportId(-1L)).thenReturn(Optional.empty());
 
@@ -428,9 +429,9 @@ class ImportReceiptServiceImplTest {
         //Set up
         ImportReceipt importReceipt = new ImportReceipt();
         importReceipt.setImportId(1L);
-        importReceipt.setTotal(1000F);
+        importReceipt.setTotal(new BigDecimal(1000));
 
-        Float paid = -1F;
+        BigDecimal paid = new BigDecimal(-1);
         // Define behaviour of repository
         when(importReceiptRepository.findByImportId(1L)).thenReturn(Optional.of(importReceipt));
 
@@ -446,9 +447,9 @@ class ImportReceiptServiceImplTest {
         //Set up
         ImportReceipt importReceipt = new ImportReceipt();
         importReceipt.setImportId(1L);
-        importReceipt.setTotal(1000F);
+        importReceipt.setTotal(new BigDecimal(1000));
 
-        Float paid = 2000F;
+        BigDecimal paid = new BigDecimal(2000);
         // Define behaviour of repository
         when(importReceiptRepository.findByImportId(1L)).thenReturn(Optional.of(importReceipt));
 
@@ -464,9 +465,9 @@ class ImportReceiptServiceImplTest {
         //Set up
         ImportReceipt importReceipt = new ImportReceipt();
         importReceipt.setImportId(1L);
-        importReceipt.setTotal(1000F);
+        importReceipt.setTotal(new BigDecimal(1000));
 
-        Float paid = 10000000000000F;
+        BigDecimal paid = BigDecimal.valueOf(10000000000000.0);
         // Define behaviour of repository
         when(importReceiptRepository.findByImportId(1L)).thenReturn(Optional.of(importReceipt));
 
@@ -481,9 +482,9 @@ class ImportReceiptServiceImplTest {
         //Set up
         ImportReceipt importReceipt = new ImportReceipt();
         importReceipt.setImportId(1L);
-        importReceipt.setTotal(1000F);
+        importReceipt.setTotal(new BigDecimal(1000));
 
-        Float paid = 1000F;
+        BigDecimal paid = new BigDecimal(1000);
         // Define behaviour of repository
         when(importReceiptRepository.findByImportId(1L)).thenReturn(Optional.of(importReceipt));
 

@@ -40,6 +40,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -139,7 +141,7 @@ public class ImportReceiptServiceImpl implements IImportReceiptService {
             return new ResponseEntity<>("Hãy tạo ít nhất 1 lô trứng", HttpStatus.BAD_REQUEST);
         }
         // Amount and Price
-        float total = 0;
+        BigDecimal total = new BigDecimal(0);
         for (CreateEggBatchDTO eggBatch : createImportDTO.getEggBatchList()) {
             if (eggBatch.getBreedId() == null) {
                 return new ResponseEntity<>("Chưa chọn loại", HttpStatus.BAD_REQUEST);
@@ -147,14 +149,17 @@ public class ImportReceiptServiceImpl implements IImportReceiptService {
             if (eggBatch.getAmount() <= 0) { // Amount negative
                 return new ResponseEntity<>("Số lượng trứng phải lớn hơn 0", HttpStatus.BAD_REQUEST);
             }
-            if (eggBatch.getPrice() < 0 || eggBatch.getPrice() > 9999999999999.99) { // Price over limit
+            BigDecimal price = eggBatch.getPrice().setScale(2, RoundingMode.FLOOR);
+            if (price.compareTo(new BigDecimal("0")) < 0
+                    || price.compareTo(new BigDecimal(9999999999999.99)) > 0) { // Price over limit
                 return new ResponseEntity<>("Đơn giá không hợp lệ", HttpStatus.BAD_REQUEST);
             }
-            if (eggBatch.getPrice() * eggBatch.getAmount() > 9999999999999.99) { // Price over limit
-                return new ResponseEntity<>("Giá trị lô trứng không được vượt quá 9999999999999.99",
-                        HttpStatus.BAD_REQUEST);
+
+            if (price.multiply(BigDecimal.valueOf(eggBatch.getAmount()))
+                    .compareTo(new BigDecimal(9999999999999.99)) > 0) { // over flow
+                return new ResponseEntity<>("Giá trị lô trứng không được vượt quá 9999999999999.99", HttpStatus.BAD_REQUEST);
             }
-            total += eggBatch.getPrice() * eggBatch.getAmount();
+            total = total.add(price.multiply(BigDecimal.valueOf(eggBatch.getAmount())));
         }
         try {
             // Set attribute to save import receipt
@@ -164,7 +169,7 @@ public class ImportReceiptServiceImpl implements IImportReceiptService {
             importReceipt.setFacilityId(createImportDTO.getFacilityId());
             importReceipt.setImportDate(createImportDTO.getImportDate());
             importReceipt.setTotal(total);
-            importReceipt.setPaid(0F);
+            importReceipt.setPaid(new BigDecimal(0));
             importReceipt.setStatus(1);
             ImportReceipt importInserted = importReceiptRepository.save(importReceipt);
             Long importId = importInserted.getImportId();
@@ -231,15 +236,17 @@ public class ImportReceiptServiceImpl implements IImportReceiptService {
      * Update paid amount of import receipt.
      *
      * @param importId the id of import receipt.
-     * @param paid
+     * @param paid the paid amount
      * @return
      */
     @Override
-    public ResponseEntity<?> updatePaidOfImport(Long importId, Float paid) {
+    public ResponseEntity<?> updatePaidOfImport(Long importId, BigDecimal paid) {
         Optional<ImportReceipt> importReceiptOptional = importReceiptRepository.findByImportId(importId);
         if (importReceiptOptional.isPresent()) {
             ImportReceipt importReceipt = importReceiptOptional.get();
-            if (paid < 0F || paid > importReceipt.getTotal() || paid > 9999999999999.99) {
+            if (paid.compareTo(new BigDecimal(0)) < 0
+                    || paid.compareTo(importReceipt.getTotal()) > 0
+                    || paid.compareTo(new BigDecimal(9999999999999.99)) > 0 ) {
                 return new ResponseEntity<>("Số tiền đã trả không hợp lệ", HttpStatus.BAD_REQUEST);
             }
             importReceipt.setPaid(paid);

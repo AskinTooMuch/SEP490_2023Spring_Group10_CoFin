@@ -26,6 +26,8 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.ResponseEntity;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -229,8 +231,8 @@ class ExportReceiptServiceImplTest {
         eggProduct1.setEggProductId(1L);
         eggProduct1.setCurAmount(100);
         eggProduct1.setExportAmount(100);
-        eggProduct1.setPrice(1F);
-        eggProduct1.setVaccine(1F);
+        eggProduct1.setPrice(new BigDecimal(1));
+        eggProduct1.setVaccine(new BigDecimal(1));
 
         List<EggProductCreateExportDTO> eggProductList = new ArrayList<>();
         //eggProductList.add(eggProduct1);
@@ -256,8 +258,8 @@ class ExportReceiptServiceImplTest {
         eggProduct1.setEggProductId(1L);
         eggProduct1.setCurAmount(100);
         eggProduct1.setExportAmount(100);
-        eggProduct1.setPrice(1F);
-        eggProduct1.setVaccine(1F);
+        eggProduct1.setPrice(new BigDecimal(1));
+        eggProduct1.setVaccine(new BigDecimal(1));
 
         List<EggProductCreateExportDTO> eggProductList = new ArrayList<>();
         //eggProductList.add(eggProduct1);
@@ -283,8 +285,8 @@ class ExportReceiptServiceImplTest {
         eggProduct1.setEggProductId(1L);
         eggProduct1.setCurAmount(100);
         eggProduct1.setExportAmount(100);
-        eggProduct1.setPrice(1F);
-        eggProduct1.setVaccine(1F);
+        eggProduct1.setPrice(new BigDecimal(1));
+        eggProduct1.setVaccine(new BigDecimal(1));
 
         List<EggProductCreateExportDTO> eggProductList = new ArrayList<>();
         eggProductList.add(eggProduct1);
@@ -310,8 +312,8 @@ class ExportReceiptServiceImplTest {
         eggProduct1.setEggProductId(null);
         eggProduct1.setCurAmount(100);
         eggProduct1.setExportAmount(100);
-        eggProduct1.setPrice(1F);
-        eggProduct1.setVaccine(1F);
+        eggProduct1.setPrice(new BigDecimal(1));
+        eggProduct1.setVaccine(new BigDecimal(1));
 
         List<EggProductCreateExportDTO> eggProductList = new ArrayList<>();
         eggProductList.add(eggProduct1);
@@ -336,8 +338,8 @@ class ExportReceiptServiceImplTest {
         eggProduct1.setEggProductId(1L);
         eggProduct1.setCurAmount(100);
         eggProduct1.setExportAmount(-100);
-        eggProduct1.setPrice(1F);
-        eggProduct1.setVaccine(1F);
+        eggProduct1.setPrice(new BigDecimal(1));
+        eggProduct1.setVaccine(new BigDecimal(1));
 
         List<EggProductCreateExportDTO> eggProductList = new ArrayList<>();
         eggProductList.add(eggProduct1);
@@ -363,8 +365,8 @@ class ExportReceiptServiceImplTest {
         eggProduct1.setEggProductId(1L);
         eggProduct1.setCurAmount(100);
         eggProduct1.setExportAmount(200);
-        eggProduct1.setPrice(1F);
-        eggProduct1.setVaccine(1F);
+        eggProduct1.setPrice(new BigDecimal(1));
+        eggProduct1.setVaccine(new BigDecimal(1));
 
         List<EggProductCreateExportDTO> eggProductList = new ArrayList<>();
         eggProductList.add(eggProduct1);
@@ -389,8 +391,8 @@ class ExportReceiptServiceImplTest {
         eggProduct1.setEggProductId(1L);
         eggProduct1.setCurAmount(100);
         eggProduct1.setExportAmount(100);
-        eggProduct1.setPrice(1F);
-        eggProduct1.setVaccine(-1F);
+        eggProduct1.setPrice(new BigDecimal(1));
+        eggProduct1.setVaccine(new BigDecimal(-1));
 
         List<EggProductCreateExportDTO> eggProductList = new ArrayList<>();
         eggProductList.add(eggProduct1);
@@ -416,8 +418,8 @@ class ExportReceiptServiceImplTest {
         eggProduct1.setEggProductId(1L);
         eggProduct1.setCurAmount(100);
         eggProduct1.setExportAmount(100);
-        eggProduct1.setPrice(-1F);
-        eggProduct1.setVaccine(1F);
+        eggProduct1.setPrice(new BigDecimal(-1));
+        eggProduct1.setVaccine(new BigDecimal(1));
 
         List<EggProductCreateExportDTO> eggProductList = new ArrayList<>();
         eggProductList.add(eggProduct1);
@@ -442,8 +444,8 @@ class ExportReceiptServiceImplTest {
         eggProduct1.setEggProductId(1L);
         eggProduct1.setCurAmount(100);
         eggProduct1.setExportAmount(100);
-        eggProduct1.setPrice(9999999999999.99F);
-        eggProduct1.setVaccine(1F);
+        eggProduct1.setPrice(new BigDecimal(9999999999999.99));
+        eggProduct1.setVaccine(new BigDecimal(1));
 
         List<EggProductCreateExportDTO> eggProductList = new ArrayList<>();
         eggProductList.add(eggProduct1);
@@ -468,8 +470,8 @@ class ExportReceiptServiceImplTest {
         eggProduct1.setEggProductId(1L);
         eggProduct1.setCurAmount(100);
         eggProduct1.setExportAmount(100);
-        eggProduct1.setPrice(1F);
-        eggProduct1.setVaccine(1F);
+        eggProduct1.setPrice(new BigDecimal(1));
+        eggProduct1.setVaccine(new BigDecimal(1));
 
         List<EggProductCreateExportDTO> eggProductList = new ArrayList<>();
         eggProductList.add(eggProduct1);
@@ -555,9 +557,9 @@ class ExportReceiptServiceImplTest {
         //Set up
         ExportReceipt exportReceipt = new ExportReceipt();
         exportReceipt.setExportId(-1L);
-        exportReceipt.setTotal(1000F);
+        exportReceipt.setTotal(new BigDecimal(1000));
 
-        Float paid = 1000F;
+        BigDecimal paid = new BigDecimal(1000);
         // Define behaviour of repository
         when(exportReceiptRepository.findById(-1L)).thenReturn(Optional.empty());
 
@@ -572,9 +574,9 @@ class ExportReceiptServiceImplTest {
         //Set up
         ExportReceipt exportReceipt = new ExportReceipt();
         exportReceipt.setExportId(1L);
-        exportReceipt.setTotal(1000F);
+        exportReceipt.setTotal(new BigDecimal(1000));
 
-        Float paid = -1F;
+        BigDecimal paid = new BigDecimal(-1);
         // Define behaviour of repository
         when(exportReceiptRepository.findById(1L)).thenReturn(Optional.of(exportReceipt));
 
@@ -590,9 +592,9 @@ class ExportReceiptServiceImplTest {
         //Set up
         ExportReceipt exportReceipt = new ExportReceipt();
         exportReceipt.setExportId(1L);
-        exportReceipt.setTotal(1000F);
+        exportReceipt.setTotal(new BigDecimal(1000));
 
-        Float paid = 20000F;
+        BigDecimal paid = new BigDecimal(2000);
         // Define behaviour of repository
         when(exportReceiptRepository.findById(1L)).thenReturn(Optional.of(exportReceipt));
 
@@ -607,9 +609,9 @@ class ExportReceiptServiceImplTest {
         //Set up
         ExportReceipt exportReceipt = new ExportReceipt();
         exportReceipt.setExportId(1L);
-        exportReceipt.setTotal(1000F);
+        exportReceipt.setTotal(new BigDecimal(1000));
 
-        Float paid = 10000000000000F;
+        BigDecimal paid = BigDecimal.valueOf(10000000000000.0);
         // Define behaviour of repository
         when(exportReceiptRepository.findById(1L)).thenReturn(Optional.of(exportReceipt));
 
@@ -624,9 +626,9 @@ class ExportReceiptServiceImplTest {
         //Set up
         ExportReceipt exportReceipt = new ExportReceipt();
         exportReceipt.setExportId(1L);
-        exportReceipt.setTotal(1000F);
+        exportReceipt.setTotal(new BigDecimal(1000));
 
-        Float paid = 1000F;
+        BigDecimal paid = new BigDecimal(1000);
         // Define behaviour of repository
         when(exportReceiptRepository.findById(1L)).thenReturn(Optional.of(exportReceipt));
 

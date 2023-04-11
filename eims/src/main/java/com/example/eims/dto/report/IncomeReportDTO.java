@@ -2,6 +2,7 @@ package com.example.eims.dto.report;
 
 import lombok.Data;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Data
@@ -11,6 +12,6 @@ public class IncomeReportDTO {
     private List<IncomeReportItemDTO> payrollList;
     private List<IncomeReportItemDTO> importList;
     private List<IncomeReportItemDTO> exportList;
-    private Float incomeNow;
-    private Float incomeLast;
+    private BigDecimal incomeNow;
+    private BigDecimal incomeLast;
 }

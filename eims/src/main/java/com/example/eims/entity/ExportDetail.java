@@ -15,6 +15,8 @@ package com.example.eims.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.math.BigDecimal;
+
 @Data
 @Entity
 @Table(name = "export_detail")
@@ -24,8 +26,8 @@ public class ExportDetail {
     private Long exportDetailId;
     private Long exportId;
     private Long productId;
-    private Float price;
-    private Float vaccinePrice;
+    private BigDecimal price;
+    private BigDecimal vaccinePrice;
     private int amount;
     private int status;
 }

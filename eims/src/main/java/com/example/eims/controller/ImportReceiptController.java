@@ -13,6 +13,7 @@
  */
 
 package com.example.eims.controller;
+
 import com.example.eims.dto.importReceipt.CreateImportDTO;
 import com.example.eims.entity.EggBatch;
 import com.example.eims.entity.ImportReceipt;
@@ -24,6 +25,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.Optional;
 
 @CrossOrigin(origins = "http://localhost:3000")
@@ -52,7 +54,7 @@ public class ImportReceiptController {
      *                        total, paid, status, list of import items.
      * @return
      */
-    @Secured({"ROLE_OWNER","ROLE_EMPLOYEE"})
+    @Secured({"ROLE_OWNER", "ROLE_EMPLOYEE"})
     @PostMapping("/create")
     public ResponseEntity<?> createImport(@RequestBody CreateImportDTO createImportDTO) {
         return importReceiptService.createImport(createImportDTO);
@@ -64,7 +66,7 @@ public class ImportReceiptController {
      * @param importId the id of import receipt.
      * @return
      */
-    @Secured({"ROLE_OWNER","ROLE_EMPLOYEE"})
+    @Secured({"ROLE_OWNER", "ROLE_EMPLOYEE"})
     @GetMapping("/get")
     public ResponseEntity<?> getImport(@RequestParam Long importId) {
         return importReceiptService.getImport(importId);
@@ -74,12 +76,12 @@ public class ImportReceiptController {
      * Update paid amount of import receipt.
      *
      * @param importId the id of import receipt.
-     * @param paid
+     * @param paid     the paid amount
      * @return
      */
-    @Secured({"ROLE_OWNER","ROLE_EMPLOYEE"})
+    @Secured({"ROLE_OWNER", "ROLE_EMPLOYEE"})
     @PutMapping("/update")
-    public ResponseEntity<?> updatePaidOfImport(@RequestParam Long importId, @RequestParam Float paid) {
-        return  importReceiptService.updatePaidOfImport(importId, paid);
+    public ResponseEntity<?> updatePaidOfImport(@RequestParam Long importId, @RequestParam BigDecimal paid) {
+        return importReceiptService.updatePaidOfImport(importId, paid);
     }
 }

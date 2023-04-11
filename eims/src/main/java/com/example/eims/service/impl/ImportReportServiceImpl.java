@@ -24,6 +24,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.sql.Date;
 import java.util.List;
 import java.util.Optional;
@@ -93,7 +94,7 @@ public class ImportReportServiceImpl implements IImportReportService {
 
             if(reportItemList.isEmpty()){
                 //add blank report
-                reportItem[index] = new ReportItem(month + "", 0F, 0F);
+                reportItem[index] = new ReportItem(month + "", new BigDecimal(0), new BigDecimal(0));
             }else{
                 reportItem[index] = reportItemList.get(0);
             }

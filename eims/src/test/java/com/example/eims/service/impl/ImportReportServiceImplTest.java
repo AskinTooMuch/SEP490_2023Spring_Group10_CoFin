@@ -27,6 +27,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -99,8 +100,8 @@ class ImportReportServiceImplTest {
         Query q = mock(Query.class);
 
         ReportItem dto = new ReportItem();
-        dto.setTotal(100F);
-        dto.setPaid(100F);
+        dto.setTotal(new BigDecimal(100));
+        dto.setPaid(new BigDecimal(100));
 
         List<ReportItem> list = new ArrayList<>();
         list.add(dto);
@@ -176,8 +177,8 @@ class ImportReportServiceImplTest {
 
         ReportItem dto = new ReportItem();
         dto.setReportName("2023");
-        dto.setTotal(100F);
-        dto.setPaid(100F);
+        dto.setTotal(new BigDecimal(100));
+        dto.setPaid(new BigDecimal(100));
 
         List<ReportItem> list = new ArrayList<>();
         list.add(dto);

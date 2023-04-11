@@ -13,11 +13,13 @@ package com.example.eims.dto.eggProduct;
 
 import lombok.Data;
 
+import java.math.BigDecimal;
+
 @Data
 public class EggProductCreateExportDTO {
     private Long eggProductId;
     private int curAmount;
     private int exportAmount;
-    private Float price;
-    private Float vaccine;
+    private BigDecimal price;
+    private BigDecimal vaccine;
 }
