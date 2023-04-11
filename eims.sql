@@ -1,4 +1,4 @@
--- V0.12.1: Insert data customer table : Khách lẻ
+-- V0.12.2: Insert data customer table : Khách lẻ
 -- V0.12.1: Modify update_status_trigger
 -- V0.12.0: Add attributes to user_subscription table, add 1 triggers
 -- V0.11.2: Add attributes to export_detail table attribute

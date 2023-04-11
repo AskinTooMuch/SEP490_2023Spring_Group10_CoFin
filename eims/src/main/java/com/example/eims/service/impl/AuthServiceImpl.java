@@ -277,84 +277,87 @@ public class AuthServiceImpl implements IAuthService {
         user.setStatus(0);      /* Inactivated, need registration's approval */
         //Encode password
         user.setPassword(passwordEncoder.encode(password));
+        // Facility
+        Facility facility = new Facility();
+        // Name
+        String fName = stringDealer.trimMax(signUpDTO.getFacilityName());
+        if (fName.equals("")) { /* Facility name is empty */
+            return new ResponseEntity<>("Tên cơ sở không được để trống", HttpStatus.BAD_REQUEST);
+        }
+        facility.setFacilityName(fName);
+        // Found date
+        if(sDate == null){
+            return new ResponseEntity<>("Ngày thành lập không được để trống", HttpStatus.BAD_REQUEST);
+        }
+        sDate = stringDealer.trimMax(signUpDTO.getFacilityFoundDate());
+        if (sDate.equals("")) {  /* Found date is empty */
+            return new ResponseEntity<>("Ngày thành lập không được để trống", HttpStatus.BAD_REQUEST);
+        }
+        date = stringDealer.convertToDateAndFormat(sDate);
+        if(date.after(Date.valueOf(LocalDate.now()))){
+            return new ResponseEntity<>("Ngày thành lập không hợp lệ", HttpStatus.BAD_REQUEST);
+        }
+        facility.setFacilityFoundDate(date);
+        // Hotline (Using the same format with cellphone number)
+        String hotline = stringDealer.trimMax(signUpDTO.getFacilityHotline());
+        if (hotline.equals("")) { /* Hotline is empty */
+            return new ResponseEntity<>("Hotline không được để trống", HttpStatus.BAD_REQUEST);
+        }
+        if (!stringDealer.checkPhoneRegex(hotline)) { /* Hotline is not valid */
+            return new ResponseEntity<>("Hotline không đúng định dạng", HttpStatus.BAD_REQUEST);
+        }
+        facility.setHotline(hotline);
+        // Address
+        String fAddress = stringDealer.trimMax(signUpDTO.getFacilityAddress());
+        if (fAddress.equals("")) { /* Address is empty */
+            return new ResponseEntity<>("Địa chỉ cơ sở không được để trống", HttpStatus.BAD_REQUEST);
+        }
+        JSONObject addressObjFaci;
+        try {
+            addressObjFaci = new JSONObject(fAddress);
+            String city = stringDealer.trimMax((String) addressObjFaci.get("city"));
+            String district = stringDealer.trimMax((String) addressObjFaci.get("district"));
+            String ward = stringDealer.trimMax((String) addressObjFaci.get("ward"));
+            String street = stringDealer.trimMax((String) addressObjFaci.get("street"));
+            if (city == null || city.equals("")) {
+                return new ResponseEntity<>("Thành phố không được để trống", HttpStatus.BAD_REQUEST);
+            }
+            if (district == null || district.equals("")) {
+                return new ResponseEntity<>("Quận/Huyện không được để trống", HttpStatus.BAD_REQUEST);
+            }
+            if (ward == null || ward.equals("")) {
+                return new ResponseEntity<>("Phường xã không được để trống", HttpStatus.BAD_REQUEST);
+            }
+            if (street == null || street.equals("")) {
+                return new ResponseEntity<>("Số nhà không được để trống", HttpStatus.BAD_REQUEST);
+            }
+            if (street.length() > 30) {
+                return new ResponseEntity<>("Số nhà không được quá 30 kí tự", HttpStatus.BAD_REQUEST);
+            }
+            addressObjFaci = new JSONObject();
+            addressObjFaci.put("city", city);
+            addressObjFaci.put("district", district);
+            addressObjFaci.put("ward", ward);
+            addressObjFaci.put("street", street);
+            fAddress = addressObj.toString();
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
+        facility.setFacilityAddress(fAddress);
+        // Business license number
+        String licenseNumber = stringDealer.trimMax(signUpDTO.getBusinessLicenseNumber());
+        if (licenseNumber.equals("")) { /* Business license number is empty */
+            return new ResponseEntity<>("Số đăng kí kinh doanh không được để trống", HttpStatus.BAD_REQUEST);
+        }
+        if (licenseNumber.length()>10) {
+            return new ResponseEntity<>("Số đăng kí kinh doanh không dài hơn 10 ký tự", HttpStatus.BAD_REQUEST);
+        }
+        facility.setBusinessLicenseNumber(licenseNumber);
+
+        facility.setStatus(0);  /* Inactivated, need registration's approval */
         try {
             User returnUser = userRepository.save(user);
-            // Facility
-            Facility facility = new Facility();
             facility.setUserId(returnUser.getUserId());
-            // Name
-            String fName = stringDealer.trimMax(signUpDTO.getFacilityName());
-            if (fName.equals("")) { /* Facility name is empty */
-                return new ResponseEntity<>("Tên cơ sở không được để trống", HttpStatus.BAD_REQUEST);
-            }
-            facility.setFacilityName(fName);
-            // Found date
-            if(sDate == null){
-                return new ResponseEntity<>("Ngày thành lập không được để trống", HttpStatus.BAD_REQUEST);
-            }
-            sDate = stringDealer.trimMax(signUpDTO.getFacilityFoundDate());
-            if (sDate.equals("")) {  /* Found date is empty */
-                return new ResponseEntity<>("Ngày thành lập không được để trống", HttpStatus.BAD_REQUEST);
-            }
-            date = stringDealer.convertToDateAndFormat(sDate);
-            if(date.after(Date.valueOf(LocalDate.now()))){
-                return new ResponseEntity<>("Ngày thành lập không hợp lệ", HttpStatus.BAD_REQUEST);
-            }
-            facility.setFacilityFoundDate(date);
-            // Hotline (Using the same format with cellphone number)
-            String hotline = stringDealer.trimMax(signUpDTO.getFacilityHotline());
-            if (hotline.equals("")) { /* Hotline is empty */
-                return new ResponseEntity<>("Hotline không được để trống", HttpStatus.BAD_REQUEST);
-            }
-            if (!stringDealer.checkPhoneRegex(hotline)) { /* Hotline is not valid */
-                return new ResponseEntity<>("Hotline không đúng định dạng", HttpStatus.BAD_REQUEST);
-            }
-            facility.setHotline(hotline);
-            // Address
-            String fAddress = stringDealer.trimMax(signUpDTO.getFacilityAddress());
-            if (fAddress.equals("")) { /* Address is empty */
-                return new ResponseEntity<>("Địa chỉ cơ sở không được để trống", HttpStatus.BAD_REQUEST);
-            }
-            JSONObject addressObjFaci;
-            try {
-                addressObjFaci = new JSONObject(fAddress);
-                String city = stringDealer.trimMax((String) addressObjFaci.get("city"));
-                String district = stringDealer.trimMax((String) addressObjFaci.get("district"));
-                String ward = stringDealer.trimMax((String) addressObjFaci.get("ward"));
-                String street = stringDealer.trimMax((String) addressObjFaci.get("street"));
-                if (city == null || city.equals("")) {
-                    return new ResponseEntity<>("Thành phố không được để trống", HttpStatus.BAD_REQUEST);
-                }
-                if (district == null || district.equals("")) {
-                    return new ResponseEntity<>("Quận/Huyện không được để trống", HttpStatus.BAD_REQUEST);
-                }
-                if (ward == null || ward.equals("")) {
-                    return new ResponseEntity<>("Phường xã không được để trống", HttpStatus.BAD_REQUEST);
-                }
-                if (street == null || street.equals("")) {
-                    return new ResponseEntity<>("Số nhà không được để trống", HttpStatus.BAD_REQUEST);
-                }
-                if (street.length() > 30) {
-                    return new ResponseEntity<>("Số nhà không được quá 30 kí tự", HttpStatus.BAD_REQUEST);
-                }
-                addressObjFaci = new JSONObject();
-                addressObjFaci.put("city", city);
-                addressObjFaci.put("district", district);
-                addressObjFaci.put("ward", ward);
-                addressObjFaci.put("street", street);
-                fAddress = addressObj.toString();
-            } catch (JSONException e) {
-                throw new RuntimeException(e);
-            }
-            facility.setFacilityAddress(fAddress);
-            // Business license number
-            String licenseNumber = stringDealer.trimMax(signUpDTO.getBusinessLicenseNumber());
-            if (licenseNumber.equals("")) { /* Business license number is empty */
-                return new ResponseEntity<>("Số đăng kí kinh doanh không được để trống", HttpStatus.BAD_REQUEST);
-            }
-            facility.setBusinessLicenseNumber(licenseNumber);
-
-            facility.setStatus(0);  /* Inactivated, need registration's approval */
             try {
                 facilityRepository.save(facility);
                 // Registration
