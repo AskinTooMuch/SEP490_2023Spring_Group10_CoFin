@@ -159,7 +159,8 @@ export default function BasicTabs() {
         status: "",
         eggProductList: [],
         machineList: [],
-        machineNotFullList: []
+        machineNotFullList: [],
+        phaseUpdateList: []
     })
 
     // Update egg batch
@@ -222,9 +223,11 @@ export default function BasicTabs() {
         eggBatchDetail.eggProductList = result.data.eggProductList;
         eggBatchDetail.machineList = result.data.machineList;
         eggBatchDetail.machineNotFullList = result.data.machineNotFullList;
-
+        eggBatchDetail.phaseUpdateList = result.data.phaseUpdateList;
+        
         updateEggBatchDTO.needAction = result.data.needAction;
-
+        updateEggBatchDTO.phaseNumber = result.data.phaseUpdateList[0].phaseNumber;
+        console.log(JSON.stringify(updateEggBatchDTO));
         if (result.data.progress == 0) {
             remain.remain = result.data.amount;
         }
@@ -290,12 +293,6 @@ export default function BasicTabs() {
         var e = document.getElementById("select");
         if (e != null) {
             var value = e.options[e.selectedIndex].value;
-            if (value == "") {
-                document.getElementById('amount').disabled = true;
-            }
-            if (value != "") {
-                document.getElementById('amount').disabled = false;
-            }
         }
 
         if ((field == "amount" && value != 5) || field == "eggWasted") {
@@ -306,6 +303,7 @@ export default function BasicTabs() {
 
     // Handle Submit functions
     const handleUpdateEggBatchSubmit = async (event) => {
+        setOpen(false);
         event.preventDefault();
         console.log(rowsData)
         updateEggBatchDTO.eggBatchId = id;
@@ -324,7 +322,6 @@ export default function BasicTabs() {
                 }
             );
             setShow(false);
-            setOpen(false);
             setUpdateEggBatchDTO({
                 eggBatchId: id,
                 phaseNumber: "",
@@ -354,6 +351,7 @@ export default function BasicTabs() {
 
     // Handle Update done 
     const handleUpdateEggBatchDone = async () => {
+        setOpen2(false);
         console.log(eggBatchDetail.eggBatchId);
         let response;
         try {
@@ -373,7 +371,6 @@ export default function BasicTabs() {
                     withCredentials: true
                 }
             );
-            setOpen2(false);
             setShow(false);
             loadEggBatch();
             setEggBatchLoaded(false);
@@ -486,7 +483,7 @@ export default function BasicTabs() {
                                 <p>Số lượng</p>
                             </div>
                             <div className="col-md-3">
-                                <p>{eggBatchDetail.amount}</p>
+                                <p>{eggBatchDetail.amount.toLocaleString()}</p>
                             </div>
                             <div className="col-md-3 ">
                                 <p></p>
@@ -713,15 +710,13 @@ export default function BasicTabs() {
                                             </div>
                                             <div className="col-md-3">
                                                 <select onChange={(e) => handleUpdateEggBatchChange(e, "phaseNumber")} id="select" className="form-select" aria-label="Default select example">
-                                                    <option value="">Chọn</option>
-                                                    <option value="0">Trứng vỡ/dập</option>
-                                                    <option value="2">Trứng trắng/tròn, trứng không có phôi</option>
-                                                    <option value="3">Trứng loãng/tàu, phôi chết non</option>
-                                                    <option value="4">Trứng lộn</option>
-                                                    <option value="5">Trứng đang nở</option>
-                                                    <option value="6">Trứng tắc</option>
-                                                    <option value="8">Con đực</option>
-                                                    <option value="9">Con cái</option>
+                                                    {
+                                                        eggBatchDetail.phaseUpdateList && eggBatchDetail.phaseUpdateList.length > 0
+                                                            ? eggBatchDetail.phaseUpdateList.map((item) =>
+                                                                <option value={item.phaseNumber}>{item.phaseDescription}</option>
+                                                            )
+                                                            : ''
+                                                    }
                                                 </select>
                                             </div>
                                             {
@@ -745,7 +740,7 @@ export default function BasicTabs() {
                                                 <label>Số lượng cập nhật</label>
                                             </div>
                                             <div className="col-md-3">
-                                                <input defaultValue="0" disabled className='form-control' id="amount" name="amount" type="number"
+                                                <input defaultValue="0" className='form-control' id="amount" name="amount" type="number"
                                                     onChange={(e) => handleUpdateEggBatchChange(e, "amount")} />
                                             </div>
 
@@ -779,7 +774,9 @@ export default function BasicTabs() {
                                             }
                                             <br />
                                             {
-                                                (eggBatchDetail.progress == 6 || eggBatchDetail.progress == 0)
+                                                (eggBatchDetail.progress == 0 ||  eggBatchDetail.progress > 4
+                                                    || (eggBatchDetail.progress == 4 && eggBatchDetail.phaseUpdateList[0].phaseNumber == 5) 
+                                                    )
                                                     ? ''
                                                     :
                                                     <div className='row'>
@@ -791,6 +788,7 @@ export default function BasicTabs() {
                                                         </div>
                                                     </div>
                                             }
+
                                         </div>
                                     </div>
                                     <ConfirmBox open={open} closeDialog={() => setOpen(false)} title={"Xác nhận cập nhật lô trứng"}
@@ -861,14 +859,19 @@ export default function BasicTabs() {
                             <div className='model-footer'>
                                 <button style={{ width: "20%" }} onClick={() => setOpen(true)}
                                     className="col-md-6 btn-light" type="button">
-                                    Xác nhận
+                                    Lưu
                                 </button>
                                 <button style={{ width: "10%" }} onClick={handleClose} type='button' className="btn btn-light">
                                     Huỷ
                                 </button>
-                                <button style={{ width: "20%", float: "left" }} onClick={() => setOpen2(true)} className="col-md-6 btn-light" type="button">
-                                    Hoàn thành
-                                </button>
+                                {
+                                    eggBatchDetail.progress && eggBatchDetail.progress >= 7 ?
+                                        <button style={{ width: "20%", float: "left" }} onClick={() => setOpen2(true)} className="col-md-6 btn-light" type="button">
+                                            Hoàn thành lô
+                                        </button>
+                                        : ''
+                                }
+
                             </div>
                         </form>
                     </Modal>

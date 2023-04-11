@@ -15,9 +15,9 @@ package com.example.eims.dto.eggBatch;
 import com.example.eims.dto.eggLocation.EggLocationEggBatchDetailDTO;
 import com.example.eims.dto.machine.MachineListItemDTO;
 import com.example.eims.entity.EggProduct;
+import com.example.eims.entity.IncubationPhase;
 import lombok.Data;
 
-import java.sql.Date;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -44,4 +44,5 @@ public class EggBatchDetailDTO {
     private List<EggProduct> eggProductList;
     private List<EggLocationEggBatchDetailDTO> machineList;
     private List<MachineListItemDTO> machineNotFullList;
+    private List<IncubationPhase> phaseUpdateList;
 }

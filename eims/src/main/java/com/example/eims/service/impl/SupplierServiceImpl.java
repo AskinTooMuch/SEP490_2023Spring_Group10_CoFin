@@ -16,13 +16,8 @@ package com.example.eims.service.impl;
 import com.example.eims.dto.supplier.CreateSupplierDTO;
 import com.example.eims.dto.supplier.SupplierDetailDTO;
 import com.example.eims.dto.supplier.UpdateSupplierDTO;
-import com.example.eims.entity.Facility;
-import com.example.eims.entity.ImportReceipt;
-import com.example.eims.entity.Supplier;
-import com.example.eims.repository.FacilityRepository;
-import com.example.eims.repository.ImportReceiptRepository;
-import com.example.eims.repository.SupplierRepository;
-import com.example.eims.repository.UserRepository;
+import com.example.eims.entity.*;
+import com.example.eims.repository.*;
 import com.example.eims.service.interfaces.ISupplierService;
 import com.example.eims.utils.AddressPojo;
 import com.example.eims.utils.StringDealer;
@@ -51,16 +46,23 @@ public class SupplierServiceImpl implements ISupplierService {
     @Autowired
     private final ImportReceiptRepository importReceiptRepository;
     @Autowired
-    private final FacilityRepository facilityRepository;
+    private final EggBatchRepository eggBatchRepository;
+    @Autowired
+    private final EggProductRepository eggProductRepository;
+    @Autowired
+    private final IncubationPhaseRepository incubationPhaseRepository;
     private final StringDealer stringDealer = new StringDealer();
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     public SupplierServiceImpl(UserRepository userRepository, SupplierRepository supplierRepository,
-                               ImportReceiptRepository importReceiptRepository, FacilityRepository facilityRepository) {
+                               ImportReceiptRepository importReceiptRepository, EggBatchRepository eggBatchRepository,
+                               EggProductRepository eggProductRepository, IncubationPhaseRepository incubationPhaseRepository) {
         this.userRepository = userRepository;
         this.supplierRepository = supplierRepository;
         this.importReceiptRepository = importReceiptRepository;
-        this.facilityRepository = facilityRepository;
+        this.eggBatchRepository = eggBatchRepository;
+        this.eggProductRepository = eggProductRepository;
+        this.incubationPhaseRepository = incubationPhaseRepository;
     }
 
     /**
@@ -112,15 +114,53 @@ public class SupplierServiceImpl implements ISupplierService {
             Supplier supplier = supplierOptional.get();
             System.out.println(supplier);
             // Get and add attribute to DTO
-            // Get fertilized rate
-            Float fertilizedRate = 9.0F;
-            // Get male rate
-            Float maleRate = 6.0F;
+            // Get fertilized rate, male rate
+            Float totalEgg = 0F;
+            Float eggUnfertilized = 0F;
+            Float fertilizedRate = 0F;
+            Float totalMale = 0F;
+            Float totalFemale = 0F;
+            Float maleRate = 0F;
+            Optional<List<ImportReceipt>> importReceiptListOptional = importReceiptRepository.findBySupplierId(supplierId);
+            if (importReceiptListOptional.isPresent()) {
+                List<ImportReceipt> importReceiptList = importReceiptListOptional.get();
+                for (ImportReceipt importReceipt : importReceiptList) {
+                    List<EggBatch> eggBatchList = eggBatchRepository.findByImportId(importReceipt.getImportId()).get();
+                    for (EggBatch eggBatch : eggBatchList) {
+                        if (eggBatch.getStatus() == 0) { // egg batch done
+                            totalEgg += eggBatch.getAmount();
+                            List<EggProduct> eggProductList = eggProductRepository.findByEggBatchId(eggBatch.getEggBatchId()).get();
+                            for (EggProduct eggProduct : eggProductList) {
+                                IncubationPhase incubationPhase = incubationPhaseRepository
+                                        .findByIncubationPhaseId(eggProduct.getIncubationPhaseId()).get();
+                                if (eggProduct.getAmount() == 0) {
+                                    continue;
+                                }
+                                if (incubationPhase.getPhaseNumber() == 2) { // unfertilized
+                                    eggUnfertilized += eggProduct.getAmount();
+                                }
+                                if (incubationPhase.getPhaseNumber() == 8) { // male
+                                    totalMale += eggProduct.getAmount();
+                                }
+                                if (incubationPhase.getPhaseNumber() == 9) { // female
+                                    totalFemale += eggProduct.getAmount();
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            if (totalEgg != 0) {
+                fertilizedRate = (totalEgg - eggUnfertilized) / totalEgg * 10;
+            }
+            if ((totalMale + totalFemale) != 0) {
+                maleRate = totalMale / (totalMale + totalFemale) * 10;
+            }
+
             SupplierDetailDTO supplierDetailDTO = new SupplierDetailDTO();
             supplierDetailDTO.getFromEntity(supplier);
-            supplierDetailDTO.setFertilizedRate(fertilizedRate);
-            supplierDetailDTO.setMaleRate(maleRate);
-            System.out.println(supplierDetailDTO);
+            supplierDetailDTO.setFertilizedRate(String.format("%.2f", fertilizedRate));
+            supplierDetailDTO.setMaleRate(String.format("%.2f", maleRate));
             return new ResponseEntity<>(supplierDetailDTO, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
@@ -183,7 +223,6 @@ public class SupplierServiceImpl implements ISupplierService {
         if (supplierAddress.equals("")) { /* Address is empty */
             return new ResponseEntity<>("Địa chỉ không được để trống.", HttpStatus.BAD_REQUEST);
         }
-        System.out.println(supplierAddress);
         try {
             AddressPojo address = objectMapper.readValue(supplierAddress, AddressPojo.class);
             address.city = stringDealer.trimMax(address.city);
@@ -206,7 +245,6 @@ public class SupplierServiceImpl implements ISupplierService {
                 return new ResponseEntity<>("Xã không được để trống", HttpStatus.BAD_REQUEST);
             }
             supplierAddress = objectMapper.writeValueAsString(address);
-            System.out.println(supplierAddress);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -290,7 +328,6 @@ public class SupplierServiceImpl implements ISupplierService {
         if (supplierAddress.equals("")) { /* Address is empty */
             return new ResponseEntity<>("Địa chỉ không được để trống.", HttpStatus.BAD_REQUEST);
         }
-        System.out.println(supplierAddress);
         try {
             AddressPojo address = objectMapper.readValue(supplierAddress, AddressPojo.class);
             address.city = stringDealer.trimMax(address.city);
@@ -313,7 +350,6 @@ public class SupplierServiceImpl implements ISupplierService {
                 return new ResponseEntity<>("Xã không được để trống", HttpStatus.BAD_REQUEST);
             }
             supplierAddress = objectMapper.writeValueAsString(address);
-            System.out.println(supplierAddress);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

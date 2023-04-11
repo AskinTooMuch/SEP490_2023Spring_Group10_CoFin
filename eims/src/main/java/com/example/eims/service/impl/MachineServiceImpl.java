@@ -309,6 +309,11 @@ public class MachineServiceImpl implements IMachineService {
             if (updateMachineDTO.getActive() != 1 && updateMachineDTO.getActive() != 0) {
                 return new ResponseEntity<>("Trạng thái không hợp lệ", HttpStatus.BAD_REQUEST);
             }
+            if (updateMachineDTO.getActive() == 0) {
+                if (eggLocationRepository.existsByMachineId(updateMachineDTO.getMachineId())) { /*Machine is running (have eggs in it)*/
+                    return new ResponseEntity<>("Chuyển trứng sang máy khác trước khi xóa", HttpStatus.BAD_REQUEST);
+                }
+            }
             machine.setActive(updateMachineDTO.getActive());
             // Save
             machineRepository.save(machine);

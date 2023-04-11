@@ -162,7 +162,7 @@ const StockReport = () => {
                                                                 <td className="u-border-1 u-border-grey-30 u-table-cell">{item.breedName}</td>
                                                                 <td className="u-border-1 u-border-grey-30 u-table-cell">{item.eggBatchId}</td>
                                                                 <td className="u-border-1 u-border-grey-30 u-table-cell">{item.phaseDescription}</td>
-                                                                <td className="u-border-1 u-border-grey-30 u-table-cell">{item.curAmount}</td>
+                                                                <td className="u-border-1 u-border-grey-30 u-table-cell">{item.curAmount.toLocaleString()}</td>
                                                                 <td className="u-border-1 u-border-grey-30 u-table-cell">{item.incubationDate.replace("T", " ")}</td>
                                                             </tr>
                                                         )
@@ -206,7 +206,7 @@ const StockReport = () => {
                                                     <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-3">Loại</th>
                                                     <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-4">Sản phẩm</th>
                                                     <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-5">Số lượng trong kho</th>
-                                                    <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-6">Ngày xuất</th>
+                                                    <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-6">Ngày cập nhật</th>
                                                 </tr>
                                             </thead>
                                             <tbody className="u-table-body">
@@ -217,7 +217,7 @@ const StockReport = () => {
                                                                 <td className="u-border-1 u-border-grey-30 u-first-column u-grey-5 u-table-cell u-table-cell-5">{index + 1}</td>
                                                                 <td className="u-border-1 u-border-grey-30 u-table-cell">{item.breedName}</td>
                                                                 <td className="u-border-1 u-border-grey-30 u-table-cell">{item.phaseDescription}</td>
-                                                                <td className="u-border-1 u-border-grey-30 u-table-cell">{item.curAmount}</td>
+                                                                <td className="u-border-1 u-border-grey-30 u-table-cell">{item.curAmount.toLocaleString()}</td>
                                                                 <td className="u-border-1 u-border-grey-30 u-table-cell">{item.incubationDate.replace("T", " ")}</td>
                                                             </tr>
                                                         )

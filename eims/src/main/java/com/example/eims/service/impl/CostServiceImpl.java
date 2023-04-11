@@ -122,12 +122,12 @@ public class CostServiceImpl implements ICostService {
         }
         String costItem = stringDealer.trimMax(createCostDTO.getCostItem());
         if(costItem.length() > 32){
-            return new ResponseEntity<>("Tên chi phí không dài quá 50 ký tự", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Tên chi phí không dài quá 32 ký tự", HttpStatus.BAD_REQUEST);
         }
         // check cost amount
         BigDecimal costAmount = createCostDTO.getCostAmount().setScale(2, RoundingMode.FLOOR);
         if(costAmount.compareTo(new BigDecimal("0")) <= 0){
-            return new ResponseEntity<>("Tổng chi phí phải lớn hơn 0.01", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Tổng chi phí phải lớn hơn 0", HttpStatus.BAD_REQUEST);
         }
         if(costAmount.compareTo(new BigDecimal(9999999999999.99)) > 0){
             return new ResponseEntity<>("Tổng chi phí không được vượt quá 9999999999999.99", HttpStatus.BAD_REQUEST);
@@ -190,12 +190,12 @@ public class CostServiceImpl implements ICostService {
         }
         String costItem = stringDealer.trimMax(updateCostDTO.getCostItem());
         if(costItem.length() > 32){
-            return new ResponseEntity<>("Tên chi phí không dài quá 50 ký tự", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Tên chi phí không dài quá 32 ký tự", HttpStatus.BAD_REQUEST);
         }
         // check cost amount
         BigDecimal costAmount = updateCostDTO.getCostAmount().setScale(2, RoundingMode.FLOOR);
         if(costAmount.compareTo(new BigDecimal("0")) <= 0){
-            return new ResponseEntity<>("Tổng chi phí phải lớn hơn 0.01", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Tổng chi phí phải lớn hơn 0", HttpStatus.BAD_REQUEST);
         }
         if(costAmount.compareTo(new BigDecimal("9999999999999.99")) > 0){
             return new ResponseEntity<>("Tổng chi phí không được vượt quá 9999999999999.99", HttpStatus.BAD_REQUEST);

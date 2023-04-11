@@ -292,7 +292,7 @@ export default function BasicTabs() {
                                                         <th className="u-border-1 u-border-grey-30 u-first-column u-grey-5 u-table-cell u-table-cell-1" scope="row">{index + 1}</th>
                                                         <td className="u-border-1 u-border-grey-30 u-table-cell">{item.machineName}</td>
                                                         <td className="u-border-1 u-border-grey-30 u-table-cell">{item.machineTypeName}</td>
-                                                        <td className="u-border-1 u-border-grey-30 u-table-cell">{item.curCapacity}/{item.maxCapacity}</td>
+                                                        <td className="u-border-1 u-border-grey-30 u-table-cell">{item.curCapacity.toLocaleString()}/{item.maxCapacity.toLocaleString()}</td>
 
                                                         {item.active === 1
                                                             ? <td className="u-border-1 u-border-grey-30 u-table-cell text-green">

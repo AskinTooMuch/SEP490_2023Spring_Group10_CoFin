@@ -61,6 +61,10 @@ class MachineServiceImplTest {
     IncubationPhaseRepository incubationPhaseRepository;
     @Mock
     SpecieRepository specieRepository;
+    @Mock
+    SubscriptionRepository subscriptionRepository;
+    @Mock
+    UserSubscriptionRepository userSubscriptionRepository;
     @InjectMocks
     MachineServiceImpl machineService;
 
@@ -499,8 +503,16 @@ class MachineServiceImplTest {
         dto.setMachineId(1L);
         dto.setMachineName("Máy nở nhỏ 3");
         dto.setActive(0);
+        dto.setFacilityId(1L);
+        UserSubscription userSubscription = new UserSubscription();
+        userSubscription.setSubscriptionId(1L);
         // Define behaviour of repository
         when(machineRepository.findByMachineId(1L)).thenReturn(Optional.of(machine));
+        when(machineRepository.countActiveMachine(1L)).thenReturn(10);
+        when(userSubscriptionRepository.getUserSubscriptionByFacilityIdAndStatus(1L,true))
+                .thenReturn(Optional.of(userSubscription));
+        when(subscriptionRepository.findBySubscriptionId(1L)).thenReturn(Optional.of(new Subscription()));
+        when(eggLocationRepository.existsByMachineId(1L)).thenReturn(false);
         // Run service method
         ResponseEntity<?> responseEntity = machineService.updateMachine(dto);
         System.out.println(responseEntity.toString());
@@ -517,8 +529,15 @@ class MachineServiceImplTest {
         dto.setMachineId(1L);
         dto.setMachineName("abcdefgh");
         dto.setActive(1);
+        dto.setFacilityId(1L);
+        UserSubscription userSubscription = new UserSubscription();
+        userSubscription.setSubscriptionId(1L);
         // Define behaviour of repository
         when(machineRepository.findByMachineId(1L)).thenReturn(Optional.of(machine));
+        when(machineRepository.countActiveMachine(1L)).thenReturn(10);
+        when(userSubscriptionRepository.getUserSubscriptionByFacilityIdAndStatus(1L,true))
+                .thenReturn(Optional.of(userSubscription));
+        when(subscriptionRepository.findBySubscriptionId(1L)).thenReturn(Optional.of(new Subscription()));
         // Run service method
         ResponseEntity<?> responseEntity = machineService.updateMachine(dto);
         System.out.println(responseEntity.toString());
@@ -535,8 +554,17 @@ class MachineServiceImplTest {
         dto.setMachineId(1L);
         dto.setMachineName("12345678");
         dto.setActive(0);
+        dto.setFacilityId(1L);
+        UserSubscription userSubscription = new UserSubscription();
+        userSubscription.setSubscriptionId(1L);
         // Define behaviour of repository
         when(machineRepository.findByMachineId(1L)).thenReturn(Optional.of(machine));
+        when(machineRepository.findByMachineId(1L)).thenReturn(Optional.of(machine));
+        when(machineRepository.countActiveMachine(1L)).thenReturn(10);
+        when(userSubscriptionRepository.getUserSubscriptionByFacilityIdAndStatus(1L,true))
+                .thenReturn(Optional.of(userSubscription));
+        when(subscriptionRepository.findBySubscriptionId(1L)).thenReturn(Optional.of(new Subscription()));
+        when(eggLocationRepository.existsByMachineId(1L)).thenReturn(false);
         // Run service method
         ResponseEntity<?> responseEntity = machineService.updateMachine(dto);
         System.out.println(responseEntity.toString());
@@ -553,8 +581,16 @@ class MachineServiceImplTest {
         dto.setMachineId(1L);
         dto.setMachineName("        ");
         dto.setActive(0);
+        dto.setFacilityId(1L);
+        UserSubscription userSubscription = new UserSubscription();
+        userSubscription.setSubscriptionId(1L);
         // Define behaviour of repository
         when(machineRepository.findByMachineId(1L)).thenReturn(Optional.of(machine));
+        when(machineRepository.findByMachineId(1L)).thenReturn(Optional.of(machine));
+        when(machineRepository.countActiveMachine(1L)).thenReturn(10);
+        when(userSubscriptionRepository.getUserSubscriptionByFacilityIdAndStatus(1L,true))
+                .thenReturn(Optional.of(userSubscription));
+        when(subscriptionRepository.findBySubscriptionId(1L)).thenReturn(Optional.of(new Subscription()));
         // Run service method
         ResponseEntity<?> responseEntity = machineService.updateMachine(dto);
         System.out.println(responseEntity.toString());
@@ -571,8 +607,16 @@ class MachineServiceImplTest {
         dto.setMachineId(1L);
         dto.setMachineName(null);
         dto.setActive(1);
+        dto.setFacilityId(1L);
+        UserSubscription userSubscription = new UserSubscription();
+        userSubscription.setSubscriptionId(1L);
         // Define behaviour of repository
         when(machineRepository.findByMachineId(1L)).thenReturn(Optional.of(machine));
+        when(machineRepository.countActiveMachine(1L)).thenReturn(10);
+        when(userSubscriptionRepository.getUserSubscriptionByFacilityIdAndStatus(1L,true))
+                .thenReturn(Optional.of(userSubscription));
+        when(subscriptionRepository.findBySubscriptionId(1L)).thenReturn(Optional.of(new Subscription()));
+
         // Run service method
         ResponseEntity<?> responseEntity = machineService.updateMachine(dto);
         System.out.println(responseEntity.toString());
@@ -589,8 +633,15 @@ class MachineServiceImplTest {
         dto.setMachineId(1L);
         dto.setMachineName("Máy nở nhỏ 3");
         dto.setActive(2);
+        dto.setFacilityId(1L);
+        UserSubscription userSubscription = new UserSubscription();
+        userSubscription.setSubscriptionId(1L);
         // Define behaviour of repository
         when(machineRepository.findByMachineId(1L)).thenReturn(Optional.of(machine));
+        when(machineRepository.countActiveMachine(1L)).thenReturn(10);
+        when(userSubscriptionRepository.getUserSubscriptionByFacilityIdAndStatus(1L,true))
+                .thenReturn(Optional.of(userSubscription));
+        when(subscriptionRepository.findBySubscriptionId(1L)).thenReturn(Optional.of(new Subscription()));
         // Run service method
         ResponseEntity<?> responseEntity = machineService.updateMachine(dto);
         System.out.println(responseEntity.toString());

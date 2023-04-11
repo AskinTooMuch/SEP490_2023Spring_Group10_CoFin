@@ -10,6 +10,7 @@
  * 21/03/2023   1.1         DuongVV     Update checks<br>
  * 27/03/2023   2.0         DuongVV     Update update egg batch<br>
  * 29/03/2023   2.1         DuongVV     Update update egg batch return message<br>
+ * 29/03/2023   2.2         DuongVV     Update functions<br>
  */
 
 package com.example.eims.service.impl;
@@ -122,17 +123,19 @@ public class EggBatchServiceImpl implements IEggBatchService {
             LocalDateTime startDate = null;
             // Egg Product
             Optional<List<EggProduct>> eggProductListOptional = eggProductRepository.findByEggBatchId(eggBatchId);
+            List<EggProduct> eggProductList;
             if (eggProductListOptional.isEmpty()) {
                 dto.setEggProductList(new ArrayList<>());
                 dto.setMachineList(new ArrayList<>());
             } else {
                 List<EggProduct> list;
+                eggProductList = eggProductListOptional.get();
                 EggProduct dummy = new EggProduct();
                 dummy.setAmount(0);
                 dummy.setCurAmount(0);
                 // dummy list
                 list = Arrays.asList(dummy, dummy, dummy, dummy, dummy, dummy, dummy, dummy, dummy, dummy, dummy, dummy, dummy);
-                for (EggProduct eggProduct : eggProductListOptional.get()) {
+                for (EggProduct eggProduct : eggProductList) {
                     IncubationPhase incubationPhase = incubationPhaseRepository.
                             findByIncubationPhaseId(eggProduct.getIncubationPhaseId()).get();
                     if (incubationPhase.getPhaseNumber() == 1) {
@@ -150,7 +153,7 @@ public class EggBatchServiceImpl implements IEggBatchService {
                 // Machine list
                 List<EggLocationEggBatchDetailDTO> machineList = new ArrayList<>();
                 EggLocationEggBatchDetailDTO dto1;
-                for (EggProduct eggProduct : eggProductListOptional.get()) {
+                for (EggProduct eggProduct : eggProductList) {
                     IncubationPhase incubationPhase = incubationPhaseRepository
                             .findByIncubationPhaseId(eggProduct.getIncubationPhaseId()).get();
                     // Chỉ lấy product trứng đang ấp hoặc nở
@@ -217,6 +220,42 @@ public class EggBatchServiceImpl implements IEggBatchService {
                 dto.setPhase("Chưa ấp");
                 dto.setProgress(progress);
             }
+            // List incubation phase to update
+            List<IncubationPhase> phaseUpdateList = new ArrayList<>();
+            // Get incubation phase list
+            List<IncubationPhase> incubationPhaseList = incubationPhaseRepository.
+                    getListIncubationPhaseForEggBatch(eggBatchId);
+            // List item (incubationPhaseId)    | 0| 1| 2| 3| 4| 5| 6| 7| 8| 9| 10|
+            // phase number                     |-1| 0| 1| 2| 3| 4| 5| 6| 7| 8| 9 |
+            LocalDateTime now = LocalDateTime.now();
+            long dateDiff = stringDealer
+                    .dateDiff(Date.valueOf(eggBatch.getDateAction().minusHours(7).toLocalDate()), Date.valueOf(now.toLocalDate()));
+            if (progress == 0) {
+                phaseUpdateList.add(incubationPhaseList.get(1));
+            }
+            if (progress == 1) {
+                phaseUpdateList.add(incubationPhaseList.get(progress + 2));
+            }
+            if (progress == 2 || progress == 3 || progress == 4) {
+                if (dateDiff < 0) {
+                    phaseUpdateList.add(incubationPhaseList.get(progress + 1));
+                }
+                if (dateDiff >= 0) {
+                    phaseUpdateList.add(incubationPhaseList.get(progress + 2));
+                }
+            }
+            if (progress == 5) {
+                if (dto.getEggProductList().get(2).getCurAmount() > 0) {
+                    phaseUpdateList.add(incubationPhaseList.get(6));
+                } else {
+                    phaseUpdateList.add(incubationPhaseList.get(7));
+                }
+            }
+            if (progress == 7 || progress == 8 || progress == 9) {
+                phaseUpdateList.add(incubationPhaseList.get(9));
+                phaseUpdateList.add(incubationPhaseList.get(10));
+            }
+            dto.setPhaseUpdateList(phaseUpdateList);
             return new ResponseEntity<>(dto, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
@@ -350,9 +389,8 @@ public class EggBatchServiceImpl implements IEggBatchService {
         int needActionUpdate = updateEggBatchDTO.getNeedAction();
         int needActionEggBatch = eggBatch.getNeedAction();
         LocalDateTime now = LocalDateTime.now();
-        long dateDiff = stringDealer
-                .dateDiff(Date.valueOf(dateAction.minusHours(7).toLocalDate()), Date.valueOf(now.toLocalDate()));
-        if ((needActionEggBatch == 0 || dateDiff != 0) && progress < 7) {
+
+        if (needActionEggBatch == 0 && progress < 7) {
             return new ResponseEntity<>("Chưa đến giai đoạn cần cập nhật", HttpStatus.BAD_REQUEST);
         }
 
@@ -595,15 +633,9 @@ public class EggBatchServiceImpl implements IEggBatchService {
                     eggBatch.setNeedAction(0);
                     eggBatch.setStatus(0);
                 } else {
-                    if (needActionUpdate == 1) {
-                        eggBatch.setNeedAction(1);
-                        eggBatch.setDateAction(now);
-                    }
-                    if (needActionUpdate == 0) {
-                        eggBatch.setNeedAction(0);
-                        eggBatch.setDateAction(eggIncubating.getIncubationDate()
-                                .plusDays(incubationPhaseList.get(phaseNumber + 2).getPhasePeriod()));
-                    }
+                    eggBatch.setNeedAction(needActionUpdate);
+                    eggBatch.setDateAction(eggIncubating.getIncubationDate()
+                            .plusDays(incubationPhaseList.get(phaseNumber + 2).getPhasePeriod()));
                 }
                 eggBatchRepository.save(eggBatch);
 
@@ -812,23 +844,19 @@ public class EggBatchServiceImpl implements IEggBatchService {
                 }
                 EggProduct eggHatching = eggProductRepository.save(eggProduct);
 
+                // Update egg batch
+                // Chuyển hết sang nở
+                if (amount == eggIncubating.getAmount()) {
+                    eggBatch.setNeedAction(0);
+                }
+
                 // Update Trứng đang nở - egg1
                 eggIncubating.setAmount(eggIncubating.getAmount() - amount - eggWastedAmount);
                 eggIncubating.setCurAmount(eggIncubating.getCurAmount() - amount - eggWastedAmount);
                 eggProductRepository.save(eggIncubating);
 
-                // Update egg batch
-                // Chuyển hết sang nở
-                if (amount == eggIncubating.getAmount()) {
-                    eggBatch.setNeedAction(0);
-                    eggBatch.setDateAction(eggIncubating.getIncubationDate()
-                            .plusDays(incubationPhaseList.get(7).getPhasePeriod()));
-                } else {
-                    if (needActionUpdate == 1) {
-                        eggBatch.setNeedAction(needActionUpdate);
-                        eggBatch.setDateAction(now);
-                    }
-                }
+                eggBatch.setDateAction(eggIncubating.getIncubationDate()
+                        .plusDays(incubationPhaseList.get(7).getPhasePeriod()));
 
                 eggBatchRepository.save(eggBatch);
 

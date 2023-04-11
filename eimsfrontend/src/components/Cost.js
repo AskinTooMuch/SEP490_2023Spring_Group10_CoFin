@@ -335,8 +335,8 @@ const Cost = () => {
                                     <tr style={{ height: "21px" }}>
                                         <th className="u-border-1 u-border-custom-color-1 u-palette-2-base u-table-cell u-table-cell-1">Tên chi phí</th>
                                         <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-2">Ngày nhập</th>
-                                        <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-3">Tổng chi phí</th>
-                                        <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-4">Đã thanh toán</th>
+                                        <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-3">Tổng chi phí  (đ)</th>
+                                        <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-4">Đã thanh toán  (đ)</th>
                                         <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-5">Trạng thái</th>
                                     </tr>
                                 </thead>
@@ -347,8 +347,8 @@ const Cost = () => {
                                                 <tr style={{ height: "76px" }} onClick={(e) => loadCostDetail(item.costId)}>
                                                     <td className="u-border-1 u-border-grey-30 u-first-column u-grey-5 u-table-cell u-table-cell-5">{item.costItem}</td>
                                                     <td className="u-border-1 u-border-grey-30 u-table-cell">{item.issueDate}</td>
-                                                    <td className="u-border-1 u-border-grey-30 u-table-cell">{item.costAmount} <span style={{ float: "right" }}>VNĐ</span></td>
-                                                    <td className="u-border-1 u-border-grey-30 u-table-cell">{item.paidAmount} <span style={{ float: "right" }}>VNĐ</span></td>
+                                                    <td className="u-border-1 u-border-grey-30 u-table-cell">{item.costAmount.toLocaleString()}</td>
+                                                    <td className="u-border-1 u-border-grey-30 u-table-cell">{item.paidAmount.toLocaleString()}</td>
                                                     {
                                                         item.paidAmount === item.costAmount
                                                             ? <td className="u-border-1 u-border-grey-30 u-table-cell text-green">Đã thanh toán đủ</td>

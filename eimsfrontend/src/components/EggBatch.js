@@ -81,7 +81,7 @@ const EggBatch = () => {
                                         <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-9" scope="col">Trạng thái</th>
                                     </tr>
                                 </thead>
-                                <tbody  className="u-table-body" id="specie_list_table_body">
+                                <tbody className="u-table-body" id="specie_list_table_body">
                                     {
                                         eggBatchList && eggBatchList.length > 0 ?
                                             eggBatchList.map((item, index) =>
@@ -100,7 +100,7 @@ const EggBatch = () => {
                                                             : ''
                                                     }
                                                     {
-                                                        item.status === 1 && item.needAction === 1
+                                                        item.status === 1 && item.needAction === 1 && item.progress <= 5
                                                             ? <td className='u-border-1 u-border-grey-30 u-table-cell text-red'>Cần cập nhật</td>
                                                             : ''
                                                     }
@@ -110,8 +110,12 @@ const EggBatch = () => {
                                                             : ''
                                                     }
                                                     {
-                                                        item.status === 1 && item.needAction === 0 && item.progress >= 5
+                                                        item.status === 1 && item.needAction === 0 && item.progress == 5
                                                             ? <td className='u-border-1 u-border-grey-30 u-table-cell text-green'>Đang nở</td>
+                                                            : ''
+                                                    }{
+                                                        item.status === 1 && item.progress > 5
+                                                            ? <td className='u-border-1 u-border-grey-30 u-table-cell text-green'>Đã nở</td>
                                                             : ''
                                                     }
                                                 </tr>

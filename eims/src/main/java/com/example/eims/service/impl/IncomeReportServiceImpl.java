@@ -100,7 +100,7 @@ public class IncomeReportServiceImpl implements IIncomeReportService {
                 BigDecimal total = new BigDecimal(0);
                 BigDecimal paid = new BigDecimal(0);
                 for (Payroll payroll : payrollList) {
-                    total.add(payroll.getPayrollAmount());
+                    total = total.add(payroll.getPayrollAmount());
                     paid = paid.add(payroll.getPayrollAmount());
                 }
                 IncomeReportItemDTO item = new IncomeReportItemDTO(total = total, paid);

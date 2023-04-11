@@ -149,7 +149,13 @@ public class ImportReceiptServiceImpl implements IImportReceiptService {
             if (eggBatch.getAmount() <= 0) { // Amount negative
                 return new ResponseEntity<>("Số lượng trứng phải lớn hơn 0", HttpStatus.BAD_REQUEST);
             }
-            BigDecimal price = eggBatch.getPrice().setScale(2, RoundingMode.FLOOR);
+
+            BigDecimal price;
+            if (eggBatch.getPrice() == null) {
+                price = new BigDecimal(0);
+            } else {
+                price = eggBatch.getPrice().setScale(2, RoundingMode.FLOOR);
+            }
             if (price.compareTo(new BigDecimal("0")) < 0
                     || price.compareTo(new BigDecimal(9999999999999.99)) > 0) { // Price over limit
                 return new ResponseEntity<>("Đơn giá không hợp lệ", HttpStatus.BAD_REQUEST);
@@ -236,7 +242,7 @@ public class ImportReceiptServiceImpl implements IImportReceiptService {
      * Update paid amount of import receipt.
      *
      * @param importId the id of import receipt.
-     * @param paid the paid amount
+     * @param paid     the paid amount
      * @return
      */
     @Override
@@ -246,7 +252,7 @@ public class ImportReceiptServiceImpl implements IImportReceiptService {
             ImportReceipt importReceipt = importReceiptOptional.get();
             if (paid.compareTo(new BigDecimal(0)) < 0
                     || paid.compareTo(importReceipt.getTotal()) > 0
-                    || paid.compareTo(new BigDecimal(9999999999999.99)) > 0 ) {
+                    || paid.compareTo(new BigDecimal(9999999999999.99)) > 0) {
                 return new ResponseEntity<>("Số tiền đã trả không hợp lệ", HttpStatus.BAD_REQUEST);
             }
             importReceipt.setPaid(paid);

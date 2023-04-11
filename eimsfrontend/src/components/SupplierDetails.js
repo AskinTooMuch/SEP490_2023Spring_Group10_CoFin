@@ -141,6 +141,7 @@ export default function BasicTabs() {
                 });
             // Set inf
             setAddressJson(JSON.parse(result.data.supplierAddress));
+            console.log(result.data);
             updateSupplierDTO.userId = sessionStorage.getItem("curUserId");
             updateSupplierDTO.supplierId = result.data.supplierId;
             updateSupplierDTO.supplierName = result.data.supplierName;

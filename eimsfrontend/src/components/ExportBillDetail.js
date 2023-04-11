@@ -51,9 +51,6 @@ export default function BasicTabs() {
     const EXPORT_UPDATE_PAID = "/api/export/update";
 
     //ConfirmBox
-    function openDelete() {
-        setOpen(true);
-    }
     const [open, setOpen] = useState(false);
     const [open2, setOpen2] = useState(false);
 
@@ -260,9 +257,9 @@ export default function BasicTabs() {
                                 <th scope="col">Sản phẩm</th>
                                 <th scope="col">Mã lô</th>
                                 <th scope="col">Số lượng mua</th>
-                                <th scope="col">Đơn giá</th>
-                                <th scope="col">Vaccine</th>
-                                <th scope="col">Thành tiền</th>
+                                <th scope="col">Đơn giá (đ)</th>
+                                <th scope="col">Vaccine/Con (đ)</th>
+                                <th scope="col">Thành tiền (đ)</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -275,9 +272,9 @@ export default function BasicTabs() {
                                             <td>{item.productName}</td>
                                             <td>{item.eggBatchId}</td>
                                             <td>{item.exportAmount.toLocaleString()}</td>
-                                            <td>{item.price.toLocaleString('vi', { style: 'currency', currency: 'VND' })}</td>
-                                            <td>{item.vaccine.toLocaleString('vi', { style: 'currency', currency: 'VND' })}</td>
-                                            <td>{(item.exportAmount * item.price + item.exportAmount * item.vaccine).toLocaleString('vi', { style: 'currency', currency: 'VND' })}</td>
+                                            <td>{item.price.toLocaleString()}</td>
+                                            <td>{item.vaccine.toLocaleString()}</td>
+                                            <td>{(item.exportAmount * item.price + item.exportAmount * item.vaccine).toLocaleString()}</td>
                                         </tr>
                                     ) : "Nothing"
                             }
@@ -307,7 +304,7 @@ export default function BasicTabs() {
                             size="lg"
                             aria-labelledby="contained-modal-title-vcenter"
                             centered >
-                            <form >
+                            <form>
                                 <Modal.Header closeButton onClick={handleClose}>
                                     <Modal.Title>Cập nhật số tiền thanh toán</Modal.Title>
                                 </Modal.Header>
@@ -339,11 +336,11 @@ export default function BasicTabs() {
                                 </div>
                             </form>
                             <ConfirmBox open={open} closeDialog={() => setOpen(false)} title={"Xác nhận cập nhật số tiền đã trả"}
-                                content={"Xác nhận cập nhật số tiền đã trả cho hóa đơn mã " + exportDetail.exportId
+                                content={"Xác nhận cập nhật số tiền đã trả cho hóa đơn xuất mã " + exportDetail.exportId
                             + ": " + paid.paid.toLocaleString('vi', { style: 'currency', currency: 'VND' })} deleteFunction={(e) => handleUpdatePaidSubmit(e)}
                             />
                             <ConfirmBox open={open2} closeDialog={() => setOpen2(false)} title={"Xác nhận cập nhật số tiền đã trả"}
-                                content={"Xác nhận trả hết cho hóa đơn mã " + exportDetail.exportId
+                                content={"Xác nhận trả hết cho hóa đơn xuất mã " + exportDetail.exportId
                             + ": " + exportDetail.total.toLocaleString('vi', { style: 'currency', currency: 'VND' })} deleteFunction={(e) => handleUpdatePaidAllSubmit(e)}
                             />
                         </Modal>

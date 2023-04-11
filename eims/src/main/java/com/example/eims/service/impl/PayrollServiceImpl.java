@@ -143,12 +143,12 @@ public class PayrollServiceImpl implements IPayrollService {
         }
         String payrollItem = stringDealer.trimMax(createPayrollDTO.getPayrollItem());
         if (payrollItem.length() > 32){
-            return new ResponseEntity<>("Khoản tiền không được dài quá 50 ký tự", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Khoản tiền không được dài quá 32 ký tự", HttpStatus.BAD_REQUEST);
         }
         //check payroll amount
         BigDecimal payrollAmount = createPayrollDTO.getPayrollAmount().setScale(2, RoundingMode.FLOOR);
         if(payrollAmount.compareTo(new BigDecimal("0")) <= 0 ){
-            return new ResponseEntity<>("Số tiền phải lớn hơn 0.01", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Số tiền phải lớn hơn 0", HttpStatus.BAD_REQUEST);
         }
         if(payrollAmount.compareTo(new BigDecimal("9999999999999.99")) > 0){
             return new ResponseEntity<>("Tiền lương không được vượt quá 9999999999999.99", HttpStatus.BAD_REQUEST);
@@ -204,12 +204,12 @@ public class PayrollServiceImpl implements IPayrollService {
         }
         String payrollItem = stringDealer.trimMax(updatePayrollDTO.getPayrollItem());
         if (payrollItem.length() > 32){
-            return new ResponseEntity<>("Khoản tiền không được dài quá 50 ký tự", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Khoản tiền không được dài quá 32 ký tự", HttpStatus.BAD_REQUEST);
         }
         //check payroll amount
         BigDecimal payrollAmount = updatePayrollDTO.getPayrollAmount().setScale(2, RoundingMode.FLOOR);
         if(payrollAmount.compareTo(new BigDecimal("0")) <= 0 ){
-            return new ResponseEntity<>("Số tiền phải lớn hơn 0.01", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Số tiền phải lớn hơn 0", HttpStatus.BAD_REQUEST);
         }
         if(payrollAmount.compareTo(new BigDecimal("9999999999999.99")) > 0){
             return new ResponseEntity<>("Tiền lương không được vượt quá 9999999999999.99", HttpStatus.BAD_REQUEST);

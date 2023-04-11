@@ -134,6 +134,7 @@ const ForgotPassword = () => {
       setTimeout(() => {
         navigate("/changepassword") //Enable button after one minute
       }, 1000);
+      sessionStorage.setItem("phone", phoneNumber);
       toast.success("Mã OTP chính xác")
     })
       .catch((err) => {

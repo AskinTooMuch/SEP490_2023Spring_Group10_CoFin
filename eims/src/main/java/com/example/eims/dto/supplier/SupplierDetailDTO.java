@@ -23,8 +23,8 @@ public class SupplierDetailDTO {
     private String supplierPhone;
     private String supplierMail;
     private String supplierAddress;
-    private Float fertilizedRate;
-    private Float maleRate;
+    private String fertilizedRate;
+    private String maleRate;
     private int status;
 
     public void getFromEntity(Supplier supplier) {

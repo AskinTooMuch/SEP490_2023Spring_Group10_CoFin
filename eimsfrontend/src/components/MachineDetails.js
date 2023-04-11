@@ -131,7 +131,7 @@ export default function BasicTabs() {
             machineTypeName: result.data.machineTypeName,
             curCapacity: result.data.curCapacity,
             maxCapacity: result.data.maxCapacity,
-            addedDate:result.data.addedDate,
+            addedDate: result.data.addedDate,
             eggs: result.data.eggs,
             status: result.data.status,
             active: result.data.active
@@ -153,6 +153,40 @@ export default function BasicTabs() {
     //Handle submit update machine
     const handleUpdateMachineSubmit = async (event) => {
         event.preventDefault();
+        let response;
+        try {
+            response = await axios.put(MACHINE_UPDATE_SAVE,
+                updateMachineDTO,
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Access-Control-Allow-Origin': '*'
+                    },
+                    withCredentials: true
+                }
+            );
+
+            loadMachine();
+            console.log(response);
+            toast.success("Cập nhật thành công");
+            setShow(false);
+        } catch (err) {
+            if (!err?.response) {
+                toast.error('Server không phản hồi');
+            } else {
+                if ((err.response.data === null) || (err.response.data === '')) {
+                    toast.error('Có lỗi xảy ra, vui lòng thử lại');
+                } else {
+                    toast.error(err.response.data);
+                }
+            }
+        }
+    }
+
+    // flip active
+    const handleUpdateActiveMachine = async (i) => {
+        updateMachineDTO.active= i;
+        console.log(updateMachineDTO);
         let response;
         try {
             response = await axios.put(MACHINE_UPDATE_SAVE,
@@ -291,10 +325,15 @@ export default function BasicTabs() {
                                 <p>{machineDetailDTO.machineName}</p>
                             </div>
                             <div className="col-md-4 ">
-                                <div className='button'>
-                                    <button className='btn btn-light ' onClick={handleShow} id="startEditMachine" >Sửa</button>
-                                    <button className='btn btn-light ' id="startDeleteMachine" onClick={openDelete}>Xoá</button>
-                                </div>
+                                {
+                                    (sessionStorage.getItem("roleId") == 2)
+                                        ?
+                                        <div className='button'>
+                                            <button className='btn btn-light ' onClick={handleShow} id="startEditMachine" >Sửa</button>
+                                            <button className='btn btn-light ' id="startDeleteMachine" onClick={openDelete}>Xoá</button>
+                                        </div>
+                                        : ''
+                                }
                             </div>
                         </div>
                         <ConfirmBox open={open} closeDialog={() => setOpen(false)} title={"Xóa máy"}
@@ -307,6 +346,26 @@ export default function BasicTabs() {
                             <div className="col-md-4">
                                 <p>{machineDetailDTO.machineTypeName}</p>
                             </div>
+                            {
+                                sessionStorage.getItem("roleId") == 2 && machineDetailDTO.active == 0
+                                    ?
+                                    <div className="col-md-4">
+                                        <div className='button'>
+                                            <button className='btn btn-light' onClick={()=> handleUpdateActiveMachine(1)} id="startEditMachine">Hoạt động máy</button>
+                                        </div>
+                                    </div>
+                                    : ''
+                            }
+                            {
+                                sessionStorage.getItem("roleId") == 2 && machineDetailDTO.active == 1
+                                    ?
+                                    <div className="col-md-4">
+                                        <div className='button'>
+                                            <button className='btn btn-light'  onClick={()=> handleUpdateActiveMachine(0)} id="startEditMachine">Dừng hoạt động máy</button>
+                                        </div>
+                                    </div>
+                                    : ''
+                            }
                         </div>
                         <div className="row">
                             <div className="col-md-4">

@@ -229,7 +229,12 @@ public class ExportReceiptServiceImpl implements IExportReceiptService {
             if (eggProduct.getExportAmount() <= 0 || eggProduct.getExportAmount() > eggProduct.getCurAmount()) { // Amount export must be less than current amount
                 return new ResponseEntity<>("Số lượng xuất không hợp lệ", HttpStatus.BAD_REQUEST);
             }
-            BigDecimal price = eggProduct.getPrice().setScale(2, RoundingMode.FLOOR);
+            BigDecimal price;
+            if (eggProduct.getPrice() == null) {
+                price = new BigDecimal(0);
+            } else {
+                price = eggProduct.getPrice().setScale(2, RoundingMode.FLOOR);
+            }
             if (price.compareTo(new BigDecimal("0")) < 0
                     || price.compareTo(new BigDecimal(9999999999999.99)) > 0) { // Price over limit
                 return new ResponseEntity<>("Đơn giá không hợp lệ", HttpStatus.BAD_REQUEST);

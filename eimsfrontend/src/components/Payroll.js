@@ -402,7 +402,7 @@ const Payroll = () => {
                                         <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-2">Số điện thoại</th>
                                         <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-3">Ngày trả</th>
                                         <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-4">Khoản tiền</th>
-                                        <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-5">Số tiền</th>
+                                        <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-5">Số tiền (đ)</th>
                                     </tr>
                                 </thead>
                                 <tbody className="u-table-body">
@@ -413,8 +413,8 @@ const Payroll = () => {
                                                     <td className="u-border-1 u-border-grey-30 u-first-column u-grey-5 u-table-cell u-table-cell-5">{item.employeeName}</td>
                                                     <td className="u-border-1 u-border-grey-30 u-table-cell">{item.employeePhone}</td>
                                                     <td className="u-border-1 u-border-grey-30 u-table-cell">{item.issueDate}</td>
-                                                    <td className="u-border-1 u-border-grey-30 u-table-cell">{item.payrollItem} <span style={{ float: "right" }}>VNĐ</span></td>
-                                                    <td className="u-border-1 u-border-grey-30 u-table-cell">{item.payrollAmount} <span style={{ float: "right" }}>VNĐ</span></td>
+                                                    <td className="u-border-1 u-border-grey-30 u-table-cell">{item.payrollItem}</td>
+                                                    <td className="u-border-1 u-border-grey-30 u-table-cell">{item.payrollAmount.toLocaleString()} </td>
 
                                                 </tr>
                                             ) :

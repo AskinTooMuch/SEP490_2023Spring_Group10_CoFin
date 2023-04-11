@@ -106,7 +106,7 @@ class SupplierServiceImplTest {
         dto.getFromEntity(supplier);
         // Define behaviour of repository
         when(supplierRepository.findBySupplierId(1L)).thenReturn(Optional.of(supplier));
-
+        when(importReceiptRepository.findBySupplierId(supplierId)).thenReturn(Optional.empty());
         // Run service method
         ResponseEntity<?> responseEntity = supplierService.getSupplier(supplierId);
         System.out.println(responseEntity.toString());
@@ -883,7 +883,7 @@ class SupplierServiceImplTest {
         ResponseEntity<?> responseEntity = supplierService.searchSupplier(userId, key1);
         System.out.println(responseEntity.toString());
         // Assert
-        assertEquals(null, responseEntity.getBody());
+        assertEquals(new ArrayList<>(), responseEntity.getBody());
     }
 
     @Test
@@ -898,7 +898,7 @@ class SupplierServiceImplTest {
         ResponseEntity<?> responseEntity = supplierService.searchSupplier(userId, key1);
         System.out.println(responseEntity.toString());
         // Assert
-        assertEquals(null, responseEntity.getBody());
+        assertEquals(new ArrayList<>(), responseEntity.getBody());
     }
 
     @Test
@@ -911,7 +911,7 @@ class SupplierServiceImplTest {
         ResponseEntity<?> responseEntity = supplierService.searchSupplier(userId, key1);
         System.out.println(responseEntity.toString());
         // Assert
-        assertEquals(null, responseEntity.getBody());
+        assertEquals(new ArrayList<>(), responseEntity.getBody());
     }
 
     @Test

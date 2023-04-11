@@ -67,8 +67,9 @@
          // Set up
          EggBatch eggBatch = new EggBatch();
          eggBatch.setEggBatchId(1L);
-         eggBatch.setImportId(-1L);
+         eggBatch.setImportId(1L);
          eggBatch.setBreedId(1L);
+         eggBatch.setDateAction(LocalDateTime.now());
          ImportReceipt importReceipt = new ImportReceipt();
          importReceipt.setFacilityId(1L);
          importReceipt.setSupplierId(1L);
@@ -82,6 +83,10 @@
          eggProduct1.setIncubationPhaseId(1L);
          eggProductList.add(eggProduct1);
          IncubationPhase incubationPhase = new IncubationPhase();
+         incubationPhase.setPhaseNumber(0);
+         List<IncubationPhase> incubationPhaseList = new ArrayList<>();
+         incubationPhaseList.add(incubationPhase);
+         incubationPhaseList.add(incubationPhase);
          List<EggLocation> eggLocationList = new ArrayList<>();
          EggLocation eggLocation = new EggLocation();
          eggLocation.setMachineId(1L);
@@ -103,6 +108,8 @@
          when(incubationPhaseRepository.findByIncubationPhaseId(eggProduct1.getIncubationPhaseId())).thenReturn(Optional.of(incubationPhase));
          when(machineRepository.findAllNotFull(importReceipt.getFacilityId())).thenReturn(Optional.of(notFullList));
          when(machineTypeRepository.findByMachineTypeId(machine.getMachineTypeId())).thenReturn(Optional.of(machineType));
+         when(eggProductRepository.findEggProductLastPhase(eggBatch.getEggBatchId())).thenReturn(Optional.of(eggProduct1));
+         when(incubationPhaseRepository.getListIncubationPhaseForEggBatch(eggBatch.getEggBatchId())).thenReturn(incubationPhaseList);
 
          // Run service method
          ResponseEntity<?> responseEntity = eggBatchService.getEggBatch(1L);
@@ -244,7 +251,7 @@
          eggBatch.setEggBatchId(1L);
          eggBatch.setAmount(1000);
          eggBatch.setStatus(1);
-         eggBatch.setNeedAction(1);
+         eggBatch.setNeedAction(0);
          eggBatch.setDateAction(LocalDateTime.now().plusHours(24));
 
          EggProduct eggProduct = new EggProduct();

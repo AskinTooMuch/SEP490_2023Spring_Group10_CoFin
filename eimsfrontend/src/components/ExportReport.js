@@ -181,8 +181,8 @@ const ExportReport = () => {
                                         <thead>
                                             <tr>
                                                 <th scope="col">Tháng</th>
-                                                <th scope="col">Tổng chi phí</th>
-                                                <th scope="col">Đã thanh toán</th>
+                                                <th scope="col">Tổng chi phí (đ)</th>
+                                                <th scope="col">Đã thanh toán (đ)</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -191,8 +191,8 @@ const ExportReport = () => {
                                                     ? reportItemList.map((item, index) =>
                                                         <tr>
                                                             <th scope="row">{item.reportName}</th>
-                                                            <td>{item.total}</td>
-                                                            <td>{item.paid}</td>
+                                                            <td>{item.total.toLocaleString()}</td>
+                                                            <td>{item.paid.toLocaleString()}</td>
                                                         </tr>
                                                     ) : <tr>
                                                         <th colSpan='3'>Không có dữ liệu</th>
@@ -209,8 +209,8 @@ const ExportReport = () => {
                                         <thead>
                                             <tr>
                                                 <th scope="col">Năm</th>
-                                                <th scope="col">Tổng chi phí</th>
-                                                <th scope="col">Đã thanh toán</th>
+                                                <th scope="col">Tổng chi phí (đ)</th>
+                                                <th scope="col">Đã thanh toán (đ)</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -219,8 +219,8 @@ const ExportReport = () => {
                                                     ? reportItemYearList.map((item, index) =>
                                                         <tr>
                                                             <th scope="row">{item.reportName}</th>
-                                                            <td>{item.total}</td>
-                                                            <td>{item.paid}</td>
+                                                            <td>{item.total.toLocaleString()}</td>
+                                                            <td>{item.paid.toLocaleString()}</td>
                                                         </tr>
                                                     ) : <tr>
                                                         <th colSpan='3'>Không có dữ liệu</th>
@@ -251,8 +251,8 @@ const ExportReport = () => {
                                 <tr style={{ height: "21px" }}>
                                     <th className="u-border-1 u-border-custom-color-1 u-palette-2-base u-table-cell u-table-cell-1">STT</th>
                                     <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-2">Nhà cung cấp</th>
-                                    <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-3">Tổng chi phí</th>
-                                    <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-4">Đã thanh toán</th>
+                                    <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-3">Tổng chi phí (đ)</th>
+                                    <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-4">Đã thanh toán (đ)</th>
                                 </tr>
                             </thead>
                             <tbody className="u-table-body">
@@ -262,8 +262,8 @@ const ExportReport = () => {
                                             <tr style={{ height: "76px" }} onClick={() => handleViewDetail(item.customerId, item.customerName)}>
                                                 <td className="u-border-1 u-border-grey-30 u-first-column u-grey-5 u-table-cell u-table-cell-5">{index + 1}</td>
                                                 <td className="u-border-1 u-border-grey-30 u-table-cell">{item.customerName}</td>
-                                                <td className="u-border-1 u-border-grey-30 u-table-cell">{item.total} <span style={{ float: "right" }}>VNĐ</span></td>
-                                                <td className="u-border-1 u-border-grey-30 u-table-cell ">{item.paid} <span style={{ float: "right" }}>VNĐ</span></td>
+                                                <td className="u-border-1 u-border-grey-30 u-table-cell">{item.total.toLocaleString()}</td>
+                                                <td className="u-border-1 u-border-grey-30 u-table-cell ">{item.paid.toLocaleString()}</td>
                                             </tr>)
                                         : <tr>
                                             <td colSpan='5'>Chưa có hóa đơn nào được lưu trên hệ thống</td>

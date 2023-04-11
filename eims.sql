@@ -1,3 +1,4 @@
+-- V0.12.3: Update constrain table import_receipt
 -- V0.12.2: Insert data customer table : Khách lẻ
 -- V0.12.1: Modify update_status_trigger
 -- V0.12.0: Add attributes to user_subscription table, add 1 triggers
@@ -21,7 +22,7 @@
 -- V0.2.0: Add foreign key constraint
 -- V0.2.1: Change attribute _name, re-route foreign key constraint
 -- V0.2.2: Add CHECK constraint
--- Last update: 08/04/2023
+-- Last update: 12/04/2023
 -- Script for generating EIMS - Eggs Incubating Management System.
 -- Check if database already exist. If yes then drop the database to ensure the script runs successfully with no variations.
 DROP DATABASE IF EXISTS eims;
@@ -318,7 +319,7 @@ ALTER TABLE egg_batch
 ADD FOREIGN KEY (import_id)		REFERENCES import_receipt(import_id),
 ADD FOREIGN KEY (breed_id)		REFERENCES breed(breed_id),
 ADD CHECK (amount > 0),
-ADD CHECK (price > 0);
+ADD CHECK (price >= 0);
 
 ALTER TABLE export_receipt
 ADD FOREIGN KEY (customer_id) 	REFERENCES customer(customer_id),
@@ -330,7 +331,7 @@ ADD CHECK (paid >= 0);
 ALTER TABLE export_detail
 ADD FOREIGN KEY (export_id)		REFERENCES export_receipt(export_id),
 ADD FOREIGN KEY (product_id) 	REFERENCES egg_product(product_id),
-ADD CHECK (price > 0),
+ADD CHECK (price >= 0),
 ADD CHECK (vaccine_price >= 0),
 ADD CHECK (amount > 0);
 

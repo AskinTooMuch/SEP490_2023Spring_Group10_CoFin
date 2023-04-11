@@ -663,7 +663,7 @@ export default function BasicTabs() {
                                 <p>Tiền lương</p>
                             </div>
                             <div className="col-md-4">
-                                <p>{employeeDetailDTO.salary} VNĐ/tháng</p>
+                                <p>{employeeDetailDTO.salary.toLocaleString('vi', { style: 'currency', currency: 'VND' })} /tháng</p>
                             </div>
                         </div>
                         <div className="row">
