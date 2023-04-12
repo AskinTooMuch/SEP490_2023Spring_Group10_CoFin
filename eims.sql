@@ -1,3 +1,4 @@
+-- V0.13.0: Update procedure user_and_facility
 -- V0.12.3: Update constrain table import_receipt
 -- V0.12.2: Insert data customer table : Khách lẻ
 -- V0.12.1: Modify update_status_trigger
@@ -397,6 +398,7 @@ FROM user U JOIN user_role UR ON U.user_id = UR.user_id
 													WHEN fid != 0 THEN fid
 													ELSE (SELECT facility_id FROM work_in WHERE user_id = uid)
 												END)
+        AND US.status = 1
 ORDER BY US.subscribe_date DESC
 LIMIT 1;
 END //

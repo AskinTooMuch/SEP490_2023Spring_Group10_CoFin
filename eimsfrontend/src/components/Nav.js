@@ -23,7 +23,7 @@ import WithPermission from '../utils.js/WithPermission';
 import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
 import { Modal } from 'react-bootstrap';
 import axios from '../api/axios';
-import {toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 const Nav = () => {
     // Auth
     const auth = sessionStorage.getItem("curUserId");
@@ -275,9 +275,18 @@ const Nav = () => {
                                             aria-expanded={open ? 'true' : undefined}
                                             color="inherit"
                                         >
-                                            <Badge badgeContent={<FiberManualRecordIcon color="error" />}>
-                                                <NotificationsIcon />
-                                            </Badge>
+                                            {
+                                                notificationList && notificationList.length == 0
+                                                    ?
+                                                    <Badge>
+                                                        <NotificationsIcon />
+                                                    </Badge>
+                                                    :
+                                                    <Badge badgeContent={<FiberManualRecordIcon color="error" />}>
+                                                        <NotificationsIcon />
+                                                    </Badge>
+                                            }
+
                                         </IconButton>
                                         <IconButton
                                             size="large"

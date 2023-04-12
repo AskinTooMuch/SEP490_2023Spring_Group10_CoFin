@@ -183,99 +183,112 @@ const TotalIncome = () => {
                             }
                         </select>
                         <br />
-                        <table className="table table-bordered" >
-                            <colgroup>
-                                <col width="4%" />
-                                <col width="16%" />
-                                <col width="16%" />
-                                <col width="16%" />
-                                <col width="16%" />
-                                <col width="16%" />
-                                <col width="16%" />
-                            </colgroup>
-                            <thead>
-                                <tr>
-                                    <th scope="col">Tháng</th>
-                                    <th scope="col">Nhập (đ)</th>
-                                    <th scope="col">Xuất (đ)</th>
-                                    <th scope="col">Tiền lương (đ)</th>
-                                    <th scope="col">Chi phí (đ)</th>
-                                    <th scope="col">Lợi nhuận (đ)</th>
-                                    <th scope="col">Thực thu (đ)</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {
-                                    inMonthList.costList && inMonthList.costList.length > 0
-                                        ? inMonthList.costList.map((item, index) =>
+                        <section className="u-align-center u-clearfix u-section-1" id="sec-b42b">
+                            <div className="u-clearfix u-sheet u-sheet-1">
+                                <div className="u-expanded-width u-table u-table-responsive u-table-1">
+                                    <table className="u-table-entity u-table-entity-1">
+                                        <colgroup>
+                                            <col width="4%" />
+                                            <col width="16%" />
+                                            <col width="16%" />
+                                            <col width="16%" />
+                                            <col width="16%" />
+                                            <col width="16%" />
+                                            <col width="16%" />
+                                        </colgroup>
+                                        <thead className="u-palette-4-base u-table-header u-table-header-1">
                                             <tr>
-                                                <th scope="row">{index + 1}</th>
-                                                <td>{inMonthList.importList[index].paid.toLocaleString()}/{inMonthList.importList[index].total.toLocaleString()}</td>
-                                                <td>{inMonthList.exportList[index].paid.toLocaleString()}/{inMonthList.exportList[index].total.toLocaleString()}</td>
-                                                <td>{inMonthList.payrollList[index].total.toLocaleString()}</td>
-                                                <td>{inMonthList.costList[index].paid.toLocaleString()}/{inMonthList.costList[index].total.toLocaleString()}</td>
-                                                <td>{(- inMonthList.costList[index].total - inMonthList.payrollList[index].total - inMonthList.importList[index].total + inMonthList.exportList[index].total).toLocaleString()}</td>
-                                                <td>{(- inMonthList.costList[index].paid - inMonthList.payrollList[index].total - inMonthList.importList[index].paid + inMonthList.exportList[index].paid).toLocaleString()}</td>
+                                                <th className="u-border-1 u-border-custom-color-1 u-palette-2-base u-table-cell u-table-cell-1" scope="col">Tháng</th>
+                                                <th className="u-border-1 u-border-custom-color-1 u-palette-2-base u-table-cell u-table-cell-1" scope="col">Nhập (đ)</th>
+                                                <th className="u-border-1 u-border-custom-color-1 u-palette-2-base u-table-cell u-table-cell-1" scope="col">Xuất (đ)</th>
+                                                <th className="u-border-1 u-border-custom-color-1 u-palette-2-base u-table-cell u-table-cell-1" scope="col">Tiền lương (đ)</th>
+                                                <th className="u-border-1 u-border-custom-color-1 u-palette-2-base u-table-cell u-table-cell-1" scope="col">Chi phí (đ)</th>
+                                                <th className="u-border-1 u-border-custom-color-1 u-palette-2-base u-table-cell u-table-cell-1" scope="col">Lợi nhuận (đ)</th>
+                                                <th className="u-border-1 u-border-custom-color-1 u-palette-2-base u-table-cell u-table-cell-1" scope="col">Thực thu (đ)</th>
                                             </tr>
-                                        ) : ''
-                                }
-                            </tbody>
-                        </table>
-                        <div className='total-icome' >
-                            <p>Lợi nhuận cuối: <span id="incomeTrue">{inMonthList.incomeLast.toLocaleString('vi', { style: 'currency', currency: 'VND' })}</span></p>
-                        </div>
-                        <div className='total-icome' >
-                            <p>Thực thu: <span id="incomeNow">{inMonthList.incomeNow.toLocaleString('vi', { style: 'currency', currency: 'VND' })}</span></p>
-                        </div>
+                                        </thead>
+                                        <tbody className="u-table-body">
+                                            {
+                                                inMonthList.costList && inMonthList.costList.length > 0
+                                                    ? inMonthList.costList.map((item, index) =>
+                                                        <tr>
+                                                            <th className="u-border-1 u-border-grey-30 u-first-column u-grey-5 u-table-cell u-table-cell-1" scope="row">{index + 1}</th>
+                                                            <td className="u-border-1 u-border-grey-30 u-table-cell">{inMonthList.importList[index].paid.toLocaleString()}/{inMonthList.importList[index].total.toLocaleString()}</td>
+                                                            <td className="u-border-1 u-border-grey-30 u-table-cell">{inMonthList.exportList[index].paid.toLocaleString()}/{inMonthList.exportList[index].total.toLocaleString()}</td>
+                                                            <td className="u-border-1 u-border-grey-30 u-table-cell">{inMonthList.payrollList[index].total.toLocaleString()}</td>
+                                                            <td className="u-border-1 u-border-grey-30 u-table-cell">{inMonthList.costList[index].paid.toLocaleString()}/{inMonthList.costList[index].total.toLocaleString()}</td>
+                                                            <td className="u-border-1 u-border-grey-30 u-table-cell">{(- inMonthList.costList[index].total - inMonthList.payrollList[index].total - inMonthList.importList[index].total + inMonthList.exportList[index].total).toLocaleString()}</td>
+                                                            <td className="u-border-1 u-border-grey-30 u-table-cell">{(- inMonthList.costList[index].paid - inMonthList.payrollList[index].total - inMonthList.importList[index].paid + inMonthList.exportList[index].paid).toLocaleString()}</td>
+                                                        </tr>
+                                                    ) : ''
+                                            }
+                                        </tbody>
+                                    </table>
+
+                                    <div className='total-icome' >
+                                        <p>Lợi nhuận cuối: <span id="incomeTrue">{inMonthList.incomeLast.toLocaleString('vi', { style: 'currency', currency: 'VND' })}</span></p>
+                                    </div>
+                                    <div className='total-icome' >
+                                        <p>Thực thu: <span id="incomeNow">{inMonthList.incomeNow.toLocaleString('vi', { style: 'currency', currency: 'VND' })}</span></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
                     </div>
                     <br />
-                    <div className="content content-2">
 
-                        <table className="table table-bordered" >
-                            <colgroup>
-                                <col width="4%" />
-                                <col width="16%" />
-                                <col width="16%" />
-                                <col width="16%" />
-                                <col width="16%" />
-                                <col width="16%" />
-                                <col width="16%" />
-                            </colgroup>
-                            <thead>
-                                <tr>
-                                    <th scope="col">Năm</th>
-                                    <th scope="col">Nhập (đ)</th>
-                                    <th scope="col">Xuất (đ)</th>
-                                    <th scope="col">Tiền lương (đ)</th>
-                                    <th scope="col">Chi phí (đ)</th>
-                                    <th scope="col">Lợi nhuận (đ)</th>
-                                    <th scope="col">Thực thu (đ)</th>
-                                </tr>
-                            </thead>
-                            {
-                                inYearList.costList && inYearList.costList.length > 0
-                                    ? inYearList.costList.map((item, index) =>
-                                        <tbody>
+                    <div className="content content-2">
+                        <section className="u-align-center u-clearfix u-section-1" id="sec-b42b">
+                            <div className="u-clearfix u-sheet u-sheet-1">
+                                <div className="u-expanded-width u-table u-table-responsive u-table-1">
+                                    <table className="u-table-entity u-table-entity-1">
+                                        <colgroup>
+                                            <col width="4%" />
+                                            <col width="16%" />
+                                            <col width="16%" />
+                                            <col width="16%" />
+                                            <col width="16%" />
+                                            <col width="16%" />
+                                            <col width="16%" />
+                                        </colgroup>
+                                        <thead className="u-palette-4-base u-table-header u-table-header-1">
                                             <tr>
-                                                <th scope="row">{inYearList.yearList[index]}</th>
-                                                <td>{inYearList.importList[index].paid.toLocaleString()}/{inYearList.importList[index].total.toLocaleString()}</td>
-                                                <td>{inYearList.exportList[index].paid.toLocaleString()}/{inYearList.exportList[index].total.toLocaleString()}</td>
-                                                <td>{inYearList.payrollList[index].paid.toLocaleString()}/{inYearList.payrollList[index].total.toLocaleString()}</td>
-                                                <td>{inYearList.costList[index].paid.toLocaleString()}/{inYearList.costList[index].total.toLocaleString()}</td>
-                                                <td>{(- inYearList.costList[index].total - inYearList.payrollList[index].total - inYearList.importList[index].total + inYearList.exportList[index].total).toLocaleString()}</td>
-                                                <td>{(- inYearList.costList[index].paid - inYearList.payrollList[index].total - inYearList.importList[index].paid + inYearList.exportList[index].paid).toLocaleString()}</td>
+                                                <th className="u-border-1 u-border-custom-color-1 u-palette-2-base u-table-cell u-table-cell-1" scope="col">Năm</th>
+                                                <th className="u-border-1 u-border-custom-color-1 u-palette-2-base u-table-cell u-table-cell-1" scope="col">Nhập (đ)</th>
+                                                <th className="u-border-1 u-border-custom-color-1 u-palette-2-base u-table-cell u-table-cell-1" scope="col">Xuất (đ)</th>
+                                                <th className="u-border-1 u-border-custom-color-1 u-palette-2-base u-table-cell u-table-cell-1" scope="col">Tiền lương (đ)</th>
+                                                <th className="u-border-1 u-border-custom-color-1 u-palette-2-base u-table-cell u-table-cell-1" scope="col">Chi phí (đ)</th>
+                                                <th className="u-border-1 u-border-custom-color-1 u-palette-2-base u-table-cell u-table-cell-1" scope="col">Lợi nhuận (đ)</th>
+                                                <th className="u-border-1 u-border-custom-color-1 u-palette-2-base u-table-cell u-table-cell-1" scope="col">Thực thu (đ)</th>
                                             </tr>
-                                        </tbody>
-                                    )
-                                    : ''
-                            }
-                        </table>
-                        <div className='total-icome' >
-                            <p>Lợi nhuận cuối: <span id="incomeLast">{inYearList.incomeLast.toLocaleString('vi', { style: 'currency', currency: 'VND' })}</span></p>
-                        </div>
-                        <div className='total-icome' >
-                            <p>Thực thu: <span id="incomeNow">{inYearList.incomeNow.toLocaleString('vi', { style: 'currency', currency: 'VND' })}</span></p>
-                        </div>
+                                        </thead>
+                                        {
+                                            inYearList.costList && inYearList.costList.length > 0
+                                                ? inYearList.costList.map((item, index) =>
+                                                    <tbody className="u-table-body">
+                                                        <tr>
+                                                            <th className="u-border-1 u-border-grey-30 u-first-column u-grey-5 u-table-cell u-table-cell-1" scope="row">{inYearList.yearList[index]}</th>
+                                                            <td className="u-border-1 u-border-grey-30 u-table-cell">{inYearList.importList[index].paid.toLocaleString()}/{inYearList.importList[index].total.toLocaleString()}</td>
+                                                            <td className="u-border-1 u-border-grey-30 u-table-cell">{inYearList.exportList[index].paid.toLocaleString()}/{inYearList.exportList[index].total.toLocaleString()}</td>
+                                                            <td className="u-border-1 u-border-grey-30 u-table-cell">{inYearList.payrollList[index].paid.toLocaleString()}/{inYearList.payrollList[index].total.toLocaleString()}</td>
+                                                            <td className="u-border-1 u-border-grey-30 u-table-cell">{inYearList.costList[index].paid.toLocaleString()}/{inYearList.costList[index].total.toLocaleString()}</td>
+                                                            <td className="u-border-1 u-border-grey-30 u-table-cell">{(- inYearList.costList[index].total - inYearList.payrollList[index].total - inYearList.importList[index].total + inYearList.exportList[index].total).toLocaleString()}</td>
+                                                            <td className="u-border-1 u-border-grey-30 u-table-cell">{(- inYearList.costList[index].paid - inYearList.payrollList[index].total - inYearList.importList[index].paid + inYearList.exportList[index].paid).toLocaleString()}</td>
+                                                        </tr>
+                                                    </tbody>
+                                                )
+                                                : ''
+                                        }
+                                    </table>
+                                    <div className='total-icome' >
+                                        <p>Lợi nhuận cuối: <span id="incomeLast">{inYearList.incomeLast.toLocaleString('vi', { style: 'currency', currency: 'VND' })}</span></p>
+                                    </div>
+                                    <div className='total-icome' >
+                                        <p>Thực thu: <span id="incomeNow">{inYearList.incomeNow.toLocaleString('vi', { style: 'currency', currency: 'VND' })}</span></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
                     </div>
                 </section>
             </div>

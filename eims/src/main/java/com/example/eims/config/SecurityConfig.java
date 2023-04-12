@@ -132,6 +132,7 @@ public class SecurityConfig{
                 "/api/machine/update/**",
                 "/api/machine/delete",
                 "/api/breed/detail/specieId",
+                "/api/notification/**",
                 "/api/eggBatch/**"
         };
         final String[] MODERATOR_ADMIN = {
