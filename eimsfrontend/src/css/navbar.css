@@ -22,12 +22,18 @@
   color: white;
 }
 
-.mybtn {
-  position: fixed;
-  top: 93%;
-  left: 40%;
+.seeAll {
+  text-align: center;
   border: none;
   background-color: transparent;
+}
+
+.mybtn {
+  border: none;
+  background-color: transparent;
+}
+.mybtn:hover {
+  color:#F46110;
 }
 
 .notifi-header {

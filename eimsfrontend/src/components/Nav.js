@@ -369,8 +369,10 @@ const Nav = () => {
                                 </div>
                             </div>
                     }
-                    <br /><br />
-                    <i><button className='mybtn' onClick={() => viewAllNoti()} >Xem tất cả</button></i>
+                    <br/>
+                    <div className='seeAll'>
+                        <button className='mybtn' onClick={() => viewAllNoti()} >Xem tất cả</button>
+                    </div>
                 </div>
             </Menu>
         </div>
