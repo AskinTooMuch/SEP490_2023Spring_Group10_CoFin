@@ -56,25 +56,19 @@ public class AuthServiceImpl implements IAuthService {
     @Autowired
     private final RegistrationRepository registrationRepository;
     @Autowired
-    private final OtpRepository otpRepository;
-    @Autowired
     private final PasswordEncoder passwordEncoder;
-    private final SpeedSMS speedSMS;
     private final StringDealer stringDealer;
-    private final String SENDER = "61522b07d22251db";
 
     public AuthServiceImpl(AuthenticationProvider authenticationProvider, UserRepository userRepository,
                            FacilityRepository facilityRepository, WorkInRepository workInRepository,
-                           RegistrationRepository registrationRepository, OtpRepository otpRepository,
+                           RegistrationRepository registrationRepository,
                            PasswordEncoder passwordEncoder) {
         this.authenticationProvider = authenticationProvider;
         this.userRepository = userRepository;
         this.facilityRepository = facilityRepository;
         this.workInRepository = workInRepository;
         this.registrationRepository = registrationRepository;
-        this.otpRepository = otpRepository;
         this.passwordEncoder = passwordEncoder;
-        this.speedSMS = new SpeedSMS();
         this.stringDealer = new StringDealer();
     }
 
