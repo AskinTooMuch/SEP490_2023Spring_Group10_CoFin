@@ -207,7 +207,8 @@ export default function BasicTabs() {
                                             <p>Tên máy<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                         </div>
                                         <div className="col-md-6">
-                                            <input id="createMachineName" style={{ width: "100%" }}
+                                            <input className="form-control mt-1"
+                                            id="createMachineName" style={{ width: "100%" }}
                                                 onChange={(e) => handleCreateMachineChange(e, "machineName")} />
                                         </div>
                                     </div>
@@ -229,7 +230,8 @@ export default function BasicTabs() {
                                             <p>Sức chứa<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                         </div>
                                         <div className="col-md-6">
-                                            <input id="createMachineCapacity" style={{ width: "100%" }} type="number"
+                                            <input className="form-control mt-1"
+                                            id="createMachineCapacity" style={{ width: "100%" }} type="number"
                                                 onChange={(e) => handleCreateMachineChange(e, "maxCapacity")} />
                                         </div>
                                     </div>
