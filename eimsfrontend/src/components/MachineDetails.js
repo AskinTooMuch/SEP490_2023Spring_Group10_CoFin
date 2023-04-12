@@ -116,7 +116,6 @@ export default function BasicTabs() {
                 withCredentials: true
             });
         console.log(result);
-
         // Set inf
         setUpdateMachineDTO({
             facilityId: sessionStorage.getItem("facilityId"),
@@ -185,7 +184,7 @@ export default function BasicTabs() {
 
     // flip active
     const handleUpdateActiveMachine = async (i) => {
-        updateMachineDTO.active= i;
+        updateMachineDTO.active = i;
         console.log(updateMachineDTO);
         let response;
         try {
@@ -346,26 +345,7 @@ export default function BasicTabs() {
                             <div className="col-md-4">
                                 <p>{machineDetailDTO.machineTypeName}</p>
                             </div>
-                            {
-                                sessionStorage.getItem("roleId") == 2 && machineDetailDTO.active == 0
-                                    ?
-                                    <div className="col-md-4">
-                                        <div className='button'>
-                                            <button className='btn btn-light' onClick={()=> handleUpdateActiveMachine(1)} id="startEditMachine">Hoạt động máy</button>
-                                        </div>
-                                    </div>
-                                    : ''
-                            }
-                            {
-                                sessionStorage.getItem("roleId") == 2 && machineDetailDTO.active == 1
-                                    ?
-                                    <div className="col-md-4">
-                                        <div className='button'>
-                                            <button className='btn btn-light'  onClick={()=> handleUpdateActiveMachine(0)} id="startEditMachine">Dừng hoạt động máy</button>
-                                        </div>
-                                    </div>
-                                    : ''
-                            }
+
                         </div>
                         <div className="row">
                             <div className="col-md-4">
@@ -387,15 +367,19 @@ export default function BasicTabs() {
                             <div className="col-md-4">
                                 <p>Trạng thái</p>
                             </div>
-                            {machineDetailDTO.active === 1 ?
-                                <div className="col-md-4">
-                                    <p className="text-green">Hoạt động</p>
-                                </div>
-                                :
-                                <div className="col-md-4">
-                                    <p className="text-red">Dừng hoạt động</p>
-                                </div>
-                            }
+                            <div className="col-md-4">
+                                {
+                                    machineDetailDTO.active == 0
+                                        ?
+                                        <div style={{display: "flex" ,justifyContent: "space-between"}}>
+                                            <button style={{width: "45%" }} className='btn btn-light' onClick={()=> handleUpdateActiveMachine(1)} id="startEditMachine">Dừng hoạt động</button>
+                                        </div>
+                                        :
+                                        <div style={{display: "flex" ,justifyContent: "space-between"}}>
+                                            <button style={{width: "45%" }} className='btn btn-light' onClick={()=> handleUpdateActiveMachine(0)} id="startEditMachine">Hoạt động</button>
+                                        </div>
+                                }
+                            </div>
                         </div>
                     </div>
 
