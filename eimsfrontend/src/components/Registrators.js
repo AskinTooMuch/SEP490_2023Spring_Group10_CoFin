@@ -58,15 +58,18 @@ const Registrators = () => {
     // Get Registration list
     useEffect(() => {
         if (dataLoaded) return;
-        loadRegistrationList();
+        loadRegistrationList(0);
         setDataLoaded(true)
     }, []);
 
     // Request Registration list and load the Registration list into the table rows
-    const loadRegistrationList = async () => {
+    const loadRegistrationList = async (status) => {
         try {
             const result = await axios.get(REGISTRATION_GET_LIST,
                 {
+                    params: {
+                        status: status
+                    },
                     headers: {
                         'Content-Type': 'application/json',
                         'Access-Control-Allow-Origin': '*'
@@ -89,6 +92,12 @@ const Registrators = () => {
                 }
             }
         }
+    }
+
+    // handle choose status of registrations
+    const handleFilter = (event) => {
+        let actualValue = event.target.value;
+        loadRegistrationList(actualValue);
     }
 
     // Handle get Registration detail
@@ -168,7 +177,6 @@ const Registrators = () => {
                     withCredentials: true
                 }
             );
-
             console.log(response);
             toast.success("Đã từ chối đơn đăng ký của " + registrationDetail.username);
             setRegistrationDetail('');
@@ -282,12 +290,15 @@ const Registrators = () => {
                     </form>
                 </Modal>
                 <div >
-                    <select
+                    <select  onChange={(e) => handleFilter(e)}
                         id="" name="" className="form-select" aria-label="Default select example">
-                        <option value="0" defaultValue>Chọn tài khoản</option>
+                        <option value={0} >Đang xét duyệt</option>
+                        <option value={2} >Đã chấp thuận</option>
+                        <option value={1} >Đã từ chối</option>
                     </select>
+                    <br/>
                 </div>
-
+            
             </nav>
             <div>
                 <section className="u-align-center u-clearfix u-section-1" id="sec-b42b">
@@ -329,7 +340,7 @@ const Registrators = () => {
                                                 </tr>
                                             ) :
                                             <tr>
-                                                <td colSpan='5'>Hiện tại không có tài khoản nào đăng ký vào hệ thống</td>
+                                                <td colSpan='7'>Không có đơn đăng ký nào</td>
                                             </tr>
                                     }
                                 </tbody>

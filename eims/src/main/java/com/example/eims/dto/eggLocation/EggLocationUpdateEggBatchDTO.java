@@ -22,4 +22,5 @@ public class EggLocationUpdateEggBatchDTO {
     private int amountCurrent;
     private int capacity;
     private int amountUpdate;
+    private int oldAmount;
 }

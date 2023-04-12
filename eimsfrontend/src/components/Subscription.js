@@ -154,6 +154,7 @@ export default function BasicTabs() {
                           <h3 className="title">GÓI {item.subscriptionId}</h3>
                           <div className="price-value ">
                             <p className="amount">{item.cost.toLocaleString("de-DE")}</p>
+                            <br/>
                             <p className="currency">VNĐ</p>
                           </div>
                           <ul className="pricing-content">

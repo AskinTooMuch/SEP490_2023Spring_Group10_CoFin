@@ -59,11 +59,25 @@ export default function BasicTabs() {
     const [open, setOpen] = useState(false);
     const [open2, setOpen2] = useState(false);
 
+    //
+    const [phaseName, setPhaseName] = useState("");
+
     //Show-hide Popup
     const [value, setValue] = React.useState(0);
     const navigate = useNavigate();
     const [show, setShow] = useState(false);
-    const handleClose = () => setShow(false);
+    const handleClose = () => {
+        setUpdateEggBatchDTO({
+            eggBatchId: eggBatchDetail.eggBatchId,
+            phaseNumber: eggBatchDetail.phaseUpdateList[0].phaseNumber,
+            eggWasted: 0,
+            amount: 0,
+            needAction: eggBatchDetail.needAction,
+            eggLocationUpdateEggBatchDTOS: eggBatchDetail.eggProductList
+        });
+        setShow(false);
+        setPhaseName(eggBatchDetail.phaseUpdateList[0].phaseDescription);
+    }
 
     const handleShow = () => {
         if (eggBatchDetail.status == 1 && eggBatchDetail.needAction == 1 && eggBatchDetail.progress < 7) {
@@ -77,10 +91,12 @@ export default function BasicTabs() {
                     machineTypeId: eggBatchDetail.machineList[i].machineTypeId,
                     amountCurrent: eggBatchDetail.machineList[i].curCapacity,
                     capacity: eggBatchDetail.machineList[i].maxCapacity,
-                    amountUpdate: eggBatchDetail.machineList[i].amount
+                    amountUpdate: eggBatchDetail.machineList[i].amount,
+                    oldAmount: eggBatchDetail.machineList[i].amount
                 });
             }
             setRowsData(rows);
+            console.log(rows)
             setShow(true);
         } else if (eggBatchDetail.status == 1 && eggBatchDetail.progress >= 7) {
             setShow(true);
@@ -118,7 +134,8 @@ export default function BasicTabs() {
             machineTypeId: item.machineTypeId,
             amountCurrent: item.curCapacity,
             capacity: item.maxCapacity,
-            amountUpdate: item.amount
+            amountUpdate: item.amount,
+            oldAmount : item.amount
         });
         setShow2(false);
     }
@@ -224,9 +241,12 @@ export default function BasicTabs() {
         eggBatchDetail.machineList = result.data.machineList;
         eggBatchDetail.machineNotFullList = result.data.machineNotFullList;
         eggBatchDetail.phaseUpdateList = result.data.phaseUpdateList;
-        
+
         updateEggBatchDTO.needAction = result.data.needAction;
         updateEggBatchDTO.phaseNumber = result.data.phaseUpdateList[0].phaseNumber;
+
+        setPhaseName(result.data.phaseUpdateList[0].phaseDescription);
+        console.log(phaseName)
         console.log(JSON.stringify(updateEggBatchDTO));
         if (result.data.progress == 0) {
             remain.remain = result.data.amount;
@@ -257,17 +277,32 @@ export default function BasicTabs() {
 
     // display total amount
     function cal() {
-        if (document.getElementById('remain') != null) {
-            if (eggBatchDetail.eggProductList[8].amount == 0) {
-                let a = Number(document.getElementById("eggWasted").value);
-                let b = Number(document.getElementById("amount").value);
+        if (eggBatchDetail.progress < 5) {
+            if (document.getElementById('remain') != null) {
+                if (eggBatchDetail.eggProductList[8].amount == 0) {
+                    let a = Number(document.getElementById("eggWasted").value);
+                    let b = Number(document.getElementById("amount").value);
 
-                let sum = remain.remain - (a + b);
-                document.getElementById('remain').innerHTML = sum;
-            } else {
-                document.getElementById('remain').innerHTML = "";
+                    let sum = remain.remain - (a + b);
+                    document.getElementById('remain').innerHTML = sum;
+                } else {
+                    document.getElementById('remain').innerHTML = "";
+                }
             }
         }
+        if (eggBatchDetail.progress === 5) {
+            if (document.getElementById('remain') != null) {
+                if (eggBatchDetail.eggProductList[8].amount == 0) {
+                    let a = Number(document.getElementById("eggWasted").value);
+
+                    let sum = remain.remain - a;
+                    document.getElementById('remain').innerHTML = sum;
+                } else {
+                    document.getElementById('remain').innerHTML = "";
+                }
+            }
+        }
+
 
     }
 
@@ -285,18 +320,22 @@ export default function BasicTabs() {
     //Handle Change functions:
     //Update EggBatch
     const handleUpdateEggBatchChange = (event, field) => {
-        let actualValue = event.target.value
+        let actualValue = event.target.value;
         setUpdateEggBatchDTO({
             ...updateEggBatchDTO,
             [field]: actualValue
         })
+        var value;
         var e = document.getElementById("select");
         if (e != null) {
-            var value = e.options[e.selectedIndex].value;
+            value = e.options[e.selectedIndex].value;
         }
-
+        var selectedText = e.options[e.selectedIndex].text;
         if ((field == "amount" && value != 5) || field == "eggWasted") {
             cal();
+        }
+        if (field == "phaseNumber") {
+            setPhaseName(selectedText);
         }
     }
 
@@ -352,7 +391,6 @@ export default function BasicTabs() {
     // Handle Update done 
     const handleUpdateEggBatchDone = async () => {
         setOpen2(false);
-        console.log(eggBatchDetail.eggBatchId);
         let response;
         try {
             response = await axios.put(EGGBATCH_UPDATE_DONE, {},
@@ -363,7 +401,6 @@ export default function BasicTabs() {
                     }
                 },
                 {
-
                     headers: {
                         'Content-Type': 'application/json',
                         'Access-Control-Allow-Origin': '*'
@@ -675,9 +712,18 @@ export default function BasicTabs() {
                                             <div className="col-md-3" >
                                                 <label>Giai đoạn hiện tại: </label>
                                             </div>
-                                            <div className="col-md-3" >
-                                                <label>({eggBatchDetail.progress}) {eggBatchDetail.phase}</label>
-                                            </div>
+                                            {
+                                                eggBatchDetail.progress === 0
+                                                    ?
+                                                    <div className="col-md-3">
+                                                        <label>{eggBatchDetail.phase}</label>
+                                                    </div>
+                                                    :
+                                                    <div className="col-md-3">
+                                                        <label>({eggBatchDetail.progress}) {eggBatchDetail.phase}</label>
+                                                    </div>
+                                            }
+
                                         </div>
                                         <br />
                                         <div className="row">
@@ -774,9 +820,9 @@ export default function BasicTabs() {
                                             }
                                             <br />
                                             {
-                                                (eggBatchDetail.progress == 0 ||  eggBatchDetail.progress > 4
-                                                    || (eggBatchDetail.progress == 4 && eggBatchDetail.phaseUpdateList[0].phaseNumber == 5) 
-                                                    )
+                                                (eggBatchDetail.progress == 0 || eggBatchDetail.progress > 4
+                                                    || (eggBatchDetail.progress == 4 && eggBatchDetail.phaseUpdateList[0].phaseNumber == 5)
+                                                )
                                                     ? ''
                                                     :
                                                     <div className='row'>
@@ -793,7 +839,7 @@ export default function BasicTabs() {
                                     </div>
                                     <ConfirmBox open={open} closeDialog={() => setOpen(false)} title={"Xác nhận cập nhật lô trứng"}
                                         content={"Xác nhận cập nhật lô trứng với mã " + eggBatchDetail.eggBatchId
-                                            + ": cập nhật phase " + updateEggBatchDTO.phaseNumber
+                                            + ": cập nhật giai đoạn " + updateEggBatchDTO.phaseNumber + " (" + phaseName + ")"
                                             + ", số lượng cập nhật: " + updateEggBatchDTO.amount
                                             + ", số lượng trứng hao hụt: " + updateEggBatchDTO.eggWasted}
                                         deleteFunction={(e) => handleUpdateEggBatchSubmit(e)}
@@ -803,23 +849,33 @@ export default function BasicTabs() {
                                         deleteFunction={(e) => handleUpdateEggBatchDone(e)}
                                     />
                                     <br />
-                                    <div className='clear'>
-                                        <table className="table table-bordered">
-                                            <thead>
-                                                <tr>
-                                                    <th scope="col">Máy</th>
-                                                    <th scope="col">Chứa</th>
-                                                    <th scope="col">Vị trí trống</th>
-                                                    <th scope="col">Số trứng nhập máy</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <TableRows rowsData={rowsData} deleteTableRows={deleteTableRows} handleChangeData={handleChangeData} />
-                                            </tbody>
-                                        </table>
-                                    </div>
+                                    {
+                                        eggBatchDetail.progress && eggBatchDetail.progress >= 7
+                                            ? ''
+                                            :
+                                            <div className='clear'>
+                                                <table className="table table-bordered">
+                                                    <thead>
+                                                        <tr>
+                                                            <th scope="col">Máy</th>
+                                                            <th scope="col">Chứa</th>
+                                                            <th scope="col">Vị trí trống</th>
+                                                            <th scope="col">Số trứng hiện tại</th>
+                                                            <th scope="col">Số trứng cập nhật</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <TableRows rowsData={rowsData} deleteTableRows={deleteTableRows} handleChangeData={handleChangeData} />
+                                                    </tbody>
+                                                </table>
+                                                <div style={{ textAlign: "center" }}>
+                                                    <button className="btn btn-light" type='button' onClick={handleShow2} >+</button>
+                                                </div>
+                                            </div>
+                                    }
+
                                     <div style={{ textAlign: "center" }}>
-                                        <button className="btn btn-light" type='button' onClick={handleShow2} >+</button>
+
                                         <Modal show={show2} onHide={handleClose2}
                                             size="lg"
                                             aria-labelledby="contained-modal-title-vcenter"
@@ -884,7 +940,7 @@ export default function BasicTabs() {
 function TableRows({ rowsData, deleteTableRows, handleChangeData }) {
     return (
         rowsData.map((data, index) => {
-            const { machineName, amountCurrent, capacity, amountUpdate } = data;
+            const { machineName, amountCurrent, capacity, amountUpdate, oldAmount } = data;
             return (
                 <tr key={index}>
                     <td>
@@ -902,8 +958,17 @@ function TableRows({ rowsData, deleteTableRows, handleChangeData }) {
                             {(capacity - amountCurrent).toLocaleString()}
                         </div>
                     </td>
+                    <td>
+                        <div name="oldAmount" className="form-control" >
+                            {oldAmount.toLocaleString()}
+                        </div>
+                    </td>
                     <td><input type="number" value={amountUpdate} onChange={(evnt) => (handleChangeData(index, evnt))} name="amountUpdate" className="form-control" /> </td>
-                    <td className='td'><button className="btn btn-outline-danger" type='button' onClick={() => (deleteTableRows(index))}><ClearIcon /></button></td>
+                    {
+                        ((capacity - amountCurrent) === 0)
+                            ? <td className='td'><button disabled className="btn btn-outline-danger" type='button' onClick={() => (deleteTableRows(index))}><ClearIcon /></button></td>
+                            : <td className='td'><button className="btn btn-outline-danger" type='button' onClick={() => (deleteTableRows(index))}><ClearIcon /></button></td>
+                    }
                 </tr>
             )
         })

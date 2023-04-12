@@ -10,7 +10,8 @@
  * 21/03/2023   1.1         DuongVV     Update checks<br>
  * 27/03/2023   2.0         DuongVV     Update update egg batch<br>
  * 29/03/2023   2.1         DuongVV     Update update egg batch return message<br>
- * 29/03/2023   2.2         DuongVV     Update functions<br>
+ * 09/04/2023   2.2         DuongVV     Update functions<br>
+ * 13/04/2023   2.3         DuongVV     Update functions<br>
  */
 
 package com.example.eims.service.impl;
@@ -192,6 +193,7 @@ public class EggBatchServiceImpl implements IEggBatchService {
                 List<Machine> itemList = notFullListOpt.get();
                 // Set not full list
                 for (Machine machine : itemList) {
+
                     // Get and set attribute to DTO
                     MachineType machineType = machineTypeRepository.findByMachineTypeId(machine.getMachineTypeId()).get();
                     String machineTypeName = machineType.getMachineTypeName();
@@ -442,7 +444,10 @@ public class EggBatchServiceImpl implements IEggBatchService {
                 if (eggLocationDTOs.isEmpty()) {
                     return new ResponseEntity<>("Chưa cập nhật vị trí trứng", HttpStatus.BAD_REQUEST);
                 }
-                Set inputSet = new HashSet(eggLocationDTOs);
+                Set inputSet = new HashSet();
+                for (EggLocationUpdateEggBatchDTO eggLocation : eggLocationDTOs){
+                    inputSet.add(eggLocation.getMachineId());
+                }
                 if (inputSet.size() < eggLocationDTOs.size()) {
                     return new ResponseEntity<>("Có máy bị trùng lặp", HttpStatus.BAD_REQUEST);
                 }
@@ -455,8 +460,7 @@ public class EggBatchServiceImpl implements IEggBatchService {
                                 HttpStatus.BAD_REQUEST);
                     }
                     if (eggLocationDTO.getAmountUpdate() < 0
-                            || eggLocationDTO.getAmountUpdate() >
-                            (eggLocationDTO.getCapacity() - eggLocationDTO.getAmountCurrent())
+                            || eggLocationDTO.getAmountUpdate() > eggLocationDTO.getCapacity()
                             || eggLocationDTO.getAmountUpdate() > eggBatchAmount) {
                         return new ResponseEntity<>("Số lượng trứng trong danh sách máy không hợp lệ",
                                 HttpStatus.BAD_REQUEST);
@@ -561,19 +565,22 @@ public class EggBatchServiceImpl implements IEggBatchService {
                     return new ResponseEntity<>("Số " + incubationPhase.getPhaseDescription() + " cập nhật " +
                             "không được lớn hơn số trứng đang ấp", HttpStatus.BAD_REQUEST);
                 }
-                if (eggWastedAmount + amount > eggIncubating.getAmount()) {
+                if (amount + eggWastedAmount> eggIncubating.getAmount()) {
                     return new ResponseEntity<>("Số lượng trứng không hợp lệ. Tổng số Trứng hư tổn, hao hụt mới("
                             + eggWastedAmount + ") và " + incubationPhase.getPhaseDescription() + "(" + amount + ") phải " +
                             "nhỏ hơn hoặc bằng số Trứng đang ấp(" + eggIncubating.getAmount() + ")",
                             HttpStatus.BAD_REQUEST);
                 }
                 // Not Update all incubating egg
-                if (amount != eggIncubating.getAmount()) {
+                if (amount + eggWastedAmount != eggIncubating.getAmount()) {
                     // Check machine list
                     if (eggLocationDTOs.isEmpty()) {
                         return new ResponseEntity<>("Chưa cập nhật vị trí trứng", HttpStatus.BAD_REQUEST);
                     }
-                    Set inputSet = new HashSet(eggLocationDTOs);
+                    Set inputSet = new HashSet();
+                    for (EggLocationUpdateEggBatchDTO eggLocation : eggLocationDTOs){
+                        inputSet.add(eggLocation.getMachineId());
+                    }
                     if (inputSet.size() < eggLocationDTOs.size()) {
                         return new ResponseEntity<>("Có máy bị trùng lặp", HttpStatus.BAD_REQUEST);
                     }
@@ -586,7 +593,9 @@ public class EggBatchServiceImpl implements IEggBatchService {
                                     HttpStatus.BAD_REQUEST);
                         }
                         if (eggLocationDTO.getAmountUpdate() < 0
-                                || eggLocationDTO.getAmountUpdate() > (eggLocationDTO.getCapacity() - eggLocationDTO.getAmountCurrent())
+                                || eggLocationDTO.getAmountUpdate() > eggLocationDTO.getCapacity()
+                                || ((eggLocationDTO.getAmountUpdate() - eggLocationDTO.getOldAmount())
+                                > (eggLocationDTO.getCapacity() - eggLocationDTO.getAmountCurrent()))
                                 || eggLocationDTO.getAmountUpdate() > eggIncubating.getAmount()) {
                             return new ResponseEntity<>("Số lượng trứng trong danh sách máy không hợp lệ",
                                     HttpStatus.BAD_REQUEST);
@@ -710,7 +719,10 @@ public class EggBatchServiceImpl implements IEggBatchService {
                 if (eggLocationDTOs.isEmpty()) {
                     return new ResponseEntity<>("Chưa cập nhật vị trí trứng", HttpStatus.BAD_REQUEST);
                 }
-                Set inputSet = new HashSet(eggLocationDTOs);
+                Set inputSet = new HashSet();
+                for (EggLocationUpdateEggBatchDTO eggLocation : eggLocationDTOs){
+                    inputSet.add(eggLocation.getMachineId());
+                }
                 if (inputSet.size() < eggLocationDTOs.size()) {
                     return new ResponseEntity<>("Có máy bị trùng lặp", HttpStatus.BAD_REQUEST);
                 }
@@ -724,14 +736,14 @@ public class EggBatchServiceImpl implements IEggBatchService {
                 }
 
                 // Chưa chuyển hết sang nở, chọn cả máy ấp, nở
-                if (amount < eggIncubating.getAmount()) {
+                if (amount + eggWastedAmount < eggIncubating.getAmount()) {
                     if (onlyHatching) {
                         return new ResponseEntity<>("Chưa chuyển hết sang nở, phải chọn cả máy ấp và máy nở",
                                 HttpStatus.BAD_REQUEST);
                     }
                 }
                 // Chuyển hết sang nở, chỉ chọn máy nở
-                if (amount == eggIncubating.getAmount()) {
+                if (amount + eggWastedAmount == eggIncubating.getAmount()) {
                     if (!onlyHatching) {
                         return new ResponseEntity<>("Chuyển sang nở toàn bộ trứng, chỉ được chọn máy nở",
                                 HttpStatus.BAD_REQUEST);
@@ -744,8 +756,9 @@ public class EggBatchServiceImpl implements IEggBatchService {
                 for (EggLocationUpdateEggBatchDTO eggLocationDTO : eggLocationDTOs) {
                     if (eggProductOptional.isEmpty()) {
                         if (eggLocationDTO.getAmountUpdate() < 0
-                                || eggLocationDTO.getAmountUpdate() >
-                                (eggLocationDTO.getCapacity() - eggLocationDTO.getAmountCurrent())
+                                || ((eggLocationDTO.getAmountUpdate() - eggLocationDTO.getOldAmount())
+                                > (eggLocationDTO.getCapacity() - eggLocationDTO.getAmountCurrent()))
+                                || eggLocationDTO.getAmountUpdate() > eggLocationDTO.getCapacity()
                                 || eggLocationDTO.getAmountUpdate() > eggIncubating.getAmount()) {
                             return new ResponseEntity<>("Số lượng trứng trong danh sách máy không hợp lệ",
                                     HttpStatus.BAD_REQUEST);
@@ -753,8 +766,9 @@ public class EggBatchServiceImpl implements IEggBatchService {
                     } else {
                         eggProduct = eggProductOptional.get();
                         if (eggLocationDTO.getAmountUpdate() < 0
-                                || eggLocationDTO.getAmountUpdate() >
-                                (eggLocationDTO.getCapacity() - eggLocationDTO.getAmountCurrent())
+                                || eggLocationDTO.getAmountUpdate() > eggLocationDTO.getCapacity()
+                                || ((eggLocationDTO.getAmountUpdate() - eggLocationDTO.getOldAmount())
+                                > (eggLocationDTO.getCapacity() - eggLocationDTO.getAmountCurrent()))
                                 || eggLocationDTO.getAmountUpdate() >
                                 (eggIncubating.getAmount() + amount + eggProduct.getAmount())) {
                             return new ResponseEntity<>("Số lượng trứng trong danh sách máy không hợp lệ",
@@ -779,7 +793,7 @@ public class EggBatchServiceImpl implements IEggBatchService {
                                 HttpStatus.BAD_REQUEST);
                     }
                     // Chưa chuyển sang nở hết
-                    if (amount < eggIncubating.getAmount()) {
+                    if (amount + eggWastedAmount < eggIncubating.getAmount()) {
                         if (totalIncubating + totalHatching != eggIncubating.getAmount() - eggWastedAmount) {
                             return new ResponseEntity<>("Số lượng trứng trong danh sách máy không hợp lệ. " +
                                     "Tổng số trứng trong danh sách máy (đang ấp và nở) (" + (totalIncubating +
@@ -789,7 +803,7 @@ public class EggBatchServiceImpl implements IEggBatchService {
                         }
                     }
                     // Chuyển sang nở hết
-                    if (amount == eggIncubating.getAmount()) {
+                    if (amount + eggWastedAmount == eggIncubating.getAmount()) {
                         if (totalHatching != eggIncubating.getAmount() - eggWastedAmount) {
                             return new ResponseEntity<>("Số lượng trứng trong danh sách máy không hợp lệ. Chuyển" +
                                     " hết trứng sang nở: Tổng số trứng trong danh sách máy nở(" + totalHatching + ")  " +
@@ -808,7 +822,7 @@ public class EggBatchServiceImpl implements IEggBatchService {
                                 HttpStatus.BAD_REQUEST);
                     }
                     // Chưa chuyển sang nở hết
-                    if (amount < eggIncubating.getAmount()) {
+                    if (amount + eggWastedAmount < eggIncubating.getAmount()) {
                         if (totalIncubating + totalHatching != eggIncubating.getAmount() + eggProduct.getAmount()
                                 - eggWastedAmount) {
                             return new ResponseEntity<>("Số lượng trứng trong danh sách máy không hợp lệ. " +
@@ -846,7 +860,7 @@ public class EggBatchServiceImpl implements IEggBatchService {
 
                 // Update egg batch
                 // Chuyển hết sang nở
-                if (amount == eggIncubating.getAmount()) {
+                if (amount + eggWastedAmount == eggIncubating.getAmount()) {
                     eggBatch.setNeedAction(0);
                 }
 

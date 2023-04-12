@@ -14,8 +14,15 @@ package com.example.eims.service.impl;
 
 import com.example.eims.dto.user.UpdateUserDTO;
 import com.example.eims.dto.user.UserDetailDTO;
+import com.example.eims.dto.user.UserListItemDTO;
+import com.example.eims.entity.Facility;
+import com.example.eims.entity.Role;
 import com.example.eims.entity.User;
+import com.example.eims.entity.WorkIn;
+import com.example.eims.repository.FacilityRepository;
 import com.example.eims.repository.UserRepository;
+import com.example.eims.repository.UserRoleRepository;
+import com.example.eims.repository.WorkInRepository;
 import com.example.eims.service.interfaces.IUserService;
 import com.example.eims.utils.AddressPojo;
 import com.example.eims.utils.StringDealer;
@@ -33,6 +40,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -40,13 +48,23 @@ import java.util.Optional;
 public class UserServiceImpl implements IUserService {
     @Autowired
     private final UserRepository userRepository;
+    @Autowired
+    private final UserRoleRepository userRoleRepository;
+    @Autowired
+    private final FacilityRepository facilityRepository;
+    @Autowired
+    private final WorkInRepository workInRepository;
     @PersistenceContext
     private final EntityManager em;
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final StringDealer stringDealer;
 
-    public UserServiceImpl(UserRepository userRepository, EntityManager em) {
+    public UserServiceImpl(UserRepository userRepository, UserRoleRepository userRoleRepository,
+                           FacilityRepository facilityRepository, WorkInRepository workInRepository, EntityManager em) {
         this.userRepository = userRepository;
+        this.userRoleRepository = userRoleRepository;
+        this.facilityRepository = facilityRepository;
+        this.workInRepository = workInRepository;
         this.em = em;
         this.stringDealer = new StringDealer();
     }
@@ -82,6 +100,61 @@ public class UserServiceImpl implements IUserService {
         List<User> userList = userRepository.findAll();
         // Return
         return new ResponseEntity<>(userList, HttpStatus.OK);
+    }
+
+    /**
+     * Get all user for a role.
+     *
+     * @param roleId role id of the user
+     * @return
+     */
+    @Override
+    public ResponseEntity<?> getAllUserByRole(Long roleId) {
+        List<UserListItemDTO> dtoList = new ArrayList<>();
+        Optional<Role> roleOptional = userRoleRepository.findByRoleId(roleId);
+        if (roleOptional.isPresent()) {
+            Role role = roleOptional.get();
+            List<User> users = role.getAccounts();
+            if (role.getRoleId() == 2) { // owner
+                for (User user : users) {
+                    UserListItemDTO dto = new UserListItemDTO();
+                    dto.setUserId(user.getUserId());
+                    dto.setUserName(user.getUsername());
+                    dto.setPhone(user.getPhone());
+                    dto.setDob(user.getDob());
+                    dto.setStatus(user.getStatus());
+                    Facility facility = facilityRepository.findByUserId(user.getUserId()).get();
+                    dto.setFacilityName(facility.getFacilityName());
+                    dtoList.add(dto);
+                }
+            }
+            if (role.getRoleId() == 3) { // employee
+                for (User user : users) {
+                    UserListItemDTO dto = new UserListItemDTO();
+                    dto.setUserId(user.getUserId());
+                    dto.setUserName(user.getUsername());
+                    dto.setPhone(user.getPhone());
+                    dto.setDob(user.getDob());
+                    dto.setStatus(user.getStatus());
+                    WorkIn workIn = workInRepository.findByUserId(user.getUserId()).get();
+                    Facility facility = facilityRepository.findByFacilityId(workIn.getFacilityId()).get();
+                    dto.setFacilityName(facility.getFacilityName());
+                    dtoList.add(dto);
+                }
+            }
+            if (role.getRoleId() == 4) { // moderator
+                for (User user : users) {
+                    UserListItemDTO dto = new UserListItemDTO();
+                    dto.setUserId(user.getUserId());
+                    dto.setUserName(user.getUsername());
+                    dto.setPhone(user.getPhone());
+                    dto.setDob(user.getDob());
+                    dto.setStatus(user.getStatus());
+                    dtoList.add(dto);
+                }
+            }
+        }
+        return new ResponseEntity<>(dtoList, HttpStatus.OK);
     }
 
     /**

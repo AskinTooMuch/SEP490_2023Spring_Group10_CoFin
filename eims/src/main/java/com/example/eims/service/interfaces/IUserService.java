@@ -34,6 +34,14 @@ public interface IUserService {
     public ResponseEntity<?> getAllUser();
 
     /**
+     * Get all user for a role.
+     *
+     * @param roleId role id of the user
+     * @return
+     */
+    public ResponseEntity<?> getAllUserByRole(Long roleId);
+
+    /**
      * Get all user with Paging.
      *
      * @param page the page number

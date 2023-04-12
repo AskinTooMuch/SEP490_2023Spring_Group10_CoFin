@@ -20,9 +20,10 @@ public interface IRegistrationService {
     /**
      * View list registration of owners.
      *
+     * @param status status of the registration
      * @return
      */
-    public ResponseEntity<?> viewListRegistration();
+    public ResponseEntity<?> viewListRegistration(int status);
 
     /**
      * View a registration of owner.

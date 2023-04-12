@@ -138,6 +138,7 @@ public class SecurityConfig{
         final String[] MODERATOR_ADMIN = {
                 "/api/user/all",
                 "/api/user/allPaging",
+                "/api/user/allByRole",
                 "/api/registration/**",
                 "/api/facility/all"
         };

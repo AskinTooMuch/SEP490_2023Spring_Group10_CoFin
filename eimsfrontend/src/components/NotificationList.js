@@ -132,6 +132,7 @@ const NotificationList = () => {
                     withCredentials: true
                 });
             setOpen(false)
+            toast.success("Xác nhận công việc đã hoàn thành");
             handleClosePopup();
             loadListNotiNew();
             loadListNotiOld();

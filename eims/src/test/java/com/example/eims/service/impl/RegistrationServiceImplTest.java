@@ -17,6 +17,7 @@ import com.example.eims.dto.registration.RegistrationListItemDTO;
 import com.example.eims.entity.Facility;
 import com.example.eims.entity.Registration;
 import com.example.eims.entity.User;
+import com.example.eims.repository.CustomerRepository;
 import com.example.eims.repository.FacilityRepository;
 import com.example.eims.repository.RegistrationRepository;
 import com.example.eims.repository.UserRepository;
@@ -51,6 +52,8 @@ class RegistrationServiceImplTest {
     @Mock
     FacilityRepository facilityRepository;
     @Mock
+    CustomerRepository customerRepository;
+    @Mock
     EntityManager em;
     @InjectMocks
     RegistrationServiceImpl registrationService;
@@ -69,7 +72,7 @@ class RegistrationServiceImplTest {
         when(em.createNamedQuery("getRegistrationListByStatus")).thenReturn(q);
         when(q.getResultList()).thenReturn(listDTO);
         // Run service method
-        ResponseEntity<?> responseEntity = registrationService.viewListRegistration();
+        ResponseEntity<?> responseEntity = registrationService.viewListRegistration(0);
         List<RegistrationListItemDTO> resultList = (List<RegistrationListItemDTO>) responseEntity.getBody();
         System.out.println(responseEntity.toString());
         // Assert
@@ -87,7 +90,7 @@ class RegistrationServiceImplTest {
         when(em.createNamedQuery("getRegistrationListByStatus")).thenReturn(q);
         when(q.getResultList()).thenReturn(listDTO);
         // Run service method
-        ResponseEntity<?> responseEntity = registrationService.viewListRegistration();
+        ResponseEntity<?> responseEntity = registrationService.viewListRegistration(0);
         List<RegistrationListItemDTO> resultList = (List<RegistrationListItemDTO>) responseEntity.getBody();
         System.out.println(responseEntity.toString());
         // Assert
@@ -142,7 +145,6 @@ class RegistrationServiceImplTest {
         when(registrationRepository.findByUserId(userId)).thenReturn(Optional.of(registration));
         when(userRepository.findByUserId(userId)).thenReturn(Optional.of(user));
         when(facilityRepository.findByUserId(userId)).thenReturn(Optional.of(facility));
-
         // Run service method
         ResponseEntity<?> responseEntity = registrationService.registrationApproval(userId, facilityId, approval);
         System.out.println(responseEntity.toString());

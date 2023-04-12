@@ -68,12 +68,13 @@ public class RegistrationServiceImpl implements IRegistrationService {
     /**
      * View list registration of owners.
      *
+     * @param status status of the registration
      * @return
      */
     @Override
-    public ResponseEntity<?> viewListRegistration() {
+    public ResponseEntity<?> viewListRegistration(int status) {
         Query query = em.createNamedQuery("getRegistrationListByStatus");
-        query.setParameter(1, 0); /* status = 0 (considering list)*/
+        query.setParameter(1, status); /* status = 0 (considering list)*/
         List<RegistrationListItemDTO> registrationListItemDTOList = query.getResultList();
         return new ResponseEntity<>(registrationListItemDTOList, HttpStatus.OK);
     }

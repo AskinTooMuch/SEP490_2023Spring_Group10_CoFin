@@ -22,6 +22,7 @@ public class UpdateEggBatchDTO {
     private Long eggBatchId;
     private int phaseNumber;
     private int eggWasted;
+    private int oldAmount;
     private int amount;
     private List<EggLocationUpdateEggBatchDTO> eggLocationUpdateEggBatchDTOS;
     private int needAction;

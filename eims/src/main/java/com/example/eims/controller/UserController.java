@@ -57,6 +57,17 @@ public class UserController {
     }
 
     /**
+     * Get all user for a role.
+     *
+     * @param roleId role id of the user
+     * @return
+     */
+    @GetMapping("/allByRole")
+    public ResponseEntity<?> getAllUserByRole(@RequestParam Long roleId){
+        return userService.getAllUserByRole(roleId);
+    }
+
+    /**
      * Get all user with Paging.
      *
      * @param page the page number

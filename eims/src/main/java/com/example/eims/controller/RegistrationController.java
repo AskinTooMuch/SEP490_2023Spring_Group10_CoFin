@@ -32,12 +32,13 @@ public class RegistrationController {
     /**
      * View list registration of owners.
      *
+     * @param status status of the registration
      * @return
      */
     @GetMapping("/all")
     //@Secured({"ROLE_MANAGER"})
-    public ResponseEntity<?> viewListRegistration() {
-        return registrationService.viewListRegistration();
+    public ResponseEntity<?> viewListRegistration(@RequestParam int status) {
+        return registrationService.viewListRegistration(status);
     }
 
     /**
