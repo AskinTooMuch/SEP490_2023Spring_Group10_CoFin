@@ -1,25 +1,31 @@
-.serviceBox{
+.serviceBox {
     color: #444;
     font-family: 'Poppins', sans-serif;
     text-align: center;
-    margin: 20px 0 20px ;
+    margin: 20px 0 20px;
+
 }
-.serviceBox .service-icon{
+
+.serviceBox .service-icon {
     color: #fff;
-    background: linear-gradient(to right bottom,#771BCC 50%,#4802B2 50%);
+    background: linear-gradient(to right bottom, #771BCC 50%, #4802B2 50%);
     font-size: 30px;
     padding: 25px 15px 15px;
     border-radius: 50% 50% 0 0/100% 100% 0 0;
-} 
-.serviceBox .description{
+}
+
+.serviceBox .description {
+    height: 300px;
     background-color: #fff;
     font-size: 14px;
     line-height: 23px;
     padding: 25px 15px;
     margin: 0;
     border: 5px solid #4802B2;
+    overflow: scroll;
 }
-.serviceBox .title{
+
+.serviceBox .title {
     color: #fff;
     background-color: #4802B2;
     font-size: 22px;
@@ -29,20 +35,50 @@
     padding: 6px 10px 9px;
     margin: 0;
 }
-.serviceBox.blue .service-icon{ background: linear-gradient(to right bottom,#0087EF 50%,#005AE8 50%); }
-.serviceBox.blue .description{ border-color: #005AE8; }
-.serviceBox.blue .title{ background-color: #005AE8; }
-.serviceBox.orange .service-icon{ background: linear-gradient(to right bottom,#FC9200 50%,#FF6601 50%); }
-.serviceBox.orange .description{ border-color: #FF6601; }
-.serviceBox.orange .title{ background-color: #FF6601; }
-.serviceBox.red .service-icon{ background: linear-gradient(to right bottom,#E74442 50%,#E31E1C 50%); }
-.serviceBox.red .description{ border-color: #E31E1C; }
-.serviceBox.red .title{ background-color: #E31E1C; }
-@media only screen and (max-width: 990px){
-    .serviceBox{ margin: 0 0 40px; }
+
+.serviceBox.blue .service-icon {
+    background: linear-gradient(to right bottom, #0087EF 50%, #005AE8 50%);
 }
 
-.progress{
+.serviceBox.blue .description {
+    border-color: #005AE8;
+}
+
+.serviceBox.blue .title {
+    background-color: #005AE8;
+}
+
+.serviceBox.orange .service-icon {
+    background: linear-gradient(to right bottom, #FC9200 50%, #FF6601 50%);
+}
+
+.serviceBox.orange .description {
+    border-color: #FF6601;
+}
+
+.serviceBox.orange .title {
+    background-color: #FF6601;
+}
+
+.serviceBox.red .service-icon {
+    background: linear-gradient(to right bottom, #E74442 50%, #E31E1C 50%);
+}
+
+.serviceBox.red .description {
+    border-color: #E31E1C;
+}
+
+.serviceBox.red .title {
+    background-color: #E31E1C;
+}
+
+@media only screen and (max-width: 990px) {
+    .serviceBox {
+        margin: 0 0 40px;
+    }
+}
+
+.progress {
     margin: 10px;
     height: 4vh;
 }

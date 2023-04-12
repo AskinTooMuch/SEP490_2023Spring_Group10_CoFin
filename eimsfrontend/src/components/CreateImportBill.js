@@ -184,7 +184,7 @@ const CreateImportBill = () => {
                 importDate: "",
                 eggBatchList: []
             })
-            navigate("/importbill", { state: "Tạo hóa đơn thành công" });
+            navigate("/order", { state: "Tạo hóa đơn thành công" });
 
         } catch (err) {
             if (!err?.response) {
