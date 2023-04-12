@@ -304,12 +304,14 @@ export default function BasicTabs() {
                                         </div>
                                         <div className="col-md-6">
                                             <select className="form-control mt-1" aria-label="Default select example"
-                                                onChange={e => handleEditChange(e, "specieId")}>
+                                                onChange={e => handleEditChange(e, "specieId")}
+                                                value={editBreedDTO.specieId}>
                                                 <option disabled>Open this select menu</option>
                                                 { /**JSX to load options */}
                                                 {specieList &&
                                                     specieList.map((item, index) => (
                                                         item.status &&
+
                                                         <option value={item.specieId}>{item.specieName}</option>
                                                     ))
                                                 }
