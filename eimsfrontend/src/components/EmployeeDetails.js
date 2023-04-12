@@ -436,7 +436,7 @@ export default function BasicTabs() {
                                         <div className="col-md-6">
                                             <input style={{ width: "100%" }}
                                                 value={updateEmployeeDTO.employeeName}
-                                                onChange={(e) => handleUpdateEmployeeChange(e, "employeeName")} />
+                                                onChange={(e) => handleUpdateEmployeeChange(e, "employeeName")} disabled/>
                                         </div>
                                     </div>
                                     {/*Date of birth*/}
@@ -449,7 +449,7 @@ export default function BasicTabs() {
                                                 ref={userRef}
                                                 autoComplete="off"
                                                 onChange={(e) => handleUpdateEmployeeChange(e, "employeeDob")}
-                                                value={updateEmployeeDTO.employeeDob}
+                                                value={updateEmployeeDTO.employeeDob} disabled
                                             />
                                         </div></div>
                                     <div className="row">
@@ -459,7 +459,7 @@ export default function BasicTabs() {
                                         <div className="col-md-6">
                                             <input style={{ width: "100%" }}
                                                 onChange={(e) => handleUpdateEmployeeChange(e, "employeePhone")}
-                                                value={updateEmployeeDTO.employeePhone} />
+                                                value={updateEmployeeDTO.employeePhone} disabled/>
                                         </div>
                                     </div>
                                     {/*City*/}
@@ -472,7 +472,7 @@ export default function BasicTabs() {
                                                 ref={userRef}
                                                 autoComplete="off"
                                                 onChange={(e) => loadDistrict(e.target.value)}
-                                                value={cityIndex}
+                                                value={cityIndex} disabled
                                             >
                                                 <option value="" disabled>Chọn Tỉnh/Thành phố</option>
                                                 {city &&
@@ -498,7 +498,7 @@ export default function BasicTabs() {
                                                 ref={userRef}
                                                 autoComplete="off"
                                                 onChange={(e) => loadWard(e.target.value, -1)}
-                                                value={districtIndex}
+                                                value={districtIndex} disabled
                                             >
                                                 <option value="" disabled>Chọn Quận/Huyện</option>
                                                 {district &&
@@ -524,7 +524,7 @@ export default function BasicTabs() {
                                                 ref={userRef}
                                                 autoComplete="off"
                                                 onChange={(e) => saveWard(e.target.value)}
-                                                value={wardIndex}
+                                                value={wardIndex} disabled
                                             >
                                                 <option value="" disabled>Chọn Phường/Xã</option>
                                                 {ward &&
@@ -550,9 +550,9 @@ export default function BasicTabs() {
                                                 ref={userRef}
                                                 autoComplete="off"
                                                 onChange={(e) => saveEmployeeAddress(e.target.value)}
-
+                                                disabled
                                                 className="form-control"
-                                                value={street} />
+                                                value={street} /> 
                                         </div>
                                     </div>
 
@@ -563,7 +563,7 @@ export default function BasicTabs() {
                                         <div className="col-md-6">
                                             <input style={{ width: "100%" }}
                                                 onChange={(e) => handleUpdateEmployeeChange(e, "email")}
-                                                value={updateEmployeeDTO.email} />
+                                                value={updateEmployeeDTO.email} disabled/> 
                                         </div>
                                     </div>
                                     <div className="row">

@@ -55,7 +55,6 @@ function App() {
           <Route path="/employee" element={<Employee />} />
           <Route path="/importbill" element={<ImportBill />} />
           <Route path="/exportbill" element={<ExportBill />} />
-          <Route path="/notificationlist" element={<NotificationList />} />
           <Route path="/createimportbill" element={<CreateImportBill />} />
           <Route path="/createexportbill" element={<CreateExportBill />} />
           {/*Details pages */}
@@ -85,6 +84,7 @@ function App() {
         {/*All roles pages */}
         <Route element={<PrivateRoute />} >
           <Route path="/profile" element={<Profile />} />
+          <Route path="/notificationlist" element={<NotificationList />} />
         </Route>
 
         {/* Public routes */}
@@ -108,8 +108,8 @@ function App() {
         pauseOnFocusLoss
         draggable
         pauseOnHover
-        theme="colored" 
-        style={{ zIndex: "10000" }}/>
+        theme="colored"
+        style={{ zIndex: "10000" }} />
     </>
   );
 }

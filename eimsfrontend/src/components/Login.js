@@ -57,9 +57,13 @@ const Login = () => {
       if (responseJson.facilityId != null) { /* role = OWNER/EMPLOYEE */
         sessionStorage.setItem("facilityId", responseJson.facilityId);
       }
-      if ((responseJson.roleId === 2) || (responseJson.roleId === 3)) {
+      if ((responseJson.roleId === 2)) {
+        navigate("/dashboard");
+      }
+      else if (responseJson.roleId === 3) {
         navigate("/egg");
-      } else if (responseJson.roleId === 4) {
+      }
+      else if (responseJson.roleId === 4) {
         navigate("/accountmanage");
       }
 
@@ -79,7 +83,7 @@ const Login = () => {
   function changeLocation(placeToGo) {
     navigate(placeToGo, { replace: true });
     window.location.reload();
-}
+  }
   return (
     <>
 
@@ -111,7 +115,7 @@ const Login = () => {
                   <button type="submit" className="u-btn u-btn-submit u-button-style u-btn-1">Đăng nhập</button>
                 </div>
                 <input type="hidden" value="" name="recaptchaResponse" />
-               
+
               </form>
             </div>
             <Link to="/forgotpassword" onClick={() => changeLocation('/forgotpassword')} className="u-active-none u-border-2 u-border-active-palette-2-dark-1 u-border-custom-color-1 u-border-hover-palette-1-base u-border-no-left u-border-no-right u-border-no-top u-btn u-button-style u-hover-none u-login-control u-login-forgot-password u-none u-text-custom-color-1 u-text-hover-palette-1-base u-btn-2">Quên mật khẩu</Link>
