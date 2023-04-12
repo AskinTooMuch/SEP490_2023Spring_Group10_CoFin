@@ -434,9 +434,10 @@ export default function BasicTabs() {
                                             <p>Họ và tên<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                         </div>
                                         <div className="col-md-6">
-                                            <input style={{ width: "100%" }}
+                                            <input className="form-control mt-1"
+                                                style={{ width: "100%" }}
                                                 value={updateEmployeeDTO.employeeName}
-                                                onChange={(e) => handleUpdateEmployeeChange(e, "employeeName")} disabled/>
+                                                onChange={(e) => handleUpdateEmployeeChange(e, "employeeName")} disabled />
                                         </div>
                                     </div>
                                     {/*Date of birth*/}
@@ -445,7 +446,8 @@ export default function BasicTabs() {
                                             <p htmlFor="employeeDob">Ngày sinh (Ngày/Tháng/Năm) <FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                         </div>
                                         <div className="col-md-6">
-                                            <input type="date" id="employeeDob" style={{ width: "100%" }}
+                                            <input className="form-control mt-1"
+                                                type="date" id="employeeDob" style={{ width: "100%" }}
                                                 ref={userRef}
                                                 autoComplete="off"
                                                 onChange={(e) => handleUpdateEmployeeChange(e, "employeeDob")}
@@ -457,9 +459,10 @@ export default function BasicTabs() {
                                             <p>Số điện thoại<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                         </div>
                                         <div className="col-md-6">
-                                            <input style={{ width: "100%" }}
+                                            <input className="form-control mt-1"
+                                                style={{ width: "100%" }}
                                                 onChange={(e) => handleUpdateEmployeeChange(e, "employeePhone")}
-                                                value={updateEmployeeDTO.employeePhone} disabled/>
+                                                value={updateEmployeeDTO.employeePhone} disabled />
                                         </div>
                                     </div>
                                     {/*City*/}
@@ -551,8 +554,8 @@ export default function BasicTabs() {
                                                 autoComplete="off"
                                                 onChange={(e) => saveEmployeeAddress(e.target.value)}
                                                 disabled
-                                                className="form-control"
-                                                value={street} /> 
+                                                className="form-control mt-1"
+                                                value={street} />
                                         </div>
                                     </div>
 
@@ -561,9 +564,10 @@ export default function BasicTabs() {
                                             <p>Email</p>
                                         </div>
                                         <div className="col-md-6">
-                                            <input style={{ width: "100%" }}
+                                            <input className="form-control mt-1"
+                                                style={{ width: "100%" }}
                                                 onChange={(e) => handleUpdateEmployeeChange(e, "email")}
-                                                value={updateEmployeeDTO.email} disabled/> 
+                                                value={updateEmployeeDTO.email} disabled />
                                         </div>
                                     </div>
                                     <div className="row">
@@ -571,7 +575,8 @@ export default function BasicTabs() {
                                             <p>Tiền lương<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                         </div>
                                         <div className="col-md-6">
-                                            <input style={{ width: "100%" }}
+                                            <input className="form-control mt-1"
+                                                style={{ width: "100%" }}
                                                 type='number'
                                                 onChange={(e) => handleUpdateEmployeeChange(e, "salary")}
                                                 step={0.01}
@@ -622,9 +627,9 @@ export default function BasicTabs() {
                                 </div>
                             </div>
                         </div>
-                        <ConfirmBox open={open} closeDialog={() => setOpen(false)} title={"Xóa nhân viên"} 
-                        content={"Xác nhận xóa nhân viên: " + employeeDetailDTO.employeeName}
-                        deleteFunction={() => hanldeDeleteEmployee(employeeDetailDTO.employeeId)}
+                        <ConfirmBox open={open} closeDialog={() => setOpen(false)} title={"Xóa nhân viên"}
+                            content={"Xác nhận xóa nhân viên: " + employeeDetailDTO.employeeName}
+                            deleteFunction={() => hanldeDeleteEmployee(employeeDetailDTO.employeeId)}
                         />
                         <div className="row">
                             <div className="col-md-4">
@@ -681,7 +686,7 @@ export default function BasicTabs() {
 
                 </div>
             </EmployeeDetails>
-            
+
         </Box>
 
     );

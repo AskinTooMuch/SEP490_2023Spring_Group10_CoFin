@@ -208,7 +208,7 @@ export default function BasicTabs() {
                                         </div>
                                         <div className="col-md-6">
                                             <input className="form-control mt-1"
-                                            id="createMachineName" style={{ width: "100%" }}
+                                                id="createMachineName" style={{ width: "100%" }}
                                                 onChange={(e) => handleCreateMachineChange(e, "machineName")} />
                                         </div>
                                     </div>
@@ -231,7 +231,7 @@ export default function BasicTabs() {
                                         </div>
                                         <div className="col-md-6">
                                             <input className="form-control mt-1"
-                                            id="createMachineCapacity" style={{ width: "100%" }} type="number"
+                                                id="createMachineCapacity" style={{ width: "100%" }} type="number"
                                                 onChange={(e) => handleCreateMachineChange(e, "maxCapacity")} />
                                         </div>
                                     </div>
@@ -305,7 +305,7 @@ export default function BasicTabs() {
                                                             </td>
                                                         }
                                                     </tr>
-                                                ) : 
+                                                ) :
                                                 <tr>
                                                     <td colSpan='5'>Chưa có máy nào được lưu lên hệ thống</td>
                                                 </tr>

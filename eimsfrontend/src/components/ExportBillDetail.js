@@ -314,7 +314,8 @@ export default function BasicTabs() {
                                             <p>Số tiền đã thanh toán</p>
                                         </div>
                                         <div className="col-md-6">
-                                            <input style={{ width: "100%" }} type="number"
+                                            <input classname="form-control mt-1"
+                                                style={{ width: "100%" }} type="number"
                                                 value={paid.paid} onChange={(e) => handleUpdatePaidChange(e, "paid")}
                                             />
                                         </div>
@@ -322,26 +323,26 @@ export default function BasicTabs() {
                                 </Modal.Body>
                                 <div className='model-footer'>
                                     <button style={{ width: "30%" }} onClick={() => setOpen(true)}
-                                    className="col-md-6 btn-light" type="button">
+                                        className="col-md-6 btn-light" type="button">
                                         Cập nhật
                                     </button>
                                     <button style={{ width: "20%" }} onClick={() => setOpen2(true)}
-                                    className="btn btn-light" type="button">
+                                        className="btn btn-light" type="button">
                                         Đã trả hết
                                     </button>
                                     <button style={{ width: "20%" }} onClick={handleClose} className="btn btn-light" type="button">
                                         Huỷ
                                     </button>
-                                    
+
                                 </div>
                             </form>
                             <ConfirmBox open={open} closeDialog={() => setOpen(false)} title={"Xác nhận cập nhật số tiền đã trả"}
                                 content={"Xác nhận cập nhật số tiền đã trả cho hóa đơn xuất mã " + exportDetail.exportId
-                            + ": " + paid.paid.toLocaleString('vi', { style: 'currency', currency: 'VND' })} deleteFunction={(e) => handleUpdatePaidSubmit(e)}
+                                    + ": " + paid.paid.toLocaleString('vi', { style: 'currency', currency: 'VND' })} deleteFunction={(e) => handleUpdatePaidSubmit(e)}
                             />
                             <ConfirmBox open={open2} closeDialog={() => setOpen2(false)} title={"Xác nhận cập nhật số tiền đã trả"}
                                 content={"Xác nhận trả hết cho hóa đơn xuất mã " + exportDetail.exportId
-                            + ": " + exportDetail.total.toLocaleString('vi', { style: 'currency', currency: 'VND' })} deleteFunction={(e) => handleUpdatePaidAllSubmit(e)}
+                                    + ": " + exportDetail.total.toLocaleString('vi', { style: 'currency', currency: 'VND' })} deleteFunction={(e) => handleUpdatePaidAllSubmit(e)}
                             />
                         </Modal>
                     </div>

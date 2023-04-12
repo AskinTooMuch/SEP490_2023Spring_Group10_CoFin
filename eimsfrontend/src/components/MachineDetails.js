@@ -275,7 +275,8 @@ export default function BasicTabs() {
                                             <p>Tên máy<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                         </div>
                                         <div className="col-md-6">
-                                            <input id="updateMachineName" style={{ width: "100%" }}
+                                            <input className="form-control mt-1"
+                                                id="updateMachineName" style={{ width: "100%" }}
                                                 value={updateMachineDTO.machineName}
                                                 onChange={(e) => handleUpdateMachineChange(e, "machineName")} />
                                         </div>
@@ -371,12 +372,12 @@ export default function BasicTabs() {
                                 {
                                     machineDetailDTO.active == 0
                                         ?
-                                        <div style={{display: "flex" ,justifyContent: "space-between"}}>
-                                            <button style={{width: "45%" }} className='btn btn-light' onClick={()=> handleUpdateActiveMachine(1)} id="startEditMachine">Dừng hoạt động</button>
+                                        <div style={{ display: "flex", justifyContent: "space-between" }}>
+                                            <button style={{ width: "45%" }} className='btn btn-light' onClick={() => handleUpdateActiveMachine(1)} id="startEditMachine">Dừng hoạt động</button>
                                         </div>
                                         :
-                                        <div style={{display: "flex" ,justifyContent: "space-between"}}>
-                                            <button style={{width: "45%" }} className='btn btn-light' onClick={()=> handleUpdateActiveMachine(0)} id="startEditMachine">Hoạt động</button>
+                                        <div style={{ display: "flex", justifyContent: "space-between" }}>
+                                            <button style={{ width: "45%" }} className='btn btn-light' onClick={() => handleUpdateActiveMachine(0)} id="startEditMachine">Hoạt động</button>
                                         </div>
                                 }
                             </div>

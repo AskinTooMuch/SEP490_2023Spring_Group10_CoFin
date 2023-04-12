@@ -8,7 +8,7 @@ import { faStarOfLife } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from 'axios';
 //Toast
-import {  toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 const Payroll = () => {
     //Show-hide Popup
     const [show, setShow] = useState(false);
@@ -312,7 +312,7 @@ const Payroll = () => {
                                     </div>
                                     <div className="col-md-6">
                                         <select
-                                            id="select" className="form-control mt-1" 
+                                            id="select" className="form-control mt-1"
                                             onChange={(e) => handleCreatePayrollChange(e, "employeeId")} >
                                             <option defaultValue="-1" disabled selected>Chọn nhân viên</option>
                                             {
@@ -327,7 +327,8 @@ const Payroll = () => {
                                         <p>Ngày trả <FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                     </div>
                                     <div className="col-md-6">
-                                        <input type="date" style={{ width: "100%" }} placeholder="0"
+                                        <input className="form-control mt-1"
+                                            type="date" style={{ width: "100%" }} placeholder="0"
                                             onChange={(e) => handleCreatePayrollChange(e, "issueDate")} />
                                     </div>
                                 </div>
@@ -336,15 +337,17 @@ const Payroll = () => {
                                         <p>Khoản tiền <FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                     </div>
                                     <div className="col-md-6">
-                                        <input style={{ width: "100%" }} placeholder="Tiền thưởng "
+                                        <input className="form-control mt-1"
+                                            style={{ width: "100%" }} placeholder="Tiền thưởng "
                                             onChange={(e) => handleCreatePayrollChange(e, "payrollItem")} />
                                     </div>
                                     <div className="col-md-6">
                                         <p>Số tiền <FontAwesomeIcon className="star" icon={faStarOfLife} /> </p>
                                     </div>
                                     <div className="col-md-6">
-                                        <input style={{ width: "100%" }} placeholder="1.000.000"
-                                        step={0.01}
+                                        <input className="form-control mt-1"
+                                            style={{ width: "100%" }} placeholder="1.000.000"
+                                            step={0.01}
                                             defaultValue={0}
                                             onChange={(e) => handleCreatePayrollChange(e, "payrollAmount")} />
                                     </div>
@@ -352,7 +355,8 @@ const Payroll = () => {
                                         <p>Ghi chú </p>
                                     </div>
                                     <div className="col-md-6">
-                                        <textarea style={{ width: "100%" }}
+                                        <textarea className="form-control mt-1"
+                                            style={{ width: "100%" }}
                                             onChange={(e) => handleCreatePayrollChange(e, "note")} />
                                     </div>
                                 </div>
@@ -377,7 +381,7 @@ const Payroll = () => {
                             <div className="input-group-prepend">
                                 <button type='submit'><span className="input-group-text" ><SearchIcon /></span></button>
                             </div>
-                            <input type="text" className="form-control" placeholder="Tìm kiếm" aria-label="Username" aria-describedby="basic-addon1" 
+                            <input type="text" className="form-control" placeholder="Tìm kiếm" aria-label="Username" aria-describedby="basic-addon1"
                                 onChange={(e) => handleSearchPayrollChange((e))} />
                         </div>
                     </form>
@@ -449,7 +453,8 @@ const Payroll = () => {
                                     <p>Ngày trả <FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                 </div>
                                 <div className="col-md-6">
-                                    <input type="date" style={{ width: "100%" }} placeholder="0"
+                                    <input className="form-control mt-1"
+                                        type="date" style={{ width: "100%" }} placeholder="0"
                                         value={payrollDetailDTO.issueDate}
                                         onChange={(e) => handleEditPayrollChange(e, "issueDate")} />
                                 </div>
@@ -459,7 +464,8 @@ const Payroll = () => {
                                     <p>Khoản tiền <FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                 </div>
                                 <div className="col-md-6">
-                                    <input  style={{ width: "100%" }} placeholder="Tiền thưởng "
+                                    <input className="form-control mt-1"
+                                        style={{ width: "100%" }} placeholder="Tiền thưởng "
                                         value={payrollDetailDTO.payrollItem}
                                         onChange={(e) => handleEditPayrollChange(e, "payrollItem")} />
                                 </div>
@@ -467,9 +473,10 @@ const Payroll = () => {
                                     <p>Số tiền <FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                 </div>
                                 <div className="col-md-6">
-                                    <input style={{ width: "100%" }} placeholder="1.000.000"
-                                    step="0.01"
-                                    defaultValue={0}
+                                    <input className="form-control mt-1"
+                                        style={{ width: "100%" }} placeholder="1.000.000"
+                                        step="0.01"
+                                        defaultValue={0}
                                         value={payrollDetailDTO.payrollAmount}
                                         onChange={(e) => handleEditPayrollChange(e, "payrollAmount")} />
                                 </div>
@@ -477,7 +484,8 @@ const Payroll = () => {
                                     <p>Ghi chú </p>
                                 </div>
                                 <div className="col-md-6">
-                                    <textarea style={{ width: "100%" }}
+                                    <textarea className="form-control mt-1"
+                                        style={{ width: "100%" }}
                                         value={payrollDetailDTO.note}
                                         onChange={(e) => handleEditPayrollChange(e, "note")} />
                                 </div>
@@ -495,7 +503,7 @@ const Payroll = () => {
                 </form>
             </Modal>
             {/* End: Table for payroll */}
-           
+
         </div>
     );
 }

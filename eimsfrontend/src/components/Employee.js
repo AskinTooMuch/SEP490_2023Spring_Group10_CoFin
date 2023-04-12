@@ -312,7 +312,8 @@ export default function BasicTabs() {
                                         <p>Tên nhân viên<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                     </div>
                                     <div className="col-md-6">
-                                        <input style={{ width: "100%" }}
+                                        <input className="form-control mt-1"
+                                            style={{ width: "100%" }}
                                             onChange={(e) => handleCreateEmployeeChange(e, "employeeName")} />
                                     </div>
                                     {/*Date of birth*/}
@@ -320,7 +321,8 @@ export default function BasicTabs() {
                                         <p htmlFor="employeeDob">Ngày sinh (Ngày/Tháng/Năm) <FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                     </div>
                                     <div className="col-md-6">
-                                        <input type="date" id="employeeDob" style={{ width: "100%" }}
+                                        <input className="form-control mt-1"
+                                            type="date" id="employeeDob" style={{ width: "100%" }}
                                             ref={userRef}
                                             autoComplete="off"
                                             onChange={(e) => handleCreateEmployeeChange(e, "employeeDob")}
@@ -330,7 +332,8 @@ export default function BasicTabs() {
                                         <p>Số điện thoại<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                     </div>
                                     <div className="col-md-6">
-                                        <input style={{ width: "100%" }}
+                                        <input className="form-control mt-1"
+                                            style={{ width: "100%" }}
                                             onChange={(e) => handleCreateEmployeeChange(e, "employeePhone")} />
                                     </div>
                                 </div>
@@ -339,7 +342,8 @@ export default function BasicTabs() {
                                         <p>Mật khẩu<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                     </div>
                                     <div className="col-md-6">
-                                        <input style={{ width: "100%" }} 
+                                        <input className="form-control mt-1"
+                                            style={{ width: "100%" }}
                                             onChange={(e) => handleCreateEmployeeChange(e, "employeePassword")} />
                                     </div>
 
@@ -407,7 +411,8 @@ export default function BasicTabs() {
                                         <p htmlFor="uhomenum">Số nhà <FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                     </div>
                                     <div className="col-md-6">
-                                        <input type="text" id="uhomenum" style={{ width: "100%" }}
+                                        <input className="form-control mt-1"
+                                            type="text" id="uhomenum" style={{ width: "100%" }}
                                             ref={userRef}
                                             autoComplete="off"
                                             onChange={(e) => saveAddressJson(e.target.value)}
@@ -420,14 +425,16 @@ export default function BasicTabs() {
                                         <p>Email</p>
                                     </div>
                                     <div className="col-md-6">
-                                        <input style={{ width: "100%" }}
+                                        <input className="form-control mt-1"
+                                            style={{ width: "100%" }}
                                             onChange={(e) => handleCreateEmployeeChange(e, "email")} />
                                     </div>
                                     <div className="col-md-6">
                                         <p>Lương<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
                                     </div>
                                     <div className="col-md-6">
-                                        <input style={{ width: "100%" }} placeholder="0"
+                                        <input className="form-control mt-1"
+                                            style={{ width: "100%" }} placeholder="0"
                                             step={0.01}
                                             type='number'
                                             onChange={(e) => handleCreateEmployeeChange(e, "salary")}
