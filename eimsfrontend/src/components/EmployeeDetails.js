@@ -588,8 +588,8 @@ export default function BasicTabs() {
                                                 onChange={(e) => handleUpdateEmployeeChange(e, "status")}>
                                                 <option disabled>Chọn trạng thái hoạt động</option>
                                                 {updateEmployeeDTO.status === 2
-                                                    ? <><option value="2" className='text-green' selected>Đang hoạt động </option><option value="0" className='text-red'>Nghỉ việc</option></>
-                                                    : <><option value="2" className='text-green'>Đang hoạt động </option><option value="0" className='text-red' selected>Nghỉ việc</option></>
+                                                    ? <><option value="2" className='text-green' selected>Đang hoạt động </option><option value="0" className='text-red'>Tạm nghỉ</option></>
+                                                    : <><option value="2" className='text-green'>Đang hoạt động </option><option value="0" className='text-red' selected>Tạm nghỉ</option></>
                                                 }
                                             </select>
                                         </div>
