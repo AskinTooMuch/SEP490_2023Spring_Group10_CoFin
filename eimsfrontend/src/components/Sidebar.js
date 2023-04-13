@@ -29,7 +29,7 @@ function Sidebar(props, { defaultActive, }) {
     changeActiveIndex(activeItem);
   }, [location])
   return (
-    <div >
+    < >
       <SidebarParent>
         <div style={{ position: 'fixed' }}>
           {/**Sidenav for Owner */}
@@ -81,7 +81,7 @@ function Sidebar(props, { defaultActive, }) {
         </div>
         <div className="behind-the-scenes" />
       </SidebarParent>
-    </div>
+    </>
   );
 }
 
@@ -102,6 +102,7 @@ const SidebarParent = styled.div`
   
   .behind-the-scenes {
     width: 250px;
+    height: 100vh;
   }
 `;
 
