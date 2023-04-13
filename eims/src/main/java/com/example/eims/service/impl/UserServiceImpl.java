@@ -84,7 +84,7 @@ public class UserServiceImpl implements IUserService {
             UserDetailDTO userDetailDTO = (UserDetailDTO) q.getSingleResult();
             System.out.println(userDetailDTO);
             return new ResponseEntity<>(userDetailDTO, HttpStatus.OK);
-        }catch (NoResultException e){
+        } catch (NoResultException e) {
             return new ResponseEntity<>("Người dùng không hợp lệ", HttpStatus.BAD_REQUEST);
         }
     }
@@ -117,29 +117,35 @@ public class UserServiceImpl implements IUserService {
             List<User> users = role.getAccounts();
             if (role.getRoleId() == 2) { // owner
                 for (User user : users) {
-                    UserListItemDTO dto = new UserListItemDTO();
-                    dto.setUserId(user.getUserId());
-                    dto.setUserName(user.getUsername());
-                    dto.setPhone(user.getPhone());
-                    dto.setDob(user.getDob());
-                    dto.setStatus(user.getStatus());
-                    Facility facility = facilityRepository.findByUserId(user.getUserId()).get();
-                    dto.setFacilityName(facility.getFacilityName());
-                    dtoList.add(dto);
+                    if (user.getStatus() == 2) { // active
+                        UserListItemDTO dto = new UserListItemDTO();
+                        dto.setUserId(user.getUserId());
+                        dto.setUserName(user.getUsername());
+                        dto.setPhone(user.getPhone());
+                        dto.setDob(user.getDob());
+                        dto.setStatus(user.getStatus());
+                        Facility facility = facilityRepository.findByUserId(user.getUserId()).get();
+                        dto.setFacilityName(facility.getFacilityName());
+                        dto.setBusinessLicenseNumber(facility.getBusinessLicenseNumber());
+                        dtoList.add(dto);
+                    }
                 }
             }
             if (role.getRoleId() == 3) { // employee
                 for (User user : users) {
-                    UserListItemDTO dto = new UserListItemDTO();
-                    dto.setUserId(user.getUserId());
-                    dto.setUserName(user.getUsername());
-                    dto.setPhone(user.getPhone());
-                    dto.setDob(user.getDob());
-                    dto.setStatus(user.getStatus());
-                    WorkIn workIn = workInRepository.findByUserId(user.getUserId()).get();
-                    Facility facility = facilityRepository.findByFacilityId(workIn.getFacilityId()).get();
-                    dto.setFacilityName(facility.getFacilityName());
-                    dtoList.add(dto);
+                    if (user.getStatus() == 2) { // active
+                        UserListItemDTO dto = new UserListItemDTO();
+                        dto.setUserId(user.getUserId());
+                        dto.setUserName(user.getUsername());
+                        dto.setPhone(user.getPhone());
+                        dto.setDob(user.getDob());
+                        dto.setStatus(user.getStatus());
+                        WorkIn workIn = workInRepository.findByUserId(user.getUserId()).get();
+                        Facility facility = facilityRepository.findByFacilityId(workIn.getFacilityId()).get();
+                        dto.setFacilityName(facility.getFacilityName());
+                        dto.setBusinessLicenseNumber(facility.getBusinessLicenseNumber());
+                        dtoList.add(dto);
+                    }
                 }
             }
             if (role.getRoleId() == 4) { // moderator
@@ -236,12 +242,12 @@ public class UserServiceImpl implements IUserService {
             if (!email.equals("") && !stringDealer.checkEmailRegex(email)) { /* Email is not valid*/
                 return new ResponseEntity<>("Email không hợp lệ", HttpStatus.BAD_REQUEST);
             }
-            if (email.length() > 64){ /* Email is not valid*/
+            if (email.length() > 64) { /* Email is not valid*/
                 return new ResponseEntity<>("Email không được dài hơn 64 kí tự", HttpStatus.BAD_REQUEST);
             }
             // Address
             String userAddress = stringDealer.trimMax(updateUserDTO.getAddress());
-            if(userAddress.equals("")){
+            if (userAddress.equals("")) {
                 return new ResponseEntity<>("Địa chỉ không được để trống", HttpStatus.BAD_REQUEST);
             }
             try {
@@ -282,8 +288,8 @@ public class UserServiceImpl implements IUserService {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
-/*
-    *//**
+    /*
+     *//**
      * View list of users with same role.
      *
      * @param roleId the id of user's role

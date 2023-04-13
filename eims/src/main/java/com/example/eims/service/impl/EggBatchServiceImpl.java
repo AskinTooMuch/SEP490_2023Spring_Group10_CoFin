@@ -415,6 +415,13 @@ public class EggBatchServiceImpl implements IEggBatchService {
         }
         // Get Machine list
         List<EggLocationUpdateEggBatchDTO> eggLocationDTOs = updateEggBatchDTO.getEggLocationUpdateEggBatchDTOS();
+        if (eggLocationDTOs.size() > 0) {
+            for (EggLocationUpdateEggBatchDTO item : eggLocationDTOs) {
+                if (item.getAmountUpdate() == 0) {
+                    eggLocationDTOs.remove(item);
+                }
+            }
+        }
 
         try {
             // Find current egg product to update

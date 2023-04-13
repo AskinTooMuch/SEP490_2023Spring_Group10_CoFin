@@ -134,8 +134,8 @@ export default function BasicTabs() {
             machineTypeId: item.machineTypeId,
             amountCurrent: item.curCapacity,
             capacity: item.maxCapacity,
-            amountUpdate: item.amount,
-            oldAmount : item.amount
+            amountUpdate: 0,
+            oldAmount : 0
         });
         setShow2(false);
     }
@@ -965,7 +965,7 @@ function TableRows({ rowsData, deleteTableRows, handleChangeData }) {
                     </td>
                     <td><input type="number" value={amountUpdate} onChange={(evnt) => (handleChangeData(index, evnt))} name="amountUpdate" className="form-control" /> </td>
                     {
-                        ((capacity - amountCurrent) === 0)
+                        (oldAmount > 0)
                             ? <td className='td'><button disabled className="btn btn-outline-danger" type='button' onClick={() => (deleteTableRows(index))}><ClearIcon /></button></td>
                             : <td className='td'><button className="btn btn-outline-danger" type='button' onClick={() => (deleteTableRows(index))}><ClearIcon /></button></td>
                     }

@@ -145,9 +145,9 @@ const StockReport = () => {
                                             </colgroup>
                                             <thead className="u-palette-4-base u-table-header u-table-header-1">
                                                 <tr style={{ height: "21px" }}>
-                                                    <th className="u-border-1 u-border-custom-color-1 u-palette-2-base u-table-cell u-table-cell-1">STT</th>
-                                                    <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-3">Loại</th>
-                                                    <th className="u-border-1 u-border-custom-color-1 u-palette-2-base u-table-cell u-table-cell-1">Mã lô</th>
+                                                    <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-1">STT</th>
+                                                    <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-2">Loại</th>
+                                                    <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-3">Mã lô</th>
                                                     <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-4">Sản phẩm</th>
                                                     <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-5">Số lượng trong kho</th>
                                                     <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-6">Ngày xuất</th>
@@ -202,7 +202,7 @@ const StockReport = () => {
                                             </colgroup>
                                             <thead className="u-palette-4-base u-table-header u-table-header-1">
                                                 <tr style={{ height: "21px" }}>
-                                                    <th className="u-border-1 u-border-custom-color-1 u-palette-2-base u-table-cell u-table-cell-1">STT</th>
+                                                    <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-2">STT</th>
                                                     <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-3">Loại</th>
                                                     <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-4">Sản phẩm</th>
                                                     <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-5">Số lượng trong kho</th>
@@ -235,9 +235,7 @@ const StockReport = () => {
                     </div>
                 </section>
             </div>
-
         </div >
-
     );
 }
 export default StockReport;

@@ -23,4 +23,5 @@ public class UserListItemDTO {
     private String phone;
     private int status;
     private String facilityName;
+    private String businessLicenseNumber;
 }
