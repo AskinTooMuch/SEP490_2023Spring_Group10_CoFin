@@ -86,18 +86,17 @@ const Dashboard = () => {
                     </div>
                   </div>
                 )
-                : 
-                <div>
-                <h4>
-                  Hiện tại không có máy nào đang ấp
-                </h4>
+                :
+                <div className='no-eggbatch'>
+                  <h4>
+                    Hiện tại không có máy nào đang ấp
+                  </h4>
                 </div>
-                
             }
           </div>
         </div>
       </WithPermission>
-      
+
     </div >
   );
 }

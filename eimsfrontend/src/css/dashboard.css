@@ -82,3 +82,12 @@
     margin: 10px;
     height: 4vh;
 }
+
+.no-eggbatch{
+    text-align: center;
+    font-style: italic;
+}
+
+.no-eggbatch h4{
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}

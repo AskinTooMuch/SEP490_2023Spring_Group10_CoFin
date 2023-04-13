@@ -16,6 +16,13 @@ const ChangePassword = () => {
   const togglePasswordVisiblity = () => {
     setPasswordShown(passwordShown ? false : true);
   };
+
+  //show-hide password 
+  const [passwordConfirmShown, setPasswordConfirmShown] = useState(false);
+  const toggleConfirmPasswordVisiblity = () => {
+    setPasswordConfirmShown(passwordConfirmShown ? false : true);
+  };
+
   const navigate = useNavigate();
   const userRef = useRef();
   // DTOs
@@ -88,10 +95,10 @@ const ChangePassword = () => {
                 </div>
                 <div className="u-form-group u-form-password login-wrapper">
                   <label for="password-a30d" className="u-label u-text-grey-25 u-label-2">Xác nhận mật khẩu </label>
-                  <input type={passwordShown ? "text" : "password"} name="repassword" placeholder="Nhập lại mật khẩu"
+                  <input type={passwordConfirmShown ? "text" : "password"} name="repassword" placeholder="Nhập lại mật khẩu"
                     ref={userRef} onChange={(e) => handleChange(e, "confirmPassword")}
                     className="u-border-2 u-border-grey-10 u-grey-10 u-input u-input-rectangle u-input-2" />
-                  <i onClick={togglePasswordVisiblity}>{eye}</i>
+                  <i onClick={toggleConfirmPasswordVisiblity}>{eye}</i>
                 </div>
                 <div className="u-align-left u-form-group u-form-submit">
                   <button type="submit" className="u-btn u-btn-submit u-button-style u-btn-1">Xác nhận</button>

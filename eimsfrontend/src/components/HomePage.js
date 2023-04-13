@@ -105,12 +105,12 @@ c6.177,6.18,9.262,14.271,9.262,22.366C354.708,234.018,351.617,242.115,345.441,24
                                     <div className="u-layout-row">
                                         <div className="u-container-align-center u-container-style u-layout-cell u-size-15 u-layout-cell-1">
                                             <div className="u-container-layout u-valign-middle-xl u-container-layout-1">
-                                                <h3 className="u-align-center u-custom-font u-font-ubuntu u-text u-text-2" data-animation-name="counter" data-animation-event="scroll" data-animation-duration="3000">$ 40</h3>
+                                                <h3 className="u-align-center u-custom-font u-font-ubuntu u-text u-text-2" data-animation-name="counter" data-animation-event="scroll" data-animation-duration="3000">$ 20</h3>
                                             </div>
                                         </div>
                                         <div className="u-container-align-center-sm u-container-align-center-xs u-container-style u-layout-cell u-size-45 u-layout-cell-2">
                                             <div className="u-container-layout u-valign-middle u-container-layout-2">
-                                                <p className="u-align-center-sm u-align-center-xs u-text u-text-default u-text-3"> Chỉ với 40$ đã có thể sự dụng các tính năng của hệ thống</p>
+                                                <p className="u-align-center-sm u-align-center-xs u-text u-text-default u-text-3"> Chỉ với 500.000 VNĐ đã có thể sự dụng các tính năng của hệ thống</p>
                                             </div>
                                         </div>
                                     </div>

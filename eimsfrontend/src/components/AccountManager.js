@@ -5,6 +5,7 @@ import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Registrators from './Registrators';
+import Facility from './Facility';
 function AccountManager(props) {
   const { children, value, index, ...other } = props;
 
@@ -57,6 +58,7 @@ export default function BasicTabs() {
         </Tabs>
       </Box>
       <AccountManager value={value} index={0}>
+        <Facility/>
       </AccountManager>
       <AccountManager value={value} index={1}>
         <Registrators />

@@ -1,8 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Modal } from 'react-bootstrap';
-import FilterAltIcon from '@mui/icons-material/FilterAlt';
-import ImportExportIcon from '@mui/icons-material/ImportExport';
-import SearchIcon from '@mui/icons-material/Search';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 const Registrators = () => {

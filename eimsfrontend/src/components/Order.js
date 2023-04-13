@@ -49,6 +49,7 @@ export default function BasicTabs() {
   };
  
   return (
+    <div className='container'>
     <Box sx={{ width: '100%' }}>
       <Box sx={{ borderBottom: 1, borderColor: 'black' }}>
         <Tabs sx={{
@@ -74,5 +75,6 @@ export default function BasicTabs() {
         <Customer/>
       </Order>
     </Box>
+    </div>
   );
 }
