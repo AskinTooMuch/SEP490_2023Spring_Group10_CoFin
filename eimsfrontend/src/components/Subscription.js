@@ -200,7 +200,7 @@ export default function BasicTabs() {
                         ? subscriptionHistory.map((item, index) => {
                           return (
                             <tr style={{ height: "76px" }}>
-                              <td className="u-border-1 u-border-grey-30 u-first-column u-grey-5 u-table-cell u-table-cell-5">1</td>
+                              <td className="u-border-1 u-border-grey-30 u-first-column u-grey-5 u-table-cell u-table-cell-5"> {index+1}</td>
                               <td className="u-border-1 u-border-grey-30 u-table-cell">Gói {item.subscriptionId}</td>
                               <td className="u-border-1 u-border-grey-30 u-table-cell">{item.subscribeDate}</td>
                               <td className="u-border-1 u-border-grey-30 u-table-cell">{item.expireDate}</td>
