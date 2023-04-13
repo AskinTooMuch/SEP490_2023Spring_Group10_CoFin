@@ -130,95 +130,93 @@ export default function BasicTabs() {
   };
 
   return (
-    <div className='container'>
-      <WithPermission roleRequired='2'>
-        <Box sx={{ width: '100%' }}>
-          <Box sx={{ borderBottom: 1, borderColor: 'black' }}>
-            <Tabs sx={{
-              '& .MuiTabs-indicator': { backgroundColor: "#d25d19" },
-              '& .Mui-selected': { color: "#d25d19" },
-            }} value={value} onChange={handleChange} aria-label="basic tabs example">
-              <Tab id="subcription" style={{ textTransform: "capitalize" }} label="Danh sách gói" {...a11yProps(0)} />
-              <Tab id="history" style={{ textTransform: "capitalize" }} label="Lịch sử" {...a11yProps(1)} />
-            </Tabs>
-          </Box>
-          {/* Print out subscription list */}
-          <Subscription value={value} index={0}>
-            <div className="container">
-              <div className="row">
-                {
-                  subscriptionList && subscriptionList.length > 0
-                    ? subscriptionList.map((item, index) => {
-                      return (
-                        <div className="col-md-3 col-sm-6">
-                          <div className={`pricingTable ${item.recommended ? 'orange' : 'green'}`}>
-                            <h3 className="title">GÓI {item.subscriptionId}</h3>
-                            <div className="price-value ">
-                              <p className="amount">{item.cost.toLocaleString("de-DE")}</p>
-                              <br />
-                              <p className="currency">VNĐ</p>
-                            </div>
-                            <ul className="pricing-content">
-                              <li>Thời gian hiệu lực <b>{item.duration} ngày</b>.</li>
-                              <li>Tối đa sử dụng cho <b>{item.machineQuota} máy</b>.</li>
-                            </ul>
-                            <button className='btn' onClick={() => routeChange(item.subscriptionId)}><Link className="pricingTable-signup" >Đăng ký</Link></button>
+    <WithPermission roleRequired='2'>
+      <Box sx={{ width: '100%' }}>
+        <Box sx={{ borderBottom: 1, borderColor: 'black' }}>
+          <Tabs sx={{
+            '& .MuiTabs-indicator': { backgroundColor: "#d25d19" },
+            '& .Mui-selected': { color: "#d25d19" },
+          }} value={value} onChange={handleChange} aria-label="basic tabs example">
+            <Tab id="subcription" style={{ textTransform: "capitalize" }} label="Danh sách gói" {...a11yProps(0)} />
+            <Tab id="history" style={{ textTransform: "capitalize" }} label="Lịch sử" {...a11yProps(1)} />
+          </Tabs>
+        </Box>
+        {/* Print out subscription list */}
+        <Subscription value={value} index={0}>
+          <div className="container">
+            <div className="row">
+              {
+                subscriptionList && subscriptionList.length > 0
+                  ? subscriptionList.map((item, index) => {
+                    return (
+                      <div className="col-md-3 col-sm-6">
+                        <div className={`pricingTable ${item.recommended ? 'orange' : 'green'}`}>
+                          <h3 className="title">GÓI {item.subscriptionId}</h3>
+                          <div className="price-value ">
+                            <p className="amount">{item.cost.toLocaleString("de-DE")}</p>
+                            <br />
+                            <p className="currency">VNĐ</p>
                           </div>
+                          <ul className="pricing-content">
+                            <li>Thời gian hiệu lực <b>{item.duration} ngày</b>.</li>
+                            <li>Tối đa sử dụng cho <b>{item.machineQuota} máy</b>.</li>
+                          </ul>
+                          <button className='btn' onClick={() => routeChange(item.subscriptionId)}><Link className="pricingTable-signup" >Đăng ký</Link></button>
                         </div>
-                      )
-                    })
-                    : <div>Không tìm thấy gói đăng ký khả dụng.</div>
-                }
+                      </div>
+                    )
+                  })
+                  : <div>Không tìm thấy gói đăng ký khả dụng.</div>
+              }
 
+            </div>
+          </div>
+        </Subscription>
+        <Subscription value={value} index={1}>
+          <section className="u-align-center u-clearfix u-section-1" id="sec-b42b">
+            <div className="u-clearfix u-sheet u-sheet-1">
+
+              <div className="u-expanded-width u-table u-table-responsive u-table-1">
+                <table className="u-table-entity u-table-entity-1">
+                  <colgroup>
+                    <col width="5%" />
+                    <col width="20%" />
+                    <col width="25%" />
+                    <col width="25%" />
+                    <col width="25%" />
+                  </colgroup>
+                  <thead className="u-palette-4-base u-table-header u-table-header-1">
+                    <tr style={{ height: "21px" }}>
+                      <th className="u-border-1 u-border-custom-color-1 u-palette-2-base u-table-cell u-table-cell-1">STT</th>
+                      <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-2">Tên gói</th>
+                      <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-3">Ngày đăng ký</th>
+                      <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-3">Ngày hết hạn</th>
+                      <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-5">Đã thanh toán</th>
+                    </tr>
+                  </thead>
+                  <tbody className="u-table-body">
+                    {
+                      subscriptionHistory && subscriptionHistory.length > 0
+                        ? subscriptionHistory.map((item, index) => {
+                          return (
+                            <tr style={{ height: "76px" }}>
+                              <td className="u-border-1 u-border-grey-30 u-first-column u-grey-5 u-table-cell u-table-cell-5">1</td>
+                              <td className="u-border-1 u-border-grey-30 u-table-cell">Gói {item.subscriptionId}</td>
+                              <td className="u-border-1 u-border-grey-30 u-table-cell">{item.subscribeDate}</td>
+                              <td className="u-border-1 u-border-grey-30 u-table-cell">{item.expireDate}</td>
+                              <td className="u-border-1 u-border-grey-30 u-table-cell ">{item.paid ? item.paid.toLocaleString('vi', { style: 'currency', currency: 'VND' }) : '0 ₫'}</td>
+                            </tr>
+                          )
+                        })
+                        : <div>Lịch sử đăng ký trống.</div>
+                    }
+                  </tbody>
+                </table>
               </div>
             </div>
-          </Subscription>
-          <Subscription value={value} index={1}>
-            <section className="u-align-center u-clearfix u-section-1" id="sec-b42b">
-              <div className="u-clearfix u-sheet u-sheet-1">
-
-                <div className="u-expanded-width u-table u-table-responsive u-table-1">
-                  <table className="u-table-entity u-table-entity-1">
-                    <colgroup>
-                      <col width="5%" />
-                      <col width="20%" />
-                      <col width="25%" />
-                      <col width="25%" />
-                      <col width="25%" />
-                    </colgroup>
-                    <thead className="u-palette-4-base u-table-header u-table-header-1">
-                      <tr style={{ height: "21px" }}>
-                        <th className="u-border-1 u-border-custom-color-1 u-palette-2-base u-table-cell u-table-cell-1">STT</th>
-                        <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-2">Tên gói</th>
-                        <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-3">Ngày đăng ký</th>
-                        <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-3">Ngày hết hạn</th>
-                        <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-5">Đã thanh toán</th>
-                      </tr>
-                    </thead>
-                    <tbody className="u-table-body">
-                      {
-                        subscriptionHistory && subscriptionHistory.length > 0
-                          ? subscriptionHistory.map((item, index) => {
-                            return (
-                              <tr style={{ height: "76px" }}>
-                                <td className="u-border-1 u-border-grey-30 u-first-column u-grey-5 u-table-cell u-table-cell-5">1</td>
-                                <td className="u-border-1 u-border-grey-30 u-table-cell">Gói {item.subscriptionId}</td>
-                                <td className="u-border-1 u-border-grey-30 u-table-cell">{item.subscribeDate}</td>
-                                <td className="u-border-1 u-border-grey-30 u-table-cell">{item.expireDate}</td>
-                                <td className="u-border-1 u-border-grey-30 u-table-cell ">{item.paid ? item.paid.toLocaleString('vi', { style: 'currency', currency: 'VND' }) : '0 ₫'}</td>
-                              </tr>
-                            )
-                          })
-                          : <div>Lịch sử đăng ký trống.</div>
-                      }
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </section>
-          </Subscription>
-        </Box>
-      </WithPermission >
-    </div>
+          </section>
+        </Subscription>
+      </Box>
+    </WithPermission >
   );
 }

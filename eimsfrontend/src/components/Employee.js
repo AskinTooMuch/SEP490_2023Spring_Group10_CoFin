@@ -294,237 +294,235 @@ export default function BasicTabs() {
 
 
     return (
-        <div className='container'>
-            <Box sx={{ width: '100%' }}>
-                <Box sx={{ borderBottom: 1, borderColor: 'black' }}>
-                    <Tabs sx={{
-                        '& .MuiTabs-indicator': { backgroundColor: "#d25d19" },
-                        '& .Mui-selected': { color: "#d25d19" },
-                    }} value={value} onChange={handleChange} aria-label="basic tabs example">
-                        <Tab style={{ textTransform: "capitalize" }} label="Nhân viên" {...a11yProps(0)} />
-                    </Tabs>
-                </Box>
-                <Employee value={value} index={0}>
-                    <nav className="navbar justify-content-between">
-                        <button className='btn btn-light' onClick={handleShow}>+ Thêm</button>
-                        <Modal show={show} onHide={handleClose}
-                            size="lg"
-                            aria-labelledby="contained-modal-title-vcenter"
-                            centered >
-                            <form onSubmit={handleCreateEmployeeSubmit}>
-                                <Modal.Header closeButton onClick={handleClose}>
-                                    <Modal.Title>Thêm nhân viên</Modal.Title>
-                                </Modal.Header>
-                                <Modal.Body>
-                                    <div className="row">
-                                        <div className="col-md-6">
-                                            <p>Tên nhân viên<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
-                                        </div>
-                                        <div className="col-md-6">
-                                            <input className="form-control mt-1"
-                                                style={{ width: "100%" }}
-                                                onChange={(e) => handleCreateEmployeeChange(e, "employeeName")} />
-                                        </div>
-                                        {/*Date of birth*/}
-                                        <div className="col-md-6">
-                                            <p htmlFor="employeeDob">Ngày sinh (Ngày/Tháng/Năm) <FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
-                                        </div>
-                                        <div className="col-md-6">
-                                            <input className="form-control mt-1"
-                                                type="date" id="employeeDob" style={{ width: "100%" }}
-                                                ref={userRef}
-                                                autoComplete="off"
-                                                onChange={(e) => handleCreateEmployeeChange(e, "employeeDob")}
-                                            />
-                                        </div>
-                                        <div className="col-md-6">
-                                            <p>Số điện thoại<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
-                                        </div>
-                                        <div className="col-md-6 ">
-                                            <input className="form-control mt-1"
-                                                style={{ width: "100%" }}
-                                                onChange={(e) => handleCreateEmployeeChange(e, "employeePhone")} />
-                                        </div>
-                                    </div>
-                                    <div className="row">
-                                        <div className="col-md-6">
-                                            <p>Mật khẩu<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
-                                        </div>
-                                        <div className="col-md-6 pass-wrapper">
-                                            <input className="form-control mt-1"
-                                                style={{ width: "100%" }} type={passwordShown ? "text" : "password"}
-                                                onChange={(e) => handleCreateEmployeeChange(e, "employeePassword")} />
-                                            <i onClick={togglePasswordVisiblity}>{eye}</i>
-                                        </div>
-
-                                        {/*City*/}
-                                        <div className="col-md-6">
-                                            <p htmlFor="uprovince" >Tỉnh/Thành Phố<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
-                                        </div>
-                                        <div className="col-md-6">
-                                            <select className="form-control mt-1" id="uprovince"
-                                                ref={userRef}
-                                                autoComplete="off"
-                                                onChange={(e) => loadDistrict(e.target.value)}
-                                                value={cityIndex}
-                                            >
-                                                <option value="" disabled selected>Chọn Tỉnh/Thành phố</option>
-                                                {city &&
-                                                    city.map((item, index) => (
-                                                        <option value={index}>{item.label}</option>
-                                                    ))
-                                                }
-                                            </select>
-                                        </div>
-
-                                        {/*District*/}
-                                        <div className="col-md-6">
-                                            <p htmlFor="udistrict" >Quận/Huyện <FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
-                                        </div>
-                                        <div className="col-md-6">
-                                            <select className="form-control mt-1" id="udistrict" name="supplierDistrict"
-                                                ref={userRef}
-                                                autoComplete="off"
-                                                onChange={(e) => loadWard(e.target.value)}
-                                                value={districtIndex}
-                                            >
-                                                <option value="" disable>Chọn Quận/Huyện</option>
-                                                {district &&
-                                                    district.map((item, index) => (
-                                                        <option value={index}>{item.label}</option>
-                                                    ))
-                                                }
-                                            </select>
-                                        </div>
-
-                                        {/*User ward*/}
-                                        <div className="col-md-6">
-                                            <p htmlFor="uward" >Phường/Xã <FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
-                                        </div>
-                                        <div className="col-md-6">
-                                            <select className="form-control mt-1" id="uward" name="supplierWard"
-                                                ref={userRef}
-                                                autoComplete="off"
-                                                onChange={(e) => saveWard(e.target.value)}
-                                                value={wardIndex}
-                                            >
-                                                <option value="" disable>Chọn Phường/Xã</option>
-                                                {ward &&
-                                                    ward.map((item, index) => (
-                                                        <option value={index}>{item.label}</option>
-                                                    ))
-                                                }
-                                            </select>
-                                        </div>
-
-                                        <div className="col-md-6">
-                                            <p htmlFor="uhomenum">Số nhà <FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
-                                        </div>
-                                        <div className="col-md-6">
-                                            <input className="form-control mt-1"
-                                                type="text" id="uhomenum" style={{ width: "100%" }}
-                                                ref={userRef}
-                                                autoComplete="off"
-                                                onChange={(e) => saveAddressJson(e.target.value)}
-                                            />
-                                        </div>
-
-                                    </div>
-                                    <div className="row">
-                                        <div className="col-md-6">
-                                            <p>Email</p>
-                                        </div>
-                                        <div className="col-md-6">
-                                            <input className="form-control mt-1"
-                                                style={{ width: "100%" }}
-                                                onChange={(e) => handleCreateEmployeeChange(e, "email")} />
-                                        </div>
-                                        <div className="col-md-6">
-                                            <p>Lương<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
-                                        </div>
-                                        <div className="col-md-6">
-                                            <input className="form-control mt-1"
-                                                style={{ width: "100%" }} placeholder="0"
-                                                step={0.01}
-                                                type='number'
-                                                onChange={(e) => handleCreateEmployeeChange(e, "salary")}
-                                                defaultValue={0} />
-                                        </div>
-                                    </div>
-                                </Modal.Body>
-                                <div className='model-footer'>
-                                    <button style={{ width: "30%" }} type="submit" className="col-md-6 btn-light">
-                                        Tạo
-                                    </button>
-                                    <button style={{ width: "20%" }} type="button" onClick={handleClose} className="btn btn-light">
-                                        Huỷ
-                                    </button>
-                                </div>
-                            </form>
-                        </Modal>
-                        <div className='filter my-2 my-lg-0'>
-                            <p><FilterAltIcon />Lọc</p>
-                            <p><ImportExportIcon />Sắp xếp</p>
-                            <form className="form-inline" onSubmit={searchEmployeeList}>
-                                <div className="input-group">
-                                    <div className="input-group-prepend">
-                                        <button type='submit'><span className="input-group-text" ><SearchIcon /></span></button>
-                                    </div>
-                                    <input type="text" className="form-control" placeholder="Tìm kiếm" aria-label="Username" aria-describedby="basic-addon1"
-                                        onChange={(e) => handleSearchEmployeeChange((e))} />
-                                </div>
-                            </form>
-                        </div>
-                    </nav>
-                    <div>
-                        <section className="u-align-center u-clearfix u-section-1" id="sec-b42b">
-                            <div className="u-clearfix u-sheet u-sheet-1">
-                                <div className="u-expanded-width u-table u-table-responsive u-table-1">
-                                    <table className="u-table-entity u-table-entity-1">
-                                        <colgroup>
-                                            <col width="5%" />
-                                            <col width="35%" />
-                                            <col width="30%" />
-                                            <col width="30%" />
-                                        </colgroup>
-                                        <thead className="u-palette-4-base u-table-header u-table-header-1">
-                                            <tr style={{ height: "21px" }}>
-                                                <th className="u-border-1 u-border-custom-color-1 u-palette-2-base u-table-cell u-table-cell-1">STT</th>
-                                                <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-2">Tên nhân viên</th>
-                                                <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-3">Số điện thoại</th>
-                                                <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-5">Trạng thái</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody className="u-table-body">
-                                            {
-                                                employeeList && employeeList.length > 0 ?
-                                                    employeeList.map((item, index) =>
-                                                        <tr style={{ height: "76px" }} className='trclick' onClick={() => routeChange(item.employeeId)}>
-                                                            <td className="u-border-1 u-border-grey-30 u-first-column u-grey-5 u-table-cell u-table-cell-1">{index + 1}</td>
-                                                            <td className="u-border-1 u-border-grey-30 u-table-cell">{item.employeeName}</td>
-                                                            <td className="u-border-1 u-border-grey-30 u-table-cell">{item.employeePhone}</td>
-                                                            {item.status === 2
-                                                                ? <td className="u-border-1 u-border-grey-30 u-table-cell text-green">
-                                                                    Hoạt động
-                                                                </td>
-                                                                : <td className="u-border-1 u-border-grey-30 u-table-cell text-red">
-                                                                    Tạm nghỉ
-                                                                </td>
-                                                            }
-                                                        </tr>
-                                                    ) :
-                                                    <tr>
-                                                        <td colSpan='4'>Hiện tại không có nhân viên nào được lưu trong hệ thống</td>
-                                                    </tr>
-                                            }
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </section>
-                    </div>
-                </Employee>
+        <Box sx={{ width: '100%' }}>
+            <Box sx={{ borderBottom: 1, borderColor: 'black' }}>
+                <Tabs sx={{
+                    '& .MuiTabs-indicator': { backgroundColor: "#d25d19" },
+                    '& .Mui-selected': { color: "#d25d19" },
+                }} value={value} onChange={handleChange} aria-label="basic tabs example">
+                    <Tab style={{ textTransform: "capitalize" }} label="Nhân viên" {...a11yProps(0)} />
+                </Tabs>
             </Box>
-        </div>
+            <Employee value={value} index={0}>
+                <nav className="navbar justify-content-between">
+                    <button className='btn btn-light' onClick={handleShow}>+ Thêm</button>
+                    <Modal show={show} onHide={handleClose}
+                        size="lg"
+                        aria-labelledby="contained-modal-title-vcenter"
+                        centered >
+                        <form onSubmit={handleCreateEmployeeSubmit}>
+                            <Modal.Header closeButton onClick={handleClose}>
+                                <Modal.Title>Thêm nhân viên</Modal.Title>
+                            </Modal.Header>
+                            <Modal.Body>
+                                <div className="row">
+                                    <div className="col-md-6">
+                                        <p>Tên nhân viên<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
+                                    </div>
+                                    <div className="col-md-6">
+                                        <input className="form-control mt-1"
+                                            style={{ width: "100%" }}
+                                            onChange={(e) => handleCreateEmployeeChange(e, "employeeName")} />
+                                    </div>
+                                    {/*Date of birth*/}
+                                    <div className="col-md-6">
+                                        <p htmlFor="employeeDob">Ngày sinh (Ngày/Tháng/Năm) <FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
+                                    </div>
+                                    <div className="col-md-6">
+                                        <input className="form-control mt-1"
+                                            type="date" id="employeeDob" style={{ width: "100%" }}
+                                            ref={userRef}
+                                            autoComplete="off"
+                                            onChange={(e) => handleCreateEmployeeChange(e, "employeeDob")}
+                                        />
+                                    </div>
+                                    <div className="col-md-6">
+                                        <p>Số điện thoại<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
+                                    </div>
+                                    <div className="col-md-6 ">
+                                        <input className="form-control mt-1"
+                                            style={{ width: "100%" }}
+                                            onChange={(e) => handleCreateEmployeeChange(e, "employeePhone")} />
+                                    </div>
+                                </div>
+                                <div className="row">
+                                    <div className="col-md-6">
+                                        <p>Mật khẩu<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
+                                    </div>
+                                    <div className="col-md-6 pass-wrapper">
+                                        <input className="form-control mt-1"
+                                            style={{ width: "100%" }} type={passwordShown ? "text" : "password"}
+                                            onChange={(e) => handleCreateEmployeeChange(e, "employeePassword")} />
+                                        <i onClick={togglePasswordVisiblity}>{eye}</i>
+                                    </div>
+
+                                    {/*City*/}
+                                    <div className="col-md-6">
+                                        <p htmlFor="uprovince" >Tỉnh/Thành Phố<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
+                                    </div>
+                                    <div className="col-md-6">
+                                        <select className="form-control mt-1" id="uprovince"
+                                            ref={userRef}
+                                            autoComplete="off"
+                                            onChange={(e) => loadDistrict(e.target.value)}
+                                            value={cityIndex}
+                                        >
+                                            <option value="" disabled selected>Chọn Tỉnh/Thành phố</option>
+                                            {city &&
+                                                city.map((item, index) => (
+                                                    <option value={index}>{item.label}</option>
+                                                ))
+                                            }
+                                        </select>
+                                    </div>
+
+                                    {/*District*/}
+                                    <div className="col-md-6">
+                                        <p htmlFor="udistrict" >Quận/Huyện <FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
+                                    </div>
+                                    <div className="col-md-6">
+                                        <select className="form-control mt-1" id="udistrict" name="supplierDistrict"
+                                            ref={userRef}
+                                            autoComplete="off"
+                                            onChange={(e) => loadWard(e.target.value)}
+                                            value={districtIndex}
+                                        >
+                                            <option value="" disable>Chọn Quận/Huyện</option>
+                                            {district &&
+                                                district.map((item, index) => (
+                                                    <option value={index}>{item.label}</option>
+                                                ))
+                                            }
+                                        </select>
+                                    </div>
+
+                                    {/*User ward*/}
+                                    <div className="col-md-6">
+                                        <p htmlFor="uward" >Phường/Xã <FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
+                                    </div>
+                                    <div className="col-md-6">
+                                        <select className="form-control mt-1" id="uward" name="supplierWard"
+                                            ref={userRef}
+                                            autoComplete="off"
+                                            onChange={(e) => saveWard(e.target.value)}
+                                            value={wardIndex}
+                                        >
+                                            <option value="" disable>Chọn Phường/Xã</option>
+                                            {ward &&
+                                                ward.map((item, index) => (
+                                                    <option value={index}>{item.label}</option>
+                                                ))
+                                            }
+                                        </select>
+                                    </div>
+
+                                    <div className="col-md-6">
+                                        <p htmlFor="uhomenum">Số nhà <FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
+                                    </div>
+                                    <div className="col-md-6">
+                                        <input className="form-control mt-1"
+                                            type="text" id="uhomenum" style={{ width: "100%" }}
+                                            ref={userRef}
+                                            autoComplete="off"
+                                            onChange={(e) => saveAddressJson(e.target.value)}
+                                        />
+                                    </div>
+
+                                </div>
+                                <div className="row">
+                                    <div className="col-md-6">
+                                        <p>Email</p>
+                                    </div>
+                                    <div className="col-md-6">
+                                        <input className="form-control mt-1"
+                                            style={{ width: "100%" }}
+                                            onChange={(e) => handleCreateEmployeeChange(e, "email")} />
+                                    </div>
+                                    <div className="col-md-6">
+                                        <p>Lương<FontAwesomeIcon className="star" icon={faStarOfLife} /></p>
+                                    </div>
+                                    <div className="col-md-6">
+                                        <input className="form-control mt-1"
+                                            style={{ width: "100%" }} placeholder="0"
+                                            step={0.01}
+                                            type='number'
+                                            onChange={(e) => handleCreateEmployeeChange(e, "salary")}
+                                            defaultValue={0} />
+                                    </div>
+                                </div>
+                            </Modal.Body>
+                            <div className='model-footer'>
+                                <button style={{ width: "30%" }} type="submit" className="col-md-6 btn-light">
+                                    Tạo
+                                </button>
+                                <button style={{ width: "20%" }} type="button" onClick={handleClose} className="btn btn-light">
+                                    Huỷ
+                                </button>
+                            </div>
+                        </form>
+                    </Modal>
+                    <div className='filter my-2 my-lg-0'>
+                        <p><FilterAltIcon />Lọc</p>
+                        <p><ImportExportIcon />Sắp xếp</p>
+                        <form className="form-inline" onSubmit={searchEmployeeList}>
+                            <div className="input-group">
+                                <div className="input-group-prepend">
+                                    <button type='submit'><span className="input-group-text" ><SearchIcon /></span></button>
+                                </div>
+                                <input type="text" className="form-control" placeholder="Tìm kiếm" aria-label="Username" aria-describedby="basic-addon1"
+                                    onChange={(e) => handleSearchEmployeeChange((e))} />
+                            </div>
+                        </form>
+                    </div>
+                </nav>
+                <div>
+                    <section className="u-align-center u-clearfix u-section-1" id="sec-b42b">
+                        <div className="u-clearfix u-sheet u-sheet-1">
+                            <div className="u-expanded-width u-table u-table-responsive u-table-1">
+                                <table className="u-table-entity u-table-entity-1">
+                                    <colgroup>
+                                        <col width="5%" />
+                                        <col width="35%" />
+                                        <col width="30%" />
+                                        <col width="30%" />
+                                    </colgroup>
+                                    <thead className="u-palette-4-base u-table-header u-table-header-1">
+                                        <tr style={{ height: "21px" }}>
+                                            <th className="u-border-1 u-border-custom-color-1 u-palette-2-base u-table-cell u-table-cell-1">STT</th>
+                                            <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-2">Tên nhân viên</th>
+                                            <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-3">Số điện thoại</th>
+                                            <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-5">Trạng thái</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody className="u-table-body">
+                                        {
+                                            employeeList && employeeList.length > 0 ?
+                                                employeeList.map((item, index) =>
+                                                    <tr style={{ height: "76px" }} className='trclick' onClick={() => routeChange(item.employeeId)}>
+                                                        <td className="u-border-1 u-border-grey-30 u-first-column u-grey-5 u-table-cell u-table-cell-1">{index + 1}</td>
+                                                        <td className="u-border-1 u-border-grey-30 u-table-cell">{item.employeeName}</td>
+                                                        <td className="u-border-1 u-border-grey-30 u-table-cell">{item.employeePhone}</td>
+                                                        {item.status === 2
+                                                            ? <td className="u-border-1 u-border-grey-30 u-table-cell text-green">
+                                                                Hoạt động
+                                                            </td>
+                                                            : <td className="u-border-1 u-border-grey-30 u-table-cell text-red">
+                                                                Tạm nghỉ
+                                                            </td>
+                                                        }
+                                                    </tr>
+                                                ) :
+                                                <tr>
+                                                    <td colSpan='4'>Hiện tại không có nhân viên nào được lưu trong hệ thống</td>
+                                                </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </Employee>
+        </Box>
     );
 }

@@ -50,37 +50,35 @@ export default function BasicTabs() {
   };
 
   return (
-    <div className='container'>
-      <Box sx={{ width: '100%' }}>
-        <Box sx={{ borderBottom: 1, borderColor: 'black' }}>
-          <Tabs sx={{
-            '& .MuiTabs-indicator': { backgroundColor: "#d25d19" },
-            '& .Mui-selected': { color: "#d25d19" },
-          }}
-            value={value} onChange={handleChange} aria-label="basic tabs example">
-            <Tab id="costTab" style={{ textTransform: "capitalize" }} label="Chi Phí" {...a11yProps(0)} />
-            <Tab id="payrollTab" style={{ textTransform: "capitalize" }} label="Tiền lương" {...a11yProps(1)} />
-            <Tab id="importReportTab" style={{ textTransform: "capitalize" }} label="Báo cáo nhập" {...a11yProps(2)} />
-            <Tab id="exportReportTab" style={{ textTransform: "capitalize" }} label="Báo cáo xuất" {...a11yProps(3)} />
-            <Tab id="incomeReportTab" style={{ textTransform: "capitalize" }} label="Doanh thu" {...a11yProps(4)} />
-          </Tabs>
-        </Box>
-        <FinanManage value={value} index={0}>
-          <Cost />
-        </FinanManage>
-        <FinanManage value={value} index={1}>
-          <Payroll />
-        </FinanManage>
-        <FinanManage value={value} index={2}>
-          <ImportReport />
-        </FinanManage>
-        <FinanManage value={value} index={3}>
-          <ExportReport />
-        </FinanManage>
-        <FinanManage value={value} index={4}>
-          <TotalIncome />
-        </FinanManage>
+    <Box sx={{ width: '100%' }}>
+      <Box sx={{ borderBottom: 1, borderColor: 'black' }}>
+        <Tabs sx={{
+          '& .MuiTabs-indicator': { backgroundColor: "#d25d19" },
+          '& .Mui-selected': { color: "#d25d19" },
+        }}
+          value={value} onChange={handleChange} aria-label="basic tabs example">
+          <Tab id="costTab" style={{ textTransform: "capitalize" }} label="Chi Phí" {...a11yProps(0)} />
+          <Tab id="payrollTab" style={{ textTransform: "capitalize" }} label="Tiền lương" {...a11yProps(1)} />
+          <Tab id="importReportTab" style={{ textTransform: "capitalize" }} label="Báo cáo nhập" {...a11yProps(2)} />
+          <Tab id="exportReportTab" style={{ textTransform: "capitalize" }} label="Báo cáo xuất" {...a11yProps(3)} />
+          <Tab id="incomeReportTab" style={{ textTransform: "capitalize" }} label="Doanh thu" {...a11yProps(4)} />
+        </Tabs>
       </Box>
-    </div>
+      <FinanManage value={value} index={0}>
+        <Cost />
+      </FinanManage>
+      <FinanManage value={value} index={1}>
+        <Payroll />
+      </FinanManage>
+      <FinanManage value={value} index={2}>
+        <ImportReport />
+      </FinanManage>
+      <FinanManage value={value} index={3}>
+        <ExportReport />
+      </FinanManage>
+      <FinanManage value={value} index={4}>
+        <TotalIncome />
+      </FinanManage>
+    </Box>
   );
 }

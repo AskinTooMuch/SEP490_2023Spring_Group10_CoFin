@@ -90,12 +90,6 @@ export default Sidebar;
 const SidebarParent = styled.div`
   background: #f59d6e;
   border-radius:0 15px 15px 0;
-  height: 50vh;
-  text-align: center; 
-  transition: all 0.25s ease-in-out;
-  position: fixed;
-  box-shadow: 0 0 15px #f59d6e;
-  margin-top: 2vh;
   a {
     text-decoration: none;
     font-size: 20px;
@@ -103,6 +97,7 @@ const SidebarParent = styled.div`
   
   & > div {
     width: 250px;
+    height: 100vh;
   }
   
   .behind-the-scenes {

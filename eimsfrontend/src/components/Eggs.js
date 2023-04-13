@@ -50,7 +50,6 @@ export default function BasicTabs() {
   };
 
   return (
-    <div className='container'>
     <Box sx={{ width: '100%' }}>
       <WithPermission roleRequired="2">
         <Box sx={{ borderBottom: 1, borderColor: 'black' }}>
@@ -68,7 +67,7 @@ export default function BasicTabs() {
           <EggBatch />
         </Egg>
         <Egg value={value} index={1}>
-          <StockReport/>
+          <StockReport />
         </Egg>
         <Egg value={value} index={2}>
           <Species />
@@ -91,6 +90,5 @@ export default function BasicTabs() {
         </Egg>
       </WithPermission>
     </Box>
-    </div>
   );
 }

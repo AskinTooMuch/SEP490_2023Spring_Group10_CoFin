@@ -47,34 +47,32 @@ export default function BasicTabs() {
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
- 
+
   return (
-    <div className='container'>
     <Box sx={{ width: '100%' }}>
       <Box sx={{ borderBottom: 1, borderColor: 'black' }}>
         <Tabs sx={{
-            '& .MuiTabs-indicator': { backgroundColor: "#d25d19" },
-            '& .Mui-selected': { color: "#d25d19" },
-          }}value={value} onChange={handleChange} aria-label="basic tabs example">
-          <Tab id = "importBillTab" style={{ textTransform: "capitalize" }} label="Hoá đơn nhập" {...a11yProps(0)} />
-          <Tab id = "exportBillTab" style={{ textTransform: "capitalize" }} label="Hoá đơn xuất" {...a11yProps(1)} />
-          <Tab id = "supplierTab" style={{ textTransform: "capitalize" }} label="Nhà cung cấp" {...a11yProps(2)} />
-          <Tab id = "customerTab" style={{ textTransform: "capitalize" }} label="Khách hàng" {...a11yProps(3)} />
+          '& .MuiTabs-indicator': { backgroundColor: "#d25d19" },
+          '& .Mui-selected': { color: "#d25d19" },
+        }} value={value} onChange={handleChange} aria-label="basic tabs example">
+          <Tab id="importBillTab" style={{ textTransform: "capitalize" }} label="Hoá đơn nhập" {...a11yProps(0)} />
+          <Tab id="exportBillTab" style={{ textTransform: "capitalize" }} label="Hoá đơn xuất" {...a11yProps(1)} />
+          <Tab id="supplierTab" style={{ textTransform: "capitalize" }} label="Nhà cung cấp" {...a11yProps(2)} />
+          <Tab id="customerTab" style={{ textTransform: "capitalize" }} label="Khách hàng" {...a11yProps(3)} />
         </Tabs>
       </Box>
       <Order value={value} index={0}>
-        <ImportBill/>
+        <ImportBill />
       </Order>
       <Order value={value} index={1}>
-        <ExportBill/>
+        <ExportBill />
       </Order>
       <Order value={value} index={2}>
-        <Supplier/>
+        <Supplier />
       </Order>
       <Order value={value} index={3}>
-        <Customer/>
+        <Customer />
       </Order>
     </Box>
-    </div>
   );
 }
