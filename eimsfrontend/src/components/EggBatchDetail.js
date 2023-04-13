@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate, useParams, useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import PropTypes from 'prop-types';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
@@ -10,7 +10,6 @@ import { Modal } from 'react-bootstrap';
 import ClearIcon from '@mui/icons-material/Clear';
 import axios from 'axios';
 import { toast } from 'react-toastify';
-import { padding } from '@mui/system';
 import ConfirmBox from './ConfirmBox';
 
 function EggBatchDetail(props) {
@@ -52,19 +51,25 @@ export default function BasicTabs() {
     //URL
     const EGGBATCH_GET = "/api/eggBatch/get";
     const EGGBATCH_UPDATE = "/api/eggBatch/update";
+    const EGGBATCH_UPDATE_LOCATION = "/api/eggBatch/update/location";
     const EGGBATCH_UPDATE_DONE = "/api/eggBatch/update/done";
-    const MACHINE_NOT_FULL_GET = "/api/machine/notFull";
 
     //ConfirmBox
     const [open, setOpen] = useState(false);
     const [open2, setOpen2] = useState(false);
-
+    const [open3, setOpen3] = useState(false);
     //
     const [phaseName, setPhaseName] = useState("");
+
+    //Get sent params
+    const { state } = useLocation();
+    const { id } = state;
 
     //Show-hide Popup
     const [value, setValue] = React.useState(0);
     const navigate = useNavigate();
+
+    // Hanldle show update egg batch
     const [show, setShow] = useState(false);
     const handleClose = () => {
         setUpdateEggBatchDTO({
@@ -80,7 +85,7 @@ export default function BasicTabs() {
     }
 
     const handleShow = () => {
-        if (eggBatchDetail.status == 1 && eggBatchDetail.needAction == 1 && eggBatchDetail.progress < 7) {
+        if (eggBatchDetail.status === 1 && eggBatchDetail.needAction === 1 && eggBatchDetail.progress < 7) {
             const rows = [...rowsData];
             rows.splice(0, rows.length);
 
@@ -98,22 +103,65 @@ export default function BasicTabs() {
             setRowsData(rows);
             console.log(rows)
             setShow(true);
-        } else if (eggBatchDetail.status == 1 && eggBatchDetail.progress >= 7) {
+        } else if (eggBatchDetail.status === 1 && eggBatchDetail.progress >= 7) {
             setShow(true);
-        } else if (eggBatchDetail.status == 1 && eggBatchDetail.needAction == 1) {
+        } else if (eggBatchDetail.status === 1 && eggBatchDetail.needAction === 1) {
             const rows = [...rowsData];
             setRowsData(rows);
             setShow(true);
-        } else if (eggBatchDetail.status == 0) {
+        } else if (eggBatchDetail.status === 0) {
             toast.warning("Lô trứng đã hoàn thành, không thể cập nhật")
-        } else if (eggBatchDetail.status == 1 && eggBatchDetail.needAction == 0) {
+        } else if (eggBatchDetail.status === 1 && eggBatchDetail.needAction === 0) {
             toast.warning("Chưa đến giai đoạn cập nhật lô trứng")
         }
     }
+
+    // Hanlde show empty machines
     const [show2, setShow2] = useState(false);
     const handleClose2 = () => setShow2(false);
     const handleShow2 = () => setShow2(true);
 
+    // Hanlde show update locations
+    const [show3, setShow3] = useState(false);
+    const handleClose3 = () => {
+        setUpdateLocationDTO({
+            eggBatchId: id,
+            eggWasted: 0,
+            locationsOld: eggBatchDetail.machineList,
+            locationsNew: []
+        });
+        setShow3(false);
+    }
+
+    const handleShow3 = () => {
+        if (eggBatchDetail.status === 1 && eggBatchDetail.progress < 7) {
+            const rows = [...rowsData];
+            rows.splice(0, rows.length);
+
+            for (let i = 0; i < eggBatchDetail.machineList.length; i++) {
+                rows.splice(i, 0, {
+                    machineId: eggBatchDetail.machineList[i].machineId,
+                    machineName: eggBatchDetail.machineList[i].machineName,
+                    machineTypeId: eggBatchDetail.machineList[i].machineTypeId,
+                    amountCurrent: eggBatchDetail.machineList[i].curCapacity,
+                    capacity: eggBatchDetail.machineList[i].maxCapacity,
+                    amountUpdate: eggBatchDetail.machineList[i].amount,
+                    oldAmount: eggBatchDetail.machineList[i].amount
+                });
+            }
+            setRowsData(rows);
+            console.log(rows)
+            setShow3(true);
+        } else if (eggBatchDetail.status === 1 && eggBatchDetail.progress >= 7) {
+            setShow3(true);
+        } else if (eggBatchDetail.status === 1 && eggBatchDetail.needAction === 1) {
+            const rows = [...rowsData];
+            setRowsData(rows);
+            setShow3(true);
+        } else if (eggBatchDetail.status === 0) {
+            toast.warning("Lô trứng đã hoàn thành, không thể cập nhật")
+        }
+    }
     // Handle Change
     const handleChangeData = (index, evnt) => {
         const { name, value } = evnt.target;
@@ -135,7 +183,7 @@ export default function BasicTabs() {
             amountCurrent: item.curCapacity,
             capacity: item.maxCapacity,
             amountUpdate: 0,
-            oldAmount : 0
+            oldAmount: 0
         });
         setShow2(false);
     }
@@ -146,9 +194,6 @@ export default function BasicTabs() {
         setRowsData(rows);
     }
 
-    //Get sent params
-    const { state } = useLocation();
-    const { id } = state;
 
     // DTO
     // Machine list to choose
@@ -182,12 +227,21 @@ export default function BasicTabs() {
 
     // Update egg batch
     const [updateEggBatchDTO, setUpdateEggBatchDTO] = useState({
-        eggBatchId: 0,
+        eggBatchId: id,
         phaseNumber: "",
         eggWasted: 0,
         amount: 0,
         needAction: "",
         eggLocationUpdateEggBatchDTOS: []
+    })
+
+    // Update egg batch
+    const [updateLocationDTO, setUpdateLocationDTO] = useState({
+        eggBatchId: id,
+        eggWastedIncubating: 0,
+        eggWastedHatching: 0,
+        locationsOld: [],
+        locationsNew: []
     })
 
     const [done, setDone] = useState({
@@ -196,11 +250,9 @@ export default function BasicTabs() {
 
     // Remain egg in updating
     const [remain, setRemain] = useState({
-        remain: ""
+        remain: "",
+        remain2: ""
     })
-
-    // List Machine no full update location
-    const [machineNotFullList, setMachineNotFullList] = useState([])
 
     //Get import details
     useEffect(() => {
@@ -208,7 +260,6 @@ export default function BasicTabs() {
     }, [eggBatchLoaded]);
 
     const loadEggBatch = async () => {
-
         const result = await axios.get(EGGBATCH_GET,
             {
                 params: { eggBatchId: id },
@@ -243,32 +294,28 @@ export default function BasicTabs() {
         eggBatchDetail.phaseUpdateList = result.data.phaseUpdateList;
 
         updateEggBatchDTO.needAction = result.data.needAction;
-        updateEggBatchDTO.phaseNumber = result.data.phaseUpdateList[0].phaseNumber;
 
-        setPhaseName(result.data.phaseUpdateList[0].phaseDescription);
-        console.log(phaseName)
+        updateLocationDTO.locationsOld = result.data.machineList;
+        console.log(JSON.stringify(updateLocationDTO.locationsOld));
+
+        if (result.data.phaseUpdateList.length > 0) {
+            updateEggBatchDTO.phaseNumber = result.data.phaseUpdateList[0].phaseNumber;
+            setPhaseName(result.data.phaseUpdateList[0].phaseDescription);
+        } else {
+            updateEggBatchDTO.phaseNumber = "phaseNumber";
+            setPhaseName("phaseName");
+        }
+
         console.log(JSON.stringify(updateEggBatchDTO));
-        if (result.data.progress == 0) {
+        if (result.data.progress === 0) {
             remain.remain = result.data.amount;
+            remain.remain2 = result.data.amount;
         }
         if (result.data.progress != 0) {
             remain.remain = eggBatchDetail.eggProductList[2].curAmount + eggBatchDetail.eggProductList[6].curAmount;
+            remain.remain2 = eggBatchDetail.eggProductList[2].curAmount + eggBatchDetail.eggProductList[6].curAmount;
         }
         setEggBatchLoaded(true);
-    }
-
-    const loadNotFullMachines = async () => {
-        const result = await axios.get(MACHINE_NOT_FULL_GET,
-            {
-                params: { facilityId: sessionStorage.getItem("facilityId") },
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Access-Control-Allow-Origin': '*'
-                },
-                withCredentials: true
-            });
-        // Set inf
-        setMachineNotFullList(result.data)
     }
 
     const routeChange = (mid) => {
@@ -279,7 +326,7 @@ export default function BasicTabs() {
     function cal() {
         if (eggBatchDetail.progress < 5) {
             if (document.getElementById('remain') != null) {
-                if (eggBatchDetail.eggProductList[8].amount == 0) {
+                if (eggBatchDetail.eggProductList[8].curAmount === 0) {
                     let a = Number(document.getElementById("eggWasted").value);
                     let b = Number(document.getElementById("amount").value);
 
@@ -292,7 +339,7 @@ export default function BasicTabs() {
         }
         if (eggBatchDetail.progress === 5) {
             if (document.getElementById('remain') != null) {
-                if (eggBatchDetail.eggProductList[8].amount == 0) {
+                if (eggBatchDetail.eggProductList[8].curAmount === 0) {
                     let a = Number(document.getElementById("eggWasted").value);
 
                     let sum = remain.remain - a;
@@ -302,8 +349,35 @@ export default function BasicTabs() {
                 }
             }
         }
+    }
 
+    // display total amount
+    function cal2() {
+        if (eggBatchDetail.progress < 5) {
+            if (document.getElementById('remain2') != null) {
+                if (eggBatchDetail.eggProductList[8].curAmount === 0) {
+                    let a = Number(document.getElementById("eggWastedIncubating").value);
 
+                    let sum = remain.remain2 - a;
+                    document.getElementById('remain2').innerHTML = sum;
+                } else {
+                    document.getElementById('remain2').innerHTML = "";
+                }
+            }
+        }
+        if (eggBatchDetail.progress === 5) {
+            if (document.getElementById('remain2') != null) {
+                if (eggBatchDetail.eggProductList[8].curAmount === 0) {
+                    let a = Number(document.getElementById("eggWastedIncubating").value);
+                    let b = Number(document.getElementById("eggWastedHatching").value);
+
+                    let sum = remain.remain - a - b;
+                    document.getElementById('remain2').innerHTML = sum;
+                } else {
+                    document.getElementById('remain2').innerHTML = "";
+                }
+            }
+        }
     }
 
     // Variable check done
@@ -331,14 +405,25 @@ export default function BasicTabs() {
             value = e.options[e.selectedIndex].value;
         }
         var selectedText = e.options[e.selectedIndex].text;
-        if ((field == "amount" && value != 5) || field == "eggWasted") {
+        if ((field === "amount" && value != 5) || field === "eggWasted") {
             cal();
         }
-        if (field == "phaseNumber") {
+        if (field === "phaseNumber") {
             setPhaseName(selectedText);
         }
     }
 
+    //Update location EggBatch
+    const handleUpdateLocationChange = (event, field) => {
+        let actualValue = event.target.value;
+        setUpdateLocationDTO({
+            ...updateLocationDTO,
+            [field]: actualValue
+        })
+        if (field === "eggWastedIncubating" || field === "eggWastedHatching") {
+            cal2();
+        }
+    }
 
     // Handle Submit functions
     const handleUpdateEggBatchSubmit = async (event) => {
@@ -387,6 +472,49 @@ export default function BasicTabs() {
         }
     }
 
+    // Update location
+    const handleUpdateLocationSubmit = async (event) => {
+        setOpen3(false);
+        event.preventDefault();
+        console.log(rowsData)
+        updateLocationDTO.locationsNew = rowsData;
+        console.log(JSON.stringify(updateLocationDTO))
+        let response;
+        try {
+            const response = await axios.put(EGGBATCH_UPDATE_LOCATION,
+                updateLocationDTO,
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Access-Control-Allow-Origin': '*'
+                    },
+                    withCredentials: true
+                }
+            );
+            setShow3(false);
+            setUpdateLocationDTO({
+                eggBatchId: id,
+                eggWasted: 0,
+                locationsOld: [],
+                locationsNew: []
+            });
+            setRowsData([]);
+            loadEggBatch();
+            setEggBatchLoaded(false);
+            toast.success("Cập nhật lô trứng thành công");
+        } catch (err) {
+            if (!err?.response) {
+                toast.error('Server không phản hồi');
+            } else {
+                if ((err.response.data === null) || (err.response.data === '')) {
+                    toast.error('Có lỗi xảy ra, vui lòng thử lại');
+                } else {
+                    toast.error(err.response.data);
+                }
+                console.log(err.response.data);
+            }
+        }
+    }
 
     // Handle Update done 
     const handleUpdateEggBatchDone = async () => {
@@ -556,12 +684,12 @@ export default function BasicTabs() {
                                         : ''
                                 }
                                 {
-                                    eggBatchDetail.status === 1 && eggBatchDetail.needAction === 0 && eggBatchDetail.progress == 5
+                                    eggBatchDetail.status === 1 && eggBatchDetail.needAction === 0 && eggBatchDetail.progress === 5
                                         ? <td className='text-green'>Đang nở</td>
                                         : ''
                                 }
                                 {
-                                    eggBatchDetail.status === 1 && eggBatchDetail.needAction === 1 && eggBatchDetail.progress == 5
+                                    eggBatchDetail.status === 1 && eggBatchDetail.needAction === 1 && eggBatchDetail.progress === 5
                                         ? <td className='text-red'>Cần cập nhật</td>
                                         : ''
                                 }
@@ -693,8 +821,21 @@ export default function BasicTabs() {
                         </tbody>
                     </table>
                 </div>
-                <div style={{ textAlign: "center" }}>
-                    <button className='btn btn-light' id="startUpdateEggBatch" onClick={handleShow}>Cập nhật</button>
+                <div style={{ textAlign: "right" }}>
+                    {
+                        eggBatchDetail.progress && eggBatchDetail.progress <= 5 && eggBatchDetail.status === 1
+                            ?
+                            <button style={{ margin: "0 20px", width: "180px" }} className='btn btn-light' id="startUpdateLocationEggBatch" onClick={handleShow3}>Cập nhật vị trí</button>
+                            :
+                            ''
+                    }
+                    {
+                        eggBatchDetail.status && eggBatchDetail.status === 1 && eggBatchDetail.needAction === 1
+                            ?
+                            <button style={{ width: "180px" }} className='btn btn-light' id="startUpdateEggBatch" onClick={handleShow}>Cập nhật giai đoạn</button>
+                            : ''
+                    }
+
                     <Modal show={show} onHide={handleClose}
                         aria-labelledby="contained-modal-title-vcenter"
                         centered
@@ -704,7 +845,6 @@ export default function BasicTabs() {
                                 <Modal.Title>Cập nhật Thông tin lô trứng</Modal.Title>
                             </Modal.Header>
                             <Modal.Body>
-
                                 <div className='container'>
                                     <div className='detailbody'>
                                         <br />
@@ -736,14 +876,14 @@ export default function BasicTabs() {
                                             </div>
                                             {
                                                 eggBatchDetail.eggProductList && eggBatchDetail.eggProductList.length > 0
-                                                    && eggBatchDetail.eggProductList[2].amount !== 0
+                                                    && eggBatchDetail.eggProductList[2].curAmount !== 0
                                                     ? <>
                                                         <div className="col-md-3" >
                                                             <label>Số trứng đang ấp: </label>
                                                         </div>
                                                         <div className="col-md-3">
                                                             <input disabled className='form-control'
-                                                                value={eggBatchDetail.eggProductList[2].amount.toLocaleString()} />
+                                                                value={eggBatchDetail.eggProductList[2].curAmount.toLocaleString()} />
                                                         </div>
                                                     </>
                                                     : ''
@@ -767,14 +907,14 @@ export default function BasicTabs() {
                                             </div>
                                             {
                                                 eggBatchDetail.eggProductList && eggBatchDetail.eggProductList.length > 0
-                                                    && eggBatchDetail.eggProductList[6].amount !== 0
+                                                    && eggBatchDetail.eggProductList[6].curAmount !== 0
                                                     ? <>
                                                         <div className="col-md-3" >
                                                             <label>Số trứng đang nở: </label>
                                                         </div>
                                                         <div className="col-md-3">
                                                             <input disabled className='form-control'
-                                                                value={eggBatchDetail.eggProductList[6].amount.toLocaleString()} />
+                                                                value={eggBatchDetail.eggProductList[6].curAmount.toLocaleString()} />
                                                         </div>
                                                     </>
                                                     : ''
@@ -791,8 +931,8 @@ export default function BasicTabs() {
                                             </div>
 
                                             {
-                                                eggBatchDetail.progress == 0
-                                                    || (eggBatchDetail.progress <= 5 && eggBatchDetail.eggProductList[2].amount !== 0)
+                                                eggBatchDetail.progress === 0
+                                                    || (eggBatchDetail.progress <= 5)
                                                     ?
                                                     <>
                                                         <div className="col-md-3 ">
@@ -813,15 +953,15 @@ export default function BasicTabs() {
                                                             <label>Số lượng con nở</label>
                                                         </div>
                                                         <div className="col-md-3">
-                                                            <p className='form-control' id="" name="">{eggBatchDetail.eggProductList[8].amount}</p>
+                                                            <p className='form-control' id="" name="">{eggBatchDetail.eggProductList[8].curAmount}</p>
                                                         </div>
                                                     </>
                                                     : ''
                                             }
                                             <br />
                                             {
-                                                (eggBatchDetail.progress == 0 || eggBatchDetail.progress > 4
-                                                    || (eggBatchDetail.progress == 4 && eggBatchDetail.phaseUpdateList[0].phaseNumber == 5)
+                                                (eggBatchDetail.progress === 0 || eggBatchDetail.progress > 4
+                                                    || (eggBatchDetail.progress === 4 && eggBatchDetail.phaseUpdateList[0].phaseNumber === 5)
                                                 )
                                                     ? ''
                                                     :
@@ -875,7 +1015,6 @@ export default function BasicTabs() {
                                     }
 
                                     <div style={{ textAlign: "center" }}>
-
                                         <Modal show={show2} onHide={handleClose2}
                                             size="lg"
                                             aria-labelledby="contained-modal-title-vcenter"
@@ -928,6 +1067,199 @@ export default function BasicTabs() {
                                         : ''
                                 }
 
+                            </div>
+                        </form>
+                    </Modal>
+
+                    <Modal show={show3} onHide={handleClose3}
+                        aria-labelledby="contained-modal-title-vcenter"
+                        centered
+                        dialogClassName="modal-90w">
+                        <form >
+                            <Modal.Header closeButton onClick={handleClose3}>
+                                <Modal.Title>Cập nhật vị trí lô trứng</Modal.Title>
+                            </Modal.Header>
+                            <Modal.Body>
+                                <div className='container'>
+                                    <div className='detailbody'>
+                                        <br />
+                                        <div className="row">
+                                            <div className="col-md-3" >
+                                                <label>Giai đoạn hiện tại: </label>
+                                            </div>
+                                            {
+                                                eggBatchDetail.progress === 0
+                                                    ?
+                                                    <div className="col-md-3">
+                                                        <label>{eggBatchDetail.phase}</label>
+                                                    </div>
+                                                    :
+                                                    <div className="col-md-3">
+                                                        <label>({eggBatchDetail.progress}) {eggBatchDetail.phase}</label>
+                                                    </div>
+                                            }
+
+                                        </div>
+                                        <br />
+                                        {
+                                            eggBatchDetail.eggProductList && eggBatchDetail.eggProductList.length > 0
+                                                && eggBatchDetail.eggProductList[2].curAmount !== 0
+                                                ?
+                                                <div className="row">
+                                                    <div className="col-md-3" >
+                                                        <label>Trứng hao hụt (Trứng đang ấp):</label>
+                                                    </div>
+                                                    <div className="col-md-3">
+                                                        <input defaultValue="0" className='form-control' id="eggWastedIncubating" name="eggWastedIncubating" type="number"
+                                                            onChange={(e) => handleUpdateLocationChange(e, "eggWastedIncubating")} />
+                                                    </div>
+                                                    <div className="col-md-3" >
+                                                        <label>Số trứng đang ấp: </label>
+                                                    </div>
+                                                    <div className="col-md-3">
+                                                        <input disabled className='form-control'
+                                                            value={eggBatchDetail.eggProductList[2].curAmount.toLocaleString()} />
+                                                    </div>
+                                                </div>
+                                                : ''
+                                        }
+                                        <br />
+
+                                        {
+                                            eggBatchDetail.eggProductList && eggBatchDetail.eggProductList.length > 0
+                                                && eggBatchDetail.eggProductList[6].curAmount !== 0
+                                                ?
+                                                <div className="row">
+                                                    <div className="col-md-3" >
+                                                        <label>Trứng hao hụt (Trứng đang nở):</label>
+                                                    </div>
+                                                    <div className="col-md-3">
+                                                        <input defaultValue="0" className='form-control' id="eggWastedHatching" name="eggWastedHatching" type="number"
+                                                            onChange={(e) => handleUpdateLocationChange(e, "eggWastedHatching")} />
+                                                    </div>
+                                                    <div className="col-md-3" >
+                                                        <label>Số trứng đang nở: </label>
+                                                    </div>
+                                                    <div className="col-md-3">
+                                                        <input disabled className='form-control'
+                                                            value={eggBatchDetail.eggProductList[6].curAmount.toLocaleString()} />
+                                                    </div>
+                                                </div>
+                                                : ''
+                                        }
+                                        <br />
+                                        <div className="row">
+                                            <div className="col-md-3" >
+                                                <label></label>
+                                            </div>
+                                            <div className="col-md-3">
+                                            </div>
+                                            {
+                                                eggBatchDetail.progress === 0
+                                                    || (eggBatchDetail.progress <= 5)
+                                                    ?
+                                                    <>
+                                                        <div className="col-md-3 ">
+                                                            <label>Số lượng trứng còn lại</label>
+                                                            <p>(tổng trứng trong máy)</p>
+                                                        </div>
+                                                        <div className="col-md-3">
+                                                            <p className='form-control' id="remain2" name="remain2">{remain.remain2.toLocaleString()}</p>
+                                                        </div>
+                                                    </>
+                                                    : ''
+                                            }
+                                            {
+                                                eggBatchDetail.progress >= 7
+                                                    ?
+                                                    <>
+                                                        <div className="col-md-3 ">
+                                                            <label>Số lượng con nở</label>
+                                                        </div>
+                                                        <div className="col-md-3">
+                                                            <p className='form-control' id="" name="">{eggBatchDetail.eggProductList[8].curAmount}</p>
+                                                        </div>
+                                                    </>
+                                                    : ''
+                                            }
+                                            <br />
+                                        </div>
+                                    </div>
+                                    <ConfirmBox open={open3} closeDialog={() => setOpen3(false)} title={"Xác nhận cập nhật vị trí lô trứng"}
+                                        content={"Xác nhận cập nhật vị trí lô trứng với mã " + eggBatchDetail.eggBatchId}
+                                        deleteFunction={(e) => handleUpdateLocationSubmit(e)}
+                                    />
+                                    <br />
+                                    {
+                                        eggBatchDetail.progress && eggBatchDetail.progress >= 7
+                                            ? ''
+                                            :
+                                            <div className='clear'>
+                                                <table className="table table-bordered">
+                                                    <thead>
+                                                        <tr>
+                                                            <th scope="col">Máy</th>
+                                                            <th scope="col">Chứa</th>
+                                                            <th scope="col">Vị trí trống</th>
+                                                            <th scope="col">Số trứng hiện tại</th>
+                                                            <th scope="col">Số trứng cập nhật</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <TableRows rowsData={rowsData} deleteTableRows={deleteTableRows} handleChangeData={handleChangeData} />
+                                                    </tbody>
+                                                </table>
+                                                <div style={{ textAlign: "center" }}>
+                                                    <button className="btn btn-light" type='button' onClick={handleShow2} >+</button>
+                                                </div>
+                                            </div>
+                                    }
+
+                                    <div style={{ textAlign: "center" }}>
+                                        <Modal show={show2} onHide={handleClose2}
+                                            size="lg"
+                                            aria-labelledby="contained-modal-title-vcenter"
+                                            centered >
+                                            <Modal.Header closeButton onClick={handleClose2}>
+                                                <Modal.Title>Những máy còn trống</Modal.Title>
+                                            </Modal.Header>
+                                            <Modal.Body>
+                                                <div className="table-wrapper-scroll-y my-custom-scrollbar">
+                                                    <table style={{ overflowY: "scroll" }} className="table table-bordered">
+                                                        <thead>
+                                                            <tr>
+                                                                <th scope="col">Máy</th>
+                                                                <th scope="col">Chứa</th>
+                                                                <th scope="col">Vị trí trống</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody >
+                                                            {
+                                                                eggBatchDetail.machineNotFullList && eggBatchDetail.machineNotFullList.length > 0 ?
+                                                                    eggBatchDetail.machineNotFullList.map((item, index) =>
+                                                                        <tr className='trclick' onClick={() => addTableRows(item)}>
+                                                                            <td>{item.machineName}</td>
+                                                                            <td>{item.curCapacity.toLocaleString()}/{item.maxCapacity.toLocaleString()}</td>
+                                                                            <td>{(item.maxCapacity - item.curCapacity).toLocaleString()}</td>
+                                                                        </tr>
+                                                                    ) : 'Nothing'
+                                                            }
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </Modal.Body>
+                                        </Modal>
+                                    </div>
+                                </div>
+                            </Modal.Body>
+                            <div className='model-footer'>
+                                <button style={{ width: "20%" }} onClick={() => setOpen3(true)}
+                                    className="col-md-6 btn-light" type="button">
+                                    Lưu
+                                </button>
+                                <button style={{ width: "10%" }} onClick={handleClose3} type='button' className="btn btn-light">
+                                    Huỷ
+                                </button>
                             </div>
                         </form>
                     </Modal>

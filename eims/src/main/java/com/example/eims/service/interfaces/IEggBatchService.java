@@ -7,11 +7,13 @@
  * Record of change:<br>
  * DATE         Version     Author      DESCRIPTION<br>
  * 15/03/2023   1.0         DuongVV     First Deploy<br>
+ * 13/04/2023   2.0         DuongVV     Add update locations egg batch<br>
  */
 
 package com.example.eims.service.interfaces;
 
 import com.example.eims.dto.eggBatch.UpdateEggBatchDTO;
+import com.example.eims.dto.eggBatch.UpdateLocationEggBatchDTO;
 import org.springframework.http.ResponseEntity;
 
 public interface IEggBatchService {
@@ -39,6 +41,14 @@ public interface IEggBatchService {
      * @return
      */
     public ResponseEntity<?> updateEggBatch(UpdateEggBatchDTO updateEggBatchDTO);
+
+    /**
+     * Update egg batch's locations.
+     *
+     * @param updateLocationEggBatchDTO
+     * @return
+     */
+    public ResponseEntity<?> updateLocationEggBatch(UpdateLocationEggBatchDTO updateLocationEggBatchDTO);
 
     /**
      * Update egg batch's state.

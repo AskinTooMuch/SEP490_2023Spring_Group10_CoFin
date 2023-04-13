@@ -3032,7 +3032,7 @@
          eggLocation1.setMachineTypeId(1L);
          eggLocation1.setAmountCurrent(0);
          eggLocation1.setCapacity(1000);
-         eggLocation1.setAmountUpdate(-100);
+         eggLocation1.setAmountUpdate(10000);
          Machine machine1 = new Machine();
          machine1.setMachineTypeId(1L);
 

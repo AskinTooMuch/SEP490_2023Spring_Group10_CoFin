@@ -7,11 +7,13 @@
  * Record of change:<br>
  * DATE          Version    Author           DESCRIPTION<br>
  * 15/03/2023    1.0        DuongVV          First Deploy<br>
+ * 13/04/2023    2.0         DuongVV         Add update locations egg batch<br>
  */
 
 package com.example.eims.controller;
 
 import com.example.eims.dto.eggBatch.UpdateEggBatchDTO;
+import com.example.eims.dto.eggBatch.UpdateLocationEggBatchDTO;
 import com.example.eims.service.interfaces.IEggBatchService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -55,6 +57,17 @@ public class EggBatchController {
     @PutMapping("/update")
     public ResponseEntity<?> updateEggBatch(@RequestBody UpdateEggBatchDTO updateEggBatchDTO) {
         return eggBatchService.updateEggBatch(updateEggBatchDTO);
+    }
+
+    /**
+     * Update egg batch's locations.
+     *
+     * @param updateLocationEggBatchDTO
+     * @return
+     */
+    @PutMapping("/update/location")
+    public ResponseEntity<?> updateLocationEggBatch(@RequestBody UpdateLocationEggBatchDTO updateLocationEggBatchDTO) {
+        return eggBatchService.updateLocationEggBatch(updateLocationEggBatchDTO);
     }
 
     /**
