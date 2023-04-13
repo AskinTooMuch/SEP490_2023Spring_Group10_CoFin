@@ -167,6 +167,10 @@ public class ImportReceiptServiceImpl implements IImportReceiptService {
             }
             total = total.add(price.multiply(BigDecimal.valueOf(eggBatch.getAmount())));
         }
+        if (total.compareTo(new BigDecimal(9999999999999.99)) > 0) { // over flow
+            return new ResponseEntity<>("Giá trị hóa đơn không được vượt quá 9999999999999.99. Vui lòng tách hóa đơn", HttpStatus.BAD_REQUEST);
+        }
+
         try {
             // Set attribute to save import receipt
             ImportReceipt importReceipt = new ImportReceipt();

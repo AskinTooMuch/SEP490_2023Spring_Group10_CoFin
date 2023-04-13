@@ -250,6 +250,10 @@ public class ExportReceiptServiceImpl implements IExportReceiptService {
             }
             total = total.add(price.add(vaccine).multiply(BigDecimal.valueOf(eggProduct.getExportAmount())));
         }
+        if (total.compareTo(new BigDecimal(9999999999999.99)) > 0) { // over flow
+            return new ResponseEntity<>("Giá trị hóa đơn không được vượt quá 9999999999999.99. Vui lòng tách hóa đơn", HttpStatus.BAD_REQUEST);
+        }
+
         try {
             // Set attribute to save export receipt
             ExportReceipt exportReceipt = new ExportReceipt();

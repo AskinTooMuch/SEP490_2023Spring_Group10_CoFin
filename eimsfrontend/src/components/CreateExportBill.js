@@ -13,7 +13,7 @@ function TableRows({ rowsData, deleteTableRows, handleChange, eggBatchList }) {
                     <td>{eggBatchId}</td>
                     <td>{breedName}</td>
                     <td>{phaseDescription}</td>
-                    <td><input type="number" value={curAmount} onChange={(evnt) => (handleChange(index, evnt))} name="curAmount" className="form-control" /> </td>
+                    <td><div name="curAmount" className="form-control" >{curAmount} </div></td>
                     <td><input type="number" value={exportAmount} onChange={(evnt) => (handleChange(index, evnt))} name="exportAmount" className="form-control" /> </td>
                     <td><input type="number" value={price} onChange={(evnt) => (handleChange(index, evnt))} name="price" className="form-control" /> </td>
                     {
@@ -312,6 +312,16 @@ const CreateExportBill = () => {
                     </div>
                     <br />
                     <table className="table table-bordered">
+                        <colgroup>
+                            <col width="6%" />
+                            <col width="10%" />
+                            <col width="13%" />
+                            <col width="13%" />
+                            <col width="14%" />
+                            <col width="14%" />
+                            <col width="14%" />
+                            <col width="16%" />
+                        </colgroup>
                         <thead>
                             <tr>
                                 <th scope="col">Mã lô</th>
