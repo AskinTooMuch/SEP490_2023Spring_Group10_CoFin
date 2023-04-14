@@ -58,6 +58,14 @@ const CreateImportBill = () => {
         const rows = [...rowsData];
         rows.splice(index, 1);
         setRowsData(rows);
+
+        var total = 0;
+        rows.map((item) => {
+            total += item.amount * item.price;
+        }
+        )
+        var s = total.toLocaleString('vi', { style: 'currency', currency: 'VND' });
+        document.getElementById('total').innerHTML = "Tổng hóa đơn: " + s;
     }
     //On Change data input
     const handleChange = (index, evnt) => {

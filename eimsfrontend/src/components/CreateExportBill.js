@@ -72,6 +72,16 @@ const CreateExportBill = () => {
         const rows = [...rowsData];
         rows.splice(index, 1);
         setRowsData(rows);
+        
+        var total = 0;
+        rows.map((item) => {
+            total += (item.exportAmount * item.price);
+            total += (item.exportAmount * item.vaccine);
+        }
+        )
+        console.log(total);
+        var s = total.toLocaleString('vi', { style: 'currency', currency: 'VND' });
+        document.getElementById('total').innerHTML = "Tổng hóa đơn: " + s;
     }
     //On Change data input
     const handleChange = (index, evnt) => {

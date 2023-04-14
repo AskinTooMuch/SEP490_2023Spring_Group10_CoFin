@@ -450,7 +450,7 @@ public class EggBatchServiceImpl implements IEggBatchService {
                             HttpStatus.BAD_REQUEST);
                 }
                 // All egg broken
-                if (eggWastedAmount == eggBatchAmount) {
+                if (eggWastedAmount + amount == eggBatchAmount) {
                     eggBatch.setStatus(0);
                     eggBatch.setNeedAction(0);
                     eggBatchRepository.save(eggBatch);
@@ -462,7 +462,16 @@ public class EggBatchServiceImpl implements IEggBatchService {
                     eggProduct.setAmount(eggWastedAmount);
                     eggProduct.setCurAmount(eggWastedAmount);
                     eggProduct.setStatus(true);
-                    EggProduct eggWastedInserted = eggProductRepository.save(eggProduct);
+                    eggProductRepository.save(eggProduct);
+
+                    eggProduct = new EggProduct();
+                    eggProduct.setEggBatchId(eggBatch.getEggBatchId());
+                    eggProduct.setIncubationPhaseId(incubationPhaseList.get(1).getIncubationPhaseId());
+                    eggProduct.setIncubationDate(now);
+                    eggProduct.setAmount(amount);
+                    eggProduct.setCurAmount(amount);
+                    eggProduct.setStatus(true);
+                    eggProductRepository.save(eggProduct);
                     return new ResponseEntity<>("Cập nhật lô trứng thành công", HttpStatus.OK);
                 }
 
@@ -597,8 +606,9 @@ public class EggBatchServiceImpl implements IEggBatchService {
                             "nhỏ hơn hoặc bằng số Trứng đang ấp(" + eggIncubating.getCurAmount() + ")",
                             HttpStatus.BAD_REQUEST);
                 }
+
                 // All egg broken
-                if (eggWastedAmount == eggIncubating.getCurAmount() && eggProductOptional.isEmpty()) {
+                if (eggWastedAmount + amount == eggIncubating.getCurAmount()) {
                     eggBatch.setStatus(0);
                     eggBatch.setNeedAction(0);
                     eggBatchRepository.save(eggBatch);
@@ -617,12 +627,29 @@ public class EggBatchServiceImpl implements IEggBatchService {
                         Machine machine = machineRepository.findByMachineId(eggLocationDTO.getMachineId()).get();
                         machine.setCurCapacity(machineRepository.getCurrentAmount(machine.getMachineId()));
                         machineRepository.save(machine);
-
                     }
+
                     eggIncubating.setCurAmount(0);
                     eggProductRepository.save(eggIncubating);
+
+                    if (eggProductOptional.isPresent()) {
+                        eggProduct = new EggProduct();
+                        eggProduct.setEggBatchId(eggBatch.getEggBatchId());
+                        eggProduct.setIncubationPhaseId(incubationPhaseList.get(phaseNumber + 1).getIncubationPhaseId());
+                        eggProduct.setIncubationDate(now);
+                        eggProduct.setAmount(amount);
+                        eggProduct.setCurAmount(amount);
+                        eggProduct.setStatus(true);
+                        eggProductRepository.save(eggProduct);
+                    } else {
+                        eggProduct = eggProductOptional.get();
+                        eggProduct.setAmount(eggProduct.getAmount() + amount);
+                        eggProduct.setCurAmount(eggProduct.getCurAmount() + amount);
+                        eggProductRepository.save(eggProduct);
+                    }
                     return new ResponseEntity<>("Cập nhật lô trứng thành công", HttpStatus.OK);
                 }
+
 
                 // Not Update all incubating egg
                 if (amount + eggWastedAmount != eggIncubating.getCurAmount()) {
@@ -765,8 +792,9 @@ public class EggBatchServiceImpl implements IEggBatchService {
                                     "Trứng đang ấp cũ (" + eggIncubating.getCurAmount() + ")",
                             HttpStatus.BAD_REQUEST);
                 }
+
                 // All egg broken
-                if ((eggWastedAmount == eggIncubating.getCurAmount()) && eggProductOptional.isEmpty()) {
+                if (eggWastedAmount + amount == eggIncubating.getCurAmount()) {
                     eggBatch.setStatus(0);
                     eggBatch.setNeedAction(0);
                     eggBatchRepository.save(eggBatch);
@@ -789,6 +817,22 @@ public class EggBatchServiceImpl implements IEggBatchService {
 
                     eggIncubating.setCurAmount(0);
                     eggProductRepository.save(eggIncubating);
+
+                    if (eggProductOptional.isEmpty()) {
+                        eggProduct = new EggProduct();
+                        eggProduct.setEggBatchId(eggBatch.getEggBatchId());
+                        eggProduct.setIncubationPhaseId(incubationPhaseList.get(phaseNumber + 1).getIncubationPhaseId());
+                        eggProduct.setIncubationDate(now);
+                        eggProduct.setAmount(amount);
+                        eggProduct.setCurAmount(amount);
+                        eggProduct.setStatus(true);
+                        eggProductRepository.save(eggProduct);
+                    } else {
+                        eggProduct = eggProductOptional.get();
+                        eggProduct.setAmount(eggProduct.getAmount() + amount);
+                        eggProduct.setCurAmount(eggProduct.getCurAmount() + amount);
+                        eggProductRepository.save(eggProduct);
+                    }
                     return new ResponseEntity<>("Cập nhật lô trứng thành công", HttpStatus.OK);
                 }
 
@@ -1027,11 +1071,17 @@ public class EggBatchServiceImpl implements IEggBatchService {
                                         "bằng số Trứng đang nở(" + eggHatching.getAmount() + ")",
                                 HttpStatus.BAD_REQUEST);
                     }
+
                     // All egg broken
-                    if (eggWastedAmount == eggHatching.getCurAmount()) {
+                    if (eggWastedAmount + amount == eggHatching.getCurAmount()) {
                         eggBatch.setStatus(0);
                         eggBatch.setNeedAction(0);
                         eggBatchRepository.save(eggBatch);
+
+                        // Update Trứng hao hụt - egg-1
+                        eggWasted.setAmount(eggWasted.getAmount() + eggWastedAmount);
+                        eggWasted.setCurAmount(eggWasted.getCurAmount() + eggWastedAmount);
+                        EggProduct eggWastedInserted = eggProductRepository.save(eggWasted);
 
                         // Update egg location
                         List<EggLocation> eggLocations = eggLocationRepository
@@ -1043,13 +1093,26 @@ public class EggBatchServiceImpl implements IEggBatchService {
                             Machine machine = machineRepository.findByMachineId(eggLocationDTO.getMachineId()).get();
                             machine.setCurCapacity(machineRepository.getCurrentAmount(machine.getMachineId()));
                             machineRepository.save(machine);
-
                         }
 
-                        // Update Trứng hao hụt - egg-1
-                        eggWasted.setAmount(eggWasted.getAmount() + eggWastedAmount);
-                        eggWasted.setCurAmount(eggWasted.getCurAmount() + eggWastedAmount);
-                        EggProduct eggWastedInserted = eggProductRepository.save(eggWasted);
+                        eggHatching.setCurAmount(0);
+                        eggProductRepository.save(eggHatching);
+
+                        if (eggProductOptional.isPresent()) {
+                            eggProduct = new EggProduct();
+                            eggProduct.setEggBatchId(eggBatch.getEggBatchId());
+                            eggProduct.setIncubationPhaseId(incubationPhaseList.get(phaseNumber + 1).getIncubationPhaseId());
+                            eggProduct.setIncubationDate(now);
+                            eggProduct.setAmount(amount);
+                            eggProduct.setCurAmount(amount);
+                            eggProduct.setStatus(true);
+                            eggProductRepository.save(eggProduct);
+                        } else {
+                            eggProduct = eggProductOptional.get();
+                            eggProduct.setAmount(eggProduct.getAmount() + amount);
+                            eggProduct.setCurAmount(eggProduct.getCurAmount() + amount);
+                            eggProductRepository.save(eggProduct);
+                        }
                         return new ResponseEntity<>("Cập nhật lô trứng thành công", HttpStatus.OK);
                     }
 
@@ -1132,21 +1195,6 @@ public class EggBatchServiceImpl implements IEggBatchService {
                             HttpStatus.BAD_REQUEST);
                 }
 
-                // All egg broken
-                if (eggWastedAmount == eggHatched.getCurAmount()) {
-                    eggBatch.setStatus(0);
-                    eggBatch.setNeedAction(0);
-                    eggBatchRepository.save(eggBatch);
-                    // Update Trứng hao hụt - egg-1
-                    eggWasted.setAmount(eggWasted.getAmount() + eggWastedAmount);
-                    eggWasted.setCurAmount(eggWasted.getCurAmount() + eggWastedAmount);
-                    EggProduct eggWastedInserted = eggProductRepository.save(eggWasted);
-
-                    eggHatched.setCurAmount(0);
-                    eggProductRepository.save(eggHatched);
-                    return new ResponseEntity<>("Cập nhật lô trứng thành công", HttpStatus.OK);
-                }
-
                 if (eggProductOptional.isEmpty()) {
                     // Create
                     eggProduct = new EggProduct();
@@ -1173,7 +1221,7 @@ public class EggBatchServiceImpl implements IEggBatchService {
                     eggProduct = eggProductOptional.get();
                     eggProduct.setAmount(eggProduct.getAmount() + amount);
                     eggProduct.setCurAmount(eggProduct.getCurAmount() + amount);
-                    EggProduct male = eggProductRepository.save(eggProduct);
+                    eggProductRepository.save(eggProduct);
                     // Update  Con nở - egg7
                     eggHatched.setAmount(hatchedAmount - amount - eggWastedAmount);
                     eggHatched.setCurAmount(hatchedAmount - amount - eggWastedAmount);

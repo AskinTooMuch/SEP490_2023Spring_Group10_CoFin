@@ -194,11 +194,7 @@ export default function BasicTabs() {
         setRowsData(rows);
     }
 
-
     // DTO
-    // Machine list to choose
-    const [machineList, setMachineList] = useState([])
-
     // Egg batch detail
     const [eggBatchDetail, setEggBatchDetail] = useState({
         eggBatchId: id,
@@ -244,10 +240,6 @@ export default function BasicTabs() {
         locationsNew: []
     })
 
-    const [done, setDone] = useState({
-        done: ""
-    });
-
     // Remain egg in updating
     const [remain, setRemain] = useState({
         remain: "",
@@ -256,8 +248,10 @@ export default function BasicTabs() {
 
     //Get import details
     useEffect(() => {
+        if (eggBatchLoaded) return;
         loadEggBatch();
-    }, [eggBatchLoaded]);
+        setEggBatchLoaded(true);
+    }, []);
 
     const loadEggBatch = async () => {
         const result = await axios.get(EGGBATCH_GET,

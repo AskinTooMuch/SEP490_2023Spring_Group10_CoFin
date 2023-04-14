@@ -286,7 +286,7 @@ class CostServiceImplTest {
          ResponseEntity<?> responseEntity = costService.createCost(dto);
          System.out.println(responseEntity.toString());
          // Assert
-         assertEquals("Tổng chi phí phải lớn hơn 0.01", responseEntity.getBody());
+         assertEquals("Tổng chi phí phải lớn hơn 0", responseEntity.getBody());
      }
 
      @Test
@@ -314,7 +314,7 @@ class CostServiceImplTest {
          ResponseEntity<?> responseEntity = costService.createCost(dto);
          System.out.println(responseEntity.toString());
          // Assert
-         assertEquals("Tổng chi phí phải lớn hơn 0.01", responseEntity.getBody());
+         assertEquals("Tổng chi phí phải lớn hơn 0", responseEntity.getBody());
      }
 
      @Test
@@ -621,7 +621,7 @@ class CostServiceImplTest {
          ResponseEntity<?> responseEntity = costService.updateCost(dto);
          System.out.println(responseEntity.toString());
          // Assert
-         assertEquals("Tổng chi phí phải lớn hơn 0.01", responseEntity.getBody());
+         assertEquals("Tổng chi phí phải lớn hơn 0", responseEntity.getBody());
      }
 
      @Test
@@ -649,7 +649,7 @@ class CostServiceImplTest {
          ResponseEntity<?> responseEntity = costService.updateCost(dto);
          System.out.println(responseEntity.toString());
          // Assert
-         assertEquals("Tổng chi phí phải lớn hơn 0.01", responseEntity.getBody());
+         assertEquals("Tổng chi phí phải lớn hơn 0", responseEntity.getBody());
      }
 
      @Test

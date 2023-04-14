@@ -242,7 +242,6 @@ const Nav = () => {
                         </Typography>
                         {
                             auth ?
-
                                 <>
                                     <Box sx={{ flexGrow: 1 }} />
                                     <Box sx={{ display: { xs: 'none', md: 'flex' } }}>

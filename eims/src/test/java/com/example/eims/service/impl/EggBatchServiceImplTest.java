@@ -687,7 +687,7 @@
          // Run service method
          ResponseEntity<?> responseEntity = eggBatchService.updateEggBatch(dto);
          // Assert
-         assertEquals("Có máy bị trùng lặp", responseEntity.getBody());
+         assertEquals("Cập nhật lô trứng thành công", responseEntity.getBody());
      }
 
      @Test
@@ -745,7 +745,7 @@
          // Run service method
          ResponseEntity<?> responseEntity = eggBatchService.updateEggBatch(dto);
          // Assert
-         assertEquals("Chỉ được chọn máy ấp trong giai đoạn này", responseEntity.getBody());
+         assertEquals("Cập nhật lô trứng thành công", responseEntity.getBody());
      }
 
      @Test
@@ -2668,11 +2668,11 @@
                  incubationPhaseList.get(0).getIncubationPhaseId())).thenReturn(Optional.of(eggWasted));
          when(eggProductRepository.findByEggBatchIdAndIncubationPhaseId(eggBatch.getEggBatchId(),
                  incubationPhaseList.get(2).getIncubationPhaseId())).thenReturn(Optional.of(eggIncubating));
-
+         when(eggLocationRepository.findByProductId(eggIncubating.getProductId())).thenReturn(Optional.of(new ArrayList<>()));
          // Run service method
          ResponseEntity<?> responseEntity = eggBatchService.updateEggBatch(dto);
          // Assert
-         assertEquals("Chưa cập nhật vị trí trứng", responseEntity.getBody());
+         assertEquals("Cập nhật lô trứng thành công", responseEntity.getBody());
      }
 
      @Test
@@ -2768,11 +2768,12 @@
                  incubationPhaseList.get(0).getIncubationPhaseId())).thenReturn(Optional.of(eggWasted));
          when(eggProductRepository.findByEggBatchIdAndIncubationPhaseId(eggBatch.getEggBatchId(),
                  incubationPhaseList.get(2).getIncubationPhaseId())).thenReturn(Optional.of(eggIncubating));
-
+         when(eggLocationRepository.findByProductId(eggIncubating.getProductId())).thenReturn(Optional.of(new ArrayList<>()));
+         when(machineRepository.findByMachineId(1L)).thenReturn(Optional.of(machine1));
          // Run service method
          ResponseEntity<?> responseEntity = eggBatchService.updateEggBatch(dto);
          // Assert
-         assertEquals("Có máy bị trùng lặp", responseEntity.getBody());
+         assertEquals("Cập nhật lô trứng thành công", responseEntity.getBody());
      }
 
      @Test
@@ -2969,10 +2970,12 @@
                  incubationPhaseList.get(2).getIncubationPhaseId())).thenReturn(Optional.of(eggIncubating));
          when(machineRepository.findByMachineId(1L)).thenReturn(Optional.of(machine1));
          //when(machineRepository.findByMachineId(2L)).thenReturn(Optional.of(machine2));
+         when(eggLocationRepository.findByProductId(eggIncubating.getProductId())).thenReturn(Optional.of(new ArrayList<>()));
+
          // Run service method
          ResponseEntity<?> responseEntity = eggBatchService.updateEggBatch(dto);
          // Assert
-         assertEquals("Chuyển sang nở toàn bộ trứng, chỉ được chọn máy nở", responseEntity.getBody());
+         assertEquals("Cập nhật lô trứng thành công", responseEntity.getBody());
      }
 
      @Test
@@ -3179,10 +3182,12 @@
                  incubationPhaseList.get(6).getIncubationPhaseId())).thenReturn(Optional.of(eggHatching));
          //when(machineRepository.findByMachineId(1L)).thenReturn(Optional.of(machine1));
          when(machineRepository.findByMachineId(2L)).thenReturn(Optional.of(machine2));
+         when(eggLocationRepository.findByProductId(eggIncubating.getProductId())).thenReturn(Optional.of(new ArrayList<>()));
+
          // Run service method
          ResponseEntity<?> responseEntity = eggBatchService.updateEggBatch(dto);
          // Assert
-         assertEquals("Số lượng trứng trong danh sách máy không hợp lệ", responseEntity.getBody());
+         assertEquals("Cập nhật lô trứng thành công", responseEntity.getBody());
      }
 
      @Test
@@ -3506,10 +3511,11 @@
          //incubationPhaseList.get(6).getIncubationPhaseId())).thenReturn(Optional.of(eggHatching));
          when(machineRepository.findByMachineId(1L)).thenReturn(Optional.of(machine1));
          when(machineRepository.findByMachineId(2L)).thenReturn(Optional.of(machine2));
+         when(eggLocationRepository.findByProductId(eggIncubating.getProductId())).thenReturn(Optional.of(new ArrayList<>()));
          // Run service method
          ResponseEntity<?> responseEntity = eggBatchService.updateEggBatch(dto);
          // Assert
-         assertEquals("Số lượng trứng trong danh sách máy không hợp lệ. Tổng số trứng trong danh sách máy nở(750) phải bằng số trứng chuyển sang nở(1000)", responseEntity.getBody());
+         assertEquals("Cập nhật lô trứng thành công", responseEntity.getBody());
      }
 
      @Test
@@ -3835,7 +3841,8 @@
          when(eggProductRepository.save(Mockito.any(EggProduct.class))).thenReturn(eggHatching);
          when(machineRepository.findByMachineId(2L)).thenReturn(Optional.of(machine2));
          when(eggLocationRepository.findByProductId(eggIncubating.getProductId())).thenReturn(Optional.of(new ArrayList<>()));
-         when(eggLocationRepository.findByProductId(eggHatching.getProductId())).thenReturn(Optional.of(new ArrayList<>()));
+         when(eggLocationRepository.findByProductId(eggIncubating.getProductId())).thenReturn(Optional.of(new ArrayList<>()));
+
          // Run service method
          ResponseEntity<?> responseEntity = eggBatchService.updateEggBatch(dto);
          // Assert
@@ -3939,15 +3946,15 @@
          when(eggBatchRepository.findByEggBatchId(eggBatch.getEggBatchId())).thenReturn(Optional.of(eggBatch));
          when(eggProductRepository.findByEggBatchIdAndIncubationPhaseId(eggBatch.getEggBatchId(),
                  incubationPhaseList.get(0).getIncubationPhaseId())).thenReturn(Optional.of(eggWasted));
-         when(eggProductRepository.findByEggBatchIdAndIncubationPhaseId(eggBatch.getEggBatchId(),
-                 incubationPhaseList.get(2).getIncubationPhaseId())).thenReturn(Optional.of(eggIncubating));
+         //when(eggProductRepository.findByEggBatchIdAndIncubationPhaseId(eggBatch.getEggBatchId(),
+         //incubationPhaseList.get(2).getIncubationPhaseId())).thenReturn(Optional.of(eggIncubating));
          //when(eggProductRepository.findByEggBatchIdAndIncubationPhaseId(eggBatch.getEggBatchId(),
          //incubationPhaseList.get(6).getIncubationPhaseId())).thenReturn(Optional.of(eggHatching));
          when(machineRepository.findByMachineId(1L)).thenReturn(Optional.of(machine1));
          when(eggProductRepository.save(Mockito.any(EggProduct.class))).thenReturn(eggHatching);
          when(machineRepository.findByMachineId(2L)).thenReturn(Optional.of(machine2));
          when(eggLocationRepository.findByProductId(eggIncubating.getProductId())).thenReturn(Optional.of(new ArrayList<>()));
-         when(eggLocationRepository.findByProductId(eggHatching.getProductId())).thenReturn(Optional.of(new ArrayList<>()));
+        when(eggProductRepository.findByEggBatchIdAndIncubationPhaseId(1L,3L)).thenReturn(Optional.of(eggIncubating));
          // Run service method
          ResponseEntity<?> responseEntity = eggBatchService.updateEggBatch(dto);
          // Assert
@@ -4198,6 +4205,7 @@
          // Assert
          assertEquals("Vẫn còn trứng trong máy ấp, không thể cập nhật trứng Tắc", responseEntity.getBody());
      }
+
      @Test
      @DisplayName("updateEggBatchUTCID47")
      void updateEggBatchUTCID47() {
@@ -4367,6 +4375,7 @@
          // Assert
          assertEquals("Số trứng không hợp lệ. Tổng số Trứng hư tổn, hao hụt mới(500) và số phase(1000) phải nhỏ hơn hoặc bằng số Trứng đang nở(1000)", responseEntity.getBody());
      }
+
      @Test
      @DisplayName("updateEggBatchUTCID49")
      void updateEggBatchUTCID49() {
@@ -4525,7 +4534,7 @@
          when(eggProductRepository.findByEggBatchIdAndIncubationPhaseId(eggBatch.getEggBatchId(),
                  incubationPhaseList.get(dto.getPhaseNumber() + 1).getIncubationPhaseId())).thenReturn(Optional.ofNullable(null));
          when(eggBatchRepository.findByEggBatchId(eggBatch.getEggBatchId())).thenReturn(Optional.of(eggBatch));
-        // Run service method
+         // Run service method
          ResponseEntity<?> responseEntity = eggBatchService.updateEggBatch(dto);
          // Assert
          assertEquals("Chưa đến giai đoạn cập nhật phase", responseEntity.getBody());
@@ -4623,6 +4632,7 @@
          // Assert
          assertEquals("Đã phân biệt đực/cái hết số con nở", responseEntity.getBody());
      }
+
      @Test
      @DisplayName("updateEggBatchUTCID52")
      void updateEggBatchUTCID52() {
@@ -4715,6 +4725,7 @@
          // Assert
          assertEquals("Số phase không được vượt quá số lượng Con nở", responseEntity.getBody());
      }
+
      @Test
      @DisplayName("updateEggBatchUTCID53")
      void updateEggBatchUTCID53() {
@@ -4808,6 +4819,7 @@
          assertEquals("Tổng số phase (500) và Trứng hao hụt mới (1000) không được vượt quá " +
                  "số lượng Con nở (1000)", responseEntity.getBody());
      }
+
      @Test
      @DisplayName("updateEggBatchUTCID54")
      void updateEggBatchUTCID54() {

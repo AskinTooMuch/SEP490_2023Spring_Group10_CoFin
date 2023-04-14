@@ -137,7 +137,7 @@ public class NotificationServiceImpl implements INotificationService {
         if (notificationList.size() <= 5){
             return new ResponseEntity<>(notificationList, HttpStatus.OK);
         }
-        return new ResponseEntity<>(notificationList.subList(0, 4), HttpStatus.OK);
+        return new ResponseEntity<>(notificationList.subList(0, 5), HttpStatus.OK);
     }
 
     /**
