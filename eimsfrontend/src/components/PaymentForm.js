@@ -69,6 +69,7 @@ export default function PaymentForm(props) {
                 }
             } else {
                 console.log("Axios" + error.message);
+                toast.error("Thông tin thẻ không hợp lệ");
             }
 
         } else {
