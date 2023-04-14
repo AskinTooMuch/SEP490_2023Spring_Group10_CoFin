@@ -110,7 +110,7 @@ const EggBatch = () => {
                                                             : ''
                                                     }
                                                     {
-                                                        item.status === 1 && item.needAction === 0 && item.progress == 5
+                                                        item.status === 1 && item.needAction === 0 && item.progress === 5
                                                             ? <td className='u-border-1 u-border-grey-30 u-table-cell text-green'>Đang nở</td>
                                                             : ''
                                                     }{

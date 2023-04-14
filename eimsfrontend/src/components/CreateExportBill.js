@@ -17,7 +17,7 @@ function TableRows({ rowsData, deleteTableRows, handleChange, eggBatchList }) {
                     <td><input type="number" value={exportAmount} onChange={(evnt) => (handleChange(index, evnt))} name="exportAmount" className="form-control" /> </td>
                     <td><input type="number" value={price} onChange={(evnt) => (handleChange(index, evnt))} name="price" className="form-control" /> </td>
                     {
-                        phaseNumber == 7 || phaseNumber == 8 || phaseNumber == 9
+                        phaseNumber === 7 || phaseNumber === 8 || phaseNumber === 9
                             ? <td><input type="number" value={vaccine} onChange={(evnt) => (handleChange(index, evnt))} name="vaccine" className="form-control" /> </td>
                             : <td><input disabled type="number" value={vaccine} name="vaccine" className="form-control" /> </td>
                     }
@@ -261,11 +261,11 @@ const CreateExportBill = () => {
     function show() {
         var select = document.getElementById('select');
         var id = select.options[select.selectedIndex].value;
-        if (id == 0) {
+        if (id === 0) {
             document.getElementById('phone').innerHTML = "";
         } else {
             customerList.map((item) => {
-                if (item.customerId == id) {
+                if (item.customerId === id) {
                     document.getElementById('phone').innerHTML = item.customerPhone;
                 }
             })

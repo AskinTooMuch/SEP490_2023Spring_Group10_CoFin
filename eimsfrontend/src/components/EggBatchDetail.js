@@ -305,7 +305,7 @@ export default function BasicTabs() {
             remain.remain = result.data.amount;
             remain.remain2 = result.data.amount;
         }
-        if (result.data.progress != 0) {
+        if (result.data.progress !== 0) {
             remain.remain = eggBatchDetail.eggProductList[2].curAmount + eggBatchDetail.eggProductList[6].curAmount;
             remain.remain2 = eggBatchDetail.eggProductList[2].curAmount + eggBatchDetail.eggProductList[6].curAmount;
         }
@@ -319,7 +319,7 @@ export default function BasicTabs() {
     // display total amount
     function cal() {
         if (eggBatchDetail.progress < 5) {
-            if (document.getElementById('remain') != null) {
+            if (document.getElementById('remain') !== null) {
                 if (eggBatchDetail.eggProductList[8].curAmount === 0) {
                     let a = Number(document.getElementById("eggWasted").value);
                     let b = Number(document.getElementById("amount").value);
@@ -332,7 +332,7 @@ export default function BasicTabs() {
             }
         }
         if (eggBatchDetail.progress === 5) {
-            if (document.getElementById('remain') != null) {
+            if (document.getElementById('remain') !== null) {
                 if (eggBatchDetail.eggProductList[8].curAmount === 0) {
                     let a = Number(document.getElementById("eggWasted").value);
 
@@ -348,7 +348,7 @@ export default function BasicTabs() {
     // display total amount
     function cal2() {
         if (eggBatchDetail.progress < 5) {
-            if (document.getElementById('remain2') != null) {
+            if (document.getElementById('remain2') !== null) {
                 if (eggBatchDetail.eggProductList[8].curAmount === 0) {
                     let a = Number(document.getElementById("eggWastedIncubating").value);
 
@@ -360,7 +360,7 @@ export default function BasicTabs() {
             }
         }
         if (eggBatchDetail.progress === 5) {
-            if (document.getElementById('remain2') != null) {
+            if (document.getElementById('remain2') !== null) {
                 if (eggBatchDetail.eggProductList[8].curAmount === 0) {
                     let a = Number(document.getElementById("eggWastedIncubating").value);
                     let b = Number(document.getElementById("eggWastedHatching").value);
@@ -395,11 +395,11 @@ export default function BasicTabs() {
         })
         var value;
         var e = document.getElementById("select");
-        if (e != null) {
+        if (e !== null) {
             value = e.options[e.selectedIndex].value;
         }
         var selectedText = e.options[e.selectedIndex].text;
-        if ((field === "amount" && value != 5) || field === "eggWasted") {
+        if ((field === "amount" && value !== 5) || field === "eggWasted") {
             cal();
         }
         if (field === "phaseNumber") {

@@ -275,7 +275,7 @@ const Nav = () => {
                                             color="inherit"
                                         >
                                             {
-                                                notificationList && notificationList.length == 0
+                                                notificationList && notificationList.length === 0
                                                     ?
                                                     <Badge>
                                                         <NotificationsIcon />

@@ -211,11 +211,11 @@ const CreateImportBill = () => {
     function show() {
         var select = document.getElementById('select');
         var id = select.options[select.selectedIndex].value;
-        if (id == 0) {
+        if (id === 0) {
             document.getElementById('phone').innerHTML = "";
         } else {
             supplierList.map((item) => {
-                if (item.supplierId == id) {
+                if (item.supplierId === id) {
                     document.getElementById('phone').innerHTML = item.supplierPhone;
                 }
             })

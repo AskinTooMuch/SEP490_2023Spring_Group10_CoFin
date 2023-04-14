@@ -326,7 +326,7 @@ export default function BasicTabs() {
                             </div>
                             <div className="col-md-4 ">
                                 {
-                                    (sessionStorage.getItem("roleId") == 2)
+                                    (sessionStorage.getItem("roleId") === 2)
                                         ?
                                         <div className='button'>
                                             <button className='btn btn-light ' onClick={handleShow} id="startEditMachine" >Sửa</button>
@@ -370,7 +370,7 @@ export default function BasicTabs() {
                             </div>
                             <div className="col-md-4">
                                 {
-                                    machineDetailDTO.active == 0
+                                    machineDetailDTO.active === 0
                                         ?
                                         <div style={{ display: "flex", justifyContent: "space-between" }}>
                                             <button style={{ width: "45%" }} className='btn btn-light' onClick={() => handleUpdateActiveMachine(1)} id="startEditMachine">Dừng hoạt động</button>

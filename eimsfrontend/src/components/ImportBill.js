@@ -116,7 +116,7 @@ const ImportBill = () => {
                                                     <td className="u-border-1 u-border-grey-30 u-table-cell">{item.total.toLocaleString()}</td>
                                                     <td className="u-border-1 u-border-grey-30 u-table-cell">{item.paid.toLocaleString()}</td>
                                                     {
-                                                        item.total == item.paid
+                                                        item.total === item.paid
                                                             ?
                                                             <td className="u-border-1 u-border-grey-30 u-table-cell text-green">
                                                                 Đã thanh toán đủ</td>

@@ -14,14 +14,8 @@ package com.example.eims.service.impl;
 
 import com.example.eims.dto.registration.RegistrationInforDTO;
 import com.example.eims.dto.registration.RegistrationListItemDTO;
-import com.example.eims.entity.Customer;
-import com.example.eims.entity.Facility;
-import com.example.eims.entity.Registration;
-import com.example.eims.entity.User;
-import com.example.eims.repository.CustomerRepository;
-import com.example.eims.repository.FacilityRepository;
-import com.example.eims.repository.RegistrationRepository;
-import com.example.eims.repository.UserRepository;
+import com.example.eims.entity.*;
+import com.example.eims.repository.*;
 import com.example.eims.service.interfaces.IRegistrationService;
 import com.example.eims.utils.SpeedSMS;
 import jakarta.persistence.EntityManager;
@@ -35,6 +29,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -49,6 +45,10 @@ public class RegistrationServiceImpl implements IRegistrationService {
     private final FacilityRepository facilityRepository;
     @Autowired
     private final CustomerRepository customerRepository;
+    @Autowired
+    private final SubscriptionRepository subscriptionRepository;
+    @Autowired
+    private final UserSubscriptionRepository userSubscriptionRepository;
     private final SpeedSMS speedSMS;
     private final String SENDER = "61522b07d22251db";
     @PersistenceContext
@@ -56,11 +56,15 @@ public class RegistrationServiceImpl implements IRegistrationService {
 
     public RegistrationServiceImpl(UserRepository userRepository, RegistrationRepository registrationRepository,
                                    FacilityRepository facilityRepository, CustomerRepository customerRepository,
+                                   SubscriptionRepository subscriptionRepository,
+                                   UserSubscriptionRepository userSubscriptionRepository,
                                    EntityManager em) {
         this.userRepository = userRepository;
         this.registrationRepository = registrationRepository;
         this.facilityRepository = facilityRepository;
         this.customerRepository = customerRepository;
+        this.subscriptionRepository = subscriptionRepository;
+        this.userSubscriptionRepository = userSubscriptionRepository;
         this.speedSMS = new SpeedSMS();
         this.em = em;
     }
@@ -149,6 +153,18 @@ public class RegistrationServiceImpl implements IRegistrationService {
             customer.setUserId(userId);
             customerRepository.save(customer);
 
+            //
+            Subscription subscription = subscriptionRepository.findBySubscriptionId(1).get();
+
+            UserSubscription userSubscription = new UserSubscription();
+            userSubscription.setFacilityId(facilityId);
+            userSubscription.setSubscriptionId(subscription.getSubscriptionId());
+            userSubscription.setSubscribeDate(Date.valueOf(LocalDate.now()));
+            userSubscription.setExpireDate(Date.valueOf(LocalDate.now().plusDays(subscription.getDuration())));
+            userSubscription.setPaid(0);
+            userSubscription.setStatus(true);
+
+            userSubscriptionRepository.save(userSubscription);
             //  Send message to Owner
             String content = "Đơn đăng ký của bạn đã được chấp thuận! Chào mừng đến với EIMS.";
             //String userInfo = speedSMS.getUserInfo();

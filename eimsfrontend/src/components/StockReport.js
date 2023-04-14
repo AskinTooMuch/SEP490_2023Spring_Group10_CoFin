@@ -67,7 +67,7 @@ const StockReport = () => {
 
     // Load list egg product available
     const loadOneAvailable = async (number) => {
-        if (number == -1 || number == null) {
+        if (number === -1 || number === null) {
             loadAllAvailable();
             setDataLoaded(true);
         } else {

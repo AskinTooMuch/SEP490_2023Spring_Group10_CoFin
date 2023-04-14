@@ -289,7 +289,7 @@ export default function BasicTabs() {
                             <p>Đã thanh toán: {exportDetail.paid.toLocaleString('vi', { style: 'currency', currency: 'VND' })} </p>
                             <p>Trạng thái:
                                 {
-                                    exportDetail.total == exportDetail.paid
+                                    exportDetail.total === exportDetail.paid
                                         ? <span className='text-green'> Đã thanh toán đủ</span>
                                         : <span className='text-red'> Chưa thanh toán đủ</span>
                                 }

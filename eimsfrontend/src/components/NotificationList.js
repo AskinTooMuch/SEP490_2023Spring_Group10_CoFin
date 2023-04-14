@@ -192,7 +192,7 @@ const NotificationList = () => {
                         }
 
                         {
-                            listNotiOld && listNotiNew && listNotiOld.length == 0 && listNotiNew.length == 0
+                            listNotiOld && listNotiNew && listNotiOld.length === 0 && listNotiNew.length === 0
                                 ?
                                 <div className="text-center">
                                     <Link className="dark-link">Hiện tại không có thông báo nào</Link>
