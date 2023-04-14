@@ -177,7 +177,7 @@ const Registrators = () => {
             console.log(response);
             toast.success("Đã từ chối đơn đăng ký của " + registrationDetail.username);
             setRegistrationDetail('');
-            loadRegistrationList();
+            loadRegistrationList(0);
             setShow(false);
         } catch (err) {
             if (!err?.response) {
