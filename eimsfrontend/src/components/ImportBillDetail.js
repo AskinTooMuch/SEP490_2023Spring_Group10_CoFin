@@ -69,7 +69,7 @@ export default function BasicTabs() {
 
     //Get sent params
     const { state } = useLocation();
-    const { id } = state;
+    const { id, mess } = state;
 
     // DTO
     const [eggBatchList, setEggBatchList] = useState([]);

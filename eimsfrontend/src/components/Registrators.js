@@ -139,7 +139,7 @@ const Registrators = () => {
             console.log(response);
             toast.success("Đã phê duyệt đơn đăng ký của " + registrationDetail.username);
             setRegistrationDetail('');
-            loadRegistrationList();
+            loadRegistrationList(0);
             setShow(false);
         } catch (err) {
             if (!err?.response) {
@@ -276,26 +276,31 @@ const Registrators = () => {
                             </div>
 
                         </Modal.Body>
-                        <div className='model-footer'>
-                            <button style={{ width: "20%" }} className="col-md-6 btn-light" onClick={handleApprove}>
-                                Duyệt
-                            </button>
-                            <button style={{ width: "20%" }} onClick={handleDecline} className="btn btn-light">
-                                Từ chối
-                            </button>
-                        </div>
+                        {
+                            registrationDetail.status === 0
+                                ? <div className='model-footer'>
+                                    <button style={{ width: "20%" }} className="col-md-6 btn-light" onClick={handleApprove}>
+                                        Duyệt
+                                    </button>
+                                    <button style={{ width: "20%" }} onClick={handleDecline} className="btn btn-light">
+                                        Từ chối
+                                    </button>
+                                </div>
+                                : ''
+                        }
+
                     </form>
                 </Modal>
                 <div >
-                    <select  onChange={(e) => handleFilter(e)}
+                    <select onChange={(e) => handleFilter(e)}
                         id="" name="" className="form-select" aria-label="Default select example">
                         <option value={0} >Đang xét duyệt</option>
                         <option value={2} >Đã chấp thuận</option>
                         <option value={1} >Đã từ chối</option>
                     </select>
-                    <br/>
+                    <br />
                 </div>
-            
+
             </nav>
             <div>
                 <section className="u-align-center u-clearfix u-section-1" id="sec-b42b">
@@ -327,7 +332,7 @@ const Registrators = () => {
                                         registrationList && registrationList.length > 0 ?
                                             registrationList.map((item, index) =>
                                                 <tr style={{ height: "76px" }} onClick={() => getRegistrationDetail(item.userId)} >
-                                                    <td className="u-border-1 u-border-grey-30 u-first-column u-grey-5 u-table-cell u-table-cell-5">{index+1}</td>
+                                                    <td className="u-border-1 u-border-grey-30 u-first-column u-grey-5 u-table-cell u-table-cell-5">{index + 1}</td>
                                                     <td className="u-border-1 u-border-grey-30 u-table-cell">{item.username}</td>
                                                     <td className="u-border-1 u-border-grey-30 u-table-cell">{item.phone}</td>
                                                     <td className="u-border-1 u-border-grey-30 u-table-cell">{item.facilityName}</td>
