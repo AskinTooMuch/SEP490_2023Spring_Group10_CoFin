@@ -815,7 +815,7 @@ export default function BasicTabs() {
                         </tbody>
                     </table>
                 </div>
-                <div style={{ textAlign: "right" }}>
+                <div style={{ textAlign: "center" }}>
                     {
                         eggBatchDetail.progress && eggBatchDetail.progress <= 5 && eggBatchDetail.status === 1
                             ?
