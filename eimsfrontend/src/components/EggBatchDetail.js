@@ -248,9 +248,7 @@ export default function BasicTabs() {
 
     //Get import details
     useEffect(() => {
-        if (eggBatchLoaded) return;
         loadEggBatch();
-        setEggBatchLoaded(true);
     }, [eggBatchLoaded]);
 
     const loadEggBatch = async () => {
