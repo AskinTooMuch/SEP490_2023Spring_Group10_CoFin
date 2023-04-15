@@ -75,7 +75,7 @@ const ExportReport = () => {
     const [customerId, setCustomerId] = useState("");
     const [customerName, setCustomerName] = useState("");
 
-    const handleViewDetail = async (customerId2,customerName) => {
+    const handleViewDetail = async (customerId2, customerName) => {
         setCustomerId(customerId2);
         setCustomerName(customerName);
         console.log("setting customerId" + customerId);
@@ -144,7 +144,7 @@ const ExportReport = () => {
             <Modal show={show} onHide={handleClose}
                 size="lg" aria-labelledby="contained-modal-title-vcenter" centered >
                 <Modal.Header closeButton onClick={handleClose}>
-                    <Modal.Title>Phạm Ngọc A</Modal.Title>
+                    <Modal.Title>{customerName}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <div className='container'>

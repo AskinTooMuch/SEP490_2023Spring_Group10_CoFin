@@ -39,6 +39,7 @@ const ImportReport = () => {
     //Data holding objects
     const [reportList, setReportList] = useState([]);
 
+    const [supplierName, setSupplierName] = useState("");
     //Get sent params
     const { state } = useLocation();
 
@@ -74,8 +75,9 @@ const ImportReport = () => {
     const [reportItemYearList, setReportItemYearList] = useState([]);
     const [supplierId, setSupplierId] = useState("");
 
-    const handleViewDetail = async (supplierId2) => {
+    const handleViewDetail = async (supplierId2, name) => {
         setSupplierId(supplierId2);
+        setSupplierName(name);
         console.log("setting supplierId" + supplierId);
 
         const result = await axios.get(IMPORT_YEAR_LIST,
@@ -142,7 +144,7 @@ const ImportReport = () => {
             <Modal show={show} onHide={handleClose}
                 size="lg" aria-labelledby="contained-modal-title-vcenter" centered >
                 <Modal.Header closeButton onClick={handleClose}>
-                    <Modal.Title>Phạm Ngọc A</Modal.Title>
+                    <Modal.Title>{supplierName}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <div className='container'>
@@ -257,7 +259,7 @@ const ImportReport = () => {
                                 {
                                     reportList && reportList.length > 0
                                         ? reportList.map((item, index) =>
-                                            <tr style={{ height: "76px" }} onClick={() => handleViewDetail(item.supplierId)}>
+                                            <tr style={{ height: "76px" }} onClick={() => handleViewDetail(item.supplierId, item.supplierName)}>
                                                 <td className="u-border-1 u-border-grey-30 u-first-column u-grey-5 u-table-cell u-table-cell-5">{index + 1}</td>
                                                 <td className="u-border-1 u-border-grey-30 u-table-cell">{item.supplierName}</td>
                                                 <td className="u-border-1 u-border-grey-30 u-table-cell">{item.total.toLocaleString()} </td>
