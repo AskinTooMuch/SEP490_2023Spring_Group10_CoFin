@@ -96,7 +96,44 @@ const Dashboard = () => {
           </div>
         </div>
       </WithPermission>
-
+      <WithPermission roleRequired='3'>
+        <div className="container">
+          <div className="row">
+            {
+              machineList && machineList.length > 0
+                ? machineList.map((item) =>
+                  <div className="col-md-3 col-sm-6">
+                    <div className="serviceBox orange" onClick={() => routeChange(item.machineId)}>
+                      <div className="service-icon">
+                        <span>{item.machineName}</span>
+                      </div>
+                      <p className="description">
+                        {
+                          item.eggs && item.eggs.length > 0
+                            ? item.eggs.map((itemm) =>
+                              <>
+                                <span>Mã lô {itemm.eggBatchId}: {itemm.incubationDateToNow}/{itemm.incubationPeriod} ngày </span>
+                                <p>Số lượng {itemm.amount}</p>
+                                <ProgressBar now={Math.round(itemm.incubationDateToNow / itemm.incubationPeriod * 100)} variant="success" label={` `} />
+                              </>
+                            )
+                            : ''
+                        }
+                      </p>
+                      <h3 className="title">{item.curCapacity}/{item.maxCapacity}</h3>
+                    </div>
+                  </div>
+                )
+                :
+                <div className='no-eggbatch'>
+                  <h4>
+                    Hiện tại không có máy nào đang ấp
+                  </h4>
+                </div>
+            }
+          </div>
+        </div>
+      </WithPermission>
     </div >
   );
 }

@@ -79,6 +79,7 @@ function App() {
 
         {/*Employee pages */}
         <Route element={<PrivateRoute roleRequired="3" />} >
+          <Route path="/dashboard" element={<DashBoard />} />
           <Route path="/egg" element={<Egg />} />
           <Route path="/machine" element={<Machine />} />
         </Route>
