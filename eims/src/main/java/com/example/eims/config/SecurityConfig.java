@@ -125,12 +125,7 @@ public class SecurityConfig{
                 "/api/user/details",
                 "/api/specie/list",
                 "/api/specie/details",
-                "/api/machine/all",
-                "/api/machine/get",
-                "/api/machine/allPaging",
-                "/api/machine/create",
-                "/api/machine/update/**",
-                "/api/machine/delete",
+                "/api/machine/**",
                 "/api/breed/detail/specieId",
                 "/api/notification/**",
                 "/api/eggBatch/**"
