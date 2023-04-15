@@ -131,6 +131,7 @@ public class SecurityConfig{
                 "/api/eggBatch/**"
         };
         final String[] MODERATOR_ADMIN = {
+                "/api/user/details",
                 "/api/user/all",
                 "/api/user/allPaging",
                 "/api/user/allByRole",
@@ -159,6 +160,7 @@ public class SecurityConfig{
                 "api/incomeReport/**"
         };
         final String[] MODERATOR = {
+                "/api/user/details",
                 "/api/registration/**"
         };
 

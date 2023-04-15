@@ -78,15 +78,24 @@ public class UserServiceImpl implements IUserService {
      */
     @Override
     public ResponseEntity<?> sendUserDetail(Long userId) {
-        Query q = em.createNamedQuery("GetUserDetail");
-        q.setParameter(1, userId);
-        try {
-            UserDetailDTO userDetailDTO = (UserDetailDTO) q.getSingleResult();
-            System.out.println(userDetailDTO);
-            return new ResponseEntity<>(userDetailDTO, HttpStatus.OK);
-        } catch (NoResultException e) {
-            return new ResponseEntity<>("Người dùng không hợp lệ", HttpStatus.BAD_REQUEST);
+        User user = userRepository.findByUserId(userId).get();
+        List<Role> roles = user.getRoles();
+        // get first role
+        if (roles.get(0).getRoleId() == 2 || roles.get(0).getRoleId() == 3) {
+            Query q = em.createNamedQuery("GetUserDetail");
+            q.setParameter(1, userId);
+            try {
+                UserDetailDTO userDetailDTO = (UserDetailDTO) q.getSingleResult();
+                System.out.println(userDetailDTO);
+                return new ResponseEntity<>(userDetailDTO, HttpStatus.OK);
+            } catch (NoResultException e) {
+                return new ResponseEntity<>("Người dùng không hợp lệ", HttpStatus.BAD_REQUEST);
+            }
         }
+        if (roles.get(0).getRoleId() == 4 || roles.get(0).getRoleId() == 5) {
+            return new ResponseEntity<>(new UserDetailDTO(), HttpStatus.OK);
+        }
+        return new ResponseEntity<>("Người dùng không hợp lệ", HttpStatus.BAD_REQUEST);
     }
 
     /**
