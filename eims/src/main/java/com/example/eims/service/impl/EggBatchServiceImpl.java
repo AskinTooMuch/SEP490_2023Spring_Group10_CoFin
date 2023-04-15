@@ -847,18 +847,25 @@ public class EggBatchServiceImpl implements IEggBatchService {
                 if (inputSet.size() < eggLocationDTOs.size()) {
                     return new ResponseEntity<>("Có máy bị trùng lặp", HttpStatus.BAD_REQUEST);
                 }
+                boolean onlyIncubating = true;
                 boolean onlyHatching = true;
+                boolean both = false;
                 for (EggLocationUpdateEggBatchDTO eggLocationDTO : eggLocationDTOs) {
                     Machine machine = machineRepository.findByMachineId(eggLocationDTO.getMachineId()).get();
                     if (machine.getMachineTypeId() == 1 && eggLocationDTO.getAmountUpdate() > 0) {
                         onlyHatching = false;
+                    }
+                    if (machine.getMachineTypeId() == 2 && eggLocationDTO.getAmountUpdate() > 0) {
+                        onlyIncubating = false;
                         break;
                     }
                 }
-
+                if (!onlyIncubating && !onlyHatching) {
+                    both = true;
+                }
                 // Chưa chuyển hết sang nở, chọn cả máy ấp, nở
                 if (amount + eggWastedAmount < eggIncubating.getCurAmount()) {
-                    if (onlyHatching) {
+                    if (!both) {
                         return new ResponseEntity<>("Chưa chuyển hết sang nở, phải chọn cả máy ấp và máy nở",
                                 HttpStatus.BAD_REQUEST);
                     }
