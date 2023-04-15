@@ -1330,8 +1330,9 @@ public class EggBatchServiceImpl implements IEggBatchService {
         // Check amount
         for (EggLocationUpdateEggBatchDTO item : locationsNew) {
             if (item.getAmountUpdate() < 0
-                    || item.getAmountUpdate() >
-                    (item.getCapacity() - item.getAmountCurrent())
+                    || item.getAmountUpdate() > item.getCapacity()
+                    || ((item.getAmountUpdate() - item.getOldAmount())
+                    > (item.getCapacity() - item.getAmountCurrent()))
                     || item.getAmountUpdate() > totalOld) {
                 System.out.println(item.getAmountUpdate());
                 System.out.println(item.getCapacity());
