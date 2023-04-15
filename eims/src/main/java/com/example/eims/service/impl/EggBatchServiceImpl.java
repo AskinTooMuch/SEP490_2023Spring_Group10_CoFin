@@ -1300,7 +1300,7 @@ public class EggBatchServiceImpl implements IEggBatchService {
             totalOld += item.getAmount();
         }
 
-        if ((wastedIncubating + wastedHatching) > totalOld || wastedIncubating < 0 || wastedIncubating < 0) {
+        if ((wastedIncubating + wastedHatching) > totalOld || wastedIncubating < 0 || wastedHatching < 0) {
             return new ResponseEntity<>("Số lượng trứng hao hụt không hợp lệ", HttpStatus.BAD_REQUEST);
         }
 
@@ -1308,11 +1308,12 @@ public class EggBatchServiceImpl implements IEggBatchService {
         // Remove amount 0
         if (locationsNew.size() > 0) {
             for (EggLocationUpdateEggBatchDTO eggLocationDTO : locationsNew) {
-                if (eggLocationDTO.getAmountUpdate() == 0) {
+                if (eggLocationDTO.getAmountUpdate() == 0 && eggLocationDTO.getOldAmount() == 0) {
                     locationsNew.remove(eggLocationDTO);
                 }
             }
         }
+
         // Empty after remove 0
         if (locationsNew.size() == 0) {
             return new ResponseEntity<>("Danh sách máy không hợp lệ", HttpStatus.BAD_REQUEST);
@@ -1342,9 +1343,9 @@ public class EggBatchServiceImpl implements IEggBatchService {
         }
 
         // Check type machine
-        boolean onlyIncubating = true;
-        boolean onlyHatching = true;
-        boolean both = false;
+        boolean onlyIncubating = onlyIncubatingOld;
+        boolean onlyHatching = onlyHatchingOld;
+        boolean both = bothOld;
         for (EggLocationUpdateEggBatchDTO item : locationsNew) {
             if (item.getMachineTypeId() == 1L && item.getAmountUpdate() > 0) {
                 onlyHatching = false;
@@ -1412,14 +1413,53 @@ public class EggBatchServiceImpl implements IEggBatchService {
                     .findByProductId(eggIncubating.getProductId()).get();
             eggLocationRepository.deleteAll(eggLocations);
 
-            for (EggLocationUpdateEggBatchDTO eggLocationDTO : locationsNew) {
-                if (eggLocationDTO.getAmountUpdate() > 0) {
-                    EggLocation eggLocation = new EggLocation();
-                    eggLocation.setProductId(eggIncubating.getProductId());
-                    eggLocation.setMachineId(eggLocationDTO.getMachineId());
-                    eggLocation.setAmount(eggLocationDTO.getAmountUpdate());
-                    eggLocation.setStatus(1);
-                    eggLocationRepository.save(eggLocation);
+            // Check all broken
+            if (eggIncubating.getCurAmount() == 0) {
+                eggBatch.setStatus(0);
+                eggBatch.setNeedAction(0);
+                eggBatchRepository.save(eggBatch);
+            } else {
+                for (EggLocationUpdateEggBatchDTO eggLocationDTO : locationsNew) {
+                    if (eggLocationDTO.getAmountUpdate() > 0) {
+                        EggLocation eggLocation = new EggLocation();
+                        eggLocation.setProductId(eggIncubating.getProductId());
+                        eggLocation.setMachineId(eggLocationDTO.getMachineId());
+                        eggLocation.setAmount(eggLocationDTO.getAmountUpdate());
+                        eggLocation.setStatus(1);
+                        eggLocationRepository.save(eggLocation);
+                    }
+                }
+            }
+        }
+
+        if (onlyHatching) {
+            EggProduct eggHatching = eggProductRepository.
+                    findByEggBatchIdAndIncubationPhaseId(eggBatch.getEggBatchId(),
+                            incubationPhaseList.get(6).getIncubationPhaseId()).get();
+
+            eggHatching.setAmount(eggHatching.getAmount() - wastedHatching);
+            eggHatching.setCurAmount(eggHatching.getCurAmount() - wastedHatching);
+            eggProductRepository.save(eggHatching);
+
+            List<EggLocation> eggLocations = eggLocationRepository
+                    .findByProductId(eggHatching.getProductId()).get();
+            eggLocationRepository.deleteAll(eggLocations);
+
+            // Check all broken
+            if (eggHatching.getCurAmount() == 0) {
+                eggBatch.setStatus(0);
+                eggBatch.setNeedAction(0);
+                eggBatchRepository.save(eggBatch);
+            } else {
+                for (EggLocationUpdateEggBatchDTO eggLocationDTO : locationsNew) {
+                    if (eggLocationDTO.getAmountUpdate() > 0) {
+                        EggLocation eggLocation = new EggLocation();
+                        eggLocation.setProductId(eggHatching.getProductId());
+                        eggLocation.setMachineId(eggLocationDTO.getMachineId());
+                        eggLocation.setAmount(eggLocationDTO.getAmountUpdate());
+                        eggLocation.setStatus(1);
+                        eggLocationRepository.save(eggLocation);
+                    }
                 }
             }
         }
@@ -1443,6 +1483,7 @@ public class EggBatchServiceImpl implements IEggBatchService {
             eggHatching.setCurAmount(eggHatching.getCurAmount() - wastedHatching);
             eggProductRepository.save(eggHatching);
 
+
             List<EggLocation> eggLocations = eggLocationRepository
                     .findByProductId(eggIncubating.getProductId()).get();
             eggLocationRepository.deleteAll(eggLocations);
@@ -1451,18 +1492,21 @@ public class EggBatchServiceImpl implements IEggBatchService {
                     .findByProductId(eggHatching.getProductId()).get();
             eggLocationRepository.deleteAll(eggLocations);
 
-            for (EggLocationUpdateEggBatchDTO eggLocationDTO : locationsNew) {
-                if (eggLocationDTO.getAmountUpdate() > 0) {
-                    EggLocation eggLocation = new EggLocation();
-                    if (eggLocationDTO.getMachineTypeId() == 1L) {
-                        eggLocation.setProductId(eggIncubating.getProductId());
-                    } else {
+            // Check all broken
+            if (eggHatching.getCurAmount() == 0 && eggIncubating.getCurAmount() == 0) {
+                eggBatch.setStatus(0);
+                eggBatch.setNeedAction(0);
+                eggBatchRepository.save(eggBatch);
+            } else {
+                for (EggLocationUpdateEggBatchDTO eggLocationDTO : locationsNew) {
+                    if (eggLocationDTO.getAmountUpdate() > 0) {
+                        EggLocation eggLocation = new EggLocation();
                         eggLocation.setProductId(eggHatching.getProductId());
+                        eggLocation.setMachineId(eggLocationDTO.getMachineId());
+                        eggLocation.setAmount(eggLocationDTO.getAmountUpdate());
+                        eggLocation.setStatus(1);
+                        eggLocationRepository.save(eggLocation);
                     }
-                    eggLocation.setMachineId(eggLocationDTO.getMachineId());
-                    eggLocation.setAmount(eggLocationDTO.getAmountUpdate());
-                    eggLocation.setStatus(1);
-                    eggLocationRepository.save(eggLocation);
                 }
             }
         }

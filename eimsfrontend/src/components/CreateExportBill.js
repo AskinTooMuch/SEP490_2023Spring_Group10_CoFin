@@ -265,7 +265,7 @@ const CreateExportBill = () => {
             document.getElementById('phone').innerHTML = "";
         } else {
             customerList.map((item) => {
-                if (item.customerId === id) {
+                if (item.customerId == id) {
                     document.getElementById('phone').innerHTML = item.customerPhone;
                 }
             })

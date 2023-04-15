@@ -326,7 +326,7 @@ export default function BasicTabs() {
                             </div>
                             <div className="col-md-4 ">
                                 {
-                                    (sessionStorage.getItem("roleId") === 2)
+                                    (sessionStorage.getItem("roleId") == 2)
                                         ?
                                         <div className='button'>
                                             <button className='btn btn-light ' onClick={handleShow} id="startEditMachine" >Sửa</button>

@@ -215,7 +215,7 @@ const CreateImportBill = () => {
             document.getElementById('phone').innerHTML = "";
         } else {
             supplierList.map((item) => {
-                if (item.supplierId === id) {
+                if (item.supplierId == id) {
                     document.getElementById('phone').innerHTML = item.supplierPhone;
                 }
             })

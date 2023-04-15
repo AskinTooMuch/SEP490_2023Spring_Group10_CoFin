@@ -1022,6 +1022,7 @@ export default function BasicTabs() {
                                                         <thead>
                                                             <tr>
                                                                 <th scope="col">Máy</th>
+                                                                <th scope="col">Loại</th>
                                                                 <th scope="col">Chứa</th>
                                                                 <th scope="col">Vị trí trống</th>
                                                             </tr>
@@ -1032,6 +1033,7 @@ export default function BasicTabs() {
                                                                     eggBatchDetail.machineNotFullList.map((item, index) =>
                                                                         <tr className='trclick' onClick={() => addTableRows(item)}>
                                                                             <td>{item.machineName}</td>
+                                                                            <td>{item.machineTypeName}</td>
                                                                             <td>{item.curCapacity.toLocaleString()}/{item.maxCapacity.toLocaleString()}</td>
                                                                             <td>{(item.maxCapacity - item.curCapacity).toLocaleString()}</td>
                                                                         </tr>
