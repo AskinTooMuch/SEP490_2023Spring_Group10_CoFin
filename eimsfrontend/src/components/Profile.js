@@ -6,6 +6,7 @@ import { faCheck, faTimes, faInfoCircle, faStarOfLife } from "@fortawesome/free-
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye } from "@fortawesome/free-solid-svg-icons";
 import "../css/profile.css"
+import { useNavigate } from "react-router-dom";
 import { Modal, Button } from 'react-bootstrap'
 const eye = <FontAwesomeIcon icon={faEye} />;
 //regex check password
@@ -694,6 +695,12 @@ const Profile = () => {
         });
     }
 
+    //Navigate to detail Page
+  let navigate = useNavigate();
+  const routeChange = (sid) => {
+    navigate('/subscriptionInfo', { state: { id: sid } });
+  }
+
     return (
         <div className="profile-info">
             <h2>Thông tin cá nhân</h2>
@@ -1031,7 +1038,7 @@ const Profile = () => {
                                                 <div className="col-md-6">
                                                     {(facilityInformation.subscriptionId === '') || (!facilityInformation.subStatus)
                                                         ? <p id="subscription">Chưa đăng ký gói</p>
-                                                        : <p id="subscription">Gói {facilityInformation.subscriptionId}</p>
+                                                        : <p className='link-hover' id="subscription"  onClick={() => routeChange(facilityInformation.subscriptionId)}>Gói {facilityInformation.subscriptionId}</p>
                                                     }
                                                 </div>
                                             </div>

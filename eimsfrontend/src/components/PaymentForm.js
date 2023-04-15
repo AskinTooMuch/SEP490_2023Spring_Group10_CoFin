@@ -117,7 +117,6 @@ export default function PaymentForm(props) {
             active={isActive}
             spinner
             text='Vui lòng chờ...'
-            style={{'borderRadius':'5px'}}
         >
             <div>{!success
                 ? <form onSubmit={handleSubmit}>

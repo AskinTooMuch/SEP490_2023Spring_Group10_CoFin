@@ -35,6 +35,7 @@ import CreateExportBill from './components/CreateExportBill';
 import ExportBill from './components/ExportBill';
 import ExportBillDetail from './components/ExportBillDetail';
 import SubscriptionPayment from './components/SubscriptionPayment';
+import SubcriptionInfo from './components/SubscriptionInfo';
 import TestOTP from './components/TestOTP';
 import { ToastContainer } from 'react-toastify';
 function App() {
@@ -66,6 +67,7 @@ function App() {
           <Route path="/customerdetail" element={<CustomerDetails />} />
           <Route path="/importbilldetail" element={<ImportBillDetail />} />
           <Route path="/exportbilldetail" element={<ExportBillDetail />} />
+          <Route path="/subscriptionInfo" element={<SubcriptionInfo />} />
         </Route>
 
         {/*Moderator pages */}
