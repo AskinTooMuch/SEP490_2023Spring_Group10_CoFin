@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { CardElement, useElements, useStripe } from '@stripe/react-stripe-js';
+import LoadingOverlay from 'react-loading-overlay-ts';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import "../css/subscribe.css"
@@ -22,17 +23,20 @@ const CARD_OPTIONS = {
 
 export default function PaymentForm(props) {
     const CREATE_PAYMENT = '/api/subscribe/charge';
-    const [success, setSuccess] = useState(false);
+    const [success, setSuccess] = useState();
+    const [isActive, setIsActive] = useState(false);
     const stripe = useStripe();
     const elements = useElements();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setIsActive(true);
+        let cardInf = elements.getElement(CardElement);
         console.log("Get card things");
         if (props.data.final !== 0) {
             const { error, paymentMethod } = await stripe.createPaymentMethod({
                 type: 'card',
-                card: elements.getElement(CardElement)
+                card: cardInf
             });
             if (!error) {
                 console.log("Not error, sending to backend");
@@ -53,10 +57,10 @@ export default function PaymentForm(props) {
                             },
                             withCredentials: true
                         });
-
                     console.log("Successful payment");
                     setSuccess(true);
                 } catch (err) {
+                    setSuccess(false);
                     if (!err?.response) {
                         toast.error('Server không phản hồi');
                     } else {
@@ -68,10 +72,10 @@ export default function PaymentForm(props) {
                     }
                 }
             } else {
+                setSuccess(false);
                 console.log("Axios" + error.message);
                 toast.error("Thông tin thẻ không hợp lệ");
             }
-
         } else {
             try {
                 const { id } = "paymentMethod";
@@ -90,10 +94,10 @@ export default function PaymentForm(props) {
                         },
                         withCredentials: true
                     });
-
                 console.log("Successful payment");
                 setSuccess(true);
             } catch (err) {
+                setSuccess(false);
                 if (!err?.response) {
                     toast.error('Server không phản hồi');
                 } else {
@@ -105,21 +109,23 @@ export default function PaymentForm(props) {
                 }
             }
         }
-
-
-
+        setIsActive(false);
     }
 
     return (
-        <>
-            {!success
+        <LoadingOverlay
+            active={isActive}
+            spinner
+            text='Vui lòng chờ...'
+            style={{'borderRadius':'5px'}}
+        >
+            <div>{!success
                 ? <form onSubmit={handleSubmit}>
                     {props.data.final === 0
                         ? <></>
                         : <fieldset className='formGroup' style={{ borderRadius: "15px" }}>
                             <div className='formRow'>
                                 <CardElement style={{
-
                                 }} options={CARD_OPTIONS} />
                             </div>
                         </fieldset>
@@ -130,11 +136,8 @@ export default function PaymentForm(props) {
                         <button style={{ display: "inline-block", width: "50%" }} className='btn btn-light'>Thanh toán</button>
                     </div>
                 </form>
-                : <div>
-                    <b className='text-success'>Thanh toán thành công {props.data.final.toLocaleString('vi', { style: 'currency', currency: 'VND' })} cho gói {props.data.id}. </b>
-                </div>
-            }
-
-        </>
+                : <b className='text-success'>Thanh toán thành công {props.data.final.toLocaleString('vi', { style: 'currency', currency: 'VND' })} cho gói {props.data.id}. </b>
+            }</div>
+        </LoadingOverlay>
     )
 }
