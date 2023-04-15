@@ -251,7 +251,7 @@ export default function BasicTabs() {
         if (eggBatchLoaded) return;
         loadEggBatch();
         setEggBatchLoaded(true);
-    }, []);
+    }, [eggBatchLoaded]);
 
     const loadEggBatch = async () => {
         const result = await axios.get(EGGBATCH_GET,
