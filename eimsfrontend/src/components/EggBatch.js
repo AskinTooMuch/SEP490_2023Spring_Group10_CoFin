@@ -39,7 +39,7 @@ const EggBatch = () => {
     return (
         <div>
             <nav className="navbar justify-content-between">
-                <div className='filter my-2 my-lg-0'>
+                <div className='filter my-2 my-lg-0' style={{marginLeft:"auto", marginRight:"0"}}>
                     <p><FilterAltIcon />Lọc</p>
                     <p><ImportExportIcon />Sắp xếp</p>
                     <form className="form-inline">
