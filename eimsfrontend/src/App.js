@@ -38,6 +38,7 @@ import SubscriptionPayment from './components/SubscriptionPayment';
 import SubcriptionInfo from './components/SubscriptionInfo';
 import TestOTP from './components/TestOTP';
 import { ToastContainer } from 'react-toastify';
+import ChangeOldPassword from './components/ChangeOldPassword';
 function App() {
   return (
     <>
@@ -75,6 +76,7 @@ function App() {
           <Route path="/subcriptiondetail" element={<SubscriptionDetail />} />
           <Route path='/accountmanage' element={<AccountManager />} />
           <Route path='/subcribemanage' element={<SubcriptionManager />} />
+          <Route path='/changeoldpassword' element={<ChangeOldPassword />} />
         </Route>
 
         {/*Employee pages */}

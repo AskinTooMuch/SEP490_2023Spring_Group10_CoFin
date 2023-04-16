@@ -21,7 +21,6 @@ import "../css/navbar.css"
 import logo from '../pics/EIMSlogo.png'
 import WithPermission from '../utils.js/WithPermission';
 import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
-import { Modal } from 'react-bootstrap';
 import axios from '../api/axios';
 import { toast } from 'react-toastify';
 const Nav = () => {
@@ -106,10 +105,24 @@ const Nav = () => {
             open={isMenuOpen}
             onClose={handleMenuClose}
         >
-            <Link to="/profile" ><MenuItem style={{ fontSize: "medium" }} onClick={handleMenuClose} id="profile"><AccountCircle fontSize="small" /> Thông tin cá nhân</MenuItem></Link>
-            <MenuItem style={{ fontSize: "medium" }} onClick={handleMenuClose} id="setting"><SettingsIcon fontSize="small" /> Cài đặt</MenuItem>
-            <MenuItem style={{ fontSize: "medium" }} onClick={handleMenuClose} id="help"><HelpIcon fontSize="small" /> Trợ giúp & hỗ trợ</MenuItem>
-            <MenuItem style={{ fontSize: "medium" }} onClick={logout} id="logout"><LogoutIcon fontSize="small" /> Đăng xuất</MenuItem>
+            <WithPermission roleRequired='2'>
+                <Link to="/profile" ><MenuItem style={{ fontSize: "medium" }} onClick={handleMenuClose} id="profile"><AccountCircle fontSize="small" /> Thông tin cá nhân</MenuItem></Link>
+                <MenuItem style={{ fontSize: "medium" }} onClick={handleMenuClose} id="setting"><SettingsIcon fontSize="small" /> Cài đặt</MenuItem>
+                <MenuItem style={{ fontSize: "medium" }} onClick={handleMenuClose} id="help"><HelpIcon fontSize="small" /> Trợ giúp & hỗ trợ</MenuItem>
+                <MenuItem style={{ fontSize: "medium" }} onClick={logout} id="logout"><LogoutIcon fontSize="small" /> Đăng xuất</MenuItem>
+            </WithPermission>
+            <WithPermission roleRequired='3'>
+                <Link to="/profile" ><MenuItem style={{ fontSize: "medium" }} onClick={handleMenuClose} id="profile"><AccountCircle fontSize="small" /> Thông tin cá nhân</MenuItem></Link>
+                <MenuItem style={{ fontSize: "medium" }} onClick={handleMenuClose} id="setting"><SettingsIcon fontSize="small" /> Cài đặt</MenuItem>
+                <MenuItem style={{ fontSize: "medium" }} onClick={handleMenuClose} id="help"><HelpIcon fontSize="small" /> Trợ giúp & hỗ trợ</MenuItem>
+                <MenuItem style={{ fontSize: "medium" }} onClick={logout} id="logout"><LogoutIcon fontSize="small" /> Đăng xuất</MenuItem>
+            </WithPermission>
+            <WithPermission roleRequired='4'>
+                <Link to="/changeoldpassword" ><MenuItem style={{ fontSize: "medium" }} onClick={handleMenuClose} id="profile"><AccountCircle fontSize="small" /> Đổi mật khẩu</MenuItem></Link>
+                <MenuItem style={{ fontSize: "medium" }} onClick={handleMenuClose} id="setting"><SettingsIcon fontSize="small" /> Cài đặt</MenuItem>
+                <MenuItem style={{ fontSize: "medium" }} onClick={handleMenuClose} id="help"><HelpIcon fontSize="small" /> Trợ giúp & hỗ trợ</MenuItem>
+                <MenuItem style={{ fontSize: "medium" }} onClick={logout} id="logout"><LogoutIcon fontSize="small" /> Đăng xuất</MenuItem>
+            </WithPermission>
         </Menu>
     );
 
@@ -174,11 +187,6 @@ const Nav = () => {
             </MenuItem>
         </Menu>
     );
-    //Show-hide Popup
-    const [show, setShow] = useState(false);
-    const handleClosePopup = () => setShow(false);
-    const handleShowPopup = () => setShow(true);
-
     // DTO
     // top 5 newest notification
     const [notificationList, setNotificationList] = useState([]);
@@ -266,27 +274,52 @@ const Nav = () => {
                                                 </Badge>
                                             </IconButton>
                                         </WithPermission>
-                                        <IconButton
-                                            size="large"
-                                            onClick={handleClickNoti}
-                                            aria-controls={open ? 'notify-menu' : undefined}
-                                            aria-haspopup="true"
-                                            aria-expanded={open ? 'true' : undefined}
-                                            color="inherit"
-                                        >
-                                            {
-                                                notificationList && notificationList.length === 0
-                                                    ?
-                                                    <Badge>
-                                                        <NotificationsIcon />
-                                                    </Badge>
-                                                    :
-                                                    <Badge badgeContent={<FiberManualRecordIcon color="error" />}>
-                                                        <NotificationsIcon />
-                                                    </Badge>
-                                            }
+                                        <WithPermission roleRequired="2">
+                                            <IconButton
+                                                size="large"
+                                                onClick={handleClickNoti}
+                                                aria-controls={open ? 'notify-menu' : undefined}
+                                                aria-haspopup="true"
+                                                aria-expanded={open ? 'true' : undefined}
+                                                color="inherit"
+                                            >
+                                                {
+                                                    notificationList && notificationList.length === 0
+                                                        ?
+                                                        <Badge>
+                                                            <NotificationsIcon />
+                                                        </Badge>
+                                                        :
+                                                        <Badge badgeContent={<FiberManualRecordIcon color="error" />}>
+                                                            <NotificationsIcon />
+                                                        </Badge>
+                                                }
 
-                                        </IconButton>
+                                            </IconButton>
+                                        </WithPermission>
+                                        <WithPermission roleRequired="3">
+                                            <IconButton
+                                                size="large"
+                                                onClick={handleClickNoti}
+                                                aria-controls={open ? 'notify-menu' : undefined}
+                                                aria-haspopup="true"
+                                                aria-expanded={open ? 'true' : undefined}
+                                                color="inherit"
+                                            >
+                                                {
+                                                    notificationList && notificationList.length === 0
+                                                        ?
+                                                        <Badge>
+                                                            <NotificationsIcon />
+                                                        </Badge>
+                                                        :
+                                                        <Badge badgeContent={<FiberManualRecordIcon color="error" />}>
+                                                            <NotificationsIcon />
+                                                        </Badge>
+                                                }
+
+                                            </IconButton>
+                                        </WithPermission>
                                         <IconButton
                                             size="large"
                                             edge="end"
@@ -368,7 +401,7 @@ const Nav = () => {
                                 </div>
                             </div>
                     }
-                    <br/>
+                    <br />
                     <div className='seeAll'>
                         <button className='mybtn' onClick={() => viewAllNoti()} >Xem tất cả</button>
                     </div>
