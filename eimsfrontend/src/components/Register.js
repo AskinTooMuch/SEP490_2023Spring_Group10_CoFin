@@ -579,9 +579,8 @@ const Register = () => {
                                                             </div>
 
                                                             <div class="form-check">
-                                                                <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked"/>
                                                                     <label class="form-check-label" >
-                                                                        Bạn đồng ý với <a id='term' target="_blank" href="/term">Điều khoản và điều kiện</a> của chúng tôi
+                                                                        Bằng cách tiếp tục, bạn mặc định đã đồng ý với <a id='term' target="_blank" href="/term">Điều khoản và điều kiện</a> của chúng tôi
                                                                     </label>
                                                             </div>
                                                             <button id="confirmRegister" type="submit" className="btn btn-light" style={{ width: "100%", textAlign: "center" }}
