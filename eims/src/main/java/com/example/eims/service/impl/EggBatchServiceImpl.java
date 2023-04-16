@@ -1585,7 +1585,7 @@ public class EggBatchServiceImpl implements IEggBatchService {
                             eggBatch.getEggBatchId(),
                             incubationPhaseList.get(2).getIncubationPhaseId());
             // Vẫn còn trứng đang ấp
-            if (progress <= 4 && egg1Optional.get().getAmount() != 0) {
+            if (progress <= 4 && egg1Optional.get().getCurAmount() != 0) {
                 return new ResponseEntity<>("Vẫn còn trứng đang ấp, không thể cập nhật hoàn thành cho lô trứng",
                         HttpStatus.BAD_REQUEST);
             }
@@ -1595,7 +1595,7 @@ public class EggBatchServiceImpl implements IEggBatchService {
                             eggBatch.getEggBatchId(),
                             incubationPhaseList.get(6).getIncubationPhaseId());
             // Vẫn còn trứng đang nở
-            if (progress > 4 && egg5Optional.get().getAmount() != 0) {
+            if (progress > 4 && egg5Optional.get().getCurAmount() != 0) {
                 return new ResponseEntity<>("Vẫn còn trứng đang nở, không thể cập nhật hoàn thành cho lô trứng",
                         HttpStatus.BAD_REQUEST);
             }
