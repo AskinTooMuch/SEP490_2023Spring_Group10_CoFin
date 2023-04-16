@@ -129,6 +129,7 @@ export default function BasicTabs() {
     //Handle submit update paid
     const handleUpdatePaidSubmit = async (event) => {
         event.preventDefault();
+        setOpen(false);
         let response;
         try {
             response = await axios.put(EXPORT_UPDATE_PAID, {},
@@ -147,7 +148,6 @@ export default function BasicTabs() {
                     withCredentials: false
                 }
             );
-            setOpen(false);
             loadExport();
             console.log(response);
             toast.success("Cập nhật số tiền đã trả thành công");
@@ -167,6 +167,7 @@ export default function BasicTabs() {
 
     const handleUpdatePaidAllSubmit = async (event) => {
         event.preventDefault();
+        setOpen2(false);
         let response;
         try {
             response = await axios.put(EXPORT_UPDATE_PAID, {},
@@ -185,7 +186,6 @@ export default function BasicTabs() {
                     withCredentials: false
                 }
             );
-            setOpen2(false);
             loadExport();
             console.log(response);
             toast.success("Cập nhật số tiền đã trả thành công");
