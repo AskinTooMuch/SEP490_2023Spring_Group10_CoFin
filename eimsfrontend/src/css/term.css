@@ -1,0 +1,39 @@
+.term-body {
+    margin: 0;
+    padding: 0;
+    background-image: url(../pics/226bade49d12184b0a0d6b43d3d18772bdfef416d49e4be85b8b79ca37db8f80efb57f894e89f6669de2ccac898670d30cc36c1ce2069e073b1a6b_1280.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+    min-height: 94vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.terms-box {
+    border-radius: 15px;
+    max-width: 800px;
+    background-color: #fff;
+    color: #fff;
+    font-family: "Montserrat";
+    padding: 60px 30px;
+    box-shadow: 0 -2px 26px 0 #f46110;
+}
+
+.terms-text {
+    padding: 0 20px;
+    height: 600px;
+    overflow-y: auto;
+    font-size: 20px;
+    font-weight: 500;
+    color: #111;
+}
+
+.terms-text::-webkit-scrollbar {
+    width: 2px;
+    background-color: #282828;
+}
+
+.terms-text::-webkit-scrollbar-thumb {
+    background-color: #f46110;
+}

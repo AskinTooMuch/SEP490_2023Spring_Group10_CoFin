@@ -43,7 +43,7 @@ label {
   border: none;
 }
 
-h2 {
+.profile-info h2 {
   text-align: center;
   padding: 10px;
 }

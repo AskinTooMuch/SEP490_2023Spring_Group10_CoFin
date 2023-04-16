@@ -39,6 +39,7 @@ import SubcriptionInfo from './components/SubscriptionInfo';
 import TestOTP from './components/TestOTP';
 import { ToastContainer } from 'react-toastify';
 import ChangeOldPassword from './components/ChangeOldPassword';
+import TermAndCondition from './components/TermAndCondition';
 function App() {
   return (
     <>
@@ -100,6 +101,7 @@ function App() {
         <Route path="registerotp" element={<RegisterOTP />} />
         <Route path="forgotpassword" element={<ForgotPassword />} />
         <Route path="changepassword" element={<ChangePassword />} />
+        <Route path='term' element={<TermAndCondition />} />
 
         {/* Permission denied route */}
         <Route path="unauthorized" element={<Unauthorized />} />
