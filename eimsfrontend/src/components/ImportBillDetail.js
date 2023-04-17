@@ -273,7 +273,7 @@ export default function BasicTabs() {
                                             <td>{item.price.toLocaleString('vi', { style: 'currency', currency: 'VND' })}</td>
                                             <td>{(item.amount * item.price).toLocaleString('vi', { style: 'currency', currency: 'VND' })}</td>
                                         </tr>
-                                    ) : "Nothing"
+                                    ) : ""
                             }
                         </tbody>
                     </table>

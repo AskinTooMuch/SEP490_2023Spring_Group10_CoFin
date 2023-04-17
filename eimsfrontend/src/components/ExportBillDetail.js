@@ -276,7 +276,7 @@ export default function BasicTabs() {
                                             <td>{item.vaccine.toLocaleString()}</td>
                                             <td>{(item.exportAmount * item.price + item.exportAmount * item.vaccine).toLocaleString()}</td>
                                         </tr>
-                                    ) : "Nothing"
+                                    ) : ""
                             }
                         </tbody>
                     </table>

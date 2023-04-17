@@ -126,7 +126,8 @@ export default function BasicTabs() {
     const handleClose3 = () => {
         setUpdateLocationDTO({
             eggBatchId: id,
-            eggWasted: 0,
+            eggWastedIncubating: 0,
+            eggWastedHatching: 0,
             locationsOld: eggBatchDetail.machineList,
             locationsNew: []
         });
@@ -798,6 +799,7 @@ export default function BasicTabs() {
                         <thead>
                             <tr>
                                 <th scope="col">Vị trí</th>
+                                <th scope="col">Loại</th>
                                 <th scope="col">Số lượng</th>
                             </tr>
                         </thead>
@@ -805,8 +807,15 @@ export default function BasicTabs() {
                             {
                                 eggBatchDetail.machineList && eggBatchDetail.machineList.length > 0 ?
                                     eggBatchDetail.machineList.map((item, index) =>
-                                        <tr className='trclick' style={{ height: "76px", textAlign: "left" }} onClick={() => routeChange(item.machineId)}>
+                                        <tr className='trclick' style={{ height: "76px", textAlign: "center" }} onClick={() => routeChange(item.machineId)}>
                                             <th scope="row">{item.machineName}</th>
+                                            {
+                                                item.machineTypeId === 1
+                                                    ?
+                                                    <td>Máy ấp</td>
+                                                    :
+                                                    <td>Máy nở</td>
+                                            }
                                             <td>{item.amount.toLocaleString()}</td>
                                         </tr>
                                     ) : ''
@@ -869,6 +878,7 @@ export default function BasicTabs() {
                                             </div>
                                             {
                                                 eggBatchDetail.eggProductList && eggBatchDetail.eggProductList.length > 0
+                                                    && eggBatchDetail.progress > 0
                                                     && eggBatchDetail.eggProductList[2].curAmount !== 0
                                                     ? <>
                                                         <div className="col-md-3" >
@@ -900,6 +910,7 @@ export default function BasicTabs() {
                                             </div>
                                             {
                                                 eggBatchDetail.eggProductList && eggBatchDetail.eggProductList.length > 0
+                                                    && eggBatchDetail.progress === 5
                                                     && eggBatchDetail.eggProductList[6].curAmount !== 0
                                                     ? <>
                                                         <div className="col-md-3" >
@@ -925,12 +936,26 @@ export default function BasicTabs() {
 
                                             {
                                                 eggBatchDetail.progress === 0
-                                                    || (eggBatchDetail.progress <= 5)
+                                                    || (eggBatchDetail.progress < 5)
                                                     ?
                                                     <>
                                                         <div className="col-md-3 ">
-                                                            <label>Số lượng trứng còn lại</label>
-                                                            <p>(tổng trứng trong máy)</p>
+                                                            <label>Số lượng trứng còn lại</label><br/>
+                                                            (tổng trứng trong máy ấp)
+                                                        </div>
+                                                        <div className="col-md-3">
+                                                            <p className='form-control' id="remain" name="remain">{remain.remain.toLocaleString()}</p>
+                                                        </div>
+                                                    </>
+                                                    : ''
+                                            }
+                                            {
+                                                eggBatchDetail.progress === 5 && eggBatchDetail.eggProductList[2].curAmount > 0
+                                                    ?
+                                                    <>
+                                                        <div className="col-md-3 ">
+                                                            <label>Số lượng trứng còn lại</label><br/>
+                                                            (tổng trứng trong máy)
                                                         </div>
                                                         <div className="col-md-3">
                                                             <p className='form-control' id="remain" name="remain">{remain.remain.toLocaleString()}</p>
@@ -991,6 +1016,7 @@ export default function BasicTabs() {
                                                     <thead>
                                                         <tr>
                                                             <th scope="col">Máy</th>
+                                                            <th scope="col">Loại</th>
                                                             <th scope="col">Chứa</th>
                                                             <th scope="col">Vị trí trống</th>
                                                             <th scope="col">Số trứng hiện tại</th>
@@ -1036,7 +1062,7 @@ export default function BasicTabs() {
                                                                             <td>{item.curCapacity.toLocaleString()}/{item.maxCapacity.toLocaleString()}</td>
                                                                             <td>{(item.maxCapacity - item.curCapacity).toLocaleString()}</td>
                                                                         </tr>
-                                                                    ) : 'Nothing'
+                                                                    ) : 'Hiện tại không có máy nào còn trống'
                                                             }
                                                         </tbody>
                                                     </table>
@@ -1155,8 +1181,8 @@ export default function BasicTabs() {
                                                     ?
                                                     <>
                                                         <div className="col-md-3 ">
-                                                            <label>Số lượng trứng còn lại</label>
-                                                            <p>(tổng trứng trong máy)</p>
+                                                            <label>Số lượng trứng còn lại</label><br/>
+                                                            (tổng trứng trong máy)
                                                         </div>
                                                         <div className="col-md-3">
                                                             <p className='form-control' id="remain2" name="remain2">{remain.remain2.toLocaleString()}</p>
@@ -1239,7 +1265,7 @@ export default function BasicTabs() {
                                                                             <td>{item.curCapacity.toLocaleString()}/{item.maxCapacity.toLocaleString()}</td>
                                                                             <td>{(item.maxCapacity - item.curCapacity).toLocaleString()}</td>
                                                                         </tr>
-                                                                    ) : 'Nothing'
+                                                                    ) : 'Hiện tại không có máy nào còn trống'
                                                             }
                                                         </tbody>
                                                     </table>
@@ -1269,7 +1295,7 @@ export default function BasicTabs() {
 function TableRows({ rowsData, deleteTableRows, handleChangeData }) {
     return (
         rowsData.map((data, index) => {
-            const { machineName, amountCurrent, capacity, amountUpdate, oldAmount } = data;
+            const { machineName, machineTypeId, amountCurrent, capacity, amountUpdate, oldAmount } = data;
             return (
                 <tr key={index}>
                     <td>
@@ -1277,6 +1303,22 @@ function TableRows({ rowsData, deleteTableRows, handleChangeData }) {
                             {machineName}
                         </div>
                     </td>
+                    {
+                        machineTypeId === 1
+                            ?
+                            <td>
+                                <div name="machineTypeName" className="form-control" >
+                                    Máy ấp
+                                </div>
+                            </td>
+                            :
+                            <td>
+                                <div name="machineTypeName" className="form-control" >
+                                    Máy nở
+                                </div>
+                            </td>
+                    }
+
                     <td>
                         <div name="current" className="form-control" >
                             {amountCurrent.toLocaleString()} / {capacity.toLocaleString()}

@@ -1399,8 +1399,16 @@ public class EggBatchServiceImpl implements IEggBatchService {
         if (incubatingAmountOld < incubatingAmount) {
             return new ResponseEntity<>("Tổng số trứng đang ấp trong danh sách máy không thể lớn hơn trước đó", HttpStatus.BAD_REQUEST);
         }
+        if (incubatingAmountOld != incubatingAmount - wastedIncubating) {
+            return new ResponseEntity<>("Tổng số trứng đang ấp trong danh sách máy ấp mới phải bằng số trứng đang ấp " +
+                    "trước đó trừ đi số trứng hao hụt của trứng đang ấp", HttpStatus.BAD_REQUEST);
+        }
         if (hatchingAmountOld < hatchingAmount) {
             return new ResponseEntity<>("Tổng số trứng đang nở trong danh sách máy không thể lớn hơn trước đó", HttpStatus.BAD_REQUEST);
+        }
+        if (hatchingAmountOld != hatchingAmount - wastedHatching) {
+            return new ResponseEntity<>("Tổng số trứng đang nở trong danh sách máy nở mới phải bằng số trứng đang nở " +
+                    "trước đó trừ đi số trứng hao hụt của trứng đang nở", HttpStatus.BAD_REQUEST);
         }
 
         // Update egg location
@@ -1416,7 +1424,6 @@ public class EggBatchServiceImpl implements IEggBatchService {
                     findByEggBatchIdAndIncubationPhaseId(eggBatch.getEggBatchId(),
                             incubationPhaseList.get(2).getIncubationPhaseId()).get();
 
-            eggIncubating.setAmount(eggIncubating.getAmount() - wastedIncubating);
             eggIncubating.setCurAmount(eggIncubating.getCurAmount() - wastedIncubating);
             eggProductRepository.save(eggIncubating);
 
@@ -1448,7 +1455,6 @@ public class EggBatchServiceImpl implements IEggBatchService {
                     findByEggBatchIdAndIncubationPhaseId(eggBatch.getEggBatchId(),
                             incubationPhaseList.get(6).getIncubationPhaseId()).get();
 
-            eggHatching.setAmount(eggHatching.getAmount() - wastedHatching);
             eggHatching.setCurAmount(eggHatching.getCurAmount() - wastedHatching);
             eggProductRepository.save(eggHatching);
 
@@ -1481,7 +1487,6 @@ public class EggBatchServiceImpl implements IEggBatchService {
                     findByEggBatchIdAndIncubationPhaseId(eggBatch.getEggBatchId(),
                             incubationPhaseList.get(2).getIncubationPhaseId()).get();
 
-            eggIncubating.setAmount(eggIncubating.getAmount() - wastedIncubating);
             eggIncubating.setCurAmount(eggIncubating.getCurAmount() - wastedIncubating);
             eggProductRepository.save(eggIncubating);
 
@@ -1490,7 +1495,6 @@ public class EggBatchServiceImpl implements IEggBatchService {
                     findByEggBatchIdAndIncubationPhaseId(eggBatch.getEggBatchId(),
                             incubationPhaseList.get(6).getIncubationPhaseId()).get();
 
-            eggHatching.setAmount(eggHatching.getAmount() - wastedHatching);
             eggHatching.setCurAmount(eggHatching.getCurAmount() - wastedHatching);
             eggProductRepository.save(eggHatching);
 
