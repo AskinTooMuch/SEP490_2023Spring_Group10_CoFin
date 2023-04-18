@@ -25,7 +25,8 @@ import java.sql.Date;
 @NamedNativeQuery(name="GetListBreedByUser",
         query="SELECT B.breed_id, S.specie_id, B.breed_name, S.specie_name, B.average_weight_male, B.average_weight_female, B.growth_time, B.status\n" +
                 "    FROM breed B INNER JOIN specie S ON B.specie_id = S.specie_id\n" +
-                "    WHERE B.user_id = ?;",
+                "    WHERE B.user_id = ? " +
+                "    AND B.status = 1;",
         resultClass = BreedListDTO.class)
 @SqlResultSetMapping(
         name = "BreedListMapping",
