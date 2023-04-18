@@ -61,7 +61,7 @@ const Login = () => {
         navigate("/dashboard");
       }
       else if (responseJson.roleId === 3) {
-        navigate("/egg");
+        navigate("/dashboard");
       }
       else if (responseJson.roleId === 4) {
         navigate("/accountmanage");

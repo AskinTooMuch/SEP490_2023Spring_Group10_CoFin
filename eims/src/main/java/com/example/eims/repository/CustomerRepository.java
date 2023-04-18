@@ -28,7 +28,7 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
     boolean existsByCustomerPhone(String phoneNumber);
     boolean existsByCustomerPhoneAndUserId(String phoneNumber, Long userId);
     @Query(value = "SELECT * FROM eims.customer WHERE user_id = ?1 " +
-            "AND customer_name LIKE %?2% OR customer_phone LIKE %?2%", nativeQuery = true)
+            "AND (customer_name LIKE %?2% OR customer_phone LIKE %?2%) ", nativeQuery = true)
     Optional<List<Customer>> searchByUsernameOrPhone(Long userId, String key);
     Page<Customer> findAllByUserId(Long userId, Pageable pageable);
     boolean existsByCustomerPhoneNot(String phone);

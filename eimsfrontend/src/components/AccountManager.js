@@ -54,7 +54,7 @@ export default function BasicTabs() {
           '& .Mui-selected': { color: "#d25d19" },
         }} value={value} onChange={handleChange} aria-label="basic tabs example">
           <Tab id="accountListTab" style={{ textTransform: "capitalize" }} label="Danh sách tài khoản" {...a11yProps(0)} />
-          <Tab id="accountTab" style={{ textTransform: "capitalize" }} label="Danh sách chờ duyệt" {...a11yProps(1)} />
+          <Tab id="accountTab" style={{ textTransform: "capitalize" }} label="Danh sách đơn đăng ký" {...a11yProps(1)} />
         </Tabs>
       </Box>
       <AccountManager value={value} index={0}>

@@ -61,7 +61,10 @@ export default function BasicTabs() {
         setValue(newValue);
     };
     const [show, setShow] = useState(false);
-    const handleClose = () => setShow(false);
+    const handleClose = () => {
+        setShow(false);
+        setPaid(exportDetail.paid);
+    }
     const handleShow = () => setShow(true);
 
     //Get sent params
@@ -81,9 +84,7 @@ export default function BasicTabs() {
     })
 
     // DTO for update paid
-    const [paid, setPaid] = useState({
-        paid: exportDetail.paid
-    })
+    const [paid, setPaid] = useState(0.0);
 
     //Get export details
     useEffect(() => {
@@ -111,7 +112,7 @@ export default function BasicTabs() {
         exportDetail.exportDate = result.data.exportDate;
         exportDetail.total = result.data.total;
         exportDetail.paid = result.data.paid;
-        paid.paid = result.data.paid;
+        setPaid(result.data.paid);
         setEggProductList(result.data.eggProductList);
     }
 
@@ -119,10 +120,7 @@ export default function BasicTabs() {
     //Update paid
     const handleUpdatePaidChange = (event, field) => {
         let actualValue = event.target.value
-        setPaid({
-            ...paid,
-            [field]: actualValue
-        })
+        setPaid(actualValue);
     }
 
     //Handle Submit functions
@@ -215,7 +213,7 @@ export default function BasicTabs() {
                 </Tabs>
             </Box>
             <ExportBillDetail value={value} index={0}>
-                <h2>Thông tin chi tiết hoá đơn</h2>
+                <h2 style={{"text-align": "center"}}>Thông tin chi tiết hoá đơn xuất</h2>
                 <div className='container'>
                     <div className='detailbody'>
                         <div className="row" >
@@ -316,7 +314,7 @@ export default function BasicTabs() {
                                         <div className="col-md-6">
                                             <input classname="form-control mt-1"
                                                 style={{ width: "100%" }} type="number"
-                                                value={paid.paid} onChange={(e) => handleUpdatePaidChange(e, "paid")}
+                                                value={paid} onChange={(e) => handleUpdatePaidChange(e)}
                                             />
                                         </div>
                                     </div>
@@ -338,7 +336,7 @@ export default function BasicTabs() {
                             </form>
                             <ConfirmBox open={open} closeDialog={() => setOpen(false)} title={"Xác nhận cập nhật số tiền đã trả"}
                                 content={"Xác nhận cập nhật số tiền đã trả cho hóa đơn xuất mã " + exportDetail.exportId
-                                    + ": " + paid.paid.toLocaleString('vi', { style: 'currency', currency: 'VND' })} deleteFunction={(e) => handleUpdatePaidSubmit(e)}
+                                    + ": " + paid.toLocaleString('vi', { style: 'currency', currency: 'VND' })} deleteFunction={(e) => handleUpdatePaidSubmit(e)}
                             />
                             <ConfirmBox open={open2} closeDialog={() => setOpen2(false)} title={"Xác nhận cập nhật số tiền đã trả"}
                                 content={"Xác nhận trả hết cho hóa đơn xuất mã " + exportDetail.exportId

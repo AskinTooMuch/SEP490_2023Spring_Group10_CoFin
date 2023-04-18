@@ -271,7 +271,7 @@ const Customer = () => {
                     withCredentials: true
                 });
             setCustomerList(response.data);
-            setMessEmpty("Không có khách hàng nào có tên hoặc số điện thoại giống với từ khóa tìm kiếm: \"" + searchKey + "\"");
+            setMessEmpty("Không có khách hàng nào có tên hoặc số điện thoại phù hợp với từ khóa tìm kiếm: \"" + searchKey + "\"");
 
         } catch (err) {
             if (!err?.response) {

@@ -243,7 +243,7 @@ const Supplier = () => {
           withCredentials: true
         });
       setSupplierList(response.data);
-      setMessEmpty("Không có nhà cung cấp nào có tên hoặc số điện thoại giống với từ khóa tìm kiếm: \"" + searchKey + "\"");
+      setMessEmpty("Không có nhà cung cấp nào có tên hoặc số điện thoại phù hợp với từ khóa tìm kiếm: \"" + searchKey + "\"");
 
     } catch (err) {
       if (!err?.response) {

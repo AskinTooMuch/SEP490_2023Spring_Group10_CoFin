@@ -62,6 +62,7 @@ const Breed = () => {
                     withCredentials: true
                 });
             setSpecieList(result.data);
+            newBreedDTO.specieId = result.data[0].specieId;
         } catch (err) {
             if (!err?.response) {
                 toast.error('Server không phản hồi');

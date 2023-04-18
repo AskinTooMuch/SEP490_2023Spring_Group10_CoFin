@@ -216,7 +216,7 @@ export default function BasicTabs() {
                 </Tabs>
             </Box>
             <ImportBillDetail value={value} index={0}>
-                <h2>Thông tin chi tiết hoá đơn</h2>
+                <h2 style={{"text-align": "center"}}>Thông tin chi tiết hoá đơn nhập</h2>
                 <div className='container'>
                     <div className='detailbody'>
                         <div className="row" >

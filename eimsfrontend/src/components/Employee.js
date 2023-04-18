@@ -103,6 +103,7 @@ export default function BasicTabs() {
     const [employeeList, setEmployeeList] = useState([]);
     //Get sent params
     const { state } = useLocation();
+    var mess = true;
     //DTOs
     //CreateEmployeeDTO
     const [createEmployeeDTO, setCreateEmployeeDTO] = useState({
@@ -250,8 +251,10 @@ export default function BasicTabs() {
         setEmployeeList(result.data);
 
         // Toast Delete Emplopyee success
-        console.log("state:====" + state)
-        if (state != null) toast.success(state);
+        if (mess) {
+            toast.success(state);
+            mess = false;
+        }
     }
 
     //search function
@@ -444,7 +447,6 @@ export default function BasicTabs() {
                                     <div className="col-md-6">
                                         <input className="form-control mt-1"
                                             style={{ width: "100%" }} placeholder="0"
-                                            step={0.01}
                                             type='number'
                                             onChange={(e) => handleCreateEmployeeChange(e, "salary")}
                                             defaultValue={0} />

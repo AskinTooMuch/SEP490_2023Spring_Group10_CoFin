@@ -153,7 +153,6 @@ const Register = () => {
     //Load Address into the fields
     function loadUserAddress(street) {
         setUserStreet(street);
-        setFaciStreet(street);
         console.log(fullAddresses[userCityIndex]);
         userAddressJson.city = fullAddresses[userCityIndex].Name;
         userAddressJson.district = fullAddresses[userCityIndex].Districts[userDistrictIndex].Name;
@@ -253,10 +252,12 @@ const Register = () => {
         } catch (err) {
             if (!err?.response) {
                 toast.error('Server không phản hồi');
-            } else if (err.response?.status === 409) {
-                toast.error('Tài khoản trùng');
             } else {
-                toast.error('Đăng ký thất bại')
+                if ((err.response.data === null) || (err.response.data === '')) {
+                    toast.error('Có lỗi xảy ra, vui lòng thử lại');
+                } else {
+                    toast.error(err.response.data);
+                }
             }
         }
     }
