@@ -287,7 +287,7 @@ const CreateExportBill = () => {
 
     return (
         <>
-            <h2>Tạo hoá đơn xuất</h2>
+            <h2 style={{"text-align": "center"}}>Tạo hoá đơn xuất</h2>
             <form onSubmit={handleCreateExportSubmit}>
                 <div className='container'>
                     <div className='detailbody'>

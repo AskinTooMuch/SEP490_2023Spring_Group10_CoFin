@@ -403,7 +403,10 @@ export default function BasicTabs() {
                                             <td scope="row">Ngày {item.incubationDateToNow}/{item.incubationPeriod} </td>
                                             <td scope="row">{item.amount}</td>
                                         </tr>
-                                    ) : "Hiện tại không có trứng trong máy"
+                                    ) :
+                                    <tr>
+                                        <td style={{fontWeight:"bold"}} colSpan='4'>Hiện tại không có trứng trong máy</td>
+                                    </tr>
                             }
                         </tbody>
                     </table>

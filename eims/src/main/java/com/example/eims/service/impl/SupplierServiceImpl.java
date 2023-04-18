@@ -127,22 +127,34 @@ public class SupplierServiceImpl implements ISupplierService {
                 for (ImportReceipt importReceipt : importReceiptList) {
                     List<EggBatch> eggBatchList = eggBatchRepository.findByImportId(importReceipt.getImportId()).get();
                     for (EggBatch eggBatch : eggBatchList) {
-                        if (eggBatch.getStatus() == 0) { // egg batch done
-                            totalEgg += eggBatch.getAmount();
+                        System.out.println("ebid:" + eggBatch.getEggBatchId());
+                        Optional<EggProduct> eggProductLastPhaseOptional = eggProductRepository
+                                .findEggProductLastPhase(eggBatch.getEggBatchId());
+                        if (eggProductLastPhaseOptional.isEmpty()) {
+                            continue;
+                        }
+                        IncubationPhase incubationPhase = incubationPhaseRepository
+                                .findByIncubationPhaseId(eggProductLastPhaseOptional.get()
+                                        .getIncubationPhaseId()).get();
+                        System.out.println("phase:" + incubationPhase.getPhaseNumber());
+                        if (incubationPhase.getPhaseNumber() > 2) { // egg batch phase > 2
                             List<EggProduct> eggProductList = eggProductRepository.findByEggBatchId(eggBatch.getEggBatchId()).get();
                             for (EggProduct eggProduct : eggProductList) {
-                                IncubationPhase incubationPhase = incubationPhaseRepository
+                                IncubationPhase phase = incubationPhaseRepository
                                         .findByIncubationPhaseId(eggProduct.getIncubationPhaseId()).get();
                                 if (eggProduct.getAmount() == 0) {
                                     continue;
                                 }
-                                if (incubationPhase.getPhaseNumber() == 2) { // unfertilized
+                                if (phase.getPhaseNumber() == 1) { // total egg incubating
+                                    totalEgg += eggProduct.getAmount();
+                                }
+                                if (phase.getPhaseNumber() == 2) { // unfertilized
                                     eggUnfertilized += eggProduct.getAmount();
                                 }
-                                if (incubationPhase.getPhaseNumber() == 8) { // male
+                                if (phase.getPhaseNumber() == 8) { // male
                                     totalMale += eggProduct.getAmount();
                                 }
-                                if (incubationPhase.getPhaseNumber() == 9) { // female
+                                if (phase.getPhaseNumber() == 9) { // female
                                     totalFemale += eggProduct.getAmount();
                                 }
                             }

@@ -235,7 +235,7 @@ const CreateImportBill = () => {
 
     return (
         <>
-            <h2>Tạo hoá đơn nhập</h2>
+            <h2 style={{"text-align": "center"}}>Tạo hoá đơn nhập</h2>
             <form onSubmit={handleCreateImportSubmit}>
                 <div className='container'>
                     <div className='detailbody'>
