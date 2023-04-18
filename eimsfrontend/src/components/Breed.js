@@ -318,7 +318,7 @@ const Breed = () => {
                             <button style={{ width: "20%" }} type="submit" className="col-md-6 btn-light mt-2" id="confirmCreateBreed">
                                 Tạo
                             </button>
-                            <button className='btn btn-light' type="button mt-2" style={{ width: "20%" }} onClick={handleNewCancel} id="cancelCreateBreed">
+                            <button className='btn btn-light' type="button" style={{ width: "20%" }} onClick={handleNewCancel} id="cancelCreateBreed">
                                 Huỷ
                             </button>
                         </div>

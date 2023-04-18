@@ -13,9 +13,15 @@ const Species = () => {
   const [open, setOpen] = useState(false);
   const [specieList, setSpecieList] = useState([]);
   //ConfirmBox
-  function openDelete() {
+  function openDelete(id) {
     setOpen(true);
+    deleteSpecie.id = id;
   }
+  // Specie id to delete
+  const [deleteSpecie, setDeleteSpecie] = useState({
+    id : ""
+  });
+
   // Create new specie JSON
   const [newSpecieDTO, setNewSpecieDTO] = useState({
     userId: sessionStorage.getItem("curUserId"),
@@ -148,11 +154,11 @@ const Species = () => {
   //
 
   // Handle submit to send request to API (Delete specie)
-  const handleDelete = async (index) => {
+  const handleDelete = async () => {
     try {
       const response = await axios.get(SPECIE_DELETE,
         {
-          params: { specieId: specieList[index].specieId },
+          params: { specieId: deleteSpecie.id},
           headers: {
             'Content-Type': 'application/json',
             'Access-Control-Allow-Origin': '*'
@@ -423,9 +429,9 @@ const Species = () => {
                         <th className="u-border-1 u-border-grey-30 u-first-column u-grey-5 u-table-cell u-table-cell-5" scope="row" onClick={() => LoadData(index)}>{index + 1} </th>
                         <td className="u-border-1 u-border-grey-30 u-table-cell" onClick={() => LoadData(index)}>{item.specieName}</td>
                         <td className="u-border-1 u-border-grey-30 u-table-cell" onClick={() => LoadData(index)}>{item.incubationPeriod} (ngày)</td>
-                        <td className="u-border-1 u-border-grey-30 u-table-cell" style={{ textAlign: "center" }}><button className='btn btn-light' style={{ width: "50%" }} onClick={() => openDelete()}>Xoá</button>
+                        <td className="u-border-1 u-border-grey-30 u-table-cell" style={{ textAlign: "center" }}><button className='btn btn-light' style={{ width: "50%" }} onClick={() => openDelete(item.specieId)}>Xoá</button>
                           <ConfirmBox open={open} closeDialog={() => setOpen(false)} title={"Xóa loài"}
-                            content={"Xác nhận xóa loài này?"} deleteFunction={() => handleDelete(index)}
+                            content={"Xác nhận xóa loài này?"} deleteFunction={() => handleDelete()}
                           />
                         </td>
                       </tr>

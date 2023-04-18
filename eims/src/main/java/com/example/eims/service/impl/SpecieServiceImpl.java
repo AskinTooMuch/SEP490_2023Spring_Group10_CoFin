@@ -131,12 +131,14 @@ public class SpecieServiceImpl implements ISpecieService {
             List<IncubationPhase> incubationPhases = incubationPhaseRepository.findAll();
             List<DetailSpecieDTO> detailSpecieDTOList = new ArrayList<>();
             for (Specie s : specieList) {
-                DetailSpecieDTO detailSpecieDTO = new DetailSpecieDTO();
-                detailSpecieDTO.setSpecieId(s.getSpecieId());
-                detailSpecieDTO.setSpecieName(s.getSpecieName());
-                detailSpecieDTO.setIncubationPeriod(s.getIncubationPeriod());
-                detailSpecieDTO.setStatus(s.isStatus());
-                detailSpecieDTOList.add(detailSpecieDTO);
+                if (s.isStatus()) {
+                    DetailSpecieDTO detailSpecieDTO = new DetailSpecieDTO();
+                    detailSpecieDTO.setSpecieId(s.getSpecieId());
+                    detailSpecieDTO.setSpecieName(s.getSpecieName());
+                    detailSpecieDTO.setIncubationPeriod(s.getIncubationPeriod());
+                    detailSpecieDTO.setStatus(s.isStatus());
+                    detailSpecieDTOList.add(detailSpecieDTO);
+                }
             }
             return new ResponseEntity<>(detailSpecieDTOList, HttpStatus.OK);
         }
