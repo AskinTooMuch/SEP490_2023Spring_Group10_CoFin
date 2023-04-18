@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
-import {toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { faCheck, faTimes, faInfoCircle, faStarOfLife } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -8,6 +8,7 @@ import { faEye } from "@fortawesome/free-solid-svg-icons";
 import "../css/profile.css"
 import { useNavigate } from "react-router-dom";
 import { Modal, Button } from 'react-bootstrap'
+import WithPermission from '../utils.js/WithPermission';
 const eye = <FontAwesomeIcon icon={faEye} />;
 //regex check password
 const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,20}$/;
@@ -696,10 +697,10 @@ const Profile = () => {
     }
 
     //Navigate to detail Page
-  let navigate = useNavigate();
-  const routeChange = (sid) => {
-    navigate('/subscriptionInfo', { state: { id: sid } });
-  }
+    let navigate = useNavigate();
+    const routeChange = (sid) => {
+        navigate('/subscriptionInfo', { state: { id: sid } });
+    }
 
     return (
         <div className="profile-info">
@@ -1031,22 +1032,26 @@ const Profile = () => {
                                                     <p id="hotline">{facilityInformation.hotline}</p>
                                                 </div>
                                             </div>
-                                            <div className="row">
-                                                <div className="col-md-6">
-                                                    <p>Gói đăng ký</p>
+                                            <WithPermission roleRequired="2">
+                                                <div className="row">
+                                                    <div className="col-md-6">
+                                                        <p>Gói đăng ký</p>
+                                                    </div>
+                                                    <div className="col-md-6">
+                                                        {(facilityInformation.subscriptionId === '') || (!facilityInformation.subStatus)
+                                                            ? <p id="subscription">Chưa đăng ký gói</p>
+                                                            : <p className='link-hover' id="subscription" onClick={() => routeChange(facilityInformation.subscriptionId)}>Gói {facilityInformation.subscriptionId}</p>
+                                                        }
+                                                    </div>
                                                 </div>
-                                                <div className="col-md-6">
-                                                    {(facilityInformation.subscriptionId === '') || (!facilityInformation.subStatus)
-                                                        ? <p id="subscription">Chưa đăng ký gói</p>
-                                                        : <p className='link-hover' id="subscription"  onClick={() => routeChange(facilityInformation.subscriptionId)}>Gói {facilityInformation.subscriptionId}</p>
-                                                    }
-                                                </div>
-                                            </div>
+                                            </WithPermission>
                                         </div>
                                     </form>
-                                    <div style={{ textAlign: "center" }}>
-                                        <button className="btn btn-light" onClick={handleUpdateFacilityGet} style={{ width: "50%" }}>Cập nhật</button>
-                                    </div>
+                                    <WithPermission roleRequired="2">
+                                        <div style={{ textAlign: "center" }}>
+                                            <button className="btn btn-light" onClick={handleUpdateFacilityGet} style={{ width: "50%" }}>Cập nhật</button>
+                                        </div>
+                                    </WithPermission>
                                     <Modal show={showFaci} onHide={handleCloseFaci}
                                         size="lg"
                                         aria-labelledby="contained-modal-title-vcenter"
@@ -1205,7 +1210,7 @@ const Profile = () => {
                     </div>
                 </div>
             </div>
-           
+
         </div>
     )
 }
