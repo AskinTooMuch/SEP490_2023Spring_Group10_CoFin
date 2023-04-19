@@ -118,7 +118,7 @@ export default function BasicTabs() {
 
     //Handle Change functions:
     //Update paid
-    const handleUpdatePaidChange = (event, field) => {
+    const handleUpdatePaidChange = (event) => {
         let actualValue = event.target.value
         setPaid(actualValue);
     }
@@ -314,7 +314,7 @@ export default function BasicTabs() {
                                         <div className="col-md-6">
                                             <input classname="form-control mt-1"
                                                 style={{ width: "100%" }} type="number"
-                                                value={paid} onChange={(e) => handleUpdatePaidChange(e)}
+                                                defaultValue={paid} onChange={(e) => handleUpdatePaidChange(e)}
                                             />
                                         </div>
                                     </div>
