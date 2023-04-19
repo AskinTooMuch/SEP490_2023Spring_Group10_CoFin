@@ -38,7 +38,7 @@ const Payroll = () => {
             employeeName: "",
             employeePhone: "",
             payrollItem: "",
-            payrollAmount: "0",
+            payrollAmount: 0,
             issueDate: "",
             note: "",
             status: ""
@@ -76,7 +76,7 @@ const Payroll = () => {
         employeeName: "",
         employeePhone: "",
         payrollItem: "",
-        payrollAmount: "0",
+        payrollAmount: 0,
         issueDate: "",
         note: "",
         status: ""
@@ -90,6 +90,21 @@ const Payroll = () => {
             ...createPayrollDTO,
             [field]: actualValue
         })
+    }
+
+    const handleChooseEmployee = (event) => {
+        let actualValue = event.target.value
+        console.log(actualValue)
+        createPayrollDTO.employeeId = actualValue;
+        console.log(JSON.stringify(createPayrollDTO))
+        employeeList.map((item) => {
+            console.log(item.employeeId)
+            if (item.employeeId == actualValue) {
+                createPayrollDTO.payrollAmount = item.payrollAmount;
+                document.getElementById('payrollAmount').value = item.payrollAmount;
+            }
+        })
+        console.log(JSON.stringify(createPayrollDTO))
     }
 
     //EditPayroll
@@ -216,6 +231,7 @@ const Payroll = () => {
     //Handle Submit functions
     //Handle submit new Payroll
     const handleCreatePayrollSubmit = async (event) => {
+        console.log("dto"+JSON.stringify(createPayrollDTO));
         event.preventDefault();
         let response;
         try {
@@ -313,7 +329,7 @@ const Payroll = () => {
                                     <div className="col-md-6">
                                         <select
                                             id="select" className="form-control mt-1"
-                                            onChange={(e) => handleCreatePayrollChange(e, "employeeId")} >
+                                            onChange={(e) => handleChooseEmployee(e)} >
                                             <option defaultValue="-1" disabled selected>Chọn nhân viên</option>
                                             {
                                                 employeeList.map((emItem, emIndex) =>
@@ -345,10 +361,9 @@ const Payroll = () => {
                                         <p>Số tiền <FontAwesomeIcon className="star" icon={faStarOfLife} /> </p>
                                     </div>
                                     <div className="col-md-6">
-                                        <input className="form-control mt-1"
+                                        <input className="form-control mt-1" id="payrollAmount"
                                             style={{ width: "100%" }} placeholder="1.000.000"
-                                            step={0.01}
-                                            defaultValue={0}
+                                            value={createPayrollDTO.payrollAmount}
                                             onChange={(e) => handleCreatePayrollChange(e, "payrollAmount")} />
                                     </div>
                                     <div className="col-md-6">
