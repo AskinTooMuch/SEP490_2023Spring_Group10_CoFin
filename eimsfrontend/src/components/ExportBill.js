@@ -39,7 +39,6 @@ const ExportBill = () => {
                     },
                     withCredentials: true
                 });
-            console.log(JSON.stringify(result.data))
             setExportList(result.data);
             // Toast message
             if (mess) {
@@ -101,8 +100,8 @@ const ExportBill = () => {
                                         <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-2">Mã hoá đơn</th>
                                         <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-3">Khách hàng</th>
                                         <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-4">Ngày bán</th>
-                                        <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-5">Tổng giá</th>
-                                        <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-6">Đã thanh toán</th>
+                                        <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-5">Tổng (đ)</th>
+                                        <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-6">Đã thanh toán (đ)</th>
                                         <th className="u-border-1 u-border-palette-4-base u-palette-2-base u-table-cell u-table-cell-7">Trạng thái</th>
                                     </tr>
                                 </thead>
