@@ -870,7 +870,7 @@ export default function BasicTabs() {
                                         <br />
                                         <div className="row">
                                             <div className="col-md-3" >
-                                                <label>Hao hụt: </label>
+                                                <label>Số lượng hao hụt: </label>
                                             </div>
                                             <div className="col-md-3">
                                                 <input defaultValue="0" className='form-control' id="eggWasted" name="eggWasted" type="number"
