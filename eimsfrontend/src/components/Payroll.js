@@ -361,8 +361,8 @@ const Payroll = () => {
                                         <p>Số tiền <FontAwesomeIcon className="star" icon={faStarOfLife} /> </p>
                                     </div>
                                     <div className="col-md-6">
-                                        <input className="form-control mt-1" id="payrollAmount"
-                                            style={{ width: "100%" }} placeholder="1.000.000"
+                                        <input className="form-control mt-1" id="payrollAmount" type='number'
+                                            style={{ width: "100%" }} placeholder="1.000.000" 
                                             value={createPayrollDTO.payrollAmount}
                                             onChange={(e) => handleCreatePayrollChange(e, "payrollAmount")} />
                                     </div>
