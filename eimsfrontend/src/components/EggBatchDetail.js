@@ -870,7 +870,7 @@ export default function BasicTabs() {
                                         <br />
                                         <div className="row">
                                             <div className="col-md-3" >
-                                                <label>Trứng hao hụt: </label>
+                                                <label>Hao hụt: </label>
                                             </div>
                                             <div className="col-md-3">
                                                 <input defaultValue="0" className='form-control' id="eggWasted" name="eggWasted" type="number"
@@ -895,7 +895,7 @@ export default function BasicTabs() {
                                         <br />
                                         <div className="row">
                                             <div className="col-md-3 ">
-                                                <label>Loại trứng cập nhật</label>
+                                                <label>Loại cập nhật</label>
                                             </div>
                                             <div className="col-md-3">
                                                 <select onChange={(e) => handleUpdateEggBatchChange(e, "phaseNumber")} id="select" className="form-select" aria-label="Default select example">
