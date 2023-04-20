@@ -135,7 +135,7 @@ export default function BasicTabs() {
                     params:
                     {
                         exportId: exportDetail.exportId,
-                        paid: paid.paid
+                        paid: paid
                     }
                 },
                 {
