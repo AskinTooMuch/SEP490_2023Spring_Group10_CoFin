@@ -1,3 +1,4 @@
+-- V0.13.1: Update trigger createNotificationAfterUpdate, data insert into table machine
 -- V0.13.0: Update procedure user_and_facility
 -- V0.12.3: Update constrain table import_receipt
 -- V0.12.2: Insert data customer table : Khách lẻ
@@ -23,7 +24,7 @@
 -- V0.2.0: Add foreign key constraint
 -- V0.2.1: Change attribute _name, re-route foreign key constraint
 -- V0.2.2: Add CHECK constraint
--- Last update: 12/04/2023
+-- Last update: 20/04/2023
 -- Script for generating EIMS - Eggs Incubating Management System.
 -- Check if database already exist. If yes then drop the database to ensure the script runs successfully with no variations.
 DROP DATABASE IF EXISTS eims;
@@ -475,7 +476,6 @@ DO  -- process
 UPDATE eims.egg_batch
 SET  need_action = 1 
 WHERE DATEDIFF(date_action, now()) = 0 -- date_action is the next day
-OR date_action < now(); -- date_action is previous days (forget to update)
 
 -- Create notification
 -- After update
@@ -657,10 +657,10 @@ VALUES 	(1, 'Máy ấp', 'Máy dùng cho giai đoạn vừa mới ấp cho tới
         
 -- machine
 INSERT INTO machine(machine_type_id, facility_id, machine_name, max_capacity, cur_capacity, added_date, active, status)
-VALUES 	(1, 1, 'Máy ấp kho', '6000', '0', '2019-02-17', 0, 1),
-		(1, 1, 'Máy ấp 2', '4000', '0', '2019-02-17', 0, 1),
-		(2, 1, 'Máy nở nhỏ', '2000', '0', '2019-02-17', 0, 1),
-        (2, 1, 'Máy nở to', '4000', '0', '2019-02-17', 0, 1);
+VALUES 	(1, 1, 'Máy ấp kho', '6000', '0', '2019-02-17', 1, 1),
+		(1, 1, 'Máy ấp 2', '4000', '0', '2019-02-17', 1, 1),
+		(2, 1, 'Máy nở nhỏ', '2000', '0', '2019-02-17', 1, 1),
+        (2, 1, 'Máy nở to', '4000', '0', '2019-02-17', 1, 1);
 
 -- subscription
 INSERT INTO subscription(subscription_id, cost, duration, machine_quota, recommended, status)

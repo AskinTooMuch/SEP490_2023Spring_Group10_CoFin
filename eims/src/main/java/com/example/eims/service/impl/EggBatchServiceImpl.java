@@ -1276,9 +1276,7 @@ public class EggBatchServiceImpl implements IEggBatchService {
         int wastedHatching = updateLocationEggBatchDTO.getEggWastedHatching();
 
         List<EggLocationEggBatchDetailDTO> locationsOld = updateLocationEggBatchDTO.getLocationsOld();
-        System.out.println(locationsOld);
         List<EggLocationUpdateEggBatchDTO> locationsNew = updateLocationEggBatchDTO.getLocationsNew();
-        System.out.println(locationsNew);
         // Get type of machine list old
         boolean onlyIncubatingOld = true;
         boolean onlyHatchingOld = true;
@@ -1344,10 +1342,6 @@ public class EggBatchServiceImpl implements IEggBatchService {
                     || ((item.getAmountUpdate() - item.getOldAmount())
                     > (item.getCapacity() - item.getAmountCurrent()))
                     || item.getAmountUpdate() > totalOld) {
-                System.out.println(item.getAmountUpdate());
-                System.out.println(item.getCapacity());
-                System.out.println(item.getAmountCurrent());
-                System.out.println(totalOld);
                 return new ResponseEntity<>("Số lượng trứng trong danh sách máy không hợp lệ",
                         HttpStatus.BAD_REQUEST);
             }
@@ -1356,7 +1350,7 @@ public class EggBatchServiceImpl implements IEggBatchService {
         // Check type machine
         boolean onlyIncubating = onlyIncubatingOld;
         boolean onlyHatching = onlyHatchingOld;
-        boolean both = bothOld;
+        boolean both = false;
         for (EggLocationUpdateEggBatchDTO item : locationsNew) {
             if (item.getMachineTypeId() == 1L && item.getAmountUpdate() > 0) {
                 onlyHatching = false;
@@ -1367,16 +1361,6 @@ public class EggBatchServiceImpl implements IEggBatchService {
         }
         if (!onlyIncubating && !onlyHatching) {
             both = true;
-        }
-
-        if (onlyIncubating != onlyIncubatingOld) {
-            return new ResponseEntity<>("Chỉ được chọn máy ấp trong giai đoạn này", HttpStatus.BAD_REQUEST);
-        }
-        if (onlyHatching != onlyHatchingOld) {
-            return new ResponseEntity<>("Chỉ được chọn máy nở trong giai đoạn này", HttpStatus.BAD_REQUEST);
-        }
-        if (both != bothOld) {
-            return new ResponseEntity<>("Phải chọn cả máy ấp và nở trong giai đoạn này", HttpStatus.BAD_REQUEST);
         }
 
         // Check amounts
@@ -1393,9 +1377,22 @@ public class EggBatchServiceImpl implements IEggBatchService {
             }
             total += item.getAmountUpdate();
         }
+
+        if (onlyIncubating != onlyIncubatingOld && wastedIncubating != incubatingAmountOld) {
+            return new ResponseEntity<>("Chỉ được chọn máy ấp trong giai đoạn này", HttpStatus.BAD_REQUEST);
+        }
+        if (onlyHatching != onlyHatchingOld && wastedHatching != hatchingAmountOld) {
+            return new ResponseEntity<>("Chỉ được chọn máy nở trong giai đoạn này", HttpStatus.BAD_REQUEST);
+        }
+
+        if (both != bothOld && wastedIncubating != incubatingAmountOld && wastedHatching != hatchingAmountOld) {
+            return new ResponseEntity<>("Phải chọn cả máy ấp và nở trong giai đoạn này", HttpStatus.BAD_REQUEST);
+        }
+
         if (total != totalOld - wastedIncubating - wastedHatching) {
             return new ResponseEntity<>("Tổng số trứng trong danh sách máy không hợp lệ", HttpStatus.BAD_REQUEST);
         }
+
         if (incubatingAmountOld < incubatingAmount) {
             return new ResponseEntity<>("Tổng số trứng đang ấp trong danh sách máy không thể lớn hơn trước đó", HttpStatus.BAD_REQUEST);
         }
@@ -1516,7 +1513,12 @@ public class EggBatchServiceImpl implements IEggBatchService {
                 for (EggLocationUpdateEggBatchDTO eggLocationDTO : locationsNew) {
                     if (eggLocationDTO.getAmountUpdate() > 0) {
                         EggLocation eggLocation = new EggLocation();
-                        eggLocation.setProductId(eggHatching.getProductId());
+                        if (eggLocationDTO.getMachineTypeId() == 1L){
+                            eggLocation.setProductId(eggIncubating.getProductId());
+                        }
+                        if (eggLocationDTO.getMachineTypeId() == 2L){
+                            eggLocation.setProductId(eggHatching.getProductId());
+                        }
                         eggLocation.setMachineId(eggLocationDTO.getMachineId());
                         eggLocation.setAmount(eggLocationDTO.getAmountUpdate());
                         eggLocation.setStatus(1);
