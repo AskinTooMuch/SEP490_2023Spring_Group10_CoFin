@@ -137,7 +137,9 @@ public class SupplierServiceImpl implements ISupplierService {
                                 .findByIncubationPhaseId(eggProductLastPhaseOptional.get()
                                         .getIncubationPhaseId()).get();
                         System.out.println("phase:" + incubationPhase.getPhaseNumber());
-                        if (incubationPhase.getPhaseNumber() > 2) { // egg batch phase > 2
+                        if (incubationPhase.getPhaseNumber() > 2
+                                || (incubationPhase.getPhaseNumber() == 2 && eggBatch.getNeedAction() == 0) ) {
+                            // egg batch phase > 2
                             List<EggProduct> eggProductList = eggProductRepository.findByEggBatchId(eggBatch.getEggBatchId()).get();
                             for (EggProduct eggProduct : eggProductList) {
                                 IncubationPhase phase = incubationPhaseRepository
